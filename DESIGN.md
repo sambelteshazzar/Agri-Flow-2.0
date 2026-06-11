@@ -49,29 +49,42 @@ AgriFlow's design philosophy is built on the idea of **"Technical Authority meet
 ## Component Patterns
 
 ### Auth Modal (Login / Sign Up)
-A split-screen modal with hero image on the left and form on the right. Supports both login and signup modes with a toggle.
+A split-screen modal with branded hero panel on the left and form on the right. Supports both login and signup modes with a toggle.
 ```jsx
 // Container: fixed overlay with backdrop blur
-<div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-md animate-fade-in">
-  {/* Split layout: hero left, form right */}
-  <div className="w-full max-w-4xl mx-4 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row animate-fade-in-up">
-    {/* Hero panel (hidden on mobile) */}
-    <div className="hidden md:block md:w-1/2 relative overflow-hidden bg-slate-900">
-      {/* Image + gradient overlay + brand copy */}
+<div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-lg animate-fade-in">
+  <div className="w-full max-w-5xl mx-4 rounded-3xl shadow-2xl overflow-hidden border border-slate-200/50 dark:border-slate-700/50 flex flex-col md:flex-row animate-fade-in-up">
+    {/* Hero panel — gradient bg with dot grid, brand mark, feature list, stats (hidden on mobile) */}
+    <div className="hidden md:flex md:w-[45%] relative overflow-hidden bg-gradient-to-br from-slate-950 via-green-950/80 to-slate-900 flex-col justify-between p-10">
+      {/* Decorative blurs: green-500/10, yellow-500/10 */}
+      {/* Dot grid overlay: opacity-[0.03] */}
+      {/* Brand: gradient icon + heading + subtext */}
+      {/* Features: icon list with colored icons */}
+      {/* Stats: 2-col grid with numbers */}
     </div>
     {/* Form panel */}
-    <div className="w-full md:w-1/2 bg-white dark:bg-slate-900 flex flex-col">
-      {/* Header with title + close */}
-      {/* Form body: inputs with left icons, password toggle, checkbox, submit button */}
-      {/* Footer with mode toggle link + brand icons */}
+    <div className="w-full md:w-[55%] bg-white dark:bg-slate-900 flex flex-col">
+      {/* Header: title + subtitle + close button */}
+      {/* Brand mark: rotated yellow gradient square with Leaf icon + green badge */}
+      {/* Form: inputs with focus ring, password toggle, checkbox */}
+      {/* Submit: gradient green button with shadow */}
+      {/* Social buttons: Google + GitHub in 2-col grid */}
+      {/* Toggle link */}
+      {/* Footer brand strip */}
     </div>
   </div>
 </div>
 ```
-- **Inputs:** `pl-10` for left icon space, `bg-slate-50 dark:bg-slate-800`, `border-2 border-slate-200 dark:border-slate-700`, `focus:border-green-500`
-- **Submit button:** `bg-slate-900 dark:bg-white`, `font-black uppercase tracking-widest`, `rounded-lg`
-- **Mode toggle:** Yellow accent link (`text-yellow-500`) switching between "Sign In" and "Create Account"
-- **Hero accent:** Green/brand gradient overlay (`from-slate-950/90 via-green-900/40`)
+- **Hero panel:** Gradient background with decorative blur circles and subtle dot grid; feature icons (Zap, Shield, Droplets, TrendingUp) with colored accents; stats row
+- **Inputs:** `pl-11` for left icon space, `bg-slate-50 dark:bg-slate-800/80`, `border-2 border-slate-200 dark:border-slate-700`, `rounded-xl`, `focus:border-green-500 focus:ring-4 focus:ring-green-500/10`
+- **Submit button:** `bg-gradient-to-r from-green-600 to-green-500`, `shadow-lg shadow-green-500/25`, `rounded-xl`
+- **Social buttons:** `bg-slate-50 dark:bg-slate-800`, `border-2 border-slate-200 dark:border-slate-700`, `rounded-xl`, 2-col grid
+- **Mode toggle:** Green accent link (`text-green-600 dark:text-green-400`) switching between "Sign In" and "Create one"
+- **Form titles:** "Welcome Back" (login) / "Create Account" (signup) — no "Access Terminal"
+- **Form subtitles:** Professional tone — "Sign in to access your dashboard." / "Join thousands of farmers using AgriFlow."
+- **Placeholders:** Clean & professional — "John Doe", "you@example.com", "Min. 8 characters"
+- **Hero features:** 3 items with label + description (not 4 bare labels); items have `items-start` layout
+- **Footer:** "Secured with 256-bit encryption" instead of decorative icon strip
 
 ### The "Terminal" Card
 A standard card with a dark background, a subtle border, and a header.
