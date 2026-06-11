@@ -329,8 +329,8 @@ const AIAdvisor: React.FC = () => {
                  <div className="absolute inset-0 border-4 border-yellow-500/20 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }}></div>
               </div>
               
-              <h3 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest">Live Consultation</h3>
-              <p className="text-slate-400 mb-8 font-mono text-sm">Gemini 2.5 Voice • Secure Line</p>
+               <h3 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest">Live Consultation</h3>
+               <p className="text-slate-400 mb-8 font-mono text-sm">AI Voice Engine • Secure Line</p>
               
               {/* Audio Visualizer Bar */}
               <div className="flex gap-1 h-12 items-end justify-center mb-10 w-full max-w-[200px]">
@@ -364,7 +364,7 @@ const AIAdvisor: React.FC = () => {
              <BrainCircuit className="w-6 h-6 text-yellow-500 mr-2" aria-hidden="true" />
              AI Consultant
            </h2>
-           <p className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wide">Gemini 3 / Live Search / Vision</p>
+            <p className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wide">AI Assistant / Live Search / Vision</p>
         </div>
         <button 
           onClick={isCallActive ? endCall : startCall}

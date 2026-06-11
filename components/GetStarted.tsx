@@ -96,7 +96,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
           {/* Status Pill */}
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/30 text-green-300 text-xs font-bold uppercase tracking-wider mb-8 animate-fade-in-up backdrop-blur-md shadow-[0_0_15px_rgba(34,197,94,0.2)]">
             <Zap className="w-3 h-3 text-green-400" />
-            V3.0 System Operational • Gemini AI Integrated
+            V3.0 System Operational • Smart AI Integrated
           </div>
           
           {/* Main Heading */}
@@ -179,7 +179,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
             {[
               { icon: Database, color: 'text-green-400', bg: 'bg-green-500/10', title: 'Crop Manager', desc: 'Detailed plot tracking, soil health logging, and growth stage monitoring.' },
               { icon: Users, color: 'text-yellow-400', bg: 'bg-yellow-500/10', title: 'Community', desc: 'Global marketplace and expert forums for knowledge sharing.' },
-              { icon: BrainCircuit, color: 'text-purple-400', bg: 'bg-purple-500/10', title: 'Gemini AI', desc: 'Advanced diagnostics and personalized agronomy advice.' },
+              { icon: BrainCircuit, color: 'text-purple-400', bg: 'bg-purple-500/10', title: 'Smart AI Advisor', desc: 'Advanced diagnostics and personalized agronomy advice powered by intelligent systems.' },
               { icon: BarChart3, color: 'text-blue-400', bg: 'bg-blue-500/10', title: 'Analytics', desc: 'Financial forecasting and input cost optimization tools.' },
               { icon: GraduationCap, color: 'text-pink-400', bg: 'bg-pink-500/10', title: 'Education', desc: 'Professional certification courses on regenerative practices.' },
               { icon: Gamepad2, color: 'text-red-400', bg: 'bg-red-500/10', title: 'Agri-Arcade', desc: 'Simulation modules to test strategies without financial risk.' },
@@ -230,15 +230,15 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
                           <p className="text-slate-500 text-sm">Robust local persistence layer mimics backend behavior, syncing data when connectivity is restored.</p>
                        </div>
                     </div>
-                    <div className="flex gap-4">
-                       <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center shrink-0 border border-slate-700">
-                          <BrainCircuit className="w-6 h-6 text-purple-400" />
-                       </div>
-                       <div>
-                          <h4 className="text-white font-bold text-lg">Generative AI Core</h4>
-                          <p className="text-slate-500 text-sm">Direct integration with Google's Gemini 3.0 Pro model for multimodal image analysis and complex reasoning.</p>
-                       </div>
-                    </div>
+                     <div className="flex gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center shrink-0 border border-slate-700">
+                           <BrainCircuit className="w-6 h-6 text-purple-400" />
+                        </div>
+                        <div>
+                           <h4 className="text-white font-bold text-lg">Generative AI Core</h4>
+                           <p className="text-slate-500 text-sm">Multimodal AI integration delivering intelligent insights for image analysis, weather forecasting, and agronomic reasoning.</p>
+                        </div>
+                     </div>
                  </div>
               </div>
               
@@ -263,10 +263,10 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
                           <span className="text-slate-500">UI.Engine</span>
                           <span className="text-sky-400">TailwindCSS</span>
                        </div>
-                       <div className="flex justify-between">
-                          <span className="text-slate-500">AI.Model</span>
-                          <span className="text-purple-400">Gemini-3-Flash</span>
-                       </div>
+                        <div className="flex justify-between">
+                           <span className="text-slate-500">AI.Model</span>
+                           <span className="text-purple-400">GPT-3.5 / Multimodal Flash</span>
+                        </div>
                        <div className="flex justify-between">
                           <span className="text-slate-500">Data.Vis</span>
                           <span className="text-orange-400">Recharts</span>
@@ -275,10 +275,11 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
                           <span className="text-slate-500">Icons</span>
                           <span className="text-white">Lucide-React</span>
                        </div>
+                       {/* System Logs */}
                        <div className="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-600">
-                          > System Integrity: 100%<br/>
-                          > Modules Loaded: 12/12<br/>
-                          > Ready for deployment...
+                          System Integrity: 100%<br/>
+                          Modules Loaded: 12/12<br/>
+                          Ready for deployment...
                        </div>
                     </div>
                  </div>

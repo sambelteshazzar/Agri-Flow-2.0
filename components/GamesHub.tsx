@@ -145,9 +145,13 @@ const GamesHub: React.FC = () => {
   };
 
   const generateEcoTurn = async (day: number, currentStats: EcoStats, context: string) => {
-    setEcoLoading(true);
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  setEcoLoading(true);
+  if (!process.env.API_KEY) {
+    setEcoLoading(false);
+    return;
+  }
+  try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const prompt = `
         You are the game engine for "Eco Tycoon", a farming simulation.
         Current Stats: Funds $${currentStats.funds}, Soil Health ${currentStats.soilHealth}%, Reputation ${currentStats.reputation}%.

@@ -128,7 +128,7 @@ const LivestockManager: React.FC = () => {
     if (!scanImage) return;
     setIsScanning(true);
     try {
-      // Reusing the Gemini vision service but with livestock context
+      // Reusing the AI vision service with livestock context
       const diagnosis = await analyzeCropImage(scanImage, `LIVESTOCK HEALTH ANALYSIS: ${scanContext}. Check for signs of disease, injury, or malnutrition.`);
       setScanResult(diagnosis);
     } catch {

@@ -2,10 +2,14 @@
 import { GoogleGenAI, GenerateContentResponse, Type } from "@google/genai";
 import { WeatherData, Crop, Task, NewsArticle } from '../types';
 
-// Initialize the Gemini Client
-// Using process.env.API_KEY directly as per guidelines.
-// Note: If API_KEY is missing, API calls will be skipped via check below.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Lazy AI Client — constructor throws in browser if apiKey is null
+let _ai: InstanceType<typeof GoogleGenAI> | null = null;
+const getAI = () => {
+  if (!_ai && process.env.API_KEY) {
+    _ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  }
+  return _ai;
+};
 
 // --- SIMPLE IN-MEMORY CACHE ---
 const responseCache = new Map<string, any>();
@@ -41,7 +45,7 @@ const FALLBACK_ANALYSIS = "Based on visual analysis, this crop appears to be sho
  * REGENERATIVE AGRICULTURE & 2025 RESILIENCE SYSTEM INSTRUCTION
  */
 const SYSTEM_INSTRUCTION = `
-You are the "AgriFlow Resilience Engine," powered by Gemini 3. Your goal is to help farmers navigate the critical challenges of 2025: Climate Instability, Economic Profit Squeeze, and Soil Degradation.
+You are the "AgriFlow Resilience Engine," an advanced agricultural AI. Your goal is to help farmers navigate the critical challenges of 2025: Climate Instability, Economic Profit Squeeze, and Soil Degradation.
 
 CORE KNOWLEDGE BASE (2025 CONTEXT):
 1. Economic Squeeze: Farmers are price takers. Input costs (fertilizer/fuel) are soaring (+60%), while commodity prices are volatile. Focus on margin protection and low-input strategies.
@@ -68,7 +72,7 @@ RESPONSE STRUCTURE:
 /**
  * Helper to strip markdown artifacts if the model ignores strict instructions.
  */
-const cleanGeminiOutput = (text: string): string => {
+const cleanAIOutput = (text: string): string => {
   if (!text) return "";
   return text
     .replace(/\*{1,2}(.*?)\*{1,2}/g, '$1') // Remove bold/italic
@@ -101,7 +105,7 @@ const extractJson = (text: string): string => {
 };
 
 /**
- * Sends a text prompt to Gemini with the Regenerative persona and Search Grounding.
+ * Sends a text prompt to the AI with the Resenerative persona and Search Grounding.
  */
 export const getFarmingAdvice = async (prompt: string): Promise<{ text: string; sources?: { title: string; uri: string }[] }> => {
   if (!process.env.API_KEY) {
@@ -115,7 +119,7 @@ export const getFarmingAdvice = async (prompt: string): Promise<{ text: string; 
   }
 
   try {
-    const response: GenerateContentResponse = await ai.models.generateContent({
+    const response: GenerateContentResponse = await getAI()?.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
@@ -137,7 +141,7 @@ export const getFarmingAdvice = async (prompt: string): Promise<{ text: string; 
 
     const rawText = response.text || "I couldn't generate a response at this time.";
     const result = {
-      text: cleanGeminiOutput(rawText),
+      text: cleanAIOutput(rawText),
       sources: sources.length > 0 ? sources : undefined
     };
 
@@ -145,7 +149,7 @@ export const getFarmingAdvice = async (prompt: string): Promise<{ text: string; 
     return result;
 
   } catch (error) {
-    console.error("Gemini Text Error (Falling back):", error);
+    console.error("AI Text Error (Falling back):", error);
     return FALLBACK_ADVICE;
   }
 };
@@ -171,7 +175,7 @@ export const fetchAgNews = async (): Promise<NewsArticle[]> => {
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await getAI()?.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
@@ -228,7 +232,7 @@ export const getLiveAgriIntel = async (): Promise<string> => {
   const prompt = "What are the 3 most critical agricultural news headlines right now regarding climate events, pest outbreaks, or major commodity price shifts globally? Be concise, 1 sentence per headline.";
 
   try {
-    const response: GenerateContentResponse = await ai.models.generateContent({
+    const response: GenerateContentResponse = await getAI()?.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
@@ -238,7 +242,7 @@ export const getLiveAgriIntel = async (): Promise<string> => {
     });
 
     const text = response.text || "Market intelligence systems offline.";
-    const cleanText = cleanGeminiOutput(text);
+    const cleanText = cleanAIOutput(text);
     responseCache.set(cacheKey, cleanText);
     return cleanText;
   } catch (error) {
@@ -272,7 +276,7 @@ export const generateDailyTasks = async (weather: WeatherData, crops: Crop[]): P
   `;
 
   try {
-    const response: GenerateContentResponse = await ai.models.generateContent({
+    const response: GenerateContentResponse = await getAI()?.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,
       config: { temperature: 0.3 }
@@ -280,7 +284,7 @@ export const generateDailyTasks = async (weather: WeatherData, crops: Crop[]): P
 
     return extractJson(response.text || "[]");
   } catch (error) {
-    console.error("Gemini Task Generation Error (Falling back):", error);
+    console.error("AI Task Generation Error (Falling back):", error);
     return JSON.stringify(FALLBACK_TASKS);
   }
 };
@@ -311,7 +315,7 @@ export const analyzeCropImage = async (base64Image: string, userPrompt: string):
       Provide a diagnosis that balances biological treatment with economic reality.
     `;
 
-    const response: GenerateContentResponse = await ai.models.generateContent({
+    const response: GenerateContentResponse = await getAI()?.models.generateContent({
       model: 'gemini-3-flash-preview', 
       contents: {
         parts: [
@@ -323,9 +327,9 @@ export const analyzeCropImage = async (base64Image: string, userPrompt: string):
     });
 
     const text = response.text || "I analyzed the image but couldn't generate a specific diagnosis.";
-    return cleanGeminiOutput(text);
+    return cleanAIOutput(text);
   } catch (error) {
-    console.error("Gemini Vision Error (Falling back):", error);
+    console.error("AI Vision Error (Falling back):", error);
     return FALLBACK_ANALYSIS;
   }
 };
