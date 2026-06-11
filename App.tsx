@@ -14,7 +14,8 @@ import CommunityHub from './components/CommunityHub';
 import GamesHub from './components/GamesHub';
 import GetStarted from './components/GetStarted';
 import SettingsPage from './components/Settings';
-import VoiceAgent from './components/VoiceAgent'; // Import Global Agent
+import VoiceAgent from './components/VoiceAgent';
+import AuthModal from './components/AuthModal';
 import { NavigationTab } from './types';
 import { FarmProvider, useFarm } from './contexts/FarmContext';
 
@@ -30,11 +31,7 @@ const AppContent: React.FC = () => {
   const [isOnline, setIsOnline] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
   
-  // Auth Modal State
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authEmail, setAuthEmail] = useState('');
-  const [authName, setAuthName] = useState('');
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const unreadAlerts = alerts.length;
 
@@ -97,16 +94,9 @@ const AppContent: React.FC = () => {
     setIsMobileOpen(false);
   };
 
-  const handleSignInSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (authEmail && authName) {
-      setIsAuthenticating(true);
-      await login(authName, authEmail);
-      setIsAuthenticating(false);
-      setIsAuthModalOpen(false);
-      setAuthEmail('');
-      setAuthName('');
-    }
+  const handleAuthSubmit = async (name: string, email: string) => {
+    await login(name, email);
+    setIsAuthModalOpen(false);
   };
 
   if (!hasStarted) {
@@ -144,57 +134,12 @@ const AppContent: React.FC = () => {
       {/* --- GLOBAL VOICE AGENT --- */}
       <VoiceAgent />
 
-      {/* SIGN IN MODAL */}
-      {isAuthModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md animate-fade-in">
-           <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
-              <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center">
-                 <h3 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Access Terminal</h3>
-                 <button onClick={() => setIsAuthModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><X className="w-6 h-6"/></button>
-              </div>
-              <form onSubmit={handleSignInSubmit} className="p-8 space-y-5">
-                 <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-yellow-500 rounded-full mx-auto flex items-center justify-center mb-4 shadow-lg shadow-yellow-500/20">
-                       <User className="w-8 h-8 text-slate-900" />
-                    </div>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 font-medium">Sign in to your AgriFlow account to sync data.</p>
-                 </div>
-                 
-                 <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-400 uppercase mb-1">Operator Name</label>
-                    <input 
-                      type="text" 
-                      value={authName} 
-                      onChange={e => setAuthName(e.target.value)} 
-                      className="w-full p-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-lg font-bold text-slate-900 dark:text-white focus:outline-none focus:border-yellow-500" 
-                      placeholder="e.g. John Doe"
-                      autoFocus
-                      required
-                    />
-                 </div>
-                 <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-400 uppercase mb-1">Email Address</label>
-                    <input 
-                      type="email" 
-                      value={authEmail} 
-                      onChange={e => setAuthEmail(e.target.value)} 
-                      className="w-full p-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-lg font-bold text-slate-900 dark:text-white focus:outline-none focus:border-yellow-500" 
-                      placeholder="name@example.com"
-                      required
-                    />
-                 </div>
-                 <button 
-                   type="submit" 
-                   disabled={isAuthenticating}
-                   className="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity shadow-xl flex items-center justify-center gap-2"
-                 >
-                   {isAuthenticating ? <Loader2 className="w-5 h-5 animate-spin"/> : <LogIn className="w-5 h-5"/>}
-                   {isAuthenticating ? 'Authenticating...' : 'Initialize Session'}
-                 </button>
-              </form>
-           </div>
-        </div>
-      )}
+      {/* SIGN IN / SIGN UP MODAL */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLogin={handleAuthSubmit}
+      />
 
       {/* Sidebar Component */}
       <Sidebar 

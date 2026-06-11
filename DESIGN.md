@@ -48,6 +48,31 @@ AgriFlow's design philosophy is built on the idea of **"Technical Authority meet
 
 ## Component Patterns
 
+### Auth Modal (Login / Sign Up)
+A split-screen modal with hero image on the left and form on the right. Supports both login and signup modes with a toggle.
+```jsx
+// Container: fixed overlay with backdrop blur
+<div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-md animate-fade-in">
+  {/* Split layout: hero left, form right */}
+  <div className="w-full max-w-4xl mx-4 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row animate-fade-in-up">
+    {/* Hero panel (hidden on mobile) */}
+    <div className="hidden md:block md:w-1/2 relative overflow-hidden bg-slate-900">
+      {/* Image + gradient overlay + brand copy */}
+    </div>
+    {/* Form panel */}
+    <div className="w-full md:w-1/2 bg-white dark:bg-slate-900 flex flex-col">
+      {/* Header with title + close */}
+      {/* Form body: inputs with left icons, password toggle, checkbox, submit button */}
+      {/* Footer with mode toggle link + brand icons */}
+    </div>
+  </div>
+</div>
+```
+- **Inputs:** `pl-10` for left icon space, `bg-slate-50 dark:bg-slate-800`, `border-2 border-slate-200 dark:border-slate-700`, `focus:border-green-500`
+- **Submit button:** `bg-slate-900 dark:bg-white`, `font-black uppercase tracking-widest`, `rounded-lg`
+- **Mode toggle:** Yellow accent link (`text-yellow-500`) switching between "Sign In" and "Create Account"
+- **Hero accent:** Green/brand gradient overlay (`from-slate-950/90 via-green-900/40`)
+
 ### The "Terminal" Card
 A standard card with a dark background, a subtle border, and a header.
 ```jsx
