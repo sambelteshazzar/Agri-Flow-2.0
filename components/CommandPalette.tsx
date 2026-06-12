@@ -10,17 +10,17 @@ interface CommandPaletteProps {
 }
 
 const commands = [
-  { id: NavigationTab.DASHBOARD, label: 'Dashboard', icon: LayoutDashboard, category: 'Navigation', shortcut: '1' },
-  { id: NavigationTab.CROPS, label: 'Crop Manager', icon: Sprout, category: 'Navigation', shortcut: '2' },
-  { id: NavigationTab.LIVESTOCK, label: 'Livestock', icon: Beef, category: 'Navigation', shortcut: '3' },
-  { id: NavigationTab.MARKET, label: 'Market Analytics', icon: TrendingUp, category: 'Navigation', shortcut: '4' },
-  { id: NavigationTab.NEWS, label: 'Global News', icon: Globe, category: 'Navigation', shortcut: '5' },
+  { id: NavigationTab.DASHBOARD, label: 'Dashboard', icon: LayoutDashboard, category: 'Navigate', shortcut: '1' },
+  { id: NavigationTab.CROPS, label: 'My Crops', icon: Sprout, category: 'Navigate', shortcut: '2' },
+  { id: NavigationTab.LIVESTOCK, label: 'Livestock', icon: Beef, category: 'Navigate', shortcut: '3' },
+  { id: NavigationTab.MARKET, label: 'Market', icon: TrendingUp, category: 'Navigate', shortcut: '4' },
+  { id: NavigationTab.NEWS, label: 'News', icon: Globe, category: 'Navigate', shortcut: '5' },
   { id: NavigationTab.AI_ADVISOR, label: 'AI Advisor', icon: BrainCircuit, category: 'Tools', shortcut: '6' },
-  { id: NavigationTab.CALCULATOR, label: 'Resource Calculator', icon: Calculator, category: 'Tools', shortcut: '7' },
-  { id: NavigationTab.EDUCATION, label: 'Education Hub', icon: GraduationCap, category: 'Tools', shortcut: '8' },
-  { id: NavigationTab.COMMUNITY, label: 'Community Hub', icon: Users, category: 'Social', shortcut: '9' },
-  { id: NavigationTab.GAMES, label: 'Arcade', icon: Gamepad2, category: 'Social', shortcut: '0' },
-  { id: NavigationTab.SETTINGS, label: 'Settings', icon: Settings, category: 'System', shortcut: ',' },
+  { id: NavigationTab.CALCULATOR, label: 'Calculators', icon: Calculator, category: 'Tools', shortcut: '7' },
+  { id: NavigationTab.EDUCATION, label: 'Learn', icon: GraduationCap, category: 'Tools', shortcut: '8' },
+  { id: NavigationTab.COMMUNITY, label: 'Community', icon: Users, category: 'Connect', shortcut: '9' },
+  { id: NavigationTab.GAMES, label: 'Games', icon: Gamepad2, category: 'Connect', shortcut: '0' },
+  { id: NavigationTab.SETTINGS, label: 'Settings', icon: Settings, category: 'Account', shortcut: ',' },
 ];
 
 const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose, onNavigate }) => {
@@ -105,7 +105,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose, onNavi
           ) : (
             categories.map(category => (
               <div key={category}>
-                <p className="px-2 pt-2 pb-1 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">{category}</p>
+                <p className="px-2 pt-2 pb-1 text-[10px] font-semibold text-slate-400 dark:text-slate-500">{category}</p>
                 {filtered.filter(c => c.category === category).map(cmd => {
                   const globalIndex = filtered.indexOf(cmd);
                   return (

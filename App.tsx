@@ -52,17 +52,17 @@ const AppContent: React.FC = () => {
 
   const getPageTitle = (tab: NavigationTab) => {
     switch(tab) {
-      case NavigationTab.AI_ADVISOR: return 'AI Consultant';
-      case NavigationTab.CALCULATOR: return 'Resource Tools';
-      case NavigationTab.COMMUNITY: return 'Community Hub';
-      case NavigationTab.CROPS: return 'Field Operations';
+      case NavigationTab.AI_ADVISOR: return 'AI Advisor';
+      case NavigationTab.CALCULATOR: return 'Calculators';
+      case NavigationTab.COMMUNITY: return 'Community';
+      case NavigationTab.CROPS: return 'My Crops';
       case NavigationTab.DASHBOARD: return 'Dashboard';
-      case NavigationTab.EDUCATION: return 'Training';
+      case NavigationTab.EDUCATION: return 'Learn';
       case NavigationTab.LIVESTOCK: return 'Livestock';
-      case NavigationTab.MARKET: return 'Market Data';
-      case NavigationTab.NEWS: return 'Global Wire';
-      case NavigationTab.GAMES: return 'Arcade';
-      case NavigationTab.SETTINGS: return 'System Configuration';
+      case NavigationTab.MARKET: return 'Market';
+      case NavigationTab.NEWS: return 'News';
+      case NavigationTab.GAMES: return 'Games';
+      case NavigationTab.SETTINGS: return 'Settings';
       default: return 'AgriFlow';
     }
   };
@@ -151,7 +151,7 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen h-[100dvh] bg-[#FDFCF8] dark:bg-slate-950 overflow-hidden relative transition-colors duration-300">
+    <div className="flex h-screen h-[100dvh] bg-[#F8FAF5] dark:bg-slate-950 overflow-hidden relative transition-colors duration-300">
 
       {/* GLOBAL TOAST CONTAINER */}
       <div className="fixed top-24 right-4 z-[9999] flex flex-col gap-3 pointer-events-none">
@@ -220,11 +220,11 @@ const AppContent: React.FC = () => {
               <Menu className="w-6 h-6" aria-hidden="true" />
             </button>
             <div>
-              <h1 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tight font-heading">
+              <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white tracking-tight font-heading">
                 {getPageTitle(currentView)}
               </h1>
-              <p className="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest hidden md:block">
-                System Status: Nominal
+              <p className="text-[10px] md:text-xs text-green-600 dark:text-green-400 font-medium hidden md:block">
+                All systems running smoothly
               </p>
             </div>
           </div>
@@ -237,24 +237,24 @@ const AppContent: React.FC = () => {
               {/* Command Palette Trigger */}
               <button
                 onClick={() => setIsCommandPaletteOpen(true)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
               >
                 <Search className="w-3.5 h-3.5" />
                 Search
-                <kbd className="ml-1.5 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-[9px] font-bold text-slate-400">
+                <kbd className="ml-1.5 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-[9px] font-medium text-slate-400">
                   <Command className="w-2.5 h-2.5" />K
                 </kbd>
               </button>
 
               <button
                 onClick={() => setIsOnline(!isOnline)}
-                className={`flex items-center px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${isOnline ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800'}`}
+                className={`flex items-center px-3 py-1.5 rounded-full text-[11px] font-medium transition-all border ${isOnline ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800'}`}
               >
                 {isOnline ? <Wifi className="w-3 h-3 mr-2" /> : <WifiOff className="w-3 h-3 mr-2" />}
                 {isOnline ? 'Online' : 'Offline'}
               </button>
-              <button className="flex items-center px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                <Globe className="w-3 h-3 mr-2" /> EN-US
+              <button className="flex items-center px-3 py-1.5 rounded-full text-[11px] font-medium bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                <Globe className="w-3 h-3 mr-2" /> EN
               </button>
 
               {/* Notifications Dropdown */}
@@ -270,7 +270,7 @@ const AppContent: React.FC = () => {
                 {showNotifications && (
                   <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-200 dark:border-slate-800 z-50 animate-fade-in-up">
                     <div className="bg-slate-50 dark:bg-slate-800 p-3 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
-                      <h3 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Alerts ({unreadAlerts})</h3>
+                      <h3 className="text-xs font-semibold text-slate-800 dark:text-white">Alerts ({unreadAlerts})</h3>
                       <button onClick={() => setShowNotifications(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
                         <X className="w-4 h-4" />
                       </button>
@@ -283,7 +283,7 @@ const AppContent: React.FC = () => {
                             <div>
                               <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-red-700 dark:group-hover:text-red-400">{alert.title}</p>
                               <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{alert.message}</p>
-                              <p className="text-[10px] text-slate-400 font-bold uppercase mt-2">Just now</p>
+                               <p className="text-[10px] text-slate-400 font-medium mt-2">Just now</p>
                             </div>
                           </div>
                         </div>
@@ -292,7 +292,7 @@ const AppContent: React.FC = () => {
                       )}
                     </div>
                     <div className="bg-slate-50 dark:bg-slate-800 p-2 border-t border-slate-200 dark:border-slate-700 text-center">
-                      <button className="text-[10px] font-bold uppercase text-slate-500 hover:text-slate-800 dark:hover:text-slate-300">Mark all as read</button>
+                      <button className="text-[10px] font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-300">Mark all as read</button>
                     </div>
                   </div>
                 )}
@@ -304,7 +304,7 @@ const AppContent: React.FC = () => {
               <div className="flex items-center gap-3">
                 <div className="text-right hidden md:block">
                   <p className="text-sm font-bold text-slate-900 dark:text-white leading-none">{userProfile.name}</p>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase mt-1 tracking-wide">{userProfile.role}</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-1">{userProfile.role}</p>
                 </div>
                 <div
                   onClick={() => navigate(NavigationTab.SETTINGS)}
@@ -331,7 +331,7 @@ const AppContent: React.FC = () => {
             ) : (
               <button
                 onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-slate-900 rounded-lg font-bold text-xs uppercase tracking-wide transition-all shadow-md active:scale-95"
+                className="flex items-center gap-2 px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-slate-900 rounded-lg font-semibold text-sm transition-all shadow-md active:scale-95"
               >
                 <LogIn className="w-4 h-4" /> Sign In
               </button>
@@ -343,7 +343,7 @@ const AppContent: React.FC = () => {
         {/* Scrollable Content with page transition + scroll persistence */}
         <main
           ref={mainRef}
-          className="flex-1 overflow-auto p-4 md:p-8 bg-[#F1F5F9] dark:bg-[#020617] transition-colors"
+          className="flex-1 overflow-auto p-4 md:p-8 bg-[#F4F7F0] dark:bg-[#020617] transition-colors"
         >
           <div key={viewKey} className="max-w-7xl mx-auto h-full animate-page-enter">
             {renderContent()}

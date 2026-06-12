@@ -26,12 +26,12 @@ const MobileNav: React.FC<MobileNavProps> = ({ activeTab, onNavigate }) => {
             <button
               key={tab.id}
               onClick={() => onNavigate(tab.id)}
-              className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors ${
-                isActive ? 'text-green-600 dark:text-green-400' : 'text-slate-400 dark:text-slate-500'
+              className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors rounded-lg ${
+                isActive ? 'text-green-600 dark:text-green-400 bg-green-50/50 dark:bg-green-900/10' : 'text-slate-400 dark:text-slate-500'
               }`}
             >
               <tab.icon className={`w-5 h-5 ${isActive ? 'scale-110' : ''} transition-transform`} />
-              <span className={`text-[10px] font-bold uppercase tracking-wide ${isActive ? 'text-green-600 dark:text-green-400' : ''}`}>
+              <span className={`text-[10px] font-medium ${isActive ? 'text-green-600 dark:text-green-400' : ''}`}>
                 {tab.label}
               </span>
               {isActive && <div className="w-1 h-1 rounded-full bg-green-500 mt-0.5" />}

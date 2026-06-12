@@ -338,7 +338,7 @@ const CropManager: React.FC = () => {
                 <Lightbulb className="w-5 h-5 text-yellow-500 animate-pulse" />
               </div>
               <div>
-                <h4 className="font-bold uppercase tracking-wide text-sm text-yellow-500 mb-1">Smart Insight</h4>
+                <h4 className="font-semibold text-sm text-yellow-500 mb-1">Smart Insight</h4>
                 <p className="text-sm font-medium mb-2">
                   System analysis suggests <span className="font-bold text-white">{suggestion.cropName}</span> status should be updated to <span className="font-bold text-yellow-400">{suggestion.suggestedStatus}</span>.
                 </p>
@@ -347,13 +347,13 @@ const CropManager: React.FC = () => {
                 <div className="flex gap-2">
                   <button 
                     onClick={confirmSuggestion}
-                    className="bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-3 py-1.5 rounded text-xs font-bold uppercase flex items-center"
+                    className="bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-3 py-1.5 rounded text-xs font-semibold flex items-center"
                   >
                     <Check className="w-3 h-3 mr-1" /> Update Status
                   </button>
                   <button 
                     onClick={dismissSuggestion}
-                    className="bg-transparent border border-slate-600 text-slate-300 hover:text-white hover:border-slate-400 px-3 py-1.5 rounded text-xs font-bold uppercase"
+                    className="bg-transparent border border-slate-600 text-slate-300 hover:text-white hover:border-slate-400 px-3 py-1.5 rounded text-xs font-semibold"
                   >
                     Ignore
                   </button>
@@ -366,10 +366,10 @@ const CropManager: React.FC = () => {
 
       <div className="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-300 dark:border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4 transition-colors">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Field Operations</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white font-heading">My Crops</h2>
           <div className="flex items-center gap-2 mt-1">
-             <span className="px-2 py-0.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold rounded uppercase">Plots: {crops.length}</span>
-             <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-bold rounded uppercase flex items-center border border-green-200 dark:border-green-800">
+<span className="px-2 py-0.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded">Plots: {crops.length}</span>
+              <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-semibold rounded flex items-center border border-green-200 dark:border-green-800">
                 <Leaf className="w-3 h-3 mr-1" aria-hidden="true" /> Regenerative Focus
              </span>
           </div>
