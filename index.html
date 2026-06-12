@@ -9,9 +9,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     
-    <title>AgriFlow - Field Command</title>
+    <title>AgriFlow - Smart Farming</title>
     
-    <!-- Dynamic Favicon (Sprout) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,8 +21,8 @@
           extend: {
             colors: {
               slate: {
-                850: '#1e293b', // Custom darker slate for panels
-                950: '#020617', // Deepest background
+                850: '#1e293b',
+                950: '#020617',
               }
             },
             animation: {
@@ -49,7 +48,7 @@
     <style>
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #FDFCF8;
+        background-color: #F8FAF5;
         color: #1e293b;
         overscroll-behavior-y: none;
         -webkit-tap-highlight-color: transparent;
@@ -64,16 +63,15 @@
         font-family: 'IBM Plex Sans', sans-serif;
       }
       
-      /* Refined Scrollbar */
       ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
+        width: 5px;
+        height: 5px;
       }
       ::-webkit-scrollbar-track {
         background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
+        background: #c8cfc0;
         border-radius: 3px;
       }
       ::-webkit-scrollbar-thumb:hover {
@@ -103,7 +101,6 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
       
-      /* Animation Keyframes */
       @keyframes fade-in {
         from { opacity: 0; }
         to { opacity: 1; }

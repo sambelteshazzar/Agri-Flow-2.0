@@ -7,14 +7,15 @@
 
 ## Philosophy
 
-AgriFlow's design philosophy is built on the idea of **"Technical Authority meets Organic Growth."** The interface is dark, data-dense, and precise, inspired by high-end engineering dashboards (Tesla, SpaceX) and modern terminal aesthetics. The visual language communicates reliability, intelligence, and a forward-looking perspective on agriculture.
+AgriFlow's design philosophy is built on **"Rooted Intelligence, Growing Yields."** The interface balances professional data density with the warmth and approachability of a trusted farming companion. Dark mode remains the primary experience (reducing eye strain during early-morning and late-evening field checks), but every surface, label, and interaction speaks the language of agriculture — not terminals. The visual language communicates reliability, growth, and stewardship.
 
 ### Core Principles
 
-1.  **Data is King:** Information density is high. Every pixel should convey value.
-2.  **Dark Mode First:** The primary aesthetic is a deep, immersive dark theme (`slate-950`) to reduce eye strain and make data pop.
-3.  **Cinematic Immersion:** The landing page (`GetStarted.tsx`) features a cinematic, scroll-driven narrative with parallax, large typography, and subtle interactive glows.
-4.  **Brand-Agnostic AI:** All AI-related UI is intentionally brand-agnostic ("Smart AI", "AI Advisor"), avoiding vendor lock-in (e.g., no "Gemini" or "GPT" branding visible in the UI).
+1.  **Clarity Over Ceremony:** Information density is high, but presentation is clean and approachable. No monospace readouts, no uppercase shouting, no terminal metaphors.
+2.  **Dark Mode First:** Deep, immersive dark theme (`slate-950`) to reduce eye strain and let data pop — but warm green and earth accents keep it grounded, not clinical.
+3.  **Farming Language:** Labels, section names, and copy use agricultural vocabulary (Field, Harvest, Season, Growth) — never system/engineering terms (Module, Deploy, Terminal, Log).
+4.  **Sentence Case:** Headers and labels use sentence case, not ALL CAPS. Only status badges and tiny meta-text may use uppercase for scannability.
+5.  **Brand-Agnostic AI:** All AI-related UI is intentionally brand-agnostic ("Smart AI", "AI Advisor"), avoiding vendor lock-in.
 
 ## Color Palette
 

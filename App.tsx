@@ -56,7 +56,7 @@ const AppContent: React.FC = () => {
       case NavigationTab.CALCULATOR: return 'Resource Tools';
       case NavigationTab.COMMUNITY: return 'Community Hub';
       case NavigationTab.CROPS: return 'Field Operations';
-      case NavigationTab.DASHBOARD: return 'Command Center';
+      case NavigationTab.DASHBOARD: return 'Dashboard';
       case NavigationTab.EDUCATION: return 'Training';
       case NavigationTab.LIVESTOCK: return 'Livestock';
       case NavigationTab.MARKET: return 'Market Data';
