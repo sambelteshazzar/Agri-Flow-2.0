@@ -11,7 +11,7 @@ import NewsHub from './components/NewsHub';
 import AIAdvisor from './components/AIAdvisor';
 import ResourceCalculator from './components/ResourceCalculator';
 import CommunityHub from './components/CommunityHub';
-import GamesHub from './components/GamesHub';
+import FarmLaborPlanner from './components/FarmLaborPlanner';
 import GetStarted from './components/GetStarted';
 import SettingsPage from './components/Settings';
 import VoiceAgent from './components/VoiceAgent';
@@ -31,7 +31,7 @@ const FAVICON_EMOJIS: Record<string, string> = {
   [NavigationTab.CALCULATOR]: '🧮',
   [NavigationTab.EDUCATION]: '🎓',
   [NavigationTab.COMMUNITY]: '👥',
-  [NavigationTab.GAMES]: '🎮',
+  [NavigationTab.LABOR]: '👷',
   [NavigationTab.SETTINGS]: '⚙️',
 };
 
@@ -61,7 +61,7 @@ const AppContent: React.FC = () => {
       case NavigationTab.LIVESTOCK: return 'Livestock';
       case NavigationTab.MARKET: return 'Market';
       case NavigationTab.NEWS: return 'News';
-      case NavigationTab.GAMES: return 'Games';
+      case NavigationTab.LABOR: return 'Labor Planner';
       case NavigationTab.SETTINGS: return 'Settings';
       default: return 'AgriFlow';
     }
@@ -127,7 +127,7 @@ const AppContent: React.FC = () => {
       case NavigationTab.MARKET: return <MarketAnalytics />;
       case NavigationTab.NEWS: return <NewsHub />;
       case NavigationTab.AI_ADVISOR: return <AIAdvisor />;
-      case NavigationTab.GAMES: return <GamesHub />;
+      case NavigationTab.LABOR: return <FarmLaborPlanner />;
       case NavigationTab.SETTINGS: return <SettingsPage />;
       default: return <Dashboard />;
     }

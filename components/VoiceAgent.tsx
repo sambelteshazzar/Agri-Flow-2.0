@@ -40,7 +40,7 @@ const VoiceAgent: React.FC = () => {
       properties: {
         destination: {
           type: Type.STRING,
-          enum: ["DASHBOARD", "CROPS", "LIVESTOCK", "MARKET", "NEWS", "AI_ADVISOR", "CALCULATOR", "COMMUNITY", "GAMES", "SETTINGS"],
+          enum: ["DASHBOARD", "CROPS", "LIVESTOCK", "MARKET", "NEWS", "AI_ADVISOR", "CALCULATOR", "COMMUNITY", "LABOR", "SETTINGS"],
           description: "The destination tab to navigate to."
         }
       },

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutDashboard, Sprout, TrendingUp, BrainCircuit, Leaf, Beef, GraduationCap, Calculator, Users, ArrowLeft, Gamepad2, Globe, LogOut, Settings as SettingsIcon } from 'lucide-react';
+import { LayoutDashboard, Sprout, TrendingUp, BrainCircuit, Leaf, Beef, GraduationCap, Calculator, Users, ArrowLeft, HardHat, Globe, LogOut, Settings as SettingsIcon } from 'lucide-react';
 import { NavigationTab } from '../types';
 
 interface SidebarProps {
@@ -28,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
     { id: NavigationTab.CALCULATOR, label: 'Calculators', icon: Calculator },
     { id: NavigationTab.EDUCATION, label: 'Learn', icon: GraduationCap },
     { id: NavigationTab.COMMUNITY, label: 'Community', icon: Users },
-    { id: NavigationTab.GAMES, label: 'Games', icon: Gamepad2 },
+    { id: NavigationTab.LABOR, label: 'Labor Planner', icon: HardHat },
   ];
 
   return (

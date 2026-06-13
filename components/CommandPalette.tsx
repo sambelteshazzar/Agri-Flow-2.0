@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, LayoutDashboard, Sprout, Beef, TrendingUp, BrainCircuit, GraduationCap, Calculator, Users, Gamepad2, Globe, Settings, ArrowRight, Command } from 'lucide-react';
+import { Search, LayoutDashboard, Sprout, Beef, TrendingUp, BrainCircuit, GraduationCap, Calculator, Users, HardHat, Globe, Settings, ArrowRight, Command } from 'lucide-react';
 import { NavigationTab } from '../types';
 
 interface CommandPaletteProps {
@@ -19,7 +19,7 @@ const commands = [
   { id: NavigationTab.CALCULATOR, label: 'Calculators', icon: Calculator, category: 'Tools', shortcut: '7' },
   { id: NavigationTab.EDUCATION, label: 'Learn', icon: GraduationCap, category: 'Tools', shortcut: '8' },
   { id: NavigationTab.COMMUNITY, label: 'Community', icon: Users, category: 'Connect', shortcut: '9' },
-  { id: NavigationTab.GAMES, label: 'Games', icon: Gamepad2, category: 'Connect', shortcut: '0' },
+  { id: NavigationTab.LABOR, label: 'Labor Planner', icon: HardHat, category: 'Tools', shortcut: '0' },
   { id: NavigationTab.SETTINGS, label: 'Settings', icon: Settings, category: 'Account', shortcut: ',' },
 ];
 

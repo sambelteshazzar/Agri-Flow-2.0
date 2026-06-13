@@ -9,7 +9,7 @@ export enum NavigationTab {
   AI_ADVISOR = 'AI_ADVISOR',
   CALCULATOR = 'CALCULATOR',
   COMMUNITY = 'COMMUNITY',
-  GAMES = 'GAMES',
+  LABOR = 'LABOR',
   SETTINGS = 'SETTINGS'
 }
 

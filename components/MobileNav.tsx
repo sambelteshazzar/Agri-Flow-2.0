@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutDashboard, Sprout, Beef, TrendingUp, BrainCircuit, GraduationCap, Calculator, Users, Gamepad2, Globe, Settings } from 'lucide-react';
+import { LayoutDashboard, Sprout, Beef, TrendingUp, BrainCircuit, GraduationCap, Calculator, Users, HardHat, Globe, Settings } from 'lucide-react';
 import { NavigationTab } from '../types';
 
 interface MobileNavProps {

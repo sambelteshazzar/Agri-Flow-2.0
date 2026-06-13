@@ -1,6 +1,6 @@
 
 import React, { useRef, useState } from 'react';
-import { Sprout, BrainCircuit, ChevronRight, BarChart3, Globe, Zap, CloudLightning, ArrowUpRight, ArrowDownRight, Users, Leaf, GraduationCap, Gamepad2, Calculator, MessageSquare, Database, Code, Layers, Shield, Cpu } from 'lucide-react';
+import { Sprout, BrainCircuit, ChevronRight, BarChart3, Globe, Zap, CloudLightning, ArrowUpRight, ArrowDownRight, Users, Leaf, GraduationCap, HardHat, Calculator, MessageSquare, Database, Code, Layers, Shield, Cpu } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 
 interface GetStartedProps {
@@ -182,7 +182,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
               { icon: BrainCircuit, color: 'text-purple-400', bg: 'bg-purple-500/10', title: 'AI Advisor', desc: 'Get personalized agronomy advice and smart diagnostics, powered by AI.' },
               { icon: BarChart3, color: 'text-blue-400', bg: 'bg-blue-500/10', title: 'Market', desc: 'Track prices, forecast revenue, and optimize your input costs.' },
               { icon: GraduationCap, color: 'text-pink-400', bg: 'bg-pink-500/10', title: 'Learn', desc: 'Professional courses on regenerative farming and sustainable practices.' },
-              { icon: Gamepad2, color: 'text-red-400', bg: 'bg-red-500/10', title: 'Games', desc: 'Test farming strategies risk-free with fun simulations.' },
+              { icon: HardHat, color: 'text-red-400', bg: 'bg-red-500/10', title: 'Labor Planner', desc: 'Calculate the right workforce size for your farm and season.' },
               { icon: Calculator, color: 'text-teal-400', bg: 'bg-teal-500/10', title: 'Calculators', desc: 'Quick tools for irrigation, fertilizer, and planting calculations.' },
               { icon: Globe, color: 'text-orange-400', bg: 'bg-orange-500/10', title: 'News', desc: 'Stay informed on climate trends, trade policies, and market shifts.' },
             ].map((item, idx) => (
