@@ -486,7 +486,7 @@ const CropManager: React.FC = () => {
             </div>
             <form onSubmit={handleLogSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Activity Type</label>
+                <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Activity Type</label>
                 <select value={newLog.type} onChange={e => setNewLog({...newLog, type: e.target.value as any})} className="w-full p-3 bg-white dark:bg-slate-800 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:border-yellow-500">
                    <option value="Observation">Observation</option>
                    <option value="Action">Action (Water/Weed)</option>
@@ -496,7 +496,7 @@ const CropManager: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Details</label>
+                <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Details</label>
                 <textarea value={newLog.note} onChange={e => setNewLog({...newLog, note: e.target.value})} className="w-full p-3 bg-white dark:bg-slate-800 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-medium text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 focus:outline-none focus:border-yellow-500" rows={3} placeholder="e.g. Applied 50kg Urea per acre..." required />
               </div>
               <button type="submit" className="w-full bg-slate-900 dark:bg-slate-700 text-yellow-500 py-4 font-semibold hover:bg-slate-800 dark:hover:bg-slate-600 rounded-sm shadow-md">Save Entry</button>
@@ -510,14 +510,14 @@ const CropManager: React.FC = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md" role="dialog" aria-modal="true">
           <div className="bg-white dark:bg-slate-900 w-full max-w-lg shadow-2xl rounded-md border border-slate-600 max-h-[90vh] overflow-y-auto">
             <div className="bg-slate-900 p-5 flex justify-between items-center border-b-4 border-yellow-500 sticky top-0 z-10">
-              <h3 className="text-xl font-bold text-white uppercase tracking-wider flex items-center"><Sprout className="w-5 h-5 mr-2 text-yellow-500" /> Register New Plot</h3>
+              <h3 className="text-xl font-semibold text-white flex items-center"><Sprout className="w-5 h-5 mr-2 text-yellow-500" /> Register New Plot</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>
             </div>
             <div className="p-6">
               
               {/* --- QUICK START TEMPLATES --- */}
               <div className="mb-6 bg-slate-50 dark:bg-slate-800 p-4 rounded border border-slate-200 dark:border-slate-700">
-                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Quick Start Templates</label>
+                <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Quick Start Templates</label>
                 <div className="flex gap-2">
                   <button 
                     type="button" 
@@ -547,7 +547,7 @@ const CropManager: React.FC = () => {
                 
                 {/* Visual Image Preview & Editor */}
                 <div className="mb-4">
-                  <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1 flex items-center"><ImageIcon className="w-3 h-3 mr-1" /> Plot Imagery</label>
+                  <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1 flex items-center"><ImageIcon className="w-3 h-3 mr-1" /> Plot Imagery</label>
                   <div className="flex gap-4 items-start bg-slate-50 dark:bg-slate-800 p-3 rounded border border-slate-200 dark:border-slate-700">
                     <div className="w-24 h-24 shrink-0 bg-slate-200 dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-600 overflow-hidden relative group">
                        <img 
@@ -576,32 +576,32 @@ const CropManager: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Crop Type</label>
+                  <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Crop Type</label>
                   <input required ref={firstInputRef} type="text" value={newCrop.name} onChange={e => handleNameChange(e.target.value)} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500" placeholder="e.g. Soybeans"/>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Variety</label>
+                    <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Variety</label>
                     <input required type="text" value={newCrop.variety} onChange={e => setNewCrop({...newCrop, variety: e.target.value})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500" placeholder="e.g. Pioneer P1197"/>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Area (Acres)</label>
+                    <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Area (Acres)</label>
                     <input required type="number" value={newCrop.area || ''} onChange={e => setNewCrop({...newCrop, area: Number(e.target.value)})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500" placeholder="e.g. 15.5"/>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Plant Date</label>
+                    <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Plant Date</label>
                     <input required type="date" value={newCrop.plantingDate} onChange={e => setNewCrop({...newCrop, plantingDate: e.target.value})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Est Harvest</label>
+                    <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Est Harvest</label>
                     <input required type="date" value={newCrop.harvestDate} onChange={e => setNewCrop({...newCrop, harvestDate: e.target.value})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Water Efficiency</label>
+                    <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Water Efficiency</label>
                     <select value={newCrop.waterEfficiency} onChange={e => setNewCrop({...newCrop, waterEfficiency: e.target.value as any})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500">
                       <option value="High">High</option>
                       <option value="Moderate">Moderate</option>
@@ -609,7 +609,7 @@ const CropManager: React.FC = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Soil Health</label>
+                    <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Soil Health</label>
                     <select value={newCrop.soilHealth} onChange={e => setNewCrop({...newCrop, soilHealth: e.target.value as any})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500">
                        <option value="Excellent">Excellent</option>
                        <option value="Good">Good</option>
@@ -630,7 +630,7 @@ const CropManager: React.FC = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md" role="dialog" aria-modal="true">
            <div className="bg-slate-100 dark:bg-slate-900 w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-slate-600">
               <div className="bg-slate-900 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
-                <h3 className="text-xl font-bold text-white uppercase tracking-wider flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-500" /> Crop Health Check</h3>
+                <h3 className="text-xl font-semibold text-white flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-500" /> Crop Health Check</h3>
                 <button onClick={resetScanner} className="text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>
               </div>
               <div className="p-6 overflow-y-auto">

@@ -253,7 +253,7 @@ const EducationHub: React.FC = () => {
          <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
          <div className="relative z-10 max-w-2xl">
             <div className="flex items-center gap-2 mb-4">
-               <span className="px-3 py-1 rounded-full bg-yellow-500 text-slate-900 text-xs font-semibold tracking-widest">Premium Certification</span>
+               <span className="px-3 py-1 rounded-full bg-yellow-500 text-slate-900 text-xs font-semibold">Premium Certification</span>
                <div className="flex text-yellow-500"><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/></div>
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-white font-heading mb-4 leading-tight">

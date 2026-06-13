@@ -208,22 +208,22 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Temperature</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Temperature</span>
             <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{weather.temp}°C</div>
             <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">{weather.condition}</div>
           </div>
           <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Humidity</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Humidity</span>
             <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{weather.humidity}%</div>
             <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Relative moisture</div>
           </div>
           <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Wind Speed</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Wind Speed</span>
             <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{weather.windSpeed} <span className="text-base font-normal text-slate-500">km/h</span></div>
             <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Surface wind</div>
           </div>
           <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Forecast</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Forecast</span>
             <div className="text-sm font-medium text-slate-900 dark:text-white mt-2 leading-snug">{weather.forecast}</div>
             <div className="mt-2">
               <span className={`inline-block text-xs font-bold px-2 py-0.5 rounded-md ${getRiskBg(weather.climateRiskIndex)} ${getRiskColor(weather.climateRiskIndex)}`}>
@@ -281,7 +281,7 @@ const Dashboard: React.FC = () => {
                 <div key={alert.id} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                   <div className="flex justify-between items-start mb-1">
                     <h4 className="font-bold text-slate-900 dark:text-white text-sm">{alert.title}</h4>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase shrink-0 ml-2 ${
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0 ml-2 ${
                       alert.category === 'FINANCIAL' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200' :
                       alert.category === 'WEATHER' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200' :
                       alert.category === 'LAND' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200' :
@@ -314,7 +314,7 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
 
-          <div className="bg-slate-50 dark:bg-slate-800/50 px-5 py-2.5 border-b border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase flex justify-between tracking-wide">
+          <div className="bg-slate-50 dark:bg-slate-800/50 px-5 py-2.5 border-b border-slate-100 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 flex justify-between">
             <span>{pendingTasks} remaining</span>
             <span>{completedToday} completed</span>
           </div>
@@ -341,7 +341,7 @@ const Dashboard: React.FC = () => {
                     {task.text}
                   </p>
                   {task.priority === 'high' && !task.completed && (
-                    <span className="inline-block mt-1 text-[10px] bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 px-2 py-0.5 rounded-full font-bold uppercase">
+                    <span className="inline-block mt-1 text-[10px] bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 px-2 py-0.5 rounded-full font-semibold">
                       Priority
                     </span>
                   )}

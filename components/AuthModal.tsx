@@ -58,7 +58,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               </div>
               <div>
                 <span className="text-white font-heading font-black text-xl tracking-tight">AgriFlow</span>
-                <p className="text-green-400/70 text-[10px] font-bold uppercase tracking-[0.2em]">Precision Agriculture</p>
+                <p className="text-green-400/70 text-[10px] font-semibold">Precision Agriculture</p>
               </div>
             </div>
 
@@ -89,11 +89,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-2xl font-heading font-black text-white">12K+</p>
-                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Active Farms</p>
+                <p className="text-[10px] text-slate-500 font-semibold">Active Farms</p>
               </div>
               <div>
                 <p className="text-2xl font-heading font-black text-green-400">34%</p>
-                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Yield Increase</p>
+                <p className="text-[10px] text-slate-500 font-semibold">Yield Increase</p>
               </div>
             </div>
           </div>
@@ -135,7 +135,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Full Name Field */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-400 uppercase mb-2 tracking-wider">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-400 mb-2">
                   Full Name
                 </label>
                 <div className="relative group">
@@ -154,7 +154,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
 
               {/* Email Field */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-400 uppercase mb-2 tracking-wider">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-400 mb-2">
                   Email Address
                 </label>
                 <div className="relative group">
@@ -173,7 +173,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               {/* Password Field */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-400 uppercase tracking-wider">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-400">
                     Password
                   </label>
                   {!isSignUp && (
@@ -219,7 +219,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               <button
                 type="submit"
                 disabled={isAuthenticating}
-                className="w-full py-4 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-black text-sm uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-green-500/25 hover:shadow-green-500/40 flex items-center justify-center gap-2.5 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                className="w-full py-4 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-green-500/25 hover:shadow-green-500/40 flex items-center justify-center gap-2.5 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
               >
                 {isAuthenticating ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -239,7 +239,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               {/* Divider */}
               <div className="relative flex items-center py-3">
                 <div className="flex-grow border-t border-slate-100 dark:border-slate-800" />
-                <span className="flex-shrink mx-4 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em]">or continue with</span>
+                <span className="flex-shrink mx-4 text-[10px] font-semibold text-slate-400 dark:text-slate-500">or continue with</span>
                 <div className="flex-grow border-t border-slate-100 dark:border-slate-800" />
               </div>
 
