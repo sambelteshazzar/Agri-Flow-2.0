@@ -99,7 +99,7 @@ const ResourceCalculator: React.FC = () => {
                    <label htmlFor="cropFactor" className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Crop Factor (Kc)</label>
                    <select id="cropFactor" value={cropFactor} onChange={e => setCropFactor(Number(e.target.value))} className="w-full p-3 bg-white dark:bg-slate-800 border border-slate-400 dark:border-slate-600 rounded font-bold text-slate-900 dark:text-white focus:outline-none focus:border-blue-500">
                       <option value={1.2}>Maize (Mid-season)</option>
-                      <option value={1.05}>Wheat (Mid-season)</option>
+                      <option value={1.05}>Sorghum (Mid-season)</option>
                       <option value={0.8}>Vegetables (Avg)</option>
                       <option value={1.1}>Fruit Trees</option>
                    </select>

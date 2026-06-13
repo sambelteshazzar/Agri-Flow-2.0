@@ -189,7 +189,7 @@ const CommunityHub: React.FC = () => {
        <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden shrink-0">
           <div className="relative z-10">
              <div className="flex items-center justify-between mb-4"><h4 className="font-bold text-xs flex items-center gap-2"><BarChart2 className="w-4 h-4 text-yellow-400"/> Community Poll</h4></div>
-             <p className="text-sm font-bold mb-4 leading-snug">What's your main strategy for the 2025 drought season?</p>
+             <p className="text-sm font-bold mb-4 leading-snug">What's your main strategy for the 2026 dry season?</p>
              <div className="space-y-2">
                 {pollData.map((opt) => (
                    <button key={opt.id} onClick={() => handlePollVote(opt.id)} disabled={pollVoted !== null} className="w-full relative h-10 rounded-lg overflow-hidden group border border-white/10">

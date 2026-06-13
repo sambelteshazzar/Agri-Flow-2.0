@@ -26,6 +26,21 @@ export interface UserLocation {
   timestamp: number | null;
 }
 
+export type AreaUnit = 'ha' | 'acres';
+
+export type FarmType = 'crop' | 'livestock' | 'mixed' | 'aquaculture' | 'horticulture';
+
+export type ClimateZone =
+  | 'sahel'
+  | 'tropical_humid'
+  | 'tropical_wet_dry'
+  | 'semi_arid'
+  | 'arid'
+  | 'mediterranean'
+  | 'temperate'
+  | 'subtropical'
+  | 'highland';
+
 export interface UserProfile {
   name: string;
   role: string;
@@ -35,6 +50,42 @@ export interface UserProfile {
   followers: number;
   following: number;
   posts: number;
+  countryCode: string;
+  currencyCode: string;
+  currencySymbol: string;
+  language: string;
+  region: string;
+  farmType: FarmType;
+  areaUnit: AreaUnit;
+  climateZone: ClimateZone;
+}
+
+export interface CountryConfig {
+  code: string;
+  name: string;
+  flag: string;
+  currencyCode: string;
+  currencySymbol: string;
+  language: string;
+  region: string;
+  climateZone: ClimateZone;
+  areaUnit: AreaUnit;
+  defaultCrops: Crop[];
+  defaultLivestock: Livestock[];
+  marketPrices: MarketPrice[];
+  alerts: SystemAlert[];
+  learningModules: LearningModule[];
+  tasks: Task[];
+  marketplaceListings: MarketplaceListing[];
+  forumPosts: ForumPost[];
+  chatMessages: CommunityChatMessage[];
+  trends: SocialTrend[];
+  suggestedUsers: SuggestedUser[];
+  stories: Story[];
+  weatherDefaults: Partial<WeatherData>;
+  dailyWageLocal: number;
+  dailyWageUSD: number;
+  laborCurrencyCode: string;
 }
 
 export interface WeatherData {

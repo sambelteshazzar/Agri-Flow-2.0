@@ -45,9 +45,10 @@ const CROP_LABELS: Record<string, string> = {
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const DAILY_WAGE_NAIRA = 3000;
-const DAILY_WAGE_CFA = 2500;
+const DAILY_WAGE_NAIRA = 3500;
+const DAILY_WAGE_CFA = 2100;
 const WORKING_DAYS_PER_MONTH = 22;
+const NAIRA_TO_CFA = 0.60;
 
 const calculateLabor = (input: LaborInput): LaborResult => {
   const cropData = WEST_AFRICAN_CROPS[input.mainCrop] || WEST_AFRICAN_CROPS.maize;
@@ -104,7 +105,7 @@ const calculateLabor = (input: LaborInput): LaborResult => {
     { category: 'Hired labor (monthly)', amount: hiredWorkers * DAILY_WAGE_NAIRA * WORKING_DAYS_PER_MONTH },
     { category: 'Peak season extra', amount: Math.max(0, peakWorkers - totalWorkers) * DAILY_WAGE_NAIRA * WORKING_DAYS_PER_MONTH * 0.3 },
     { category: 'Supervision & tools', amount: hiredWorkers * DAILY_WAGE_NAIRA * 5 },
-    { category: 'Feeding allowance', amount: hiredWorkers * 800 * WORKING_DAYS_PER_MONTH },
+    { category: 'Feeding allowance', amount: hiredWorkers * 1000 * WORKING_DAYS_PER_MONTH },
   ];
 
   const totalMonthlyCost = costEstimate.reduce((sum, c) => sum + c.amount, 0);
@@ -425,7 +426,7 @@ const FarmLaborPlanner: React.FC = () => {
               </div>
               <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
                 <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
-                  CFA equivalent: <span className="font-mono">{(result.totalMonthlyCost * 0.77).toLocaleString()} FCFA</span> (approximate)
+                  CFA equivalent: <span className="font-mono">{(result.totalMonthlyCost * NAIRA_TO_CFA).toLocaleString()} FCFA</span> (approximate, WAEMU rate)
                 </p>
               </div>
             </div>

@@ -13,7 +13,7 @@ export class MarketService {
     const currentTrends = await db.getMarketTrends();
     
     // Migration: Add missing default crops if they don't exist in current storage
-    // This ensures new crops (Coffee, Cotton, etc.) appear for existing users
+    // This ensures new crops (Cowpea, Groundnut, etc.) appear for existing users
     const existingNames = new Set(currentPrices.map(p => p.cropName));
     const missingDefaults = MARKET_PRICES.filter(p => !existingNames.has(p.cropName));
     

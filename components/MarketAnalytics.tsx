@@ -91,7 +91,7 @@ const MarketAnalytics: React.FC = () => {
     const newData = [...YIELD_DATA];
     const lastIdx = newData.length - 1;
     
-    // Update the "2025 (Est)" data point
+    // Update the "2026 (Fcast)" data point
     newData[lastIdx] = { 
       ...newData[lastIdx], 
       value: Math.round(projectedRevenue), 

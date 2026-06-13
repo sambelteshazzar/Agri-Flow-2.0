@@ -88,7 +88,7 @@ const VoiceAgent: React.FC = () => {
     parameters: {
       type: Type.OBJECT,
       properties: {
-        commodity: { type: Type.STRING, description: "The specific crop to check (e.g., 'Corn', 'Wheat'). If null, returns top movers." }
+        commodity: { type: Type.STRING, description: "The specific crop to check (e.g., 'Maize', 'Rice', 'Cocoa'). If null, returns top movers." }
       }
     }
   };

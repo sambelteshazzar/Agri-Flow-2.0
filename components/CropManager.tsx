@@ -53,36 +53,36 @@ const getCropImage = (cropName: string) => {
 const CROP_TEMPLATES = [
   {
     name: 'Maize',
-    variety: 'Drought-Tol 404',
-    plantingDate: '2023-09-15',
-    harvestDate: '2024-01-20',
+    variety: 'Drought-Tol OBA Super 2',
+    plantingDate: '2026-05-15',
+    harvestDate: '2026-09-30',
     status: 'Healthy' as const,
-    area: 12.5,
+    area: 50,
     imageUrl: getCropImage('Maize'),
     soilHealth: 'Degraded' as const,
     waterEfficiency: 'Low' as const,
-    biodiversityScore: 20
+    biodiversityScore: 22
   },
   {
-    name: 'Coffee',
-    variety: 'Arabica Shade',
-    plantingDate: '2020-03-10',
-    harvestDate: '2024-04-01',
+    name: 'Rice',
+    variety: 'NERICA L-34 (Lowland)',
+    plantingDate: '2026-06-01',
+    harvestDate: '2026-10-15',
     status: 'Healthy' as const,
-    area: 8.0,
-    imageUrl: getCropImage('Coffee'),
+    area: 30,
+    imageUrl: getCropImage('Rice'),
     soilHealth: 'Good' as const,
     waterEfficiency: 'Moderate' as const,
-    biodiversityScore: 75
+    biodiversityScore: 55
   },
   {
-    name: 'Wheat',
-    variety: 'Winter Durum',
-    plantingDate: '2023-10-01',
-    harvestDate: '2024-05-15',
+    name: 'Millet',
+    variety: 'SOSAT-C88 (ICRISAT)',
+    plantingDate: '2026-06-15',
+    harvestDate: '2026-10-30',
     status: 'Healthy' as const,
-    area: 20.0,
-    imageUrl: getCropImage('Wheat'),
+    area: 20,
+    imageUrl: getCropImage('Millet'),
     soilHealth: 'Excellent' as const,
     waterEfficiency: 'High' as const,
     biodiversityScore: 40
@@ -531,14 +531,14 @@ const CropManager: React.FC = () => {
                     onClick={() => applyTemplate(CROP_TEMPLATES[1])}
                     className="flex-1 py-2 px-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:border-yellow-500 dark:hover:border-yellow-500 text-slate-700 dark:text-slate-200 hover:text-yellow-700 dark:hover:text-yellow-400 rounded text-xs font-semibold transition-colors shadow-sm flex items-center justify-center gap-1"
                   >
-                    <Coffee className="w-3 h-3" /> Coffee
+                    <Coffee className="w-3 h-3" /> Rice
                   </button>
                   <button 
                     type="button" 
                     onClick={() => applyTemplate(CROP_TEMPLATES[2])}
                     className="flex-1 py-2 px-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:border-yellow-500 dark:hover:border-yellow-500 text-slate-700 dark:text-slate-200 hover:text-yellow-700 dark:hover:text-yellow-400 rounded text-xs font-semibold transition-colors shadow-sm flex items-center justify-center gap-1"
                   >
-                    <Wheat className="w-3 h-3" /> Wheat
+                    <Wheat className="w-3 h-3" /> Millet
                   </button>
                 </div>
               </div>
@@ -577,7 +577,7 @@ const CropManager: React.FC = () => {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Crop Type</label>
-                  <input required ref={firstInputRef} type="text" value={newCrop.name} onChange={e => handleNameChange(e.target.value)} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500" placeholder="e.g. Soybeans"/>
+                  <input required ref={firstInputRef} type="text" value={newCrop.name} onChange={e => handleNameChange(e.target.value)} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500" placeholder="e.g. Cowpea"/>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>

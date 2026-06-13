@@ -140,16 +140,16 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
                   <span className="text-slate-200">Live market data</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
-                  <span className="text-white font-semibold">Corn</span> 
-                  <span className="text-green-400">$142.50 (+2.4%)</span>
+                  <span className="text-white font-semibold">Maize</span> 
+                  <span className="text-green-400">₦28,500 (+8.2%)</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
-                  <span className="text-white font-semibold">Soy</span> 
-                  <span className="text-red-400">$98.20 (-0.8%)</span>
+                  <span className="text-white font-semibold">Cowpea</span> 
+                  <span className="text-red-400">₦35,000 (-3.5%)</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
-                  <span className="text-white font-semibold">Wheat</span> 
-                  <span className="text-green-400">$58.00 (+1.2%)</span>
+                  <span className="text-white font-semibold">Millet</span> 
+                  <span className="text-green-400">₦20,000 (+12.0%)</span>
                 </div>
                 <div className="flex items-center gap-4 text-sm font-semibold text-slate-400">
                   <CloudLightning className="w-4 h-4 text-yellow-500" /> 
@@ -328,7 +328,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-slate-600 text-sm">
           <div className="flex items-center gap-3 mb-4 md:mb-0">
             <div className="bg-slate-900 p-2 rounded border border-slate-800"><Sprout className="w-5 h-5 text-green-700" /></div>
-             <span className="font-medium text-slate-500">AgriFlow &copy; 2025</span>
+             <span className="font-medium text-slate-500">AgriFlow &copy; 2026</span>
           </div>
           <div className="flex gap-8">
             <button onClick={(e) => handlePlaceholderLink(e, 'Privacy')} className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0">Privacy</button>

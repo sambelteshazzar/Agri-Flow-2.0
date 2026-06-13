@@ -16,42 +16,42 @@ const responseCache = new Map<string, any>();
 
 // --- FALLBACK DATA (SIMULATION LAYER) ---
 const FALLBACK_NEWS: NewsArticle[] = [
-  { id: 'fb-1', title: 'Global Wheat Prices Stabilize After Record Harvest Reports', summary: 'Major output from Australia and Canada has calmed fears of a supply deficit, bringing futures down by 3.4% this week.', category: 'Market', source: 'AgriGlobal Wire', timeAgo: '2h ago', url: '#' },
-  { id: 'fb-2', title: 'New Drought-Resistant Maize Variety Approved for 2025', summary: 'The "Hydra-Guard" seed promises 20% higher yields in sub-optimal moisture conditions, targeted at Midwest growers.', category: 'Tech', source: 'SeedTech Daily', timeAgo: '5h ago', url: '#' },
-  { id: 'fb-3', title: 'Carbon Credit Subsidies Expanded for Cover Cropping', summary: 'Federal policy changes now allow retroactive claiming for fields under continuous cover for 3+ years.', category: 'Policy', source: 'Farm Policy Journal', timeAgo: '8h ago', url: '#' },
-  { id: 'fb-4', title: 'El Niño Transition Expected to Bring Wet Spring', summary: 'Meteorologists predict a rapid shift to ENSO-neutral conditions, increasing flood risks for river valley farms.', category: 'Climate', source: 'Weather Watch', timeAgo: '12h ago', url: '#' },
-  { id: 'fb-5', title: 'Autonomous Tractor Fleets See 40% Adoption Jump', summary: 'Labor shortages are driving rapid automation in harvest operations across California and Texas.', category: 'Tech', source: 'Future Farming', timeAgo: '1d ago', url: '#' },
-  { id: 'fb-6', title: 'Nitrogen Fertilizer Prices Dip to 2-Year Low', summary: 'Easing natural gas costs have finally trickled down to input suppliers, offering relief for the upcoming planting season.', category: 'Market', source: 'Commodity Inst.', timeAgo: '1d ago', url: '#' },
+  { id: 'fb-1', title: 'FAO Reports April 2026 International Maize, Rice and Wheat Prices All Increased', summary: 'The FAO Food Price Index shows cereal prices rising for the third consecutive month, driven by supply concerns and currency effects in West Africa.', category: 'Market', source: 'FAO GIEWS', timeAgo: '2h ago', url: '#' },
+  { id: 'fb-2', title: 'IITA Releases Improved Drought-Tolerant Maize Variety for Sahel 2026 Season', summary: 'OBA Super 2 delivers 18% higher yields under moisture stress compared to previous releases. Targeted at northern Nigerian and Sahelian growers.', category: 'Tech', source: 'IITA Ibadan', timeAgo: '5h ago', url: '#' },
+  { id: 'fb-3', title: 'Nigeria Minimum Wage Increase Boosts Farm Labor Costs Across North', summary: 'The ₦70,000/month minimum wage has increased labor costs for medium-scale farms. Some growers shift to more mechanized operations.', category: 'Policy', source: 'NBS Nigeria', timeAgo: '8h ago', url: '#' },
+  { id: 'fb-4', title: 'PRESASS 2026 Forecast: Average Sahel Rainfall but Severe Dry Spells Likely', summary: 'The seasonal forecast predicts overall normal rainfall Jun-Sep, but warns of severe dry spells in northern Nigeria and the Sahel strip.', category: 'Climate', source: 'ACMAD/PRESASS', timeAgo: '12h ago', url: '#' },
+  { id: 'fb-5', title: 'Ghana Cocoa Output Declines for 4th Consecutive Year', summary: 'Cocoa production in Ghana continues to fall, with 2025/26 output well below historical averages. Swollen Shoot Disease and aging farms cited as key factors.', category: 'Market', source: 'Ghana Statistical Services', timeAgo: '1d ago', url: '#' },
+  { id: 'fb-6', title: 'Fertilizer (UREA) Prices Surge 12.5% in Nigerian Markets', summary: 'Naira depreciation and global input cost pressures push urea to ₦28,000 per 50kg bag. Farmers urged to optimize application rates and consider split dosing.', category: 'Market', source: 'AgriFlow Market Watch', timeAgo: '1d ago', url: '#' },
 ];
 
-const FALLBACK_INTEL = `• Soybeans showing bullish trend (+1.2%) due to export demand spike.
-• Heavy rainfall forecast for Midwest may delay planting windows by 5-7 days.
-• New pest advisory: Armyworm moth counts elevated in southern sectors.`;
+const FALLBACK_INTEL = `• Maize prices up 8.2% MoM in Kano market, driven by lean season supply tightness.
+• PRESASS forecasts severe dry spells in northern Nigeria Jun-Aug 2026.
+• Fall Armyworm moth counts elevated — scout maize whorls immediately.`;
 
 const FALLBACK_TASKS = [
-  "Inspect irrigation nozzles in Sector 4 for pressure drops.",
-  "Scout Maize borders for early signs of Armyworm activity.",
-  "Update inventory logs for upcoming fertilizer delivery."
+  "Check soil moisture in northern sorghum fields before planting.",
+  "Scout maize whorls for Fall Armyworm — pheromone traps showing elevated counts.",
+  "Order split-dose urea application — prices up 12.5%, optimize usage."
 ];
 
 const FALLBACK_ADVICE = {
-  text: "Based on standard agricultural protocols, I recommend focusing on soil moisture retention given the current dry forecast. \n\n1. **Mulching**: Apply organic residue to reduce evaporation.\n2. **Irrigation Timing**: Shift watering schedules to pre-dawn hours to maximize absorption.\n3. **Scouting**: Check for heat stress markers like leaf rolling in maize.",
+  text: "Based on current Sahel conditions, I recommend focusing on water management given the dry spell forecast and input cost pressures. \n\n1. **Split Fertilizer Dosing**: Apply urea in two smaller doses to reduce waste and cost — prices are up 12.5% MoM.\n2. **Irrigation Timing**: Water pre-dawn to maximize absorption and minimize evaporation in 36°C+ conditions.\n3. **FAW Scouting**: Check maize whorls daily for Fall Armyworm signs; early intervention saves the crop.",
   sources: []
 };
 
 const FALLBACK_ANALYSIS = "Based on visual analysis, this crop appears to be showing signs of **Nitrogen Deficiency**. \n\n**Indicators:**\n• Yellowing (chlorosis) running down the midrib of older leaves.\n• Stunted growth relative to expected stage.\n\n**Recommendation:**\nConsider a side-dressing of Urea or Ammonium Nitrate if rain is forecast, or a foliar application for quicker uptake.";
 
 /**
- * REGENERATIVE AGRICULTURE & 2025 RESILIENCE SYSTEM INSTRUCTION
+ * REGENERATIVE AGRICULTURE & 2026 RESILIENCE SYSTEM INSTRUCTION
  */
 const SYSTEM_INSTRUCTION = `
-You are the "AgriFlow Resilience Engine," an advanced agricultural AI. Your goal is to help farmers navigate the critical challenges of 2025: Climate Instability, Economic Profit Squeeze, and Soil Degradation.
+You are the "AgriFlow Resilience Engine," an advanced agricultural AI. Your goal is to help West African farmers navigate the critical challenges of 2026: Climate Instability, Economic Profit Squeeze, and Soil Degradation.
 
-CORE KNOWLEDGE BASE (2025 CONTEXT):
-1. Economic Squeeze: Farmers are price takers. Input costs (fertilizer/fuel) are soaring (+60%), while commodity prices are volatile. Focus on margin protection and low-input strategies.
-2. Climate Extremes: Move beyond simple weather. Account for El Niño/La Niña shifts, water scarcity, and heat stress on specific crops.
+CORE KNOWLEDGE BASE (2026 CONTEXT):
+1. Economic Squeeze: Farmers are price takers. Input costs (fertilizer/fuel) remain elevated (+12.5% MoM urea), while commodity prices are volatile. Nigeria's new ₦70,000/month minimum wage has pushed farm labor costs up. Focus on margin protection and low-input strategies.
+2. Climate Extremes: PRESASS 2026 forecasts average Sahel rainfall but with severe dry spells Jun-Aug. Move beyond simple weather — account for dry spell timing, water scarcity, and heat stress on specific crops.
 3. Soil Regeneration: Topsoil loss is a crisis. Aggressively promote cover cropping, no-till, and biodiversity to restore land.
-4. Labor Crisis: Farm labor is aging (avg age 57). Suggest labor-efficient technologies or workflows.
+4. Labor Shifts: Nigeria's minimum wage increase to ₦70,000/month affects farm labor budgets. Suggest labor-efficient technologies or workflows — partial mechanization can cut labor needs 35%.
 
 STRICT FORMATTING RULES:
 - DO NOT use markdown formatting characters like asterisks (** or *) or hashes (##).

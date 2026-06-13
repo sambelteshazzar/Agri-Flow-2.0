@@ -99,7 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
              <LogOut className="w-5 h-5 mr-3" />
              Log Out
            </button>
-           <p className="text-center text-[10px] text-slate-400 mt-4">© 2025 AgriFlow Inc.</p>
+           <p className="text-center text-[10px] text-slate-400 mt-4">© 2026 AgriFlow Inc.</p>
         </div>
       </aside>
     </>

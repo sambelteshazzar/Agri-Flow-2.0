@@ -123,7 +123,7 @@ const Dashboard: React.FC = () => {
                </span>
              )}
              <span className="text-slate-400 dark:text-slate-600">|</span>
-             <span className="text-slate-500 dark:text-slate-400 text-xs font-medium">Season 2025</span>
+             <span className="text-slate-500 dark:text-slate-400 text-xs font-medium">Season 2026</span>
              <span className="text-slate-400 dark:text-slate-600">|</span>
              <span className="text-slate-500 dark:text-slate-400 text-xs font-medium">{weather.locationName}</span>
           </div>
