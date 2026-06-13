@@ -1,6 +1,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { Users, Sprout, Tractor, Sun, CloudRain, Calculator, Info, ChevronDown, ChevronUp, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { useFarm } from '../contexts/FarmContext';
+import { COUNTRY_REGISTRY } from '../constants';
 
 interface LaborInput {
   farmSizeHa: number;
@@ -45,12 +47,9 @@ const CROP_LABELS: Record<string, string> = {
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const DAILY_WAGE_NAIRA = 3500;
-const DAILY_WAGE_CFA = 2100;
 const WORKING_DAYS_PER_MONTH = 22;
-const NAIRA_TO_CFA = 0.60;
 
-const calculateLabor = (input: LaborInput): LaborResult => {
+const calculateLabor = (input: LaborInput, dailyWage: number, feedingCost: number): LaborResult => {
   const cropData = WEST_AFRICAN_CROPS[input.mainCrop] || WEST_AFRICAN_CROPS.maize;
   const secondaryData = WEST_AFRICAN_CROPS[input.secondaryCrop] || WEST_AFRICAN_CROPS.maize;
 
@@ -102,10 +101,10 @@ const calculateLabor = (input: LaborInput): LaborResult => {
   const peakWorkers = Math.max(...monthlyBreakdown.map(m => m.workers));
 
   const costEstimate = [
-    { category: 'Hired labor (monthly)', amount: hiredWorkers * DAILY_WAGE_NAIRA * WORKING_DAYS_PER_MONTH },
-    { category: 'Peak season extra', amount: Math.max(0, peakWorkers - totalWorkers) * DAILY_WAGE_NAIRA * WORKING_DAYS_PER_MONTH * 0.3 },
-    { category: 'Supervision & tools', amount: hiredWorkers * DAILY_WAGE_NAIRA * 5 },
-    { category: 'Feeding allowance', amount: hiredWorkers * 1000 * WORKING_DAYS_PER_MONTH },
+    { category: 'Hired labor (monthly)', amount: hiredWorkers * dailyWage * WORKING_DAYS_PER_MONTH },
+    { category: 'Peak season extra', amount: Math.max(0, peakWorkers - totalWorkers) * dailyWage * WORKING_DAYS_PER_MONTH * 0.3 },
+    { category: 'Supervision & tools', amount: hiredWorkers * dailyWage * 5 },
+    { category: 'Feeding allowance', amount: hiredWorkers * feedingCost * WORKING_DAYS_PER_MONTH },
   ];
 
   const totalMonthlyCost = costEstimate.reduce((sum, c) => sum + c.amount, 0);
@@ -152,6 +151,12 @@ const calculateLabor = (input: LaborInput): LaborResult => {
 };
 
 const FarmLaborPlanner: React.FC = () => {
+  const { userProfile } = useFarm();
+  const countryCfg = userProfile.countryCode ? COUNTRY_REGISTRY[userProfile.countryCode] : null;
+  const dailyWage = countryCfg?.dailyWageLocal ?? 3500;
+  const currencySymbol = userProfile.currencySymbol || '₦';
+  const feedingCost = Math.round(dailyWage * 0.29);
+
   const [input, setInput] = useState<LaborInput>({
     farmSizeHa: 2,
     mainCrop: 'cassava',
@@ -165,7 +170,7 @@ const FarmLaborPlanner: React.FC = () => {
   const [showResults, setShowResults] = useState(false);
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null);
 
-  const result = useMemo(() => calculateLabor(input), [input]);
+  const result = useMemo(() => calculateLabor(input, dailyWage, feedingCost), [input, dailyWage, feedingCost]);
 
   const handleCalculate = () => setShowResults(true);
 
@@ -174,7 +179,7 @@ const FarmLaborPlanner: React.FC = () => {
     if (showResults) setShowResults(false);
   };
 
-  const formatCurrency = (n: number) => '₦' + n.toLocaleString();
+  const formatCurrency = (n: number) => currencySymbol + n.toLocaleString();
 
   return (
     <div className="space-y-6 animate-fade-in pb-10">
@@ -191,7 +196,7 @@ const FarmLaborPlanner: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Farm Size (hectares)</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Farm Size ({userProfile.areaUnit})</label>
             <input
               type="number"
               min={0.5}
@@ -401,7 +406,7 @@ const FarmLaborPlanner: React.FC = () => {
                     <div className="ml-10 mr-4 mb-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-xs text-slate-600 dark:text-slate-400 space-y-1">
                       <p><span className="font-medium text-slate-800 dark:text-white">Workers needed:</span> <span className="font-mono">{m.workers}</span></p>
                       <p><span className="font-medium text-slate-800 dark:text-white">Primary activity:</span> {m.activity}</p>
-                      <p><span className="font-medium text-slate-800 dark:text-white">Labor cost:</span> <span className="font-mono">{formatCurrency(m.workers * DAILY_WAGE_NAIRA * WORKING_DAYS_PER_MONTH)}</span></p>
+                      <p><span className="font-medium text-slate-800 dark:text-white">Labor cost:</span> <span className="font-mono">{formatCurrency(m.workers * dailyWage * WORKING_DAYS_PER_MONTH)}</span></p>
                     </div>
                   )}
                 </div>
@@ -426,7 +431,7 @@ const FarmLaborPlanner: React.FC = () => {
               </div>
               <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
                 <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
-                  CFA equivalent: <span className="font-mono">{(result.totalMonthlyCost * NAIRA_TO_CFA).toLocaleString()} FCFA</span> (approximate, WAEMU rate)
+                  Wage basis: <span className="font-mono">{currencySymbol}{dailyWage.toLocaleString()}/day</span> ({countryCfg?.name ?? 'Nigeria'} regional average, 2026)
                 </p>
               </div>
             </div>

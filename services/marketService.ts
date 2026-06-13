@@ -8,6 +8,11 @@ export class MarketService {
     return await db.getMarketPrices();
   }
 
+  static async replaceAll(prices: MarketPrice[]): Promise<MarketPrice[]> {
+    await db.saveMarketPrices(prices);
+    return prices;
+  }
+
   static async refreshPrices(): Promise<MarketPrice[]> {
     let currentPrices = await db.getMarketPrices();
     const currentTrends = await db.getMarketTrends();

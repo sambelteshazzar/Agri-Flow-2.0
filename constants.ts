@@ -1007,7 +1007,7 @@ export const COUNTRY_REGISTRY: Record<string, CountryConfig> = {
       { id: '1', type: 'SELL', item: 'Milling Wheat E-Grade - 100 Tonnes', price: '€220/t', location: 'Bavaria, Germany', contact: 'hof@bayernwheat.de', verified: true, status: 'ACTIVE', date: new Date(Date.now() - 86400000).toISOString() },
     ],
     forumPosts: [
-      { id: '1', author: 'Hans M.', title: 'CAP Eco-Schemes — what are you planting for EFA this year?', content: 'Switching from catch crops to nitrogen-fixing crops for my EFA hectares. Better subsidy payment and soil benefit. What is everyone else doing?', replies: 20, likes: 55, category: 'Policy', date: new Date(Date.now() - 86400000).toISOString() },
+      { id: '1', author: 'Hans M.', title: 'CAP Eco-Schemes — what are you planting for EFA this year?', content: 'Switching from catch crops to nitrogen-fixing crops for my EFA hectares. Better subsidy payment and soil benefit. What is everyone else doing?', replies: 20, likes: 55, category: 'General', date: new Date(Date.now() - 86400000).toISOString() },
     ],
     chatMessages: [
       { id: '1', channelId: 'general', author: 'Petra K.', text: 'Wheat looking excellent in Bayern. Stripe rust pressure low so far — hope it stays that way. Fungicide T1 applied.', timestamp: new Date(Date.now() - 3600000).toISOString(), avatar: 'https://images.unsplash.com/photo-1595211877493-41a4e65eda99?w=150&h=150&fit=crop', isMe: false },

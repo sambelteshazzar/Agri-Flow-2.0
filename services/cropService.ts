@@ -49,6 +49,11 @@ export class CropService {
    * Calculates projected revenue based on area, soil health, and current market price.
    * This represents logic that would typically live on a backend server.
    */
+  static async replaceAll(crops: Crop[]): Promise<Crop[]> {
+    await db.saveCrops(crops);
+    return crops;
+  }
+
   static calculateProjectedYield(crop: Crop, marketPricePerUnit: number): number {
     // Base yield per acre (hypothetical generic unit)
     let baseYield = 100; 

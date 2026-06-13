@@ -19,6 +19,7 @@ import AuthModal from './components/AuthModal';
 import CommandPalette from './components/CommandPalette';
 import MobileNav from './components/MobileNav';
 import { NavigationTab } from './types';
+import type { OnboardingData } from './components/AuthModal';
 import { FarmProvider, useFarm } from './contexts/FarmContext';
 
 const FAVICON_EMOJIS: Record<string, string> = {
@@ -141,8 +142,8 @@ const AppContent: React.FC = () => {
     setIsMobileOpen(false);
   };
 
-  const handleAuthSubmit = async (name: string, email: string) => {
-    await login(name, email);
+  const handleAuthSubmit = async (data: OnboardingData) => {
+    await login(data);
     setIsAuthModalOpen(false);
   };
 

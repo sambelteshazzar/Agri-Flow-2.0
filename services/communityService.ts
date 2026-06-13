@@ -32,6 +32,11 @@ export class CommunityService {
     return this.getListings(); // Return sorted
   }
 
+  static async replaceAllListings(listings: MarketplaceListing[]): Promise<MarketplaceListing[]> {
+    await db.saveListings(listings);
+    return listings;
+  }
+
   static async markListingAsSold(id: string): Promise<MarketplaceListing[]> {
     const current = await db.getListings();
     const updated = current.map(l => l.id === id ? { ...l, status: 'SOLD' as const } : l);
@@ -48,6 +53,11 @@ export class CommunityService {
 
   static async getPostReplies(postId: string): Promise<ForumReply[]> {
     return await db.getReplies(postId);
+  }
+
+  static async replaceAllPosts(posts: ForumPost[]): Promise<ForumPost[]> {
+    await db.savePosts(posts);
+    return posts;
   }
 
   static async addPost(post: Omit<ForumPost, 'id' | 'replies' | 'likes' | 'date'>): Promise<ForumPost[]> {
@@ -135,6 +145,11 @@ export class CommunityService {
       return sorted.filter(msg => msg.channelId === channelId);
     }
     return sorted;
+  }
+
+  static async replaceAllChatMessages(messages: CommunityChatMessage[]): Promise<CommunityChatMessage[]> {
+    await db.saveChatMessages(messages);
+    return messages;
   }
 
   static async sendMessage(message: Omit<CommunityChatMessage, 'id' | 'timestamp'>): Promise<CommunityChatMessage[]> {

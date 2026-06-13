@@ -9,7 +9,8 @@ import { CommunityService } from '../services/communityService';
 import { WeatherService } from '../services/weatherService';
 import { fetchAgNews } from '../services/geminiService';
 import { db, DB_KEYS } from '../services/persistence';
-import { MOCK_WEATHER, CURRENT_USER, GUEST_USER, INITIAL_ALERTS } from '../constants';
+import { MOCK_WEATHER, CURRENT_USER, GUEST_USER, INITIAL_ALERTS, COUNTRY_REGISTRY } from '../constants';
+import type { OnboardingData } from '../components/AuthModal';
 
 interface FarmContextType {
   userProfile: UserProfile;
@@ -54,7 +55,7 @@ interface FarmContextType {
   handlePollVote: (id: number) => void;
 
   // Auth Methods
-  login: (name: string, email: string) => Promise<void>;
+  login: (data: OnboardingData) => Promise<void>;
   logout: () => void;
   updateUserProfile: (profile: Partial<UserProfile>) => Promise<void>;
   resetApp: () => void;
@@ -270,17 +271,55 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [pollVoted, showToast]);
 
   // --- Auth Logic ---
-  const login = useCallback(async (name: string, email: string) => {
-    // Simulate API delay
+  const login = useCallback(async (data: OnboardingData) => {
     await new Promise(resolve => setTimeout(resolve, 800));
-    const newProfile = {
+    const countryCfg = COUNTRY_REGISTRY[data.countryCode];
+    if (!countryCfg) return;
+
+    const newProfile: UserProfile = {
       ...CURRENT_USER,
-      name: name || CURRENT_USER.name
+      name: data.name,
+      farmName: data.farmName,
+      countryCode: countryCfg.code,
+      currencyCode: countryCfg.currencyCode,
+      currencySymbol: countryCfg.currencySymbol,
+      language: countryCfg.language,
+      region: countryCfg.region,
+      farmType: data.farmType,
+      areaUnit: data.areaUnit,
+      climateZone: countryCfg.climateZone,
     };
     setUserProfile(newProfile);
     setIsSignedIn(true);
-    db.saveUserProfile(newProfile);
-    showToast(`Welcome back, ${newProfile.name}`, 'success');
+
+    setCrops(countryCfg.defaultCrops);
+    setLivestock(countryCfg.defaultLivestock);
+    setMarketPrices(countryCfg.marketPrices);
+    setAlerts(countryCfg.alerts);
+    setLearningModules(countryCfg.learningModules);
+    setTasks(countryCfg.tasks);
+    setListings(countryCfg.marketplaceListings);
+    setPosts(countryCfg.forumPosts);
+    setChatMessages(countryCfg.chatMessages);
+    setTrends(countryCfg.trends);
+    setSuggestedUsers(countryCfg.suggestedUsers);
+    setStories(countryCfg.stories);
+
+    if (countryCfg.weatherDefaults) {
+      setWeather(prev => ({ ...prev, ...countryCfg.weatherDefaults }));
+    }
+
+    await db.saveUserProfile(newProfile);
+    await CropService.replaceAll(countryCfg.defaultCrops);
+    await LivestockService.replaceAll(countryCfg.defaultLivestock);
+    await MarketService.replaceAll(countryCfg.marketPrices);
+    await CommunityService.replaceAllListings(countryCfg.marketplaceListings);
+    await CommunityService.replaceAllPosts(countryCfg.forumPosts);
+    await CommunityService.replaceAllChatMessages(countryCfg.chatMessages);
+    db.saveTasks(countryCfg.tasks);
+    db.saveModules(countryCfg.learningModules);
+
+    showToast(`Welcome, ${newProfile.name}! Your ${countryCfg.name} dashboard is ready.`, 'success');
   }, [showToast]);
 
   const logout = useCallback(() => {

@@ -27,6 +27,11 @@ export class LivestockService {
     return updatedLivestock;
   }
 
+  static async replaceAll(livestock: Livestock[]): Promise<Livestock[]> {
+    await db.saveLivestock(livestock);
+    return livestock;
+  }
+
   static async delete(id: string): Promise<Livestock[]> {
     const currentLivestock = await db.getLivestock();
     const updatedLivestock = currentLivestock.filter(a => a.id !== id);
