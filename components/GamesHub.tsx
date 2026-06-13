@@ -276,11 +276,11 @@ const GamesHub: React.FC = () => {
           <div className="bg-green-500/20 backdrop-blur-md p-3 rounded-2xl w-fit mb-4 border border-green-500/30 group-hover:bg-green-500/30 transition-colors">
              <ShieldAlert className="w-10 h-10 text-green-400" />
           </div>
-          <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-2 drop-shadow-lg">Crop Defender</h3>
+          <h3 className="text-3xl font-black text-white mb-2 drop-shadow-lg font-heading">Crop Defender</h3>
           <p className="text-slate-300 text-sm font-medium mb-6 line-clamp-2">Protect your harvest from pests and environmental hazards in this fast-paced arcade shooter.</p>
           <div className="flex items-center gap-3">
-             <span className="px-3 py-1 rounded-full bg-slate-800 text-white text-[10px] font-bold uppercase tracking-wider border border-slate-600">Action</span>
-             <span className="px-3 py-1 rounded-full bg-slate-800 text-white text-[10px] font-bold uppercase tracking-wider border border-slate-600">Single Player</span>
+             <span className="px-3 py-1 rounded-full bg-slate-800 text-white text-[10px] font-semibold border border-slate-600">Action</span>
+             <span className="px-3 py-1 rounded-full bg-slate-800 text-white text-[10px] font-semibold border border-slate-600">Single Player</span>
           </div>
         </div>
       </div>
@@ -300,11 +300,11 @@ const GamesHub: React.FC = () => {
            <div className="bg-blue-500/20 backdrop-blur-md p-3 rounded-2xl w-fit mb-4 border border-blue-500/30 group-hover:bg-blue-500/30 transition-colors">
              <BrainCircuit className="w-10 h-10 text-blue-400" />
            </div>
-           <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-2 drop-shadow-lg">Eco Tycoon</h3>
+           <h3 className="text-3xl font-black text-white mb-2 drop-shadow-lg font-heading">Eco Tycoon</h3>
            <p className="text-slate-300 text-sm font-medium mb-6 line-clamp-2">AI-Powered Farm Simulator. Every decision matters in this generated narrative adventure.</p>
            <div className="flex items-center gap-3">
-             <span className="px-3 py-1 rounded-full bg-blue-900/50 text-blue-200 text-[10px] font-bold uppercase tracking-wider border border-blue-500/30">AI Story</span>
-             <span className="px-3 py-1 rounded-full bg-slate-800 text-white text-[10px] font-bold uppercase tracking-wider border border-slate-600">Simulation</span>
+             <span className="px-3 py-1 rounded-full bg-blue-900/50 text-blue-200 text-[10px] font-semibold border border-blue-500/30">AI Story</span>
+             <span className="px-3 py-1 rounded-full bg-slate-800 text-white text-[10px] font-semibold border border-slate-600">Simulation</span>
           </div>
         </div>
       </div>
@@ -323,9 +323,9 @@ const GamesHub: React.FC = () => {
            <div className="bg-slate-800 p-4 rounded-full mb-4 border-2 border-slate-700">
              <Lock className="w-8 h-8 text-slate-400" />
            </div>
-           <h3 className="text-2xl font-black text-slate-400 uppercase tracking-tight mb-2">Poultry Builder</h3>
-           <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-4">Locked • Beta Access Only</p>
-           <button className="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full text-xs font-bold uppercase transition-colors">
+           <h3 className="text-2xl font-black text-slate-400 mb-2 font-heading">Poultry Builder</h3>
+           <p className="text-slate-500 text-xs font-semibold mb-4">Locked • Beta Access Only</p>
+           <button className="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full text-xs font-semibold transition-colors">
              Request Access
            </button>
         </div>
@@ -345,8 +345,8 @@ const GamesHub: React.FC = () => {
                  <X className="w-6 h-6 text-slate-400 hover:text-red-400" />
                </button>
                <div className="text-right">
-                 <h2 className="text-4xl font-black text-green-400 font-heading uppercase drop-shadow-md">Crop Defender</h2>
-                 <p className="text-green-200/60 font-mono text-xs uppercase tracking-widest">Defense Protocol v2.1</p>
+                 <h2 className="text-4xl font-black text-green-400 font-heading drop-shadow-md">Crop Defender</h2>
+                 <p className="text-green-200/60 text-xs">Farm Defense Game</p>
                </div>
             </div>
             
@@ -355,9 +355,9 @@ const GamesHub: React.FC = () => {
                 <div className="w-32 h-32 bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-green-500/50 shadow-[0_0_50px_rgba(34,197,94,0.2)]">
                    <Tractor className="w-16 h-16 text-green-400" />
                 </div>
-                <h1 className="text-6xl font-black text-white mb-6 tracking-tight">READY?</h1>
+                <h1 className="text-6xl font-black text-white mb-6">Ready?</h1>
                 <p className="text-slate-400 max-w-md mx-auto mb-10 text-lg font-medium">Tap the grid to move your tractor and shoot pests. Avoid bombs!</p>
-                <button onClick={resetCD} className="group relative bg-green-600 px-16 py-6 rounded-2xl font-black text-2xl hover:bg-green-500 transition-all shadow-[0_0_40px_rgba(22,163,74,0.4)] hover:shadow-[0_0_60px_rgba(22,163,74,0.6)] border-b-8 border-green-800 hover:border-green-700 active:border-b-0 active:translate-y-2 uppercase tracking-widest">
+                <button onClick={resetCD} className="group relative bg-green-600 px-16 py-6 rounded-2xl font-black text-2xl hover:bg-green-500 transition-all shadow-[0_0_40px_rgba(22,163,74,0.4)] hover:shadow-[0_0_60px_rgba(22,163,74,0.6)] border-b-8 border-green-800 hover:border-green-700 active:border-b-0 active:translate-y-2">
                   Start Mission
                   <div className="absolute -inset-1 bg-white/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </button>
@@ -368,11 +368,11 @@ const GamesHub: React.FC = () => {
               <div className="text-center relative z-10 w-full max-w-lg px-4">
                 <div className="mb-6 flex justify-between items-center bg-slate-950/80 px-6 py-3 rounded-full border border-slate-700 backdrop-blur-md">
                   <div className="text-left">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Score</p>
+                    <p className="text-[10px] font-semibold text-slate-500">Score</p>
                     <p className="text-2xl font-mono font-bold text-yellow-400">{cdScore.toString().padStart(5, '0')}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Wave</p>
+                    <p className="text-[10px] font-semibold text-slate-500">Wave</p>
                     <p className="text-2xl font-mono font-bold text-blue-400">{cdWave}</p>
                   </div>
                 </div>
@@ -431,7 +431,7 @@ const GamesHub: React.FC = () => {
                      ))}
                   </div>
                 </div>
-                <p className="mt-6 text-slate-500 font-bold uppercase text-xs tracking-widest">Tap grid to shoot</p>
+                <p className="mt-6 text-slate-500 font-semibold text-xs">Tap grid to shoot</p>
               </div>
             )}
           </div>
@@ -464,7 +464,7 @@ const GamesHub: React.FC = () => {
                    <div className="flex items-center gap-2"><Users className="w-4 h-4 text-blue-400"/> <span className="font-mono font-bold">{ecoStats.reputation}%</span></div>
                 </div>
                 <div className="text-right">
-                   <p className="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Day</p>
+                   <p className="text-[10px] font-semibold text-slate-500">Day</p>
                    <p className="text-xl font-black text-white">{currentTurn ? currentTurn.day : 1}</p>
                 </div>
              </div>
@@ -483,7 +483,7 @@ const GamesHub: React.FC = () => {
                    <div className="text-center bg-slate-900/80 p-10 rounded-3xl border border-red-900/50 backdrop-blur-lg animate-fade-in-up">
                       <h2 className="text-5xl font-black text-red-500 mb-4 font-heading">GAME OVER</h2>
                       <p className="text-slate-300 text-lg mb-8">Your farm could not sustain the operational costs or environmental damage.</p>
-                      <button onClick={startEcoGame} className="px-8 py-3 bg-white text-slate-900 font-bold uppercase rounded-full hover:scale-105 transition-transform flex items-center gap-2 mx-auto"><RefreshCw className="w-5 h-5"/> Restart Season</button>
+                      <button onClick={startEcoGame} className="px-8 py-3 bg-white text-slate-900 font-semibold rounded-full hover:scale-105 transition-transform flex items-center gap-2 mx-auto"><RefreshCw className="w-5 h-5"/> Restart Season</button>
                    </div>
                 ) : currentTurn ? (
                    <div className="w-full animate-fade-in-up">
@@ -505,7 +505,7 @@ const GamesHub: React.FC = () => {
                                 className="group relative bg-slate-800/80 hover:bg-slate-700/90 p-6 rounded-2xl border border-slate-600 hover:border-blue-500 transition-all text-left shadow-lg hover:-translate-y-1 active:translate-y-0"
                               >
                                  <div className="flex justify-between items-start mb-3">
-                                    <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase ${choice.risk === 'HIGH' ? 'bg-red-900/50 text-red-300' : choice.risk === 'MED' ? 'bg-yellow-900/50 text-yellow-300' : 'bg-green-900/50 text-green-300'}`}>{choice.risk} Risk</span>
+                                    <span className={`text-[10px] font-bold px-2 py-1 rounded ${choice.risk === 'HIGH' ? 'bg-red-900/50 text-red-300' : choice.risk === 'MED' ? 'bg-yellow-900/50 text-yellow-300' : 'bg-green-900/50 text-green-300'}`}>{choice.risk} Risk</span>
                                     <span className="text-sm font-bold text-white font-mono">-${choice.cost}</span>
                                  </div>
                                  <p className="text-slate-200 font-bold text-lg group-hover:text-blue-300 transition-colors">{choice.text}</p>

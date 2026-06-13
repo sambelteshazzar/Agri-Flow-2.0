@@ -12,7 +12,7 @@ const AIAdvisor: React.FC = () => {
     {
       id: '1',
       role: 'model',
-      text: 'Deep Analysis Module Online.\n\nI can analyze crop images for disease, process soil reports, or perform complex market simulations. Tap the Phone icon for a live voice consultation.',
+      text: 'Your farming companion is ready.\n\nI can help analyze crop images for health issues, review soil reports, or explore market trends. Tap the phone icon for a live voice consultation.',
       timestamp: new Date()
     }
   ]);
@@ -329,8 +329,8 @@ const AIAdvisor: React.FC = () => {
                  <div className="absolute inset-0 border-4 border-yellow-500/20 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }}></div>
               </div>
               
-               <h3 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest">Live Consultation</h3>
-               <p className="text-slate-400 mb-8 font-mono text-sm">AI Voice Engine • Secure Line</p>
+               <h3 className="text-2xl font-bold text-white mb-2 font-heading">Live Consultation</h3>
+               <p className="text-slate-400 mb-8 text-sm">Voice Call with Your AI Advisor</p>
               
               {/* Audio Visualizer Bar */}
               <div className="flex gap-1 h-12 items-end justify-center mb-10 w-full max-w-[200px]">
@@ -352,7 +352,7 @@ const AIAdvisor: React.FC = () => {
               >
                  <Phone className="w-8 h-8 rotate-[135deg]" />
               </button>
-              <p className="text-slate-500 mt-4 text-xs font-bold uppercase">End Call</p>
+              <p className="text-slate-500 mt-4 text-xs font-semibold">End Call</p>
            </div>
         </div>
       )}
@@ -360,17 +360,17 @@ const AIAdvisor: React.FC = () => {
       {/* HEADER */}
       <div className="mb-4 flex items-center justify-between border-b-4 border-yellow-500 pb-2 transition-colors">
         <div>
-           <h2 className="text-2xl font-bold text-slate-900 dark:text-white uppercase tracking-tight flex items-center">
+           <h2 className="text-2xl font-bold text-slate-900 dark:text-white font-heading flex items-center">
              <BrainCircuit className="w-6 h-6 text-yellow-500 mr-2" aria-hidden="true" />
              AI Consultant
            </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wide">AI Assistant / Live Search / Vision</p>
+            <p className="text-slate-600 dark:text-slate-400 text-xs font-semibold">AI Assistant / Live Search / Vision</p>
         </div>
         <button 
           onClick={isCallActive ? endCall : startCall}
           disabled={isConnectingCall}
           className={`
-            flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs uppercase tracking-wide transition-all shadow-md
+            flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs transition-all shadow-md
             ${isConnectingCall ? 'bg-slate-200 text-slate-500' : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200'}
           `}
         >
@@ -399,7 +399,7 @@ const AIAdvisor: React.FC = () => {
                 {msg.role === 'model' && (
                   <div className="flex items-center mb-2 pb-2 border-b border-slate-600">
                     <Sparkles className="w-3 h-3 mr-2 text-yellow-500" aria-hidden="true" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">Analysis Output</span>
+                    <span className="text-[10px] font-semibold text-slate-300">Analysis</span>
                   </div>
                 )}
                 
@@ -418,7 +418,7 @@ const AIAdvisor: React.FC = () => {
                   <div className="mt-4 pt-3 border-t border-slate-700">
                     <div className="flex items-center gap-1 mb-2 text-slate-400">
                       <Globe className="w-3 h-3" />
-                      <span className="text-[10px] font-bold uppercase tracking-widest">Grounding Sources</span>
+                      <span className="text-[10px] font-semibold">Sources</span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {msg.sources.map((source, idx) => (
@@ -437,7 +437,7 @@ const AIAdvisor: React.FC = () => {
                   </div>
                 )}
                 
-                <p className="text-[10px] mt-2 text-right font-mono opacity-50 uppercase text-slate-400">
+                <p className="text-[10px] mt-2 text-right opacity-50 text-slate-400">
                   {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
@@ -447,7 +447,7 @@ const AIAdvisor: React.FC = () => {
             <div className="flex justify-start">
               <div className="bg-slate-800 rounded p-3 flex items-center gap-3 shadow-md">
                 <Loader2 className="w-4 h-4 animate-spin text-yellow-500" aria-hidden="true" />
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-wide">Processing Data...</span>
+                <span className="text-xs font-semibold text-slate-300">Processing...</span>
               </div>
             </div>
           )}
@@ -461,12 +461,12 @@ const AIAdvisor: React.FC = () => {
               <div className="flex items-center gap-3">
                 <img src={selectedImage} alt="Thumbnail of attached image" className="w-10 h-10 object-cover rounded-sm" />
                 <div>
-                   <p className="text-xs font-bold text-slate-800 dark:text-white uppercase">Image Attached</p>
+                   <p className="text-xs font-semibold text-slate-800 dark:text-white">Image Attached</p>
                 </div>
               </div>
               <button 
                 onClick={() => { setSelectedImage(null); setIncludeContext(false); }}
-                className="text-xs text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-bold uppercase focus:outline-none focus:underline"
+                className="text-xs text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-semibold focus:outline-none focus:underline"
               >
                 Remove
               </button>
@@ -478,7 +478,7 @@ const AIAdvisor: React.FC = () => {
              <div className="mb-3 p-2 bg-slate-50 dark:bg-slate-900 rounded border border-slate-300 dark:border-slate-600 animate-fade-in">
                 <div className="flex items-center gap-2 mb-1 text-slate-700 dark:text-slate-300">
                    <Info className="w-4 h-4" aria-hidden="true" />
-                   <label htmlFor="contextInput" className="text-xs font-bold uppercase">Additional Context</label>
+                   <label htmlFor="contextInput" className="text-xs font-semibold">Additional Context</label>
                 </div>
                 <input
                    id="contextInput"

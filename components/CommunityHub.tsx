@@ -147,7 +147,7 @@ const CommunityHub: React.FC = () => {
               <Globe className="w-12 h-12 text-green-400" />
            </div>
         </div>
-        <h1 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tight mb-6 font-heading">
+        <h1 className="text-6xl md:text-8xl font-black text-white mb-6 font-heading">
           Agri-<span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-yellow-400">Connect</span>
         </h1>
         <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
@@ -174,7 +174,7 @@ const CommunityHub: React.FC = () => {
 
         <button 
           onClick={() => setShowIntro(false)}
-          className="group relative px-10 py-4 bg-white text-slate-950 font-black uppercase tracking-widest rounded-full hover:bg-green-400 transition-all shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(34,197,94,0.4)] flex items-center gap-3 mx-auto"
+          className="group relative px-10 py-4 bg-white text-slate-950 font-semibold rounded-full hover:bg-green-400 transition-all shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(34,197,94,0.4)] flex items-center gap-3 mx-auto"
         >
           Enter Community
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -188,7 +188,7 @@ const CommunityHub: React.FC = () => {
        {/* Poll Card */}
        <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden shrink-0">
           <div className="relative z-10">
-             <div className="flex items-center justify-between mb-4"><h4 className="font-bold text-xs uppercase tracking-wide flex items-center gap-2"><BarChart2 className="w-4 h-4 text-yellow-400"/> Community Poll</h4></div>
+             <div className="flex items-center justify-between mb-4"><h4 className="font-bold text-xs flex items-center gap-2"><BarChart2 className="w-4 h-4 text-yellow-400"/> Community Poll</h4></div>
              <p className="text-sm font-bold mb-4 leading-snug">What's your main strategy for the 2025 drought season?</p>
              <div className="space-y-2">
                 {pollData.map((opt) => (
@@ -205,7 +205,7 @@ const CommunityHub: React.FC = () => {
 
        {/* Trending */}
        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 shrink-0">
-          <h4 className="font-bold text-slate-900 dark:text-white uppercase text-xs mb-4 flex items-center tracking-wide"><TrendingUp className="w-4 h-4 mr-2 text-blue-500"/> Trending Topics</h4>
+          <h4 className="font-bold text-slate-900 dark:text-white text-xs mb-4 flex items-center"><TrendingUp className="w-4 h-4 mr-2 text-blue-500"/> Trending Topics</h4>
           <div className="space-y-4">
              {trends.map((topic, i) => (
                <div key={i} className="flex justify-between items-center group cursor-pointer">
@@ -218,7 +218,7 @@ const CommunityHub: React.FC = () => {
 
        {/* Suggestions */}
        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 shrink-0">
-          <h4 className="font-bold text-slate-900 dark:text-white uppercase text-xs mb-4 flex items-center tracking-wide"><UserPlus className="w-4 h-4 mr-2 text-green-500"/> Who to follow</h4>
+          <h4 className="font-bold text-slate-900 dark:text-white text-xs mb-4 flex items-center"><UserPlus className="w-4 h-4 mr-2 text-green-500"/> Who to follow</h4>
           <div className="space-y-5">
              {suggestedUsers.map((person) => (
                 <div key={person.id} className="flex items-center justify-between">
@@ -275,13 +275,13 @@ const CommunityHub: React.FC = () => {
                     <h3 className="font-black text-slate-900 dark:text-white text-xl flex items-center justify-center gap-1.5">
                       {userProfile?.name || 'Guest'} {isSignedIn && <BadgeCheck className="w-5 h-5 text-blue-500 fill-blue-100" />}
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider mb-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mb-4">
                       {userProfile?.role || 'Visitor'} • {userProfile?.farmName || 'Unregistered'}
                     </p>
                     <div className="grid grid-cols-3 gap-2 border-t border-slate-100 dark:border-slate-800 pt-4">
-                       <div className="text-center"><span className="block font-black text-slate-900 dark:text-white text-lg">{userProfile?.posts ?? 0}</span><span className="text-[10px] text-slate-400 uppercase font-bold">Posts</span></div>
-                       <div className="text-center border-l border-r border-slate-100 dark:border-slate-800"><span className="block font-black text-slate-900 dark:text-white text-lg">{userProfile?.followers ?? 0}</span><span className="text-[10px] text-slate-400 uppercase font-bold">Fans</span></div>
-                       <div className="text-center"><span className="block font-black text-slate-900 dark:text-white text-lg">{userProfile?.following ?? 0}</span><span className="text-[10px] text-slate-400 uppercase font-bold">Following</span></div>
+                       <div className="text-center"><span className="block font-black text-slate-900 dark:text-white text-lg">{userProfile?.posts ?? 0}</span><span className="text-[10px] text-slate-400 font-semibold">Posts</span></div>
+                       <div className="text-center border-l border-r border-slate-100 dark:border-slate-800"><span className="block font-black text-slate-900 dark:text-white text-lg">{userProfile?.followers ?? 0}</span><span className="text-[10px] text-slate-400 font-semibold">Fans</span></div>
+                       <div className="text-center"><span className="block font-black text-slate-900 dark:text-white text-lg">{userProfile?.following ?? 0}</span><span className="text-[10px] text-slate-400 font-semibold">Following</span></div>
                     </div>
                  </div>
               </div>
@@ -305,13 +305,13 @@ const CommunityHub: React.FC = () => {
            {/* Upcoming Events Mini */}
            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
               <div className="flex justify-between items-center mb-4">
-                 <h4 className="font-bold text-slate-900 dark:text-white uppercase text-xs tracking-wide">Upcoming Events</h4>
+                 <h4 className="font-semibold text-slate-900 dark:text-white text-xs">Upcoming Events</h4>
               </div>
               <div className="space-y-4">
                  {UPCOMING_EVENTS.map(evt => (
                     <div key={evt.id} className="flex gap-3 group cursor-pointer" onClick={() => showToast(`Event: ${evt.title}`, 'info')}>
                        <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-2.5 flex flex-col items-center justify-center min-w-[50px] border border-slate-200 dark:border-slate-700">
-                          <span className="text-[9px] font-black text-red-500 uppercase">{evt.date.split(' ')[0]}</span>
+                          <span className="text-[9px] font-semibold text-red-500">{evt.date.split(' ')[0]}</span>
                           <span className="text-lg font-black text-slate-900 dark:text-white leading-none">{evt.date.split(' ')[1]}</span>
                        </div>
                        <div className="flex-1">
@@ -329,9 +329,9 @@ const CommunityHub: React.FC = () => {
            
            {/* Mobile Tabs */}
            <div className="lg:hidden flex bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20 shrink-0">
-              <button onClick={() => setActiveTab('FEED')} className={`flex-1 py-4 text-xs font-bold uppercase tracking-wider border-b-2 ${activeTab === 'FEED' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-slate-500'}`}>Feed</button>
-              <button onClick={() => setActiveTab('GROUPS')} className={`flex-1 py-4 text-xs font-bold uppercase tracking-wider border-b-2 ${activeTab === 'GROUPS' ? 'border-purple-500 text-purple-600 dark:text-purple-400' : 'border-transparent text-slate-500'}`}>Groups</button>
-              <button onClick={() => setActiveTab('MARKET')} className={`flex-1 py-4 text-xs font-bold uppercase tracking-wider border-b-2 ${activeTab === 'MARKET' ? 'border-green-500 text-green-600 dark:text-green-400' : 'border-transparent text-slate-500'}`}>Market</button>
+              <button onClick={() => setActiveTab('FEED')} className={`flex-1 py-4 text-xs font-semibold border-b-2 ${activeTab === 'FEED' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-slate-500'}`}>Feed</button>
+              <button onClick={() => setActiveTab('GROUPS')} className={`flex-1 py-4 text-xs font-semibold border-b-2 ${activeTab === 'GROUPS' ? 'border-purple-500 text-purple-600 dark:text-purple-400' : 'border-transparent text-slate-500'}`}>Groups</button>
+              <button onClick={() => setActiveTab('MARKET')} className={`flex-1 py-4 text-xs font-semibold border-b-2 ${activeTab === 'MARKET' ? 'border-green-500 text-green-600 dark:text-green-400' : 'border-transparent text-slate-500'}`}>Market</button>
            </div>
 
            <div className="flex-1 overflow-y-auto custom-scrollbar p-0 lg:pr-2 pb-20">
@@ -366,10 +366,10 @@ const CommunityHub: React.FC = () => {
                       </div>
                       <div className="flex justify-between items-center pt-2">
                          <div className="flex gap-2">
-                            <button onClick={() => setIsPostModalOpen(true)} className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase transition-colors"><ImageIcon className="w-4 h-4 text-green-500"/> Photo</button>
-                            <button onClick={() => setIsPostModalOpen(true)} className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase transition-colors"><Camera className="w-4 h-4 text-blue-500"/> Video</button>
+                            <button onClick={() => setIsPostModalOpen(true)} className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-semibold transition-colors"><ImageIcon className="w-4 h-4 text-green-500"/> Photo</button>
+                            <button onClick={() => setIsPostModalOpen(true)} className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-semibold transition-colors"><Camera className="w-4 h-4 text-blue-500"/> Video</button>
                          </div>
-                         <button onClick={() => setIsPostModalOpen(true)} className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-xl font-bold text-xs uppercase shadow-lg hover:opacity-90 transition-opacity">Post</button>
+                         <button onClick={() => setIsPostModalOpen(true)} className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-xl font-semibold text-xs shadow-lg hover:opacity-90 transition-opacity">Post</button>
                       </div>
                    </div>
 
@@ -405,7 +405,7 @@ const CommunityHub: React.FC = () => {
                                 </div>
                               )}
 
-                              <div className="flex justify-between items-center text-xs text-slate-500 font-bold uppercase tracking-wide border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
+                              <div className="flex justify-between items-center text-xs text-slate-500 font-semibold border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
                                  <div className="flex gap-4">
                                     <button onClick={() => likePost(post.id)} className={`flex items-center gap-1.5 hover:text-red-500 transition-colors ${likedPostIds.includes(post.id) ? 'text-red-500' : ''}`}><Heart className={`w-4 h-4 ${likedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> {post.likes} Likes</button>
                                     <button onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)} className="flex items-center gap-1.5 hover:text-blue-500 transition-colors"><MessageCircle className="w-4 h-4"/> {post.replies} Comments</button>
@@ -458,10 +458,10 @@ const CommunityHub: React.FC = () => {
                 <div className="pt-4 lg:pt-0">
                    <div className="flex justify-between items-end mb-6 px-1">
                       <div>
-                         <h3 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Marketplace</h3>
-                         <p className="text-slate-500 text-xs font-bold uppercase mt-1">Buy, Sell & Trade Equipment</p>
+                         <h3 className="text-2xl font-semibold text-slate-900 dark:text-white font-heading">Marketplace</h3>
+                         <p className="text-slate-500 text-xs font-semibold mt-1">Buy, Sell & Trade Equipment</p>
                       </div>
-                      <button onClick={() => handleAuthRequiredAction(() => setIsListingModalOpen(true))} className="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase shadow-lg flex items-center gap-2 transition-transform active:scale-95"><Plus className="w-4 h-4"/> New Listing</button>
+                      <button onClick={() => handleAuthRequiredAction(() => setIsListingModalOpen(true))} className="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-semibold text-xs shadow-lg flex items-center gap-2 transition-transform active:scale-95"><Plus className="w-4 h-4"/> New Listing</button>
                    </div>
                    
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -469,7 +469,7 @@ const CommunityHub: React.FC = () => {
                          <div key={item.id} className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-green-500 transition-all group flex flex-col">
                             <div className="h-48 bg-slate-100 dark:bg-slate-800 relative overflow-hidden">
                                <img src={item.image || 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=800&fit=crop'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={item.item} onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=800&fit=crop'; }} />
-                               <div className="absolute top-3 right-3"><span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase shadow-md ${item.type === 'SELL' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>{item.type}</span></div>
+                               <div className="absolute top-3 right-3"><span className={`px-3 py-1 rounded-lg text-[10px] font-semibold shadow-md ${item.type === 'SELL' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>{item.type}</span></div>
                             </div>
                             <div className="p-5 flex-1 flex flex-col">
                                <div className="flex justify-between items-start mb-2">
@@ -478,8 +478,8 @@ const CommunityHub: React.FC = () => {
                                <p className="text-2xl font-black text-slate-800 dark:text-slate-200 mb-2 font-heading">{item.price}</p>
                                <div className="flex items-center text-xs text-slate-500 mb-4"><MapPin className="w-3 h-3 mr-1"/> {item.location}</div>
                                <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                                  <span className="text-[10px] font-bold text-slate-400 uppercase">{getRelativeTime(item.date)}</span>
-                                  <button onClick={() => showToast(`Contact: ${item.contact}`, 'success')} className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase hover:underline">Contact Seller</button>
+                                  <span className="text-[10px] font-semibold text-slate-400">{getRelativeTime(item.date)}</span>
+                                  <button onClick={() => showToast(`Contact: ${item.contact}`, 'success')} className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">Contact Seller</button>
                                </div>
                             </div>
                          </div>
@@ -510,7 +510,7 @@ const CommunityHub: React.FC = () => {
                                 <div key={msg.id} className={`flex gap-3 ${msg.isMe ? 'flex-row-reverse' : ''} animate-fade-in-up`}>
                                    <div className="w-8 h-8 rounded-full bg-slate-200 overflow-hidden shrink-0"><img src={msg.avatar} className="w-full h-full object-cover" onError={(e) => e.currentTarget.src = `https://ui-avatars.com/api/?name=${msg.author}`} /></div>
                                    <div className={`max-w-[75%] p-3 rounded-2xl text-sm shadow-sm ${msg.isMe ? 'bg-yellow-500 text-slate-900 rounded-tr-none font-medium' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-tl-none border border-slate-100 dark:border-slate-700'}`}>
-                                      {!msg.isMe && <div className="text-[10px] font-bold text-slate-400 mb-1 uppercase">{msg.author}</div>}
+                                      {!msg.isMe && <div className="text-[10px] font-semibold text-slate-400 mb-1">{msg.author}</div>}
                                       {msg.text}
                                    </div>
                                 </div>
@@ -557,7 +557,7 @@ const CommunityHub: React.FC = () => {
                      <button type="button" onClick={() => postFileRef.current?.click()} className="p-2 hover:bg-green-100 text-slate-500 hover:text-green-600 rounded-full transition-colors"><ImageIcon className="w-5 h-5"/></button>
                      <input type="file" ref={postFileRef} accept="image/*" onChange={(e) => handleFileRead(e.target.files?.[0], (res) => setPostImage(res))} className="hidden" />
                   </div>
-                  <button type="submit" disabled={!newPost.content} className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-2 rounded-full font-bold text-xs uppercase tracking-wide hover:opacity-90 disabled:opacity-50 transition-all shadow-md">Post Update</button>
+                  <button type="submit" disabled={!newPost.content} className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-2 rounded-full font-semibold text-xs hover:opacity-90 disabled:opacity-50 transition-all shadow-md">Post Update</button>
                </div>
              </form>
            </div>
@@ -569,7 +569,7 @@ const CommunityHub: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
            <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl p-6 relative max-h-[90vh] overflow-y-auto">
              <button onClick={() => { setIsListingModalOpen(false); setListingImage(null); }} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><X className="w-6 h-6" /></button>
-             <div className="mb-6"><h3 className="font-bold text-2xl text-slate-900 dark:text-white font-heading uppercase">New Listing</h3><p className="text-slate-500 text-xs mt-1">Marketplace / Create</p></div>
+             <div className="mb-6"><h3 className="font-semibold text-2xl text-slate-900 dark:text-white font-heading">New Listing</h3><p className="text-slate-500 text-xs mt-1">Marketplace / Create</p></div>
              <form onSubmit={async (e) => { 
                 e.preventDefault(); 
                 if (!newListing.item || !newListing.price) {
@@ -589,7 +589,7 @@ const CommunityHub: React.FC = () => {
                   <button type="button" onClick={() => setNewListing({...newListing, type: 'SELL'})} className={`py-3 font-bold text-xs rounded-lg transition-all ${newListing.type === 'SELL' ? 'bg-white dark:bg-slate-700 text-green-700 dark:text-green-400 shadow-sm' : 'text-slate-500'}`}>SELL ITEM</button>
                   <button type="button" onClick={() => setNewListing({...newListing, type: 'BUY'})} className={`py-3 font-bold text-xs rounded-lg transition-all ${newListing.type === 'BUY' ? 'bg-white dark:bg-slate-700 text-blue-700 dark:text-blue-400 shadow-sm' : 'text-slate-500'}`}>REQUEST ITEM</button>
                </div>
-               <div onClick={() => listingFileRef.current?.click()} className={`w-full h-32 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors relative overflow-hidden ${listingImage ? 'border-green-500' : 'border-slate-300 dark:border-slate-700 hover:border-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}><input type="file" ref={listingFileRef} accept="image/*" onChange={(e) => handleFileRead(e.target.files?.[0], (res) => setListingImage(res))} className="hidden" />{listingImage ? <img src={listingImage} alt="Preview" className="w-full h-full object-cover" /> : <><ImageIcon className="w-8 h-8 text-slate-400 mb-2" /><span className="text-xs font-bold text-slate-500 uppercase">Upload Item Photo</span></>}</div>
+               <div onClick={() => listingFileRef.current?.click()} className={`w-full h-32 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors relative overflow-hidden ${listingImage ? 'border-green-500' : 'border-slate-300 dark:border-slate-700 hover:border-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}><input type="file" ref={listingFileRef} accept="image/*" onChange={(e) => handleFileRead(e.target.files?.[0], (res) => setListingImage(res))} className="hidden" />{listingImage ? <img src={listingImage} alt="Preview" className="w-full h-full object-cover" /> : <><ImageIcon className="w-8 h-8 text-slate-400 mb-2" /><span className="text-xs font-semibold text-slate-500">Upload Item Photo</span></>}</div>
                <div className="space-y-4">
                   <input placeholder="Item Name" value={newListing.item} onChange={e => setNewListing({...newListing, item: e.target.value})} className="w-full p-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold outline-none text-slate-900 dark:text-white text-sm" required />
                   <div className="grid grid-cols-2 gap-4">
@@ -598,7 +598,7 @@ const CommunityHub: React.FC = () => {
                   </div>
                   <input placeholder="Contact Info" value={newListing.contact} onChange={e => setNewListing({...newListing, contact: e.target.value})} className="w-full p-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold outline-none text-slate-900 dark:text-white text-sm" />
                </div>
-               <button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-4 rounded-xl font-bold uppercase tracking-wide hover:opacity-90 shadow-lg mt-2">Publish Listing</button>
+               <button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-4 rounded-xl font-semibold hover:opacity-90 shadow-lg mt-2">Publish Listing</button>
              </form>
            </div>
         </div>
@@ -620,8 +620,8 @@ const CommunityHub: React.FC = () => {
            <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-2xl p-6 relative flex flex-col items-center text-center">
               <button onClick={() => { setIsStoryModalOpen(false); setNewStoryImage(null); }} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><X className="w-6 h-6" /></button>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Add to Story</h3>
-              <div onClick={() => storyFileRef.current?.click()} className="w-full h-64 bg-slate-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors overflow-hidden relative mt-4"><input type="file" accept="image/*" ref={storyFileRef} onChange={(e) => handleFileRead(e.target.files?.[0], (res) => setNewStoryImage(res))} className="hidden" />{newStoryImage ? <img src={newStoryImage} className="w-full h-full object-cover" /> : <><Camera className="w-10 h-10 text-slate-400 mb-2" /><span className="text-xs font-bold text-slate-500 uppercase">Tap to Upload</span></>}</div>
-              <button onClick={() => { if(newStoryImage) { setLocalStories(prev => [{id: `story-${Date.now()}`, name: userProfile.name, img: newStoryImage!, hasUpdate: true, isUser: false}, ...prev]); setIsStoryModalOpen(false); setNewStoryImage(null); showToast('Story posted', 'success'); } }} disabled={!newStoryImage} className="w-full mt-6 py-3 bg-blue-600 disabled:bg-slate-300 text-white rounded-xl font-bold uppercase text-xs shadow-lg">Share</button>
+              <div onClick={() => storyFileRef.current?.click()} className="w-full h-64 bg-slate-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors overflow-hidden relative mt-4"><input type="file" accept="image/*" ref={storyFileRef} onChange={(e) => handleFileRead(e.target.files?.[0], (res) => setNewStoryImage(res))} className="hidden" />{newStoryImage ? <img src={newStoryImage} className="w-full h-full object-cover" /> : <><Camera className="w-10 h-10 text-slate-400 mb-2" /><span className="text-xs font-semibold text-slate-500">Tap to Upload</span></>}</div>
+              <button onClick={() => { if(newStoryImage) { setLocalStories(prev => [{id: `story-${Date.now()}`, name: userProfile.name, img: newStoryImage!, hasUpdate: true, isUser: false}, ...prev]); setIsStoryModalOpen(false); setNewStoryImage(null); showToast('Story posted', 'success'); } }} disabled={!newStoryImage} className="w-full mt-6 py-3 bg-blue-600 disabled:bg-slate-300 text-white rounded-xl font-semibold text-xs shadow-lg">Share</button>
            </div>
         </div>
       )}

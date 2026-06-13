@@ -97,10 +97,10 @@ const EducationHub: React.FC = () => {
            </button>
            <div>
              <div className="flex items-center gap-2 mb-1">
-               <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${getDifficultyColor(activeCourse.difficulty)}`}>
+               <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${getDifficultyColor(activeCourse.difficulty)}`}>
                  {activeCourse.difficulty}
                </span>
-               <span className="text-slate-400 text-xs font-bold uppercase">• {activeCourse.category}</span>
+               <span className="text-slate-400 text-xs font-semibold">• {activeCourse.category}</span>
              </div>
              <h1 className="text-2xl font-bold text-slate-900 dark:text-white leading-none">{activeCourse.title}</h1>
            </div>
@@ -176,7 +176,7 @@ const EducationHub: React.FC = () => {
                     ) : (
                        <button 
                          onClick={handleCompleteCourse}
-                         className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold uppercase text-xs tracking-wide hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors shadow-lg"
+                         className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-semibold text-xs tracking-wide hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors shadow-lg"
                        >
                           Mark Complete
                        </button>
@@ -189,7 +189,7 @@ const EducationHub: React.FC = () => {
            <div className="lg:col-span-1">
               <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden h-full max-h-[calc(100vh-12rem)] flex flex-col">
                  <div className="p-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                    <h3 className="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wide">Course Syllabus</h3>
+                    <h3 className="font-semibold text-slate-900 dark:text-white text-sm">Course Syllabus</h3>
                     <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
                        <BookOpen className="w-4 h-4" />
                        <span>{activeCourse.lessonsCount} Lessons</span>
@@ -253,7 +253,7 @@ const EducationHub: React.FC = () => {
          <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
          <div className="relative z-10 max-w-2xl">
             <div className="flex items-center gap-2 mb-4">
-               <span className="px-3 py-1 rounded-full bg-yellow-500 text-slate-900 text-xs font-black uppercase tracking-widest">Premium Certification</span>
+               <span className="px-3 py-1 rounded-full bg-yellow-500 text-slate-900 text-xs font-semibold tracking-widest">Premium Certification</span>
                <div className="flex text-yellow-500"><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/></div>
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-white font-heading mb-4 leading-tight">
@@ -262,7 +262,7 @@ const EducationHub: React.FC = () => {
             <p className="text-slate-300 text-lg mb-8 font-medium leading-relaxed max-w-lg">
                Join over 10,000 farmers enhancing soil health and profitability. Led by world-class agronomists.
             </p>
-            <button className="bg-white text-slate-900 px-8 py-3 rounded-full font-bold uppercase tracking-wide hover:bg-yellow-400 transition-colors shadow-lg flex items-center gap-2">
+            <button className="bg-white text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-yellow-400 transition-colors shadow-lg flex items-center gap-2">
                Explore Courses <BookOpen className="w-4 h-4" />
             </button>
          </div>
@@ -275,7 +275,7 @@ const EducationHub: React.FC = () => {
                <button 
                  key={cat}
                  onClick={() => setFilterCategory(cat)}
-                 className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wide transition-all border ${filterCategory === cat ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'}`}
+                 className={`px-5 py-2 rounded-full text-xs font-semibold transition-all border ${filterCategory === cat ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'}`}
                >
                   {cat}
                </button>
@@ -293,7 +293,7 @@ const EducationHub: React.FC = () => {
             <div key={module.id} className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer" onClick={() => handleStartCourse(module.id)}>
                <div className="relative h-48 overflow-hidden">
                   <div className="absolute top-3 left-3 z-10 flex gap-2">
-                     <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm ${getDifficultyColor(module.difficulty)}`}>{module.difficulty}</span>
+                     <span className={`px-2 py-1 rounded text-[10px] font-semibold shadow-sm ${getDifficultyColor(module.difficulty)}`}>{module.difficulty}</span>
                   </div>
                   <img 
                     src={module.thumbnail} 
@@ -305,7 +305,7 @@ const EducationHub: React.FC = () => {
                   />
                   {module.completed && (
                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center backdrop-blur-[2px]">
-                        <div className="bg-green-500 text-white px-4 py-2 rounded-full font-bold uppercase text-xs flex items-center shadow-lg">
+                        <div className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold text-xs flex items-center shadow-lg">
                            <Check className="w-4 h-4 mr-2" /> Completed
                         </div>
                      </div>

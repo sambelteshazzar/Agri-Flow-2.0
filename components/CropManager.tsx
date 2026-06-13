@@ -311,7 +311,7 @@ const CropManager: React.FC = () => {
       const diagnosis = await analyzeCropImage(scanImage, scanContext);
       setScanResult(diagnosis);
     } catch {
-      setScanResult("Error: Could not complete diagnosis.");
+      setScanResult("Could not complete the analysis.");
     } finally {
       setIsScanning(false);
     }
@@ -340,7 +340,7 @@ const CropManager: React.FC = () => {
               <div>
                 <h4 className="font-semibold text-sm text-yellow-500 mb-1">Smart Insight</h4>
                 <p className="text-sm font-medium mb-2">
-                  System analysis suggests <span className="font-bold text-white">{suggestion.cropName}</span> status should be updated to <span className="font-bold text-yellow-400">{suggestion.suggestedStatus}</span>.
+                  Your crop looks like it needs an update — <span className="font-bold text-white">{suggestion.cropName}</span> status should be updated to <span className="font-bold text-yellow-400">{suggestion.suggestedStatus}</span>.
                 </p>
                 <p className="text-xs text-slate-300 italic mb-3">"{suggestion.reason}"</p>
                 
@@ -375,10 +375,10 @@ const CropManager: React.FC = () => {
           </div>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => setIsScannerOpen(true)} className="flex items-center px-4 py-3 bg-red-600 text-white rounded font-bold uppercase tracking-wide hover:bg-red-700 transition-colors shadow-sm border border-red-800 focus:outline-none focus:ring-2 focus:ring-red-500">
+          <button onClick={() => setIsScannerOpen(true)} className="flex items-center px-4 py-3 bg-red-600 text-white rounded font-semibold hover:bg-red-700 transition-colors shadow-sm border border-red-800 focus:outline-none focus:ring-2 focus:ring-red-500">
             <Scan className="w-5 h-5 mr-2" /> Scan Pest/Disease
           </button>
-          <button onClick={() => setIsModalOpen(true)} className="flex items-center px-6 py-3 bg-green-700 text-white rounded font-bold uppercase tracking-wide hover:bg-green-800 transition-colors shadow-sm border border-green-900 focus:outline-none focus:ring-2 focus:ring-green-500">
+          <button onClick={() => setIsModalOpen(true)} className="flex items-center px-6 py-3 bg-green-700 text-white rounded font-semibold hover:bg-green-800 transition-colors shadow-sm border border-green-900 focus:outline-none focus:ring-2 focus:ring-green-500">
             <Plus className="w-5 h-5 mr-2" /> Add Plot
           </button>
         </div>
@@ -391,15 +391,15 @@ const CropManager: React.FC = () => {
              <div className="w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6 shadow-sm mx-auto group-hover:scale-110 transition-transform duration-500">
                <Map className="w-12 h-12 text-green-600 dark:text-green-400" />
              </div>
-             <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3 uppercase tracking-wide">Start Your Season</h3>
+             <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3 font-heading">Start Your Season</h3>
              <p className="text-slate-500 dark:text-slate-400 mb-8 text-sm font-medium leading-relaxed">
                Your digital farm map is ready. Register your first crop field to begin tracking real-time health metrics, harvest schedules, and soil data.
              </p>
              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-               <button onClick={() => setIsModalOpen(true)} className="px-8 py-3 bg-green-600 text-white font-bold uppercase rounded-lg hover:bg-green-700 transition-all shadow-lg active:scale-95 tracking-wide text-xs flex items-center justify-center gap-2">
-                 <Plus className="w-4 h-4" /> Initialize Plot
-               </button>
-               <button onClick={loadSampleData} className="px-8 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 font-bold uppercase rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm active:scale-95 tracking-wide text-xs flex items-center justify-center gap-2">
+                <button onClick={() => setIsModalOpen(true)} className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all shadow-lg active:scale-95 text-xs flex items-center justify-center gap-2">
+                  <Plus className="w-4 h-4" /> Add Your First Plot
+                </button>
+                <button onClick={loadSampleData} className="px-8 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm active:scale-95 text-xs flex items-center justify-center gap-2">
                  <Database className="w-4 h-4" /> Load Sample Data
                </button>
              </div>
@@ -419,20 +419,20 @@ const CropManager: React.FC = () => {
                     e.currentTarget.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop';
                   }}
                 />
-                <div className="absolute top-0 right-0 bg-slate-900 text-white px-3 py-1 m-2 rounded text-xs font-bold uppercase tracking-wider shadow-md border border-slate-700">{crop.status}</div>
+                <div className="absolute top-0 right-0 bg-slate-900 text-white px-3 py-1 m-2 rounded text-xs font-semibold shadow-md border border-slate-700">{crop.status}</div>
                 <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4">
                   <h3 className="text-2xl font-bold text-white font-heading leading-none shadow-black drop-shadow-md">{crop.name}</h3>
-                  <span className="text-white text-sm font-bold uppercase tracking-wide drop-shadow-md">{crop.variety}</span>
+                  <span className="text-white text-sm font-semibold drop-shadow-md">{crop.variety}</span>
                 </div>
               </div>
 
               <div className="p-5 flex-1 flex flex-col">
                 <div className="flex gap-2 mb-4">
                    <div className={`flex-1 p-2 rounded border-2 text-center ${getWaterEfficiencyColor(crop.waterEfficiency)}`}>
-                      <div className="text-[10px] font-bold uppercase mb-1 flex justify-center items-center opacity-80">
-                        <Droplets className="w-3 h-3 mr-1" /> Water Eff.
-                      </div>
-                      <div className="text-sm font-black uppercase flex items-center justify-center gap-1">
+<div className="text-[10px] font-semibold mb-1 flex justify-center items-center opacity-80">
+                         <Droplets className="w-3 h-3 mr-1" /> Water Eff.
+                       </div>
+                       <div className="text-sm font-bold flex items-center justify-center gap-1">
                         <Droplet 
                           className={`w-3 h-3 ${
                             crop.waterEfficiency === 'High' ? 'text-green-600 fill-green-600 dark:text-green-400 dark:fill-green-400' : 
@@ -444,25 +444,25 @@ const CropManager: React.FC = () => {
                       </div>
                    </div>
                    <div className={`flex-1 p-2 rounded border-2 text-center ${crop.biodiversityScore < 40 ? 'bg-orange-50 border-orange-200 text-orange-800 dark:bg-orange-900/30 dark:border-orange-800 dark:text-orange-300' : 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300'}`}>
-                      <div className="text-[10px] font-bold uppercase mb-1 opacity-80">Biodiversity</div>
-                      <div className="text-sm font-black uppercase">{crop.biodiversityScore}/100</div>
+<div className="text-[10px] font-semibold mb-1 opacity-80">Biodiversity</div>
+                       <div className="text-sm font-bold">{crop.biodiversityScore}/100</div>
                    </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-4 border-b border-slate-200 dark:border-slate-700 pb-4">
                   <div>
-                     <div className="flex items-center text-slate-700 dark:text-slate-400 text-xs font-bold uppercase mb-1"><Ruler className="w-3 h-3 mr-1" /> Size</div>
+                     <div className="flex items-center text-slate-700 dark:text-slate-400 text-xs font-semibold mb-1"><Ruler className="w-3 h-3 mr-1" /> Size</div>
                      <div className="text-lg font-bold text-slate-900 dark:text-white">{crop.area} <span className="text-xs text-slate-600 dark:text-slate-400">Acres</span></div>
                   </div>
                   <div>
-                     <div className="flex items-center text-slate-700 dark:text-slate-400 text-xs font-bold uppercase mb-1"><CalendarDays className="w-3 h-3 mr-1" /> Harvest</div>
+                     <div className="flex items-center text-slate-700 dark:text-slate-400 text-xs font-semibold mb-1"><CalendarDays className="w-3 h-3 mr-1" /> Harvest</div>
                      <div className="text-lg font-bold text-slate-900 dark:text-white">{new Date(crop.harvestDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</div>
                   </div>
                 </div>
 
                 <div className="mt-auto flex gap-3">
-                  <button onClick={() => openLogModal(crop.id)} className="flex-1 py-3 bg-slate-800 dark:bg-slate-700 text-white text-sm font-bold uppercase rounded hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 cursor-pointer active:scale-95">
-                    Log Data
+<button onClick={() => openLogModal(crop.id)} className="flex-1 py-3 bg-slate-800 dark:bg-slate-700 text-white text-sm font-semibold rounded hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 cursor-pointer active:scale-95">
+                     Log Activity
                   </button>
                   <button onClick={() => deleteCrop(crop.id)} aria-label={`Delete ${crop.name} plot`} className="px-3 py-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-colors border-2 border-slate-300 dark:border-slate-700 hover:border-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer active:scale-95">
                     <Trash2 className="w-5 h-5" />
@@ -479,8 +479,8 @@ const CropManager: React.FC = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md" role="dialog" aria-modal="true">
           <div className="bg-white dark:bg-slate-900 w-full max-w-md shadow-2xl rounded-md border border-slate-600">
             <div className="bg-slate-900 p-5 flex justify-between items-center border-b-4 border-yellow-500">
-              <h3 className="text-xl font-bold text-white uppercase tracking-wider flex items-center">
-                 <ClipboardList className="w-5 h-5 mr-2 text-yellow-500" /> Log Activity
+<h3 className="text-xl font-bold text-white flex items-center">
+                  <ClipboardList className="w-5 h-5 mr-2 text-yellow-500" /> Log Activity
               </h3>
               <button onClick={() => setIsLogModalOpen(false)} className="text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>
             </div>
@@ -499,7 +499,7 @@ const CropManager: React.FC = () => {
                 <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Details</label>
                 <textarea value={newLog.note} onChange={e => setNewLog({...newLog, note: e.target.value})} className="w-full p-3 bg-white dark:bg-slate-800 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-medium text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 focus:outline-none focus:border-yellow-500" rows={3} placeholder="e.g. Applied 50kg Urea per acre..." required />
               </div>
-              <button type="submit" className="w-full bg-slate-900 dark:bg-slate-700 text-yellow-500 py-4 font-bold uppercase tracking-wider hover:bg-slate-800 dark:hover:bg-slate-600 rounded-sm shadow-md">Save Entry</button>
+              <button type="submit" className="w-full bg-slate-900 dark:bg-slate-700 text-yellow-500 py-4 font-semibold hover:bg-slate-800 dark:hover:bg-slate-600 rounded-sm shadow-md">Save Entry</button>
             </form>
           </div>
         </div>
@@ -522,21 +522,21 @@ const CropManager: React.FC = () => {
                   <button 
                     type="button" 
                     onClick={() => applyTemplate(CROP_TEMPLATES[0])}
-                    className="flex-1 py-2 px-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:border-yellow-500 dark:hover:border-yellow-500 text-slate-700 dark:text-slate-200 hover:text-yellow-700 dark:hover:text-yellow-400 rounded text-xs font-bold uppercase transition-colors shadow-sm flex items-center justify-center gap-1"
+                    className="flex-1 py-2 px-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:border-yellow-500 dark:hover:border-yellow-500 text-slate-700 dark:text-slate-200 hover:text-yellow-700 dark:hover:text-yellow-400 rounded text-xs font-semibold transition-colors shadow-sm flex items-center justify-center gap-1"
                   >
                     <Sprout className="w-3 h-3" /> Maize
                   </button>
                   <button 
                     type="button" 
                     onClick={() => applyTemplate(CROP_TEMPLATES[1])}
-                    className="flex-1 py-2 px-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:border-yellow-500 dark:hover:border-yellow-500 text-slate-700 dark:text-slate-200 hover:text-yellow-700 dark:hover:text-yellow-400 rounded text-xs font-bold uppercase transition-colors shadow-sm flex items-center justify-center gap-1"
+                    className="flex-1 py-2 px-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:border-yellow-500 dark:hover:border-yellow-500 text-slate-700 dark:text-slate-200 hover:text-yellow-700 dark:hover:text-yellow-400 rounded text-xs font-semibold transition-colors shadow-sm flex items-center justify-center gap-1"
                   >
                     <Coffee className="w-3 h-3" /> Coffee
                   </button>
                   <button 
                     type="button" 
                     onClick={() => applyTemplate(CROP_TEMPLATES[2])}
-                    className="flex-1 py-2 px-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:border-yellow-500 dark:hover:border-yellow-500 text-slate-700 dark:text-slate-200 hover:text-yellow-700 dark:hover:text-yellow-400 rounded text-xs font-bold uppercase transition-colors shadow-sm flex items-center justify-center gap-1"
+                    className="flex-1 py-2 px-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:border-yellow-500 dark:hover:border-yellow-500 text-slate-700 dark:text-slate-200 hover:text-yellow-700 dark:hover:text-yellow-400 rounded text-xs font-semibold transition-colors shadow-sm flex items-center justify-center gap-1"
                   >
                     <Wheat className="w-3 h-3" /> Wheat
                   </button>
@@ -618,7 +618,7 @@ const CropManager: React.FC = () => {
                     </select>
                   </div>
                 </div>
-                <button type="submit" className="w-full bg-yellow-500 text-slate-900 py-4 font-bold uppercase tracking-wider hover:bg-yellow-400 rounded-sm shadow-md">Confirm & Save</button>
+                <button type="submit" className="w-full bg-yellow-500 text-slate-900 py-4 font-semibold hover:bg-yellow-400 rounded-sm shadow-md">Confirm & Save</button>
               </form>
             </div>
           </div>
@@ -630,7 +630,7 @@ const CropManager: React.FC = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md" role="dialog" aria-modal="true">
            <div className="bg-slate-100 dark:bg-slate-900 w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-slate-600">
               <div className="bg-slate-900 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
-                <h3 className="text-xl font-bold text-white uppercase tracking-wider flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-500" /> Pest & Disease Diagnostics</h3>
+                <h3 className="text-xl font-bold text-white uppercase tracking-wider flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-500" /> Crop Health Check</h3>
                 <button onClick={resetScanner} className="text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>
               </div>
               <div className="p-6 overflow-y-auto">
@@ -638,17 +638,17 @@ const CropManager: React.FC = () => {
                    <div className="space-y-6">
                       <div onClick={() => scanInputRef.current?.click()} className={`border-4 border-dashed rounded-lg p-10 flex flex-col items-center justify-center cursor-pointer ${scanImage ? 'border-green-600 bg-green-50 dark:bg-green-900/20' : 'border-slate-500 dark:border-slate-600 bg-white dark:bg-slate-800'}`}>
                          <input type="file" accept="image/*" className="hidden" ref={scanInputRef} onChange={handleScanUpload} />
-                         {scanImage ? <img src={scanImage} className="max-h-48 object-contain" /> : <><Upload className="w-12 h-12 text-slate-500 mb-4" /><p className="text-slate-800 dark:text-slate-200 font-bold uppercase">Tap to Upload</p></>}
+                         {scanImage ? <img src={scanImage} className="max-h-48 object-contain" /> : <><Upload className="w-12 h-12 text-slate-500 mb-4" /><p className="text-slate-800 dark:text-slate-200 font-semibold">Tap to Upload</p></>}
                       </div>
                       <textarea value={scanContext} onChange={e => setScanContext(e.target.value)} className="w-full p-3 border-2 border-slate-400 dark:border-slate-600 rounded font-medium text-slate-800 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-800 focus:outline-none focus:border-red-500" placeholder="Add specific observation notes here..." rows={3} />
-                      <button onClick={performScan} disabled={!scanImage || isScanning} className="w-full py-4 bg-red-600 text-white font-bold uppercase tracking-widest hover:bg-red-700 rounded-sm shadow-md flex items-center justify-center">
-                        {isScanning ? <Loader2 className="animate-spin w-5 h-5 mr-2" /> : 'Run Diagnostics'}
+                      <button onClick={performScan} disabled={!scanImage || isScanning} className="w-full py-4 bg-red-600 text-white font-semibold hover:bg-red-700 rounded-sm shadow-md flex items-center justify-center">
+                        {isScanning ? <Loader2 className="animate-spin w-5 h-5 mr-2" /> : 'Run Health Check'}
                       </button>
                    </div>
                  ) : (
                    <div className="space-y-4">
                       <div className="bg-white dark:bg-slate-800 border-l-4 border-red-600 p-6 shadow-sm"><p className="whitespace-pre-wrap font-medium text-slate-900 dark:text-white">{scanResult}</p></div>
-                      <button onClick={() => setScanResult('')} className="w-full py-3 bg-slate-800 text-white font-bold uppercase rounded-sm">New Scan</button>
+                      <button onClick={() => setScanResult('')} className="w-full py-3 bg-slate-800 text-white font-semibold rounded-sm">Scan Again</button>
                    </div>
                  )}
               </div>

@@ -108,18 +108,18 @@ const MarketAnalytics: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b-4 border-slate-800 dark:border-slate-600 pb-4 transition-colors">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Market Intelligence</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white font-heading">Market Intelligence</h2>
           <div className="flex items-center gap-3 mt-1">
-             <span className="flex items-center text-xs font-bold text-green-700 dark:text-green-400 uppercase tracking-wide bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded border border-green-200 dark:border-green-800">
+             <span className="flex items-center text-xs font-semibold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded border border-green-200 dark:border-green-800">
                <Zap className="w-3 h-3 mr-1" /> Live Feed Active
              </span>
-             <span className="text-slate-400 text-xs font-bold uppercase">•</span>
-             <span className="text-slate-600 dark:text-slate-400 font-bold text-xs uppercase tracking-wide">Global Commodities Exchange</span>
+             <span className="text-slate-400 text-xs font-semibold">•</span>
+             <span className="text-slate-600 dark:text-slate-400 font-semibold text-xs">Global Commodities Exchange</span>
           </div>
         </div>
         <button 
           onClick={refreshMarketPrices}
-          className="mt-4 md:mt-0 flex items-center px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 border border-transparent rounded hover:opacity-90 transition-all text-xs font-bold shadow-lg uppercase tracking-wide active:scale-95"
+          className="mt-4 md:mt-0 flex items-center px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 border border-transparent rounded hover:opacity-90 transition-all text-xs font-semibold shadow-lg active:scale-95"
         >
           <RefreshCw className="w-4 h-4 mr-2" />
           Sync Quotes
@@ -143,7 +143,7 @@ const MarketAnalytics: React.FC = () => {
             >
               {isSelected && <div className="absolute top-2 right-2"><MousePointer2 className="w-4 h-4 text-yellow-500 animate-pulse"/></div>}
               <div className="flex justify-between items-start mb-2">
-                <h3 className={`font-black text-lg uppercase tracking-tight ${isSelected ? 'text-white' : 'text-slate-800 dark:text-slate-200'}`}>{item.cropName}</h3>
+                <h3 className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-slate-800 dark:text-slate-200'}`}>{item.cropName}</h3>
                 <div className={`p-1 rounded ${item.trend === 'up' ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400' : item.trend === 'down' ? 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'}`}>
                    {item.trend === 'up' && <TrendingUp className="w-4 h-4" />}
                    {item.trend === 'down' && <TrendingDown className="w-4 h-4" />}
@@ -151,12 +151,12 @@ const MarketAnalytics: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-end gap-2 mb-1">
-                <span className={`text-3xl font-black font-heading tracking-tight ${isSelected ? 'text-yellow-400' : 'text-slate-900 dark:text-white'}`}>${item.price.toFixed(2)}</span>
+                <span className={`text-3xl font-bold font-heading ${isSelected ? 'text-yellow-400' : 'text-slate-900 dark:text-white'}`}>${item.price.toFixed(2)}</span>
                 <span className={`text-xs font-bold mb-1.5 ${item.changePercentage > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                   {item.changePercentage > 0 ? '+' : ''}{item.changePercentage}%
                 </span>
               </div>
-              <div className={`text-[10px] font-bold uppercase tracking-wider ${isSelected ? 'text-slate-300' : 'text-slate-500 dark:text-slate-400'}`}>
+              <div className={`text-[10px] font-semibold ${isSelected ? 'text-slate-300' : 'text-slate-500 dark:text-slate-400'}`}>
                  Per {item.unit}
               </div>
             </div>
@@ -224,7 +224,7 @@ const MarketAnalytics: React.FC = () => {
                         padding: '12px'
                       }}
                       itemStyle={{ color: tooltipText, fontSize: '12px', fontWeight: '600' }}
-                      labelStyle={{ color: axisColor, fontSize: '10px', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase' }}
+                      labelStyle={{ color: axisColor, fontSize: '10px', fontWeight: '700', marginBottom: '8px', textTransform: 'none' }}
                     />
                     <Area 
                       type="monotone" 
@@ -256,7 +256,7 @@ const MarketAnalytics: React.FC = () => {
            <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-xl relative overflow-hidden border border-slate-800">
               <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950 z-0"></div>
               <div className="relative z-10">
-                 <h4 className="text-xs font-bold uppercase text-slate-400 mb-4 flex items-center">
+                 <h4 className="text-xs font-semibold text-slate-400 mb-4 flex items-center">
                     <PieChart className="w-4 h-4 mr-2" /> Market Sentiment
                  </h4>
                  
@@ -271,7 +271,7 @@ const MarketAnalytics: React.FC = () => {
                     <div className="h-full bg-green-500 transition-all duration-1000" style={{ width: activeTickerData?.trend === 'up' ? '75%' : activeTickerData?.trend === 'down' ? '25%' : '50%' }}></div>
                     <div className="h-full bg-red-500 flex-1"></div>
                  </div>
-                 <div className="flex justify-between text-[10px] font-bold uppercase mt-2 text-slate-400">
+                 <div className="flex justify-between text-[10px] font-semibold mt-2 text-slate-400">
                     <span>Buy Pressure</span>
                     <span>Sell Pressure</span>
                  </div>
@@ -291,7 +291,7 @@ const MarketAnalytics: React.FC = () => {
 
            {/* Live Feed Simulator */}
            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
-              <h4 className="text-xs font-bold uppercase text-slate-600 dark:text-slate-400 mb-4 flex items-center">
+              <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-4 flex items-center">
                  <Clock className="w-4 h-4 mr-2" /> Live Order Flow
               </h4>
               <div className="space-y-3">
@@ -318,14 +318,14 @@ const MarketAnalytics: React.FC = () => {
       <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
         <div className="flex items-center justify-between mb-6">
            <div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Financial Resilience</h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-bold uppercase mt-1">Yearly Revenue vs Input Costs Analysis</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white font-heading">Financial Resilience</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">Yearly Revenue vs Input Costs Analysis</p>
            </div>
            <div className="hidden md:flex gap-4">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-700 dark:text-slate-300">
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
                  <div className="w-3 h-3 bg-green-500 rounded-full"></div> Gross Revenue
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-700 dark:text-slate-300">
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
                  <div className="w-3 h-3 bg-red-500 rounded-full"></div> Input Costs
               </div>
            </div>

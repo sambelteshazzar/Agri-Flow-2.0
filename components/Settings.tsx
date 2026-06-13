@@ -74,8 +74,8 @@ const Settings: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-10 animate-fade-in">
       <div className="border-b-4 border-slate-800 dark:border-slate-600 pb-4 mb-8">
-        <h2 className="text-3xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">System Settings</h2>
-        <p className="text-slate-600 dark:text-slate-400 font-bold text-xs uppercase tracking-wide mt-1">Configuration & Data Management</p>
+        <h2 className="text-3xl font-semibold text-slate-900 dark:text-white font-heading">Settings</h2>
+        <p className="text-slate-600 dark:text-slate-400 font-semibold text-xs mt-1">Configuration & Data Management</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -83,14 +83,14 @@ const Settings: React.FC = () => {
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
            <div className="flex items-center gap-3 mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
               <User className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white uppercase">Profile Settings</h3>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Profile Settings</h3>
            </div>
            
            <form onSubmit={handleProfileSave} className="space-y-4">
               <div className="flex items-center gap-4 mb-4">
                  <img src={formData.avatar} alt="Avatar Preview" className="w-16 h-16 rounded-full border-4 border-slate-200 dark:border-slate-700 object-cover" />
                  <div className="flex-1">
-                    <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Avatar URL</label>
+                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Avatar URL</label>
                     <input 
                       type="text" 
                       value={formData.avatar} 
@@ -102,7 +102,7 @@ const Settings: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                  <div>
-                    <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Display Name</label>
+                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Display Name</label>
                     <input 
                       type="text" 
                       value={formData.name} 
@@ -111,7 +111,7 @@ const Settings: React.FC = () => {
                     />
                  </div>
                  <div>
-                    <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Role Title</label>
+                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Role Title</label>
                     <input 
                       type="text" 
                       value={formData.role} 
@@ -122,7 +122,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div>
-                 <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Farm Name</label>
+                 <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Farm Name</label>
                  <input 
                    type="text" 
                    value={formData.farmName} 
@@ -132,7 +132,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div>
-                 <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Bio</label>
+                 <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Bio</label>
                  <textarea 
                    value={formData.bio} 
                    onChange={e => setFormData({...formData, bio: e.target.value})}
@@ -144,7 +144,7 @@ const Settings: React.FC = () => {
               <button 
                 type="submit" 
                 disabled={isSaving}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold uppercase tracking-wide transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded font-semibold transition-colors flex items-center justify-center gap-2"
               >
                 {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Update Profile</>}
               </button>
@@ -155,7 +155,7 @@ const Settings: React.FC = () => {
         <div className="space-y-8">
            {/* Appearance */}
            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white uppercase mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                  <Sun className="w-5 h-5 text-yellow-500" /> Interface
               </h3>
               <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
@@ -174,7 +174,7 @@ const Settings: React.FC = () => {
 
            {/* Data Management */}
            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white uppercase mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                  <Shield className="w-5 h-5 text-green-500" /> Data Center
               </h3>
               
@@ -182,23 +182,23 @@ const Settings: React.FC = () => {
                  <div className="grid grid-cols-2 gap-4">
                     <button onClick={handleExportData} className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
                        <Download className="w-6 h-6 text-slate-400 group-hover:text-blue-500 mb-2" />
-                       <span className="text-xs font-bold uppercase text-slate-600 dark:text-slate-300">Backup Data</span>
+                       <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">Backup Data</span>
                     </button>
                     <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group cursor-pointer">
                        <Upload className="w-6 h-6 text-slate-400 group-hover:text-green-500 mb-2" />
-                       <span className="text-xs font-bold uppercase text-slate-600 dark:text-slate-300">Import Data</span>
+                       <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">Import Data</span>
                        <input type="file" accept=".json" className="hidden" onChange={handleImportData} />
                     </label>
                  </div>
 
                  <div className="border-t border-slate-100 dark:border-slate-800 pt-4">
-                    <h4 className="text-xs font-black text-red-600 uppercase mb-2 flex items-center gap-1">
+                    <h4 className="text-xs font-bold text-red-600 mb-2 flex items-center gap-1">
                        <AlertTriangle className="w-4 h-4" /> Danger Zone
                     </h4>
                     <p className="text-xs text-slate-500 mb-3">Irreversibly wipe all local data and return to factory settings.</p>
                     <button 
                       onClick={() => { if(confirm('Are you sure? All farm data will be lost.')) resetApp() }}
-                      className="w-full py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded font-bold uppercase text-xs hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors flex items-center justify-center gap-2"
+                      className="w-full py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded font-semibold text-xs hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors flex items-center justify-center gap-2"
                     >
                        <Trash2 className="w-4 h-4" /> Factory Reset
                     </button>

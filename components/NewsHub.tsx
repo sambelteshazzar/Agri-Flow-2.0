@@ -60,17 +60,17 @@ const NewsHub: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b-4 border-slate-800 dark:border-slate-600 pb-4 transition-colors">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white uppercase tracking-tight flex items-center">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white font-heading flex items-center">
             Global Wire <span className="ml-2 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 font-bold text-xs uppercase tracking-wide mt-1 flex items-center">
+          <p className="text-slate-600 dark:text-slate-400 font-semibold text-xs mt-1 flex items-center">
             <Signal className="w-3 h-3 mr-1" /> Live Satellite Feed
           </p>
         </div>
         <button 
           onClick={refreshNews}
           disabled={isLoadingNews}
-          className="mt-4 md:mt-0 flex items-center px-4 py-2 bg-slate-900 dark:bg-white border border-slate-900 dark:border-white text-white dark:text-slate-900 rounded hover:opacity-90 transition-opacity text-xs font-bold shadow-sm uppercase tracking-wide disabled:opacity-50 active:scale-95"
+          className="mt-4 md:mt-0 flex items-center px-4 py-2 bg-slate-900 dark:bg-white border border-slate-900 dark:border-white text-white dark:text-slate-900 rounded hover:opacity-90 transition-opacity text-xs font-semibold shadow-sm disabled:opacity-50 active:scale-95"
         >
           {isLoadingNews ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
           {isLoadingNews ? 'Syncing...' : 'Refresh Wire'}
@@ -83,7 +83,7 @@ const NewsHub: React.FC = () => {
              <div className="absolute inset-0 bg-blue-500/20 rounded-full animate-ping"></div>
              <Loader2 className="w-12 h-12 mb-4 animate-spin text-blue-600 dark:text-blue-400 relative z-10" />
            </div>
-           <p className="text-sm font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">Establishing Satellite Link...</p>
+           <p className="text-sm font-semiboldst text-slate-600 dark:text-slate-400">Establishing Satellite Link...</p>
            <p className="text-[10px] text-slate-500 mt-2">Aggregating global market data</p>
         </div>
       ) : newsArticles.length > 0 ? (
@@ -104,10 +104,10 @@ const NewsHub: React.FC = () => {
                
                <div className="absolute bottom-0 left-0 p-6 md:p-10 w-full max-w-4xl">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded border text-[10px] font-black uppercase tracking-widest ${getCategoryColor(featuredArticle.category)} bg-white/90 text-slate-900 border-white/20 backdrop-blur-md shadow-lg`}>
+                    <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded border text-[10px] font-semibold ${getCategoryColor(featuredArticle.category)} bg-white/90 text-slate-900 border-white/20 backdrop-blur-md shadow-lg`}>
                        {getCategoryIcon(featuredArticle.category)} {featuredArticle.category}
                     </div>
-                    <span className="text-[10px] font-bold uppercase text-slate-300 tracking-wider bg-black/40 px-2 py-1 rounded backdrop-blur-sm">Top Story</span>
+                    <span className="text-[10px] font-semibold text-slate-300 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">Featured</span>
                   </div>
                   
                   <h3 className="text-3xl md:text-5xl font-black text-white font-heading leading-tight mb-4 drop-shadow-xl">
@@ -118,7 +118,7 @@ const NewsHub: React.FC = () => {
                     {featuredArticle.summary}
                   </p>
                   
-                  <div className="flex items-center gap-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-t border-white/10 pt-4">
+                  <div className="flex items-center gap-4 text-xs font-semibold text-slate-400 border-t border-white/10 pt-4">
                      <span className="text-white flex items-center gap-2">
                        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                        {featuredArticle.source}
@@ -155,7 +155,7 @@ const NewsHub: React.FC = () => {
                        }}
                      />
                      <div className="absolute top-3 right-3">
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold uppercase border shadow-sm ${getCategoryColor(article.category)} bg-white/95 dark:bg-slate-900/90 backdrop-blur-sm`}>
+                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold border shadow-sm ${getCategoryColor(article.category)} bg-white/95 dark:bg-slate-900/90 backdrop-blur-sm`}>
                            {getCategoryIcon(article.category)} {article.category}
                         </span>
                      </div>
@@ -171,7 +171,7 @@ const NewsHub: React.FC = () => {
                         </p>
                      </div>
                      
-                     <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400">
+                     <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] font-semibold text-slate-500 dark:text-slate-400">
                         <span className="truncate max-w-[100px] text-slate-700 dark:text-slate-300">{article.source}</span>
                         <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {article.timeAgo}</span>
                      </div>
@@ -181,7 +181,7 @@ const NewsHub: React.FC = () => {
                        onClick={(e) => handleNewsClick(e, article.url)}
                        target="_blank" 
                        rel="noreferrer" 
-                       className="mt-3 block w-full text-center py-2.5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
+                       className="mt-3 block w-full text-center py-2.5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
                      >
                         Read Source
                      </a>
@@ -199,7 +199,7 @@ const NewsHub: React.FC = () => {
            <p className="text-slate-500 dark:text-slate-400 text-sm mb-6 max-w-xs mx-auto">We couldn't fetch the latest headlines. Please check your internet connection and try again.</p>
            <button 
              onClick={refreshNews} 
-             className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-xs uppercase tracking-wide shadow-md transition-all active:scale-95"
+             className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold text-xs shadow-md transition-all active:scale-95"
            >
              Retry Connection
            </button>

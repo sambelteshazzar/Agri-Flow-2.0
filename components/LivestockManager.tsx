@@ -132,7 +132,7 @@ const LivestockManager: React.FC = () => {
       const diagnosis = await analyzeCropImage(scanImage, `LIVESTOCK HEALTH ANALYSIS: ${scanContext}. Check for signs of disease, injury, or malnutrition.`);
       setScanResult(diagnosis);
     } catch {
-      setScanResult("Error: Could not complete diagnosis. Please ensure the image is clear.");
+      setScanResult("Could not complete the analysis. Please ensure the image is clear.");
     } finally {
       setIsScanning(false);
     }
@@ -154,14 +154,14 @@ const LivestockManager: React.FC = () => {
     <div className="space-y-6 pb-10 animate-fade-in">
       <div className="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-300 dark:border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4 transition-colors">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Livestock Inventory</h2>
-          <p className="text-slate-700 dark:text-slate-300 font-bold mt-1 uppercase text-xs tracking-wide">Monitoring {livestock.reduce((acc, curr) => acc + curr.count, 0)} Head</p>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white font-heading">My Livestock</h2>
+          <p className="text-slate-700 dark:text-slate-300 font-semibold mt-1 text-xs">Monitoring {livestock.reduce((acc, curr) => acc + curr.count, 0)} Head</p>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => setIsScannerOpen(true)} className="flex items-center px-4 py-3 bg-red-600 text-white rounded font-bold uppercase tracking-wide hover:bg-red-700 transition-colors shadow-sm border border-red-800 focus:outline-none focus:ring-2 focus:ring-red-500">
+          <button onClick={() => setIsScannerOpen(true)} className="flex items-center px-4 py-3 bg-red-600 text-white rounded font-semibold hover:bg-red-700 transition-colors shadow-sm border border-red-800 focus:outline-none focus:ring-2 focus:ring-red-500">
             <Scan className="w-5 h-5 mr-2" /> AI Health Scan
           </button>
-          <button onClick={() => setIsModalOpen(true)} className="flex items-center px-6 py-3 bg-slate-800 dark:bg-slate-700 text-white rounded font-bold uppercase tracking-wide hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors shadow-sm border border-slate-900 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500">
+          <button onClick={() => setIsModalOpen(true)} className="flex items-center px-6 py-3 bg-slate-800 dark:bg-slate-700 text-white rounded font-semibold hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors shadow-sm border border-slate-900 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500">
             <Plus className="w-5 h-5 mr-2" /> Add Herd Unit
           </button>
         </div>
@@ -174,15 +174,15 @@ const LivestockManager: React.FC = () => {
              <div className="w-24 h-24 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mb-6 shadow-sm mx-auto group-hover:scale-110 transition-transform duration-500">
                <Clipboard className="w-12 h-12 text-yellow-600 dark:text-yellow-400" />
              </div>
-             <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3 uppercase tracking-wide">Barn is Empty</h3>
+             <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3 font-heading">Barn is Empty</h3>
              <p className="text-slate-500 dark:text-slate-400 mb-8 text-sm font-medium leading-relaxed">
                Begin monitoring your herd health, grazing patterns, and veterinary logs by adding your first livestock unit to the system.
              </p>
              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-               <button onClick={() => setIsModalOpen(true)} className="px-8 py-3 bg-yellow-500 text-slate-900 font-bold uppercase rounded-lg hover:bg-yellow-400 transition-all shadow-lg active:scale-95 tracking-wide text-xs flex items-center justify-center gap-2">
+               <button onClick={() => setIsModalOpen(true)} className="px-8 py-3 bg-yellow-500 text-slate-900 font-semibold rounded-lg hover:bg-yellow-400 transition-all shadow-lg active:scale-95 text-xs flex items-center justify-center gap-2">
                  <Plus className="w-4 h-4" /> Register Herd
                </button>
-               <button onClick={loadSampleData} className="px-8 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 font-bold uppercase rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm active:scale-95 tracking-wide text-xs flex items-center justify-center gap-2">
+               <button onClick={loadSampleData} className="px-8 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm active:scale-95 text-xs flex items-center justify-center gap-2">
                  <Database className="w-4 h-4" /> Load Sample Herd
                </button>
              </div>
@@ -197,11 +197,11 @@ const LivestockManager: React.FC = () => {
                    <div className="flex items-center">
                       <div className="bg-yellow-500 text-slate-900 p-2 rounded-sm mr-3 font-bold shadow-sm"><Tag className="w-5 h-5" /></div>
                       <div>
-                         <h3 className="text-xl font-bold text-slate-900 dark:text-white uppercase">{animal.name}</h3>
-                         <p className="text-xs font-bold text-slate-700 dark:text-slate-400 uppercase tracking-wide">{animal.species}</p>
+                         <h3 className="text-xl font-bold text-slate-900 dark:text-white">{animal.name}</h3>
+                         <p className="text-xs font-semibold text-slate-700 dark:text-slate-400">{animal.species}</p>
                       </div>
                    </div>
-                   <div className="text-right"><span className="block text-3xl font-bold text-slate-800 dark:text-slate-200 font-heading">{animal.count}</span><span className="text-[10px] text-slate-600 dark:text-slate-400 uppercase font-bold">Count</span></div>
+                   <div className="text-right"><span className="block text-3xl font-bold text-slate-800 dark:text-slate-200 font-heading">{animal.count}</span><span className="text-[10px] text-slate-600 dark:text-slate-400 font-semibold">Count</span></div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 mb-4">
@@ -210,7 +210,7 @@ const LivestockManager: React.FC = () => {
                       <select 
                         value={animal.status} 
                         onChange={(e) => handleStatusChange(animal.id, e.target.value as any)}
-                        className={`w-full h-full py-2 pl-2 pr-1 bg-transparent text-xs font-bold uppercase appearance-none focus:outline-none cursor-pointer`}
+                        className={`w-full h-full py-2 pl-2 pr-1 bg-transparent text-xs font-semibold appearance-none focus:outline-none cursor-pointer`}
                       >
                         <option value="Healthy" className="text-slate-900 dark:text-slate-900">Healthy</option>
                         <option value="Sick" className="text-slate-900 dark:text-slate-900">Sick</option>
@@ -220,7 +220,7 @@ const LivestockManager: React.FC = () => {
                       <HeartPulse className="w-3 h-3 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-50"/>
                    </div>
                    
-                   <div className="text-center py-2 px-1 rounded border-2 border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold uppercase">{animal.grazingType}</div>
+                   <div className="text-center py-2 px-1 rounded border-2 border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold">{animal.grazingType}</div>
                 </div>
                 
                 <div className="h-28 w-full bg-slate-200 dark:bg-slate-800 mb-4 rounded-sm overflow-hidden border border-slate-300 dark:border-slate-700 relative group">
@@ -233,7 +233,7 @@ const LivestockManager: React.FC = () => {
                 </div>
 
                 <div className="flex gap-2 border-t border-slate-200 dark:border-slate-700 pt-3">
-                  <button onClick={() => openRecordsModal(animal.id)} className="flex-1 py-2 text-xs font-bold uppercase tracking-wide bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded transition-colors border border-slate-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">Records</button>
+                  <button onClick={() => openRecordsModal(animal.id)} className="flex-1 py-2 text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded transition-colors border border-slate-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">Records</button>
                   <button onClick={() => deleteLivestock(animal.id)} className="px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-500"><Trash2 className="w-4 h-4" /></button>
                 </div>
               </div>
@@ -247,7 +247,7 @@ const LivestockManager: React.FC = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md" role="dialog" aria-modal="true">
           <div className="bg-white dark:bg-slate-900 w-full max-w-lg shadow-2xl rounded-md border border-slate-600 max-h-[85vh] flex flex-col">
             <div className="bg-slate-900 p-5 flex justify-between items-center border-b-4 border-yellow-500 shrink-0">
-              <h3 className="text-xl font-bold text-white uppercase tracking-wider flex items-center">
+              <h3 className="text-xl font-bold text-white font-semibold flex items-center">
                  <ClipboardList className="w-5 h-5 mr-2 text-yellow-500" /> Herd Records
               </h3>
               <button onClick={() => setIsRecordsModalOpen(false)} className="text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>
@@ -256,7 +256,7 @@ const LivestockManager: React.FC = () => {
             <div className="p-6 flex-1 overflow-y-auto">
                {/* Add New Record Form */}
                <form onSubmit={handleLogSubmit} className="mb-6 p-4 bg-slate-50 dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-700">
-                  <h4 className="text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-3">Add Entry</h4>
+                  <h4 className="text-xs font-semibold text-slate-800 dark:text-slate-300 mb-3">Add Entry</h4>
                   <div className="space-y-3">
                      <select value={newLog.type} onChange={e => setNewLog({...newLog, type: e.target.value as any})} className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-400 dark:border-slate-600 rounded font-bold text-sm text-slate-900 dark:text-white focus:outline-none focus:border-yellow-500">
                         <option value="Observation">General Observation</option>
@@ -264,19 +264,19 @@ const LivestockManager: React.FC = () => {
                         <option value="Input">Feeding</option>
                      </select>
                      <input type="text" value={newLog.note} onChange={e => setNewLog({...newLog, note: e.target.value})} className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-400 dark:border-slate-600 rounded text-sm font-medium text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 focus:outline-none focus:border-yellow-500" placeholder="Details..." required />
-                     <button type="submit" className="w-full bg-slate-800 dark:bg-slate-700 text-white py-2 text-xs font-bold uppercase rounded hover:bg-slate-900 dark:hover:bg-slate-600">Save Record</button>
+                     <button type="submit" className="w-full bg-slate-800 dark:bg-slate-700 text-white py-2 text-xs font-semibold rounded hover:bg-slate-900 dark:hover:bg-slate-600">Save Record</button>
                   </div>
                </form>
 
                {/* History List */}
                <div className="space-y-3">
-                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-400 uppercase mb-2">History</h4>
+                  <h4 className="text-xs font-semibold text-slate-700 dark:text-slate-400 mb-2">History</h4>
                   {animalLogs.length === 0 ? (
                     <p className="text-sm text-slate-500 italic">No records found.</p>
                   ) : (
                     animalLogs.map((log, idx) => (
                       <div key={idx} className="border-l-2 border-slate-300 dark:border-slate-700 pl-3 pb-3">
-                         <div className="text-xs text-slate-600 dark:text-slate-400 font-bold uppercase mb-1 flex items-center">
+                         <div className="text-xs text-slate-600 dark:text-slate-400 font-semibold mb-1 flex items-center">
                             <Calendar className="w-3 h-3 mr-1" /> {new Date(log.date).toLocaleDateString()}
                             <span className="ml-2 px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-sm">{log.type}</span>
                          </div>
@@ -295,7 +295,7 @@ const LivestockManager: React.FC = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md" role="dialog" aria-modal="true">
           <div className="bg-white dark:bg-slate-900 w-full max-w-lg shadow-2xl rounded-md border border-slate-600 max-h-[90vh] overflow-y-auto">
              <div className="bg-slate-900 p-5 flex justify-between items-center border-b-4 border-yellow-500 sticky top-0 z-10">
-                <h3 className="text-xl font-bold text-white uppercase tracking-wider flex items-center"><Beef className="w-5 h-5 mr-2 text-yellow-500" /> New Herd Entry</h3>
+                <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Beef className="w-5 h-5 mr-2 text-yellow-500" /> New Herd Entry</h3>
                 <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>
              </div>
              <div className="p-6">
@@ -308,7 +308,7 @@ const LivestockManager: React.FC = () => {
                     </div>
                     <div className="flex-1">
                        <div className="mb-2">
-                         <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1 flex items-center"><ImageIcon className="w-3 h-3 mr-1" /> Image URL</label>
+                         <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1 flex items-center"><ImageIcon className="w-3 h-3 mr-1" /> Image URL</label>
                          <input 
                            type="text" 
                            value={newAnimal.imageUrl} 
@@ -321,10 +321,10 @@ const LivestockManager: React.FC = () => {
                     </div>
                   </div>
 
-                   <div><label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Herd ID / Name</label><input autoFocus type="text" value={newAnimal.name} onChange={e => setNewAnimal({...newAnimal, name: e.target.value})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-900 focus:outline-none focus:border-yellow-500" placeholder="e.g. Black Angus Herd #4" required /></div>
+                   <div><label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Herd ID / Name</label><input autoFocus type="text" value={newAnimal.name} onChange={e => setNewAnimal({...newAnimal, name: e.target.value})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-900 focus:outline-none focus:border-yellow-500" placeholder="e.g. Black Angus Herd #4" required /></div>
                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Species</label>
+                        <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Species</label>
                         <select value={newAnimal.species} onChange={e => handleSpeciesChange(e.target.value)} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-900 focus:outline-none focus:border-yellow-500">
                           <option value="Cattle">Cattle</option>
                           <option value="Goat">Goat</option>
@@ -332,15 +332,15 @@ const LivestockManager: React.FC = () => {
                           <option value="Chicken">Chicken</option><option value="Pig">Pig</option>
                         </select>
                       </div>
-                      <div><label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Count</label><input type="number" min="1" value={newAnimal.count} onChange={e => setNewAnimal({...newAnimal, count: Number(e.target.value)})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-900 focus:outline-none focus:border-yellow-500" placeholder="e.g. 12" required /></div>
+                      <div><label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Count</label><input type="number" min="1" value={newAnimal.count} onChange={e => setNewAnimal({...newAnimal, count: Number(e.target.value)})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-900 focus:outline-none focus:border-yellow-500" placeholder="e.g. 12" required /></div>
                    </div>
                    <div className="grid grid-cols-2 gap-4">
-                      <div><label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Status</label><select value={newAnimal.status} onChange={e => setNewAnimal({...newAnimal, status: e.target.value as any})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-900 focus:outline-none focus:border-yellow-500"><option value="Healthy">Healthy</option><option value="Sick">Sick</option><option value="Quarantined">Quarantined</option><option value="Lactating">Lactating</option></select></div>
-                      <div><label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Grazing</label><select value={newAnimal.grazingType} onChange={e => setNewAnimal({...newAnimal, grazingType: e.target.value as any})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-900 focus:outline-none focus:border-yellow-500"><option value="Rotational">Rotational</option><option value="Free Range">Free Range</option><option value="Feedlot">Feedlot</option></select></div>
+                      <div><label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Status</label><select value={newAnimal.status} onChange={e => setNewAnimal({...newAnimal, status: e.target.value as any})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-900 focus:outline-none focus:border-yellow-500"><option value="Healthy">Healthy</option><option value="Sick">Sick</option><option value="Quarantined">Quarantined</option><option value="Lactating">Lactating</option></select></div>
+                      <div><label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Grazing</label><select value={newAnimal.grazingType} onChange={e => setNewAnimal({...newAnimal, grazingType: e.target.value as any})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-900 focus:outline-none focus:border-yellow-500"><option value="Rotational">Rotational</option><option value="Free Range">Free Range</option><option value="Feedlot">Feedlot</option></select></div>
                    </div>
                    
                    <div>
-                      <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 uppercase mb-1">Notes</label>
+                      <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Notes</label>
                       <textarea 
                         value={newAnimal.notes} 
                         onChange={e => setNewAnimal({...newAnimal, notes: e.target.value})} 
@@ -350,7 +350,7 @@ const LivestockManager: React.FC = () => {
                       />
                    </div>
 
-                   <button type="submit" className="w-full bg-yellow-500 text-slate-900 py-4 font-bold uppercase tracking-wider hover:bg-yellow-400 rounded-sm shadow-md">Confirm Entry</button>
+                   <button type="submit" className="w-full bg-yellow-500 text-slate-900 py-4 font-semibold hover:bg-yellow-400 rounded-sm shadow-md">Confirm Entry</button>
                 </form>
              </div>
           </div>
@@ -362,7 +362,7 @@ const LivestockManager: React.FC = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md" role="dialog" aria-modal="true">
            <div className="bg-slate-100 dark:bg-slate-900 w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-slate-600">
               <div className="bg-slate-900 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
-                <h3 className="text-xl font-bold text-white uppercase tracking-wider flex items-center"><Stethoscope className="w-5 h-5 mr-2 text-red-500" /> Veterinary Diagnostics AI</h3>
+                <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Stethoscope className="w-5 h-5 mr-2 text-red-500" /> Animal Health Check</h3>
                 <button onClick={resetScanner} className="text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>
               </div>
               <div className="p-6 overflow-y-auto">
@@ -370,17 +370,17 @@ const LivestockManager: React.FC = () => {
                    <div className="space-y-6">
                       <div onClick={() => scanInputRef.current?.click()} className={`border-4 border-dashed rounded-lg p-10 flex flex-col items-center justify-center cursor-pointer ${scanImage ? 'border-red-600 bg-red-50 dark:bg-red-900/20' : 'border-slate-500 dark:border-slate-600 bg-white dark:bg-slate-800'}`}>
                          <input type="file" accept="image/*" className="hidden" ref={scanInputRef} onChange={handleScanUpload} />
-                         {scanImage ? <img src={scanImage} className="max-h-48 object-contain" /> : <><Upload className="w-12 h-12 text-slate-500 mb-4" /><p className="text-slate-800 dark:text-slate-200 font-bold uppercase">Tap to Upload Photo</p></>}
+                         {scanImage ? <img src={scanImage} className="max-h-48 object-contain" /> : <><Upload className="w-12 h-12 text-slate-500 mb-4" /><p className="text-slate-800 dark:text-slate-200 font-semibold">Tap to Upload Photo</p></>}
                       </div>
                       <textarea value={scanContext} onChange={e => setScanContext(e.target.value)} className="w-full p-3 border-2 border-slate-400 dark:border-slate-600 rounded font-medium text-slate-800 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-800 focus:outline-none focus:border-red-500" placeholder="Add specific observation notes (e.g., lethargy, spots, limping)..." rows={3} />
-                      <button onClick={performScan} disabled={!scanImage || isScanning} className="w-full py-4 bg-red-600 text-white font-bold uppercase tracking-widest hover:bg-red-700 rounded-sm shadow-md flex items-center justify-center">
+                      <button onClick={performScan} disabled={!scanImage || isScanning} className="w-full py-4 bg-red-600 text-white font-semibold hover:bg-red-700 rounded-sm shadow-md flex items-center justify-center">
                         {isScanning ? <Loader2 className="animate-spin w-5 h-5 mr-2" /> : 'Run Analysis'}
                       </button>
                    </div>
                  ) : (
                    <div className="space-y-4">
                       <div className="bg-white dark:bg-slate-800 border-l-4 border-red-600 p-6 shadow-sm"><p className="whitespace-pre-wrap font-medium text-slate-900 dark:text-white">{scanResult}</p></div>
-                      <button onClick={() => setScanResult('')} className="w-full py-3 bg-slate-800 text-white font-bold uppercase rounded-sm">New Scan</button>
+                      <button onClick={() => setScanResult('')} className="w-full py-3 bg-slate-800 text-white font-semibold rounded-sm">New Scan</button>
                    </div>
                  )}
               </div>
