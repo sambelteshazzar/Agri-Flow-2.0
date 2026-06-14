@@ -92,6 +92,17 @@ const CROP_TEMPLATES = [
 
 const CropManager: React.FC = () => {
   const { crops, addCrop, deleteCrop, addActivityLog, getLogsByRef, updateCropStatus, showToast, userProfile } = useFarm();
+
+  const countryCtx: CountryContext | undefined = userProfile.countryCode ? {
+    countryCode: userProfile.countryCode,
+    region: userProfile.region || '',
+    climateZone: userProfile.climateZone || 'temperate',
+    currencyCode: userProfile.currencyCode || 'USD',
+    currencySymbol: userProfile.currencySymbol || '$',
+    language: userProfile.language || 'en',
+    farmType: userProfile.farmType || 'mixed',
+    areaUnit: userProfile.areaUnit || 'ha',
+  } : undefined;
   
   // -- Suggestion State --
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
@@ -305,7 +316,7 @@ const CropManager: React.FC = () => {
     if (!scanImage) return;
     setIsScanning(true);
     try {
-      const diagnosis = await analyzeCropImage(scanImage, scanContext);
+      const diagnosis = await analyzeCropImage(scanImage, scanContext, countryCtx);
       setScanResult(diagnosis);
     } catch {
       setScanResult("Could not complete the analysis.");

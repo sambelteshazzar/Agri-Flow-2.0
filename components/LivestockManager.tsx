@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useFarm } from '../contexts/FarmContext';
 import { Plus, Trash2, X, Beef, Tag, Activity, FileText, ClipboardList, Calendar, HeartPulse, Image as ImageIcon, Scan, AlertTriangle, Upload, Loader2, Stethoscope, Clipboard, Database } from 'lucide-react';
 import { Livestock, LogEntry } from '../types';
-import { analyzeCropImage } from '../services/geminiService';
+import { analyzeCropImage, CountryContext } from '../services/geminiService';
 
 // Helper to provide context-aware default images
 const getLivestockImage = (species: string) => {
@@ -18,7 +18,18 @@ const getLivestockImage = (species: string) => {
 };
 
 const LivestockManager: React.FC = () => {
-  const { livestock, addLivestock, deleteLivestock, updateLivestockStatus, addActivityLog, getLogsByRef, showToast } = useFarm();
+  const { livestock, addLivestock, deleteLivestock, updateLivestockStatus, addActivityLog, getLogsByRef, showToast, userProfile } = useFarm();
+
+  const countryCtx: CountryContext | undefined = userProfile.countryCode ? {
+    countryCode: userProfile.countryCode,
+    region: userProfile.region || '',
+    climateZone: userProfile.climateZone || 'temperate',
+    currencyCode: userProfile.currencyCode || 'USD',
+    currencySymbol: userProfile.currencySymbol || '$',
+    language: userProfile.language || 'en',
+    farmType: userProfile.farmType || 'mixed',
+    areaUnit: userProfile.areaUnit || 'ha',
+  } : undefined;
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAnimal, setNewAnimal] = useState<Partial<Livestock>>({ 
@@ -125,7 +136,7 @@ const LivestockManager: React.FC = () => {
     setIsScanning(true);
     try {
       // Reusing the AI vision service with livestock context
-      const diagnosis = await analyzeCropImage(scanImage, `LIVESTOCK HEALTH ANALYSIS: ${scanContext}. Check for signs of disease, injury, or malnutrition.`);
+      const diagnosis = await analyzeCropImage(scanImage, `LIVESTOCK HEALTH ANALYSIS: ${scanContext}. Check for signs of disease, injury, or malnutrition.`, countryCtx);
       setScanResult(diagnosis);
     } catch {
       setScanResult("Could not complete the analysis. Please ensure the image is clear.");
