@@ -1,6 +1,18 @@
 
 import { GoogleGenAI, GenerateContentResponse, Type } from "@google/genai";
-import { WeatherData, Crop, Task, NewsArticle } from '../types';
+import { WeatherData, Crop, Task, NewsArticle, ClimateZone } from '../types';
+import { COUNTRY_REGISTRY } from '../constants';
+
+export interface CountryContext {
+  countryCode: string;
+  region: string;
+  climateZone: ClimateZone;
+  currencyCode: string;
+  currencySymbol: string;
+  language: string;
+  farmType: string;
+  areaUnit: string;
+}
 
 // Lazy AI Client — constructor throws in browser if apiKey is null
 let _ai: InstanceType<typeof GoogleGenAI> | null = null;
@@ -44,14 +56,60 @@ const FALLBACK_ANALYSIS = "Based on visual analysis, this crop appears to be sho
 /**
  * REGENERATIVE AGRICULTURE & 2026 RESILIENCE SYSTEM INSTRUCTION
  */
-const SYSTEM_INSTRUCTION = `
-You are the "AgriFlow Resilience Engine," an advanced agricultural AI. Your goal is to help West African farmers navigate the critical challenges of 2026: Climate Instability, Economic Profit Squeeze, and Soil Degradation.
+function buildSystemInstruction(ctx?: CountryContext): string {
+  const countryCfg = ctx?.countryCode ? COUNTRY_REGISTRY[ctx.countryCode] : undefined;
+  const countryName = countryCfg?.name || 'West Africa';
+  const region = ctx?.region || 'West Africa';
+  const climateZone = ctx?.climateZone || 'sahel';
+  const currency = ctx?.currencyCode || 'NGN';
+  const currencySymbol = ctx?.currencySymbol || '₦';
+  const farmType = ctx?.farmType || 'mixed';
+  const lang = ctx?.language || 'en';
+
+  const climateContext: Record<ClimateZone, string> = {
+    sahel: 'PRESASS 2026 forecasts average Sahel rainfall with severe dry spells Jun-Aug. Focus on water scarcity, heat stress, and dry spell timing.',
+    tropical_humid: 'Consistently rainy conditions with high humidity. Prioritize fungal disease prevention, drainage management, and rice cultivation strategies.',
+    tropical_wet_dry: 'Seasonal wet-dry transitions. Manage planting calendars around rainfall onset/cessation. Watch for pest buildup after rains.',
+    semi_arid: 'Below-average rainfall expected. Prioritize drought-tolerant varieties, water conservation, and supplemental irrigation for high-value crops.',
+    arid: 'Extreme heat and minimal rainfall. Focus on irrigation scheduling, heat-tolerant varieties, shade structures, and pre-dawn watering.',
+    mediterranean: 'Mild conditions with dry summers. Good for winter cereals. Monitor rust pressure. Irrigate high-value crops during dry periods.',
+    temperate: 'Moderate conditions with adequate soil moisture. Watch for stripe rust in cereals. Light frost risk in low-lying areas.',
+    subtropical: 'Warm and humid with thunderstorm risk. Watch for fungal pressure and insect buildup. Canicula (mid-summer dry spell) possible.',
+    highland: 'Cool highland conditions with frost risk. Good for coffee and tea. Monitor coffee leaf rust in humid valleys.',
+  };
+
+  const regionNews: Record<string, string> = {
+    'West Africa': 'Nigeria minimum wage ₦70,000/month increases farm labor costs. Urea prices up 12.5% MoM.',
+    'East Africa': 'Kenya fertilizer subsidies under review. Short rains forecast below average for 2026.',
+    'South Asia': 'India monsoon 2026 forecast near-normal. MSP increases announced for kharif crops.',
+    'South America': 'Brazil soybean harvest record volumes. Real depreciation affects input costs.',
+    'North America': 'US farm income forecast declining. Crop insurance rates adjusting for climate risk.',
+    'Horn of Africa': 'Ethiopia belg rains delayed 2026. Teff and wheat production concerns.',
+    'West Africa (Francophone)': 'CFA franc zone input costs stable. Senegal groundnut campaign results mixed.',
+    'Oceania': 'Australia El Nino watch — soil moisture declining in eastern grain belt.',
+    'Central Europe': 'EU CAP 2026 payments under reform. Winter wheat conditions fair.',
+    'Southeast Asia': 'Thai rice export premiums rising. Cassava mealybug outbreak in NE provinces.',
+    'Central America': 'Mexico avocado exports strong. Whitefly pressure on horticultural crops increasing.',
+  };
+
+  const regionContext = regionNews[region] || regionNews['West Africa'];
+
+  return `You are the "AgriFlow Resilience Engine," an advanced agricultural AI for ${countryName} farmers in the ${region} region. Your goal is to help farmers navigate the critical challenges of 2026: Climate Instability, Economic Profit Squeeze, and Soil Degradation.
+
+FARMER CONTEXT:
+- Country: ${countryName} (${ctx?.countryCode || 'NG'})
+- Region: ${region}
+- Climate Zone: ${climateZone}
+- Currency: ${currency} (${currencySymbol})
+- Language: ${lang === 'fr' ? 'French' : lang === 'es' ? 'Spanish' : lang === 'pt' ? 'Portuguese' : lang === 'th' ? 'Thai' : lang === 'am' ? 'Amharic' : lang === 'hi' ? 'Hindi' : lang === 'de' ? 'German' : 'English'}
+- Farm Type: ${farmType}
+- Area Unit: ${ctx?.areaUnit || 'ha'}
 
 CORE KNOWLEDGE BASE (2026 CONTEXT):
-1. Economic Squeeze: Farmers are price takers. Input costs (fertilizer/fuel) remain elevated (+12.5% MoM urea), while commodity prices are volatile. Nigeria's new ₦70,000/month minimum wage has pushed farm labor costs up. Focus on margin protection and low-input strategies.
-2. Climate Extremes: PRESASS 2026 forecasts average Sahel rainfall but with severe dry spells Jun-Aug. Move beyond simple weather — account for dry spell timing, water scarcity, and heat stress on specific crops.
+1. ${climateContext[climateZone]}
+2. Regional Economics: ${regionContext}
 3. Soil Regeneration: Topsoil loss is a crisis. Aggressively promote cover cropping, no-till, and biodiversity to restore land.
-4. Labor Shifts: Nigeria's minimum wage increase to ₦70,000/month affects farm labor budgets. Suggest labor-efficient technologies or workflows — partial mechanization can cut labor needs 35%.
+4. Always reference prices and costs in ${currencySymbol} (${currency}).
 
 STRICT FORMATTING RULES:
 - DO NOT use markdown formatting characters like asterisks (** or *) or hashes (##).
@@ -64,10 +122,10 @@ STRICT FORMATTING RULES:
 
 RESPONSE STRUCTURE:
 1. Risk Assessment: Identify immediate threats (Climate, Pest, Economic).
-2. Cost-Benefit Analysis: If recommending an action, briefly mention the input cost implication.
+2. Cost-Benefit Analysis: If recommending an action, briefly mention the input cost implication in ${currencySymbol}.
 3. Regenerative Solution: How does this improve soil/water retention long-term?
-4. Action Item: A clear, industrial-grade instruction for the farm manager.
-`;
+4. Action Item: A clear, practical instruction for the farm manager.`;
+}
 
 /**
  * Helper to strip markdown artifacts if the model ignores strict instructions.
@@ -107,13 +165,13 @@ const extractJson = (text: string): string => {
 /**
  * Sends a text prompt to the AI with the Resenerative persona and Search Grounding.
  */
-export const getFarmingAdvice = async (prompt: string): Promise<{ text: string; sources?: { title: string; uri: string }[] }> => {
+export const getFarmingAdvice = async (prompt: string, countryCtx?: CountryContext): Promise<{ text: string; sources?: { title: string; uri: string }[] }> => {
   if (!process.env.API_KEY) {
     await new Promise(r => setTimeout(r, 1500));
     return FALLBACK_ADVICE;
   }
   
-  const cacheKey = `ADVICE_${prompt.trim().toLowerCase()}`;
+  const cacheKey = `ADVICE_${prompt.trim().toLowerCase()}_${countryCtx?.countryCode || 'default'}`;
   if (responseCache.has(cacheKey)) {
     return responseCache.get(cacheKey);
   }
@@ -123,7 +181,7 @@ export const getFarmingAdvice = async (prompt: string): Promise<{ text: string; 
       model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
+        systemInstruction: buildSystemInstruction(countryCtx),
         temperature: 0.4,
         tools: [{ googleSearch: {} }] 
       }
@@ -157,21 +215,26 @@ export const getFarmingAdvice = async (prompt: string): Promise<{ text: string; 
 /**
  * Fetches structured real-time global agriculture news.
  */
-export const fetchAgNews = async (): Promise<NewsArticle[]> => {
+export const fetchAgNews = async (countryCtx?: CountryContext): Promise<NewsArticle[]> => {
   if (!process.env.API_KEY) {
     await new Promise(r => setTimeout(r, 1000));
     return FALLBACK_NEWS;
   }
 
-  const cacheKey = 'GLOBAL_AG_NEWS';
+  const cacheKey = `GLOBAL_AG_NEWS_${countryCtx?.countryCode || 'default'}`;
   const cached = responseCache.get(cacheKey);
   if (cached && (Date.now() - cached.timestamp < 1000 * 60 * 15)) {
     return cached.data;
   }
 
+  const region = countryCtx?.region || 'global';
+  const countryName = countryCtx?.countryCode ? (COUNTRY_REGISTRY[countryCtx.countryCode]?.name || '') : '';
+  const regionPrompt = countryName ? `Focus especially on ${countryName} and ${region} agriculture, but also include significant global stories.` : 'Focus on the latest significant global agriculture news.';
+
   const prompt = `
-    Find the 8 latest significant global agriculture news headlines from the last 24 hours.
-    Focus on Commodities (Crop Prices), AgTech (New innovations), Climate (Weather impacts on farming), and Policy (Trade/Subsidies).
+    Find the 8 latest significant agriculture news headlines from the last 24 hours.
+    ${regionPrompt}
+    Cover Commodities (Crop Prices), AgTech (New innovations), Climate (Weather impacts on farming), and Policy (Trade/Subsidies).
   `;
 
   try {
@@ -220,16 +283,17 @@ export const fetchAgNews = async (): Promise<NewsArticle[]> => {
 /**
  * Fetches real-time agricultural intelligence summaries.
  */
-export const getLiveAgriIntel = async (): Promise<string> => {
+export const getLiveAgriIntel = async (countryCtx?: CountryContext): Promise<string> => {
   if (!process.env.API_KEY) {
     await new Promise(r => setTimeout(r, 800));
     return FALLBACK_INTEL;
   }
 
-  const cacheKey = 'LIVE_INTEL_SUMMARY';
+  const cacheKey = `LIVE_INTEL_SUMMARY_${countryCtx?.countryCode || 'default'}`;
   if (responseCache.has(cacheKey)) return responseCache.get(cacheKey);
 
-  const prompt = "What are the 3 most critical agricultural news headlines right now regarding climate events, pest outbreaks, or major commodity price shifts globally? Be concise, 1 sentence per headline.";
+  const region = countryCtx ? `${COUNTRY_REGISTRY[countryCtx.countryCode]?.name || countryCtx.region}, ${countryCtx.region}` : 'global';
+  const prompt = `What are the 3 most critical agricultural news headlines right now regarding climate events, pest outbreaks, or major commodity price shifts in ${region}? Be concise, 1 sentence per headline.`;
 
   try {
     const response: GenerateContentResponse = await getAI()?.models.generateContent({
@@ -254,17 +318,19 @@ export const getLiveAgriIntel = async (): Promise<string> => {
 /**
  * Generates specific daily tasks based on weather and active crops.
  */
-export const generateDailyTasks = async (weather: WeatherData, crops: Crop[]): Promise<string> => {
+export const generateDailyTasks = async (weather: WeatherData, crops: Crop[], countryCtx?: CountryContext): Promise<string> => {
   if (!process.env.API_KEY) {
     await new Promise(r => setTimeout(r, 1200));
     return JSON.stringify(FALLBACK_TASKS);
   }
 
   const cropNames = crops.map(c => `${c.name} (${c.status})`).join(', ');
+  const regionInfo = countryCtx ? `Region: ${COUNTRY_REGISTRY[countryCtx.countryCode]?.name || countryCtx.region}, Climate: ${countryCtx.climateZone}` : '';
   
   const prompt = `
     Context:
     Current Weather: ${weather.temp}°C, Condition: ${weather.condition}, Wind: ${weather.windSpeed}km/h, Forecast: ${weather.forecast}.
+    ${regionInfo}
     Active Plots: ${cropNames}.
 
     Task:
@@ -292,7 +358,7 @@ export const generateDailyTasks = async (weather: WeatherData, crops: Crop[]): P
 /**
  * Analyzes a crop or soil image using multimodal reasoning.
  */
-export const analyzeCropImage = async (base64Image: string, userPrompt: string): Promise<string> => {
+export const analyzeCropImage = async (base64Image: string, userPrompt: string, countryCtx?: CountryContext): Promise<string> => {
   if (!process.env.API_KEY) {
     await new Promise(r => setTimeout(r, 2000));
     return FALLBACK_ANALYSIS;
@@ -323,7 +389,7 @@ export const analyzeCropImage = async (base64Image: string, userPrompt: string):
           { text: enhancedPrompt }
         ]
       },
-      config: { systemInstruction: SYSTEM_INSTRUCTION }
+      config: { systemInstruction: buildSystemInstruction(countryCtx) }
     });
 
     const text = response.text || "I analyzed the image but couldn't generate a specific diagnosis.";

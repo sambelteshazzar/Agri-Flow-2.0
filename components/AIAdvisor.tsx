@@ -1,13 +1,25 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Camera, Send, Loader2, Sparkles, Info, BrainCircuit, ExternalLink, Globe, X, Phone, Mic, MicOff, Activity } from 'lucide-react';
-import { getFarmingAdvice, analyzeCropImage } from '../services/geminiService';
+import { getFarmingAdvice, analyzeCropImage, CountryContext } from '../services/geminiService';
 import { ChatMessage } from '../types';
 import { useFarm } from '../contexts/FarmContext';
 import { GoogleGenAI, LiveServerMessage, Modality } from "@google/genai";
 
 const AIAdvisor: React.FC = () => {
   const { showToast, userProfile } = useFarm();
+
+  const countryCtx: CountryContext | undefined = userProfile.countryCode ? {
+    countryCode: userProfile.countryCode,
+    region: userProfile.region || '',
+    climateZone: userProfile.climateZone || 'temperate',
+    currencyCode: userProfile.currencyCode || 'USD',
+    currencySymbol: userProfile.currencySymbol || '$',
+    language: userProfile.language || 'en',
+    farmType: userProfile.farmType || 'mixed',
+    areaUnit: userProfile.areaUnit || 'ha',
+  } : undefined;
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
@@ -282,10 +294,9 @@ const AIAdvisor: React.FC = () => {
 
       if (userMsg.image) {
         // Image analysis
-        responseText = await analyzeCropImage(userMsg.image, userMsg.text);
+        responseText = await analyzeCropImage(userMsg.image, userMsg.text, countryCtx);
       } else {
-        // Text advice with Search Grounding
-        const result = await getFarmingAdvice(userMsg.text);
+        const result = await getFarmingAdvice(userMsg.text, countryCtx);
         responseText = result.text;
         responseSources = result.sources;
       }

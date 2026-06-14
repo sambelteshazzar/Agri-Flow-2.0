@@ -1,11 +1,12 @@
-
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Users, ShoppingBag, MessageSquare, Search, CheckCircle, MapPin, Plus, X, Send, Hash, 
   ThumbsUp, Share2, MoreHorizontal, Image as ImageIcon, Heart, MessageCircle, TrendingUp,
   UserPlus, Globe, BadgeCheck, Camera, Bell, ChevronRight, Settings,
   Calendar, BarChart2, Zap, XCircle, Leaf, PackageSearch, ArrowRight, LayoutGrid, Users2,
-  HelpCircle, Award, Target, Handshake, Cloud, DollarSign, Flame, BookOpen, Sparkles
+  HelpCircle, Award, Target, Handshake, Cloud, DollarSign, Flame, BookOpen, Sparkles,
+  ChevronDown, Eye, Star, Shield, Wheat, TreePine, Droplets, Sun, Snowflake, Bug,
+  Sprout, Tractor, CircleDot
 } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import { MarketplaceListing, ForumPost, ForumReply, Story, NavigationTab } from '../types';
@@ -48,6 +49,60 @@ interface Challenge {
 
 type CommunityTab = 'FEED' | 'GROUPS' | 'MARKET' | 'QA';
 
+const INITIAL_QUESTIONS: Question[] = [
+  {
+    id: 'q1',
+    author: 'Amara Okafor',
+    title: 'How do you prevent fall armyworm in maize during early vegetative stage?',
+    body: 'My maize is 3 weeks old and I noticed early signs of fall armyworm. What preventive measures work best at this stage before it spreads?',
+    category: 'Pests',
+    answers: [
+      { id: 'a1', author: 'Dr. Kofi Mensah', content: 'Push-pull technology works very well — plant Desmodium between maize rows and Napier grass as a border. The Desmodium repels the moths while Napier attracts them away.', isExpert: true, accepted: true, likes: 24, date: '2026-06-10' },
+      { id: 'a2', author: 'Fatima Abdullahi', content: 'I use neem oil spray at 5ml per liter of water. Apply early morning every 3 days. Worked well last season on my 2-hectare farm.', isExpert: false, accepted: false, likes: 12, date: '2026-06-11' }
+    ],
+    likes: 45,
+    solved: true,
+    date: '2026-06-09'
+  },
+  {
+    id: 'q2',
+    author: 'Rajesh Kumar',
+    title: 'Best drip irrigation setup for small-scale tomato farming under 0.5 acres?',
+    body: 'I want to switch from flood irrigation to drip for my tomato plot. Budget is tight — what is the most cost-effective setup for less than half an acre?',
+    category: 'Equipment',
+    answers: [
+      { id: 'a3', author: 'Priya Sharma', content: 'Gravel-packed drip kits from local cooperatives cost around $40-60 for 0.5 acres. They last 3-5 seasons with proper maintenance.', isExpert: false, accepted: false, likes: 8, date: '2026-06-12' }
+    ],
+    likes: 22,
+    solved: false,
+    date: '2026-06-12'
+  },
+  {
+    id: 'q3',
+    author: 'Maria Santos',
+    title: 'When should I apply the second dose of nitrogen for irrigated wheat?',
+    body: 'First dose was at sowing. Crop is now at tillering stage. Should I wait for jointing or apply now? Soil is clay loam.',
+    category: 'Crops',
+    answers: [],
+    likes: 15,
+    solved: false,
+    date: '2026-06-13'
+  },
+  {
+    id: 'q4',
+    author: 'Thomas Mwangi',
+    title: 'How to improve milk yield during dry season feed shortage?',
+    body: 'My crossbred cows drop from 12L to 6L per day during the dry season. What supplementary feeding strategies are cost-effective?',
+    category: 'Livestock',
+    answers: [
+      { id: 'a4', author: 'Prof. Amina Bakari', content: 'Prepare silage from excess wet-season forage. Add molasses-based urea blocks as cheap protein supplement. Consistently get 9-10L even in dry months.', isExpert: true, accepted: false, likes: 18, date: '2026-06-13' }
+    ],
+    likes: 31,
+    solved: false,
+    date: '2026-06-13'
+  }
+];
+
 const CommunityHub: React.FC = () => {
   const { 
     userProfile, isSignedIn,
@@ -59,18 +114,15 @@ const CommunityHub: React.FC = () => {
     navigate
   } = useFarm();
   
-  // -- VIEW STATE --
   const [showIntro, setShowIntro] = useState(true);
-  const [activeTab, setActiveTab] = useState<'FEED' | 'GROUPS' | 'MARKET'>('FEED');
+  const [activeTab, setActiveTab] = useState<CommunityTab>('FEED');
 
-  // -- DATA STATES --
   const [localStories, setLocalStories] = useState<Story[]>([]);
   const [viewingStory, setViewingStory] = useState<Story | null>(null);
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [newStoryImage, setNewStoryImage] = useState<string | null>(null);
   const [storyProgress, setStoryProgress] = useState(0);
   
-  // -- MODALS & INPUTS --
   const [isListingModalOpen, setIsListingModalOpen] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [newPost, setNewPost] = useState<Partial<ForumPost>>({ title: '', category: 'General', author: userProfile.name, content: '' });
@@ -82,38 +134,84 @@ const CommunityHub: React.FC = () => {
   const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
   const [activePostReplies, setActivePostReplies] = useState<ForumReply[]>([]);
   const [replyInput, setReplyInput] = useState('');
+
+  const [questions, setQuestions] = useState<Question[]>(INITIAL_QUESTIONS);
+  const [expandedQuestionId, setExpandedQuestionId] = useState<string | null>(null);
+  const [newQuestion, setNewQuestion] = useState({ title: '', body: '', category: 'General' });
+  const [newAnswer, setNewAnswer] = useState('');
+  const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
+  const [qaSearchQuery, setQaSearchQuery] = useState('');
+  const [challengeProgress, setChallengeProgress] = useState<Record<string, number>>({});
   
-  // -- ERROR HANDLING STATE --
   const [avatarError, setAvatarError] = useState(false);
   const [introBgError, setIntroBgError] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // -- REFS --
   const storyTimerRef = useRef<any>(null);
   const storyFileRef = useRef<HTMLInputElement>(null);
   const postFileRef = useRef<HTMLInputElement>(null);
   const listingFileRef = useRef<HTMLInputElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // --- CONFIG DATA ---
   const CHANNELS = [
     { id: 'general', name: 'General', desc: 'Main hub', icon: Globe },
     { id: 'crops', name: 'Crops Talk', desc: 'Planting & Seeds', icon: Leaf },
     { id: 'livestock', name: 'Livestock', desc: 'Herd health', icon: BadgeCheck },
-    { id: 'equipment', name: 'Equipment', desc: 'Repairs & Sharing', icon: Hash },
-    { id: 'market-watch', name: 'Market Watch', desc: 'Prices', icon: TrendingUp },
+    { id: 'equipment', name: 'Equipment', desc: 'Repairs & Sharing', icon: Tractor },
+    { id: 'market-watch', name: 'Market Watch', desc: 'Prices & Trends', icon: TrendingUp },
+    { id: 'knowledge', name: 'Knowledge Base', desc: 'Q&A & Tips', icon: BookOpen },
+    { id: 'co-ops', name: 'Co-ops', desc: 'Organize & Buy', icon: Handshake },
   ];
 
-  const UPCOMING_EVENTS = [
-    { id: 1, title: 'Soil Regeneration Webinar', date: 'OCT 24', time: '2:00 PM EST', type: 'Online' },
-    { id: 2, title: 'Regional Machinery Auction', date: 'NOV 02', time: '9:00 AM CST', type: 'In-Person' },
-  ];
+  const SEASONAL_CHALLENGES: Challenge[] = useMemo(() => [
+    { id: 'ch1', title: 'Zero-Waste Harvest', description: 'Process 90% of your harvest with zero post-harvest loss', crop: 'All', xp: 250, participants: 342, daysLeft: 18, progress: challengeProgress['ch1'] ?? 0, icon: Target },
+    { id: 'ch2', title: 'Water Saver Week', description: 'Reduce irrigation by 20% using mulch and timing', crop: 'Vegetables', xp: 150, participants: 128, daysLeft: 5, progress: challengeProgress['ch2'] ?? 0, icon: Droplets },
+    { id: 'ch3', title: 'Soil Builder Challenge', description: 'Add organic matter to 3 field sections this month', crop: 'Grains', xp: 200, participants: 89, daysLeft: 22, progress: challengeProgress['ch3'] ?? 0, icon: Sprout },
+    { id: 'ch4', title: 'Market Maximizer', description: 'Sell produce at above-average regional price', crop: 'All', xp: 300, participants: 567, daysLeft: 30, progress: challengeProgress['ch4'] ?? 0, icon: DollarSign },
+  ], [challengeProgress]);
 
-  // --- EFFECTS ---
+  const FARMER_MATCHES = useMemo(() => {
+    const country = userProfile?.countryCode || '';
+    return [
+      { id: 'fm1', name: 'Grace Adeyemi', location: 'Lagos, Nigeria', match: 94, crops: ['Maize', 'Cassava'], role: 'Crop Farmer', avatar: '' },
+      { id: 'fm2', name: 'Nkechi Obi', location: 'Enugu, Nigeria', match: 87, crops: ['Rice', 'Yam'], role: 'Mixed Farmer', avatar: '' },
+      { id: 'fm3', name: 'Emeka Nwosu', location: 'Abuja, Nigeria', match: 81, crops: ['Maize', 'Sorghum'], role: 'Grain Farmer', avatar: '' },
+    ].filter(() => country === 'NG' || country === '').concat(
+      country !== 'NG' && country !== '' ? [
+        { id: 'fm1b', name: 'Nearby Farmer', location: userLocation || 'Your Region', match: 85, crops: ['Local Crops'], role: 'Farmer', avatar: '' },
+        { id: 'fm2b', name: 'Regional Grower', location: userLocation || 'Your Region', match: 78, crops: ['Seasonal Crops'], role: 'Producer', avatar: '' },
+      ] : []
+    );
+  }, [userProfile?.countryCode, userLocation]);
+
+  const locationAlerts = useMemo(() => {
+    const weatherAlerts = alerts.filter(a => a.category === 'WEATHER').slice(0, 2);
+    const priceAlerts = marketPrices
+      .filter(p => Math.abs(p.changePercentage) >= 5)
+      .slice(0, 3)
+      .map(p => ({
+        id: `price-${p.cropName}`,
+        title: `${p.cropName} Price ${p.trend === 'up' ? 'Surge' : 'Drop'}`,
+        message: `${p.cropName} is ${p.trend === 'up' ? 'up' : 'down'} ${Math.abs(p.changePercentage).toFixed(1)}% this week`,
+        severity: Math.abs(p.changePercentage) >= 10 ? 'high' : 'medium' as 'high' | 'medium'
+      }));
+    return { weather: weatherAlerts, prices: priceAlerts };
+  }, [alerts, marketPrices]);
+
+  const filteredQuestions = useMemo(() => {
+    if (!qaSearchQuery) return questions;
+    const q = qaSearchQuery.toLowerCase();
+    return questions.filter(quest => 
+      quest.title.toLowerCase().includes(q) || 
+      quest.body.toLowerCase().includes(q) || 
+      quest.category.toLowerCase().includes(q)
+    );
+  }, [questions, qaSearchQuery]);
+
   useEffect(() => { setLocalStories(contextStories); }, [contextStories]);
   useEffect(() => { if (activeTab === 'GROUPS') setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100); }, [chatMessages, activeTab, activeChannel]);
   useEffect(() => { if (expandedPostId) getPostReplies(expandedPostId).then(setActivePostReplies).catch(() => showToast("Failed to load comments", "error")); }, [expandedPostId, getPostReplies, showToast]);
 
-  // Story Timer
   useEffect(() => {
     if (viewingStory) {
       setStoryProgress(0);
@@ -132,7 +230,6 @@ const CommunityHub: React.FC = () => {
     }
   }, [viewingStory]);
 
-  // --- HELPERS ---
   const handleAuthRequiredAction = (action: () => void) => {
     if (isSignedIn) action();
     else showToast('Please sign in to perform this action', 'info');
@@ -159,12 +256,56 @@ const CommunityHub: React.FC = () => {
     return date.toLocaleDateString();
   };
 
-  // --- RENDERING SUB-COMPONENTS ---
+  const handleQuestionSubmit = () => {
+    if (!newQuestion.title.trim()) return;
+    const q: Question = {
+      id: `q-${Date.now()}`,
+      author: userProfile.name,
+      title: newQuestion.title,
+      body: newQuestion.body,
+      category: newQuestion.category,
+      answers: [],
+      likes: 0,
+      solved: false,
+      date: new Date().toISOString()
+    };
+    setQuestions(prev => [q, ...prev]);
+    setNewQuestion({ title: '', body: '', category: 'General' });
+    setIsQuestionModalOpen(false);
+    showToast('Question posted', 'success');
+  };
+
+  const handleAnswerSubmit = (questionId: string) => {
+    if (!newAnswer.trim()) return;
+    setQuestions(prev => prev.map(q => {
+      if (q.id !== questionId) return q;
+      return { ...q, answers: [...q.answers, { id: `a-${Date.now()}`, author: userProfile.name, content: newAnswer, isExpert: false, accepted: false, likes: 0, date: new Date().toISOString() }] };
+    }));
+    setNewAnswer('');
+    showToast('Answer posted', 'success');
+  };
+
+  const handleLikeQuestion = (questionId: string) => {
+    setQuestions(prev => prev.map(q => q.id === questionId ? { ...q, likes: q.likes + 1 } : q));
+  };
+
+  const handleAcceptAnswer = (questionId: string, answerId: string) => {
+    setQuestions(prev => prev.map(q => {
+      if (q.id !== questionId) return q;
+      return { ...q, solved: true, answers: q.answers.map(a => ({ ...a, accepted: a.id === answerId })) };
+    }));
+    showToast('Answer accepted', 'success');
+  };
+
+  const handleJoinChallenge = (id: string) => {
+    if (challengeProgress[id] !== undefined) return;
+    setChallengeProgress(prev => ({ ...prev, [id]: 10 }));
+    showToast('Joined challenge! Check back for progress.', 'success');
+  };
 
   const IntroOverlay = () => (
     <div className={`absolute inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-700 ${!showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
       
-      {/* Background with Error Handling */}
       <div className="absolute inset-0 opacity-40">
         {!introBgError ? (
           <img 
@@ -200,9 +341,9 @@ const CommunityHub: React.FC = () => {
               <p className="text-slate-400 text-sm">Buy, sell, and trade equipment and harvest directly.</p>
            </div>
            <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10">
-              <Users className="w-8 h-8 text-blue-400 mb-4" />
-              <h3 className="text-white font-bold text-lg mb-2">Community</h3>
-              <p className="text-slate-400 text-sm">Join specialized groups for crops, livestock, and tech.</p>
+              <HelpCircle className="w-8 h-8 text-blue-400 mb-4" />
+              <h3 className="text-white font-bold text-lg mb-2">Q&A Hub</h3>
+              <p className="text-slate-400 text-sm">Ask questions, get expert answers, and share your knowledge.</p>
            </div>
            <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10">
               <Zap className="w-8 h-8 text-green-400 mb-4" />
@@ -222,9 +363,102 @@ const CommunityHub: React.FC = () => {
     </div>
   );
 
+  const renderLocationAlerts = () => (
+    <div className="space-y-3">
+      {locationAlerts.weather.map(a => (
+        <div key={a.id} className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex items-start gap-3">
+          <Cloud className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-amber-900 dark:text-amber-200">{a.title}</p>
+            <p className="text-xs text-amber-700 dark:text-amber-300 mt-0.5 line-clamp-2">{a.message}</p>
+          </div>
+          <Bell className="w-4 h-4 text-amber-400 shrink-0" />
+        </div>
+      ))}
+      {locationAlerts.prices.map(p => (
+        <div key={p.id} className={`border rounded-2xl p-4 flex items-start gap-3 ${p.severity === 'high' ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800' : 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800'}`}>
+          <DollarSign className={`w-5 h-5 shrink-0 mt-0.5 ${p.severity === 'high' ? 'text-red-500' : 'text-green-500'}`} />
+          <div className="flex-1 min-w-0">
+            <p className={`text-sm font-bold ${p.severity === 'high' ? 'text-red-900 dark:text-red-200' : 'text-green-900 dark:text-green-200'}`}>{p.title}</p>
+            <p className={`text-xs mt-0.5 ${p.severity === 'high' ? 'text-red-700 dark:text-red-300' : 'text-green-700 dark:text-green-300'}`}>{p.message}</p>
+          </div>
+          <TrendingUp className={`w-4 h-4 shrink-0 ${p.severity === 'high' ? 'text-red-400' : 'text-green-400'}`} />
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderSeasonalChallenges = () => (
+    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 shrink-0">
+      <h4 className="font-bold text-slate-900 dark:text-white text-xs mb-4 flex items-center gap-2">
+        <Flame className="w-4 h-4 text-orange-500" /> Seasonal Challenges
+      </h4>
+      <div className="space-y-4">
+        {SEASONAL_CHALLENGES.map(ch => {
+          const Icon = ch.icon;
+          const isJoined = challengeProgress[ch.id] !== undefined;
+          return (
+            <div key={ch.id} className="group">
+              <div className="flex items-start gap-3 mb-2">
+                <div className={`p-2 rounded-xl shrink-0 ${isJoined ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800'}`}>
+                  <Icon className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h5 className="text-xs font-bold text-slate-800 dark:text-slate-200 line-clamp-1">{ch.title}</h5>
+                  <p className="text-[10px] text-slate-500 mt-0.5 line-clamp-2">{ch.description}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 ml-9">
+                <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-green-400 to-green-500 rounded-full transition-all duration-500" style={{ width: `${isJoined ? Math.min(ch.progress + 15, 100) : 0}%` }} />
+                </div>
+                <span className="text-[10px] text-slate-400 font-semibold shrink-0">{isJoined ? `${Math.min(ch.progress + 15, 100)}%` : `${ch.participants} in`}</span>
+              </div>
+              <div className="flex items-center gap-2 ml-9 mt-1.5">
+                <span className="text-[9px] text-slate-400 font-medium flex items-center gap-0.5"><Star className="w-3 h-3 text-yellow-500" /> {ch.xp} XP</span>
+                <span className="text-[9px] text-slate-400">•</span>
+                <span className="text-[9px] text-slate-400 font-medium">{ch.daysLeft}d left</span>
+                {!isJoined && (
+                  <button onClick={() => handleAuthRequiredAction(() => handleJoinChallenge(ch.id))} className="ml-auto text-[10px] font-bold text-green-600 dark:text-green-400 hover:underline">Join</button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const renderFarmerMatches = () => (
+    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 shrink-0">
+      <h4 className="font-bold text-slate-900 dark:text-white text-xs mb-4 flex items-center gap-2">
+        <Users className="w-4 h-4 text-indigo-500" /> Farmer Matches
+      </h4>
+      <div className="space-y-4">
+        {FARMER_MATCHES.slice(0, 3).map(fm => (
+          <div key={fm.id} className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden shrink-0">
+              <img src={fm.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(fm.name)}&background=random`} className="w-full h-full object-cover" alt={fm.name} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{fm.name}</p>
+              <p className="text-[10px] text-slate-500 truncate">{fm.location}</p>
+            </div>
+            <div className="flex flex-col items-end shrink-0">
+              <span className="text-[10px] font-bold text-green-600 dark:text-green-400">{fm.match}%</span>
+              <span className="text-[9px] text-slate-400">match</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button onClick={() => showToast('Advanced matching coming soon', 'info')} className="w-full mt-4 py-2 text-[10px] font-bold text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl transition-colors flex items-center justify-center gap-1">
+        Find More Farmers <ChevronRight className="w-3 h-3" />
+      </button>
+    </div>
+  );
+
   const renderRightSidebarContent = () => (
     <div className="flex flex-col gap-6">
-       {/* Poll Card */}
        <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden shrink-0">
           <div className="relative z-10">
              <div className="flex items-center justify-between mb-4"><h4 className="font-bold text-xs flex items-center gap-2"><BarChart2 className="w-4 h-4 text-yellow-400"/> Community Poll</h4></div>
@@ -242,7 +476,10 @@ const CommunityHub: React.FC = () => {
           </div>
        </div>
 
-       {/* Trending */}
+       {renderSeasonalChallenges()}
+
+       {renderFarmerMatches()}
+
        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 shrink-0">
           <h4 className="font-bold text-slate-900 dark:text-white text-xs mb-4 flex items-center"><TrendingUp className="w-4 h-4 mr-2 text-blue-500"/> Trending Topics</h4>
           <div className="space-y-4">
@@ -255,7 +492,6 @@ const CommunityHub: React.FC = () => {
           </div>
        </div>
 
-       {/* Suggestions */}
        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 shrink-0">
           <h4 className="font-bold text-slate-900 dark:text-white text-xs mb-4 flex items-center"><UserPlus className="w-4 h-4 mr-2 text-green-500"/> Who to follow</h4>
           <div className="space-y-5">
@@ -273,16 +509,22 @@ const CommunityHub: React.FC = () => {
     </div>
   );
 
+  const tabConfig: { key: CommunityTab; label: string; icon: React.ElementType; color: string; desktopLabel: string }[] = [
+    { key: 'FEED', label: 'Feed', icon: LayoutGrid, color: 'blue', desktopLabel: 'Global Feed' },
+    { key: 'GROUPS', label: 'Groups', icon: Users2, color: 'purple', desktopLabel: 'Discussion Groups' },
+    { key: 'MARKET', label: 'Market', icon: ShoppingBag, color: 'green', desktopLabel: 'Marketplace' },
+    { key: 'QA', label: 'Q&A', icon: HelpCircle, color: 'amber', desktopLabel: 'Q&A Hub' },
+  ];
+
   return (
     <div className="h-full w-full relative overflow-hidden bg-[#F8FAFC] dark:bg-[#0B1120]">
       {showIntro && <IntroOverlay />}
 
-      {/* --- MAIN LAYOUT --- */}
       <div className="h-full flex flex-col lg:grid lg:grid-cols-12 gap-6 p-4 lg:p-6 overflow-y-hidden">
         
-        {/* --- LEFT SIDEBAR (Profile & Nav) --- */}
+        {/* LEFT SIDEBAR */}
         <div className="hidden lg:flex lg:col-span-3 flex-col gap-6 overflow-y-auto custom-scrollbar h-full">
-           {/* Profile Card with Error Handling */}
+           {/* Profile Card */}
            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative group">
               <div className="h-24 bg-gradient-to-r from-slate-800 to-slate-900 relative">
                  {isSignedIn && (
@@ -329,16 +571,32 @@ const CommunityHub: React.FC = () => {
            {/* Navigation Menu */}
            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-2">
               <nav className="space-y-1">
-                 <button onClick={() => setActiveTab('FEED')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all ${activeTab === 'FEED' ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
-                    <LayoutGrid className={`w-5 h-5 ${activeTab === 'FEED' ? 'text-blue-500' : ''}`} /> Global Feed
-                 </button>
-                 <button onClick={() => setActiveTab('GROUPS')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all ${activeTab === 'GROUPS' ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
-                    <Users2 className={`w-5 h-5 ${activeTab === 'GROUPS' ? 'text-purple-500' : ''}`} /> Discussion Groups
-                 </button>
-                 <button onClick={() => setActiveTab('MARKET')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all ${activeTab === 'MARKET' ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
-                    <ShoppingBag className={`w-5 h-5 ${activeTab === 'MARKET' ? 'text-green-500' : ''}`} /> Marketplace
-                 </button>
+                 {tabConfig.map(tab => {
+                   const Icon = tab.icon;
+                   return (
+                     <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all ${activeTab === tab.key ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                       <Icon className={`w-5 h-5 ${activeTab === tab.key ? `text-${tab.color}-500` : ''}`} /> {tab.desktopLabel}
+                     </button>
+                   );
+                 })}
               </nav>
+           </div>
+
+           {/* Start a Co-op Card */}
+           <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/20 rounded-3xl shadow-sm border border-green-200 dark:border-green-800/40 p-6">
+              <div className="flex items-center gap-3 mb-3">
+                 <div className="bg-green-100 dark:bg-green-900/40 p-2.5 rounded-xl">
+                    <Handshake className="w-5 h-5 text-green-600 dark:text-green-400" />
+                 </div>
+                 <div>
+                    <h4 className="font-bold text-green-900 dark:text-green-200 text-sm">Start a Co-op</h4>
+                    <p className="text-[10px] text-green-600 dark:text-green-400 font-medium">Pool resources with nearby farmers</p>
+                 </div>
+              </div>
+              <p className="text-xs text-green-700 dark:text-green-300 mb-4 leading-relaxed">Buy inputs in bulk, share equipment costs, and negotiate better prices together.</p>
+              <button onClick={() => handleAuthRequiredAction(() => showToast('Co-op formation wizard coming soon', 'info'))} className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2">
+                 <Users className="w-4 h-4" /> Create Cooperative
+              </button>
            </div>
 
            {/* Upcoming Events Mini */}
@@ -347,7 +605,11 @@ const CommunityHub: React.FC = () => {
                  <h4 className="font-semibold text-slate-900 dark:text-white text-xs">Upcoming Events</h4>
               </div>
               <div className="space-y-4">
-                 {UPCOMING_EVENTS.map(evt => (
+                 {[
+                   { id: 1, title: 'Soil Regeneration Webinar', date: 'OCT 24', time: '2:00 PM EST', type: 'Online' },
+                   { id: 2, title: 'Regional Machinery Auction', date: 'NOV 02', time: '9:00 AM CST', type: 'In-Person' },
+                   { id: 3, title: 'Co-op Annual Meeting', date: 'NOV 15', time: '10:00 AM', type: 'Hybrid' },
+                 ].map(evt => (
                     <div key={evt.id} className="flex gap-3 group cursor-pointer" onClick={() => showToast(`Event: ${evt.title}`, 'info')}>
                        <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-2.5 flex flex-col items-center justify-center min-w-[50px] border border-slate-200 dark:border-slate-700">
                           <span className="text-[9px] font-semibold text-red-500">{evt.date.split(' ')[0]}</span>
@@ -361,16 +623,16 @@ const CommunityHub: React.FC = () => {
                  ))}
               </div>
            </div>
-        </div>
+         </div>
 
-        {/* --- CENTER COLUMN (Content) --- */}
+        {/* CENTER COLUMN */}
         <div className="flex-1 lg:col-span-6 flex flex-col overflow-hidden h-full rounded-t-3xl lg:rounded-3xl bg-white/50 dark:bg-slate-900/50 lg:bg-transparent">
            
            {/* Mobile Tabs */}
            <div className="lg:hidden flex bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20 shrink-0">
-              <button onClick={() => setActiveTab('FEED')} className={`flex-1 py-4 text-xs font-semibold border-b-2 ${activeTab === 'FEED' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-slate-500'}`}>Feed</button>
-              <button onClick={() => setActiveTab('GROUPS')} className={`flex-1 py-4 text-xs font-semibold border-b-2 ${activeTab === 'GROUPS' ? 'border-purple-500 text-purple-600 dark:text-purple-400' : 'border-transparent text-slate-500'}`}>Groups</button>
-              <button onClick={() => setActiveTab('MARKET')} className={`flex-1 py-4 text-xs font-semibold border-b-2 ${activeTab === 'MARKET' ? 'border-green-500 text-green-600 dark:text-green-400' : 'border-transparent text-slate-500'}`}>Market</button>
+              {tabConfig.map(tab => (
+                <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`flex-1 py-4 text-xs font-semibold border-b-2 ${activeTab === tab.key ? `border-${tab.color}-500 text-${tab.color}-600 dark:text-${tab.color}-400` : 'border-transparent text-slate-500'}`}>{tab.label}</button>
+              ))}
            </div>
 
            <div className="flex-1 overflow-y-auto custom-scrollbar p-0 lg:pr-2 pb-20">
@@ -378,6 +640,11 @@ const CommunityHub: React.FC = () => {
               {/* === FEED VIEW === */}
               {activeTab === 'FEED' && (
                 <div className="space-y-6 pt-4 lg:pt-0">
+                   {/* Location Alerts */}
+                   {(locationAlerts.weather.length > 0 || locationAlerts.prices.length > 0) && (
+                     <div className="px-1">{renderLocationAlerts()}</div>
+                   )}
+
                    {/* Stories Row */}
                    <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar px-1">
                       {localStories.map(story => (
@@ -428,7 +695,7 @@ const CommunityHub: React.FC = () => {
                                        <img src={post.author === userProfile.name ? (avatarError ? `https://ui-avatars.com/api/?name=${encodeURIComponent(userProfile.name)}` : userProfile.avatar) : `https://i.pravatar.cc/150?u=${post.author}`} className="w-full h-full object-cover" alt="Author" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=random`; }} />
                                     </div>
                                     <div>
-                                       <h4 className="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-1">{post.author} <CheckCircle className="w-3 h-3 text-blue-500 fill-blue-50" /></h4>
+                                       <h4 className="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-1">{post.author} {parseInt(post.id) % 3 === 0 && <Award className="w-3.5 h-3.5 text-amber-500" />}</h4>
                                        <p className="text-xs text-slate-500 font-medium">{post.category} • {getRelativeTime(post.date)}</p>
                                     </div>
                                  </div>
@@ -453,7 +720,6 @@ const CommunityHub: React.FC = () => {
                               </div>
                            </div>
                            
-                           {/* Comments Section */}
                            {expandedPostId === post.id && (
                               <div className="bg-slate-50 dark:bg-slate-950/50 p-5 border-t border-slate-100 dark:border-slate-800">
                                  <div className="space-y-4 mb-4 max-h-60 overflow-y-auto custom-scrollbar">
@@ -461,7 +727,7 @@ const CommunityHub: React.FC = () => {
                                        <div key={reply.id} className="flex gap-3">
                                           <div className="w-8 h-8 rounded-full bg-slate-200 overflow-hidden shrink-0"><img src={`https://i.pravatar.cc/150?u=${reply.author}`} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reply.author)}&background=random`; }} /></div>
                                           <div className="flex-1 bg-white dark:bg-slate-900 p-3 rounded-2xl rounded-tl-none border border-slate-200 dark:border-slate-800 shadow-sm">
-                                             <div className="flex justify-between items-center mb-1"><span className="text-xs font-bold text-slate-900 dark:text-white">{reply.author}</span><span className="text-[10px] text-slate-400">{getRelativeTime(reply.date)}</span></div>
+                                             <div className="flex justify-between items-center mb-1"><span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1">{reply.author} {Math.random() > 0.7 && <Shield className="w-3 h-3 text-amber-500" />}</span><span className="text-[10px] text-slate-400">{getRelativeTime(reply.date)}</span></div>
                                              <p className="text-sm text-slate-600 dark:text-slate-300">{reply.content}</p>
                                           </div>
                                        </div>
@@ -564,16 +830,132 @@ const CommunityHub: React.FC = () => {
                     </div>
                  </div>
               )}
+
+              {/* === Q&A VIEW === */}
+              {activeTab === 'QA' && (
+                <div className="pt-4 lg:pt-0 space-y-6">
+                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 px-1">
+                      <div>
+                         <h3 className="text-2xl font-semibold text-slate-900 dark:text-white font-heading">Q&A Hub</h3>
+                         <p className="text-slate-500 text-xs font-semibold mt-1">Ask questions, get expert answers, share knowledge</p>
+                      </div>
+                      <div className="flex gap-3">
+                         <div className="relative flex-1 md:w-64">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                            <input value={qaSearchQuery} onChange={e => setQaSearchQuery(e.target.value)} placeholder="Search questions..." className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-amber-500" />
+                         </div>
+                         <button onClick={() => handleAuthRequiredAction(() => setIsQuestionModalOpen(true))} className="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-xl font-semibold text-xs shadow-lg flex items-center gap-2 transition-transform active:scale-95 shrink-0"><HelpCircle className="w-4 h-4"/> Ask</button>
+                      </div>
+                   </div>
+
+                   {/* Quick stat badges */}
+                   <div className="flex gap-3 px-1 overflow-x-auto no-scrollbar">
+                      <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-xl px-4 py-2 flex items-center gap-2 shrink-0">
+                         <CheckCircle className="w-4 h-4 text-green-600" />
+                         <span className="text-xs font-bold text-green-800 dark:text-green-200">{questions.filter(q => q.solved).length} Solved</span>
+                      </div>
+                      <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-2 flex items-center gap-2 shrink-0">
+                         <HelpCircle className="w-4 h-4 text-amber-600" />
+                         <span className="text-xs font-bold text-amber-800 dark:text-amber-200">{questions.filter(q => !q.solved).length} Open</span>
+                      </div>
+                      <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-xl px-4 py-2 flex items-center gap-2 shrink-0">
+                         <Shield className="w-4 h-4 text-blue-600" />
+                         <span className="text-xs font-bold text-blue-800 dark:text-blue-200">{questions.reduce((c, q) => c + q.answers.filter(a => a.isExpert).length, 0)} Expert Answers</span>
+                      </div>
+                   </div>
+
+                   {/* Questions list */}
+                   <div className="space-y-4">
+                      {filteredQuestions.map(q => (
+                        <div key={q.id} className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-md transition-shadow">
+                           <div className="p-5">
+                              <div className="flex items-start gap-4">
+                                 {/* Vote column */}
+                                 <div className="flex flex-col items-center gap-1 shrink-0 pt-0.5">
+                                    <button onClick={() => handleLikeQuestion(q.id)} className="p-1 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors">
+                                       <ThumbsUp className={`w-5 h-5 ${q.likes > 0 ? 'text-green-500' : 'text-slate-300'}`} />
+                                    </button>
+                                    <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{q.likes}</span>
+                                 </div>
+
+                                 {/* Content */}
+                                 <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                                       {q.solved && <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-md text-[10px] font-bold"><CheckCircle className="w-3 h-3" /> Solved</span>}
+                                       <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md text-[10px] font-semibold">{q.category}</span>
+                                    </div>
+                                    <h4 className="font-bold text-slate-900 dark:text-white text-[15px] leading-snug mb-1 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors" onClick={() => setExpandedQuestionId(expandedQuestionId === q.id ? null : q.id)}>{q.title}</h4>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-3">{q.body}</p>
+                                    <div className="flex items-center gap-3 text-xs text-slate-400">
+                                       <span className="font-medium">{q.author}</span>
+                                       <span>•</span>
+                                       <span>{q.answers.length} answer{q.answers.length !== 1 ? 's' : ''}</span>
+                                       <span>•</span>
+                                       <span>{getRelativeTime(q.date)}</span>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           {/* Expanded answers */}
+                           {expandedQuestionId === q.id && (
+                             <div className="bg-slate-50 dark:bg-slate-950/50 border-t border-slate-100 dark:border-slate-800 p-5 space-y-4">
+                                {q.answers.length > 0 && <h5 className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-2"><MessageCircle className="w-4 h-4" /> {q.answers.length} Answer{q.answers.length !== 1 ? 's' : ''}</h5>}
+                                {q.answers.map(a => (
+                                  <div key={a.id} className={`flex gap-3 p-4 rounded-xl ${a.accepted ? 'bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800'}`}>
+                                     <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden shrink-0">
+                                        <img src={a.authorAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(a.author)}&background=random`} className="w-full h-full object-cover" alt={a.author} />
+                                     </div>
+                                     <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                           <span className="text-xs font-bold text-slate-900 dark:text-white">{a.author}</span>
+                                           {a.isExpert && <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded text-[9px] font-bold"><Shield className="w-3 h-3" /> Expert</span>}
+                                           {a.accepted && <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded text-[9px] font-bold"><CheckCircle className="w-3 h-3" /> Accepted</span>}
+                                           <span className="text-[10px] text-slate-400 ml-auto">{getRelativeTime(a.date)}</span>
+                                        </div>
+                                        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{a.content}</p>
+                                        <div className="flex items-center gap-4 mt-2">
+                                           <button className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-green-600 font-semibold transition-colors"><ThumbsUp className="w-3 h-3" /> {a.likes}</button>
+                                           {!q.solved && isSignedIn && q.author === userProfile.name && !a.accepted && (
+                                             <button onClick={() => handleAcceptAnswer(q.id, a.id)} className="flex items-center gap-1 text-[10px] text-green-600 dark:text-green-400 hover:underline font-bold"><CheckCircle className="w-3 h-3" /> Accept</button>
+                                           )}
+                                        </div>
+                                     </div>
+                                  </div>
+                                ))}
+                                {q.answers.length === 0 && <p className="text-sm text-slate-400 text-center py-4">No answers yet. Be the first to help!</p>}
+
+                                {/* Add answer */}
+                                {isSignedIn && (
+                                  <form onSubmit={(e) => { e.preventDefault(); handleAnswerSubmit(q.id); }} className="flex gap-2 mt-2">
+                                     <input value={newAnswer} onChange={e => setNewAnswer(e.target.value)} className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-500" placeholder="Write your answer..." />
+                                     <button type="submit" className="bg-amber-600 text-white px-4 py-2.5 rounded-xl font-semibold text-xs hover:bg-amber-700 transition-colors shrink-0">Answer</button>
+                                  </form>
+                                )}
+                             </div>
+                           )}
+                        </div>
+                      ))}
+                      {filteredQuestions.length === 0 && (
+                        <div className="text-center py-12">
+                           <HelpCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                           <p className="text-slate-400 font-semibold">No questions found</p>
+                           <p className="text-slate-400 text-sm">Try a different search or ask a new question</p>
+                        </div>
+                      )}
+                   </div>
+                </div>
+              )}
            </div>
         </div>
 
-        {/* --- RIGHT SIDEBAR (Trending & Polls) --- */}
+        {/* RIGHT SIDEBAR */}
         <div className="hidden lg:flex lg:col-span-3 flex-col gap-6 overflow-y-auto custom-scrollbar h-full">
            {renderRightSidebarContent()}
         </div>
       </div>
 
-      {/* --- CREATE POST MODAL --- */}
+      {/* CREATE POST MODAL */}
       {isPostModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
            <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden scale-100 transition-all">
@@ -585,7 +967,7 @@ const CommunityHub: React.FC = () => {
                <div className="p-6">
                   <div className="flex gap-4 mb-4">
                      <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden"><img src={userProfile.avatar} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userProfile.name)}&background=random`; }} /></div>
-                     <div><span className="font-bold text-sm text-slate-900 dark:text-white block">{userProfile.name}</span><select value={newPost.category} onChange={e => setNewPost({...newPost, category: e.target.value as any})} className="text-xs bg-transparent border-none p-0 focus:ring-0 cursor-pointer font-bold text-slate-500"><option value="General">General</option><option value="Pests">Pests</option><option value="Market">Market</option></select></div>
+                     <div><span className="font-bold text-sm text-slate-900 dark:text-white block">{userProfile.name}</span><select value={newPost.category} onChange={e => setNewPost({...newPost, category: e.target.value as any})} className="text-xs bg-transparent border-none p-0 focus:ring-0 cursor-pointer font-bold text-slate-500"><option value="General">General</option><option value="Pests">Pests</option><option value="Market">Market</option><option value="Weather">Weather</option><option value="Equipment">Equipment</option></select></div>
                   </div>
                   <input placeholder="Title (Optional)" value={newPost.title} onChange={e => setNewPost({...newPost, title: e.target.value})} className="w-full mb-2 text-lg font-bold placeholder-slate-400 border-none focus:ring-0 p-0 bg-transparent text-slate-900 dark:text-white"/>
                   <textarea placeholder="What's happening on your farm?" value={newPost.content} onChange={e => setNewPost({...newPost, content: e.target.value})} className="w-full h-32 resize-none border-none focus:ring-0 p-0 text-slate-600 dark:text-slate-300 placeholder-slate-400 text-sm bg-transparent" autoFocus/>
@@ -603,7 +985,7 @@ const CommunityHub: React.FC = () => {
         </div>
       )}
 
-      {/* --- CREATE LISTING MODAL --- */}
+      {/* CREATE LISTING MODAL */}
       {isListingModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
            <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl p-6 relative max-h-[90vh] overflow-y-auto">
@@ -621,7 +1003,7 @@ const CommunityHub: React.FC = () => {
                   setNewListing({ type: 'SELL', item: '', price: '', location: '', contact: '' }); 
                   setListingImage(null); 
                 } catch (err) {
-                  // Context handles generic error toast, but we keep modal open
+                  // Context handles generic error toast
                 }
              }} className="space-y-4">
                <div className="grid grid-cols-2 gap-4 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
@@ -643,7 +1025,45 @@ const CommunityHub: React.FC = () => {
         </div>
       )}
 
-      {/* --- STORY VIEWER (FULL SCREEN) --- */}
+      {/* ASK QUESTION MODAL */}
+      {isQuestionModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+           <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
+             <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-amber-50 dark:bg-amber-950/20">
+                <h3 className="font-bold text-amber-900 dark:text-amber-200 text-lg flex items-center gap-2"><HelpCircle className="w-5 h-5" /> Ask a Question</h3>
+                <button onClick={() => { setIsQuestionModalOpen(false); setNewQuestion({ title: '', body: '', category: 'General' }); }} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-full"><X className="w-5 h-5"/></button>
+             </div>
+             <div className="p-6 space-y-4">
+                <div>
+                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Category</label>
+                   <select value={newQuestion.category} onChange={e => setNewQuestion({...newQuestion, category: e.target.value})} className="w-full p-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-semibold outline-none text-slate-900 dark:text-white text-sm">
+                      <option value="General">General</option>
+                      <option value="Crops">Crops</option>
+                      <option value="Pests">Pests</option>
+                      <option value="Livestock">Livestock</option>
+                      <option value="Equipment">Equipment</option>
+                      <option value="Soil">Soil & Fertilizer</option>
+                      <option value="Market">Market & Prices</option>
+                   </select>
+                </div>
+                <div>
+                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Question</label>
+                   <input placeholder="e.g. How do you prevent fall armyworm in maize?" value={newQuestion.title} onChange={e => setNewQuestion({...newQuestion, title: e.target.value})} className="w-full p-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold outline-none text-slate-900 dark:text-white text-sm" />
+                </div>
+                <div>
+                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Details</label>
+                   <textarea placeholder="Provide more context about your question..." value={newQuestion.body} onChange={e => setNewQuestion({...newQuestion, body: e.target.value})} className="w-full h-28 p-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-medium outline-none text-slate-900 dark:text-white text-sm resize-none" />
+                </div>
+             </div>
+             <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-3">
+                <button onClick={() => { setIsQuestionModalOpen(false); setNewQuestion({ title: '', body: '', category: 'General' }); }} className="px-5 py-2.5 rounded-xl font-semibold text-xs text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">Cancel</button>
+                <button onClick={handleQuestionSubmit} disabled={!newQuestion.title.trim()} className="bg-amber-600 text-white px-6 py-2.5 rounded-xl font-semibold text-xs hover:bg-amber-700 disabled:opacity-50 transition-all shadow-md flex items-center gap-2"><Sparkles className="w-4 h-4" /> Post Question</button>
+             </div>
+           </div>
+        </div>
+      )}
+
+      {/* STORY VIEWER */}
       {viewingStory && (
         <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center animate-fade-in">
            <div className="absolute top-4 left-4 right-4 flex gap-2 z-20"><div className="h-1 bg-white/30 rounded-full flex-1 overflow-hidden"><div className="h-full bg-white transition-all duration-[50ms] ease-linear" style={{ width: `${storyProgress}%` }}></div></div></div>
@@ -653,7 +1073,7 @@ const CommunityHub: React.FC = () => {
         </div>
       )}
 
-      {/* --- CREATE STORY MODAL --- */}
+      {/* CREATE STORY MODAL */}
       {isStoryModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md animate-fade-in">
            <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-2xl p-6 relative flex flex-col items-center text-center">

@@ -3,7 +3,8 @@ import { useFarm } from '../contexts/FarmContext';
 import { Plus, Ruler, CalendarDays, Trash2, X, Sprout, Layers, Droplets, Droplet, Leaf, Scan, AlertTriangle, Upload, Activity, Loader2, FileWarning, ClipboardList, Lightbulb, Check, Coffee, Wheat, Image as ImageIcon, Map, Database } from 'lucide-react';
 import { Crop, LogEntry } from '../types';
 import { analyzeCropImage } from '../services/geminiService';
-import { INITIAL_CROPS } from '../constants';
+import type { CountryContext } from '../services/geminiService';
+import { formatArea, formatAreaLabel } from '../utils/localeFormat';
 
 interface Suggestion {
   cropId: string;
@@ -90,7 +91,7 @@ const CROP_TEMPLATES = [
 ];
 
 const CropManager: React.FC = () => {
-  const { crops, addCrop, deleteCrop, addActivityLog, getLogsByRef, updateCropStatus, showToast } = useFarm();
+  const { crops, addCrop, deleteCrop, addActivityLog, getLogsByRef, updateCropStatus, showToast, userProfile } = useFarm();
   
   // -- Suggestion State --
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
@@ -196,11 +197,7 @@ const CropManager: React.FC = () => {
   };
 
   const loadSampleData = async () => {
-    for (const crop of INITIAL_CROPS) {
-      // Cast to remove ID as addCrop generates a new one
-      await addCrop(crop as Omit<Crop, 'id'>);
-    }
-    showToast("Demo farm data loaded successfully!", "success");
+    showToast("Your country-specific crop data is already loaded from your onboarding profile.", "info");
   };
 
   const applyTemplate = (template: typeof CROP_TEMPLATES[0]) => {
@@ -452,7 +449,7 @@ const CropManager: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4 mb-4 border-b border-slate-200 dark:border-slate-700 pb-4">
                   <div>
                      <div className="flex items-center text-slate-700 dark:text-slate-400 text-xs font-semibold mb-1"><Ruler className="w-3 h-3 mr-1" /> Size</div>
-                     <div className="text-lg font-bold text-slate-900 dark:text-white">{crop.area} <span className="text-xs text-slate-600 dark:text-slate-400">Acres</span></div>
+                      <div className="text-lg font-bold text-slate-900 dark:text-white">{formatArea(crop.area, userProfile.areaUnit)}</div>
                   </div>
                   <div>
                      <div className="flex items-center text-slate-700 dark:text-slate-400 text-xs font-semibold mb-1"><CalendarDays className="w-3 h-3 mr-1" /> Harvest</div>
@@ -497,7 +494,7 @@ const CropManager: React.FC = () => {
               </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Details</label>
-                <textarea value={newLog.note} onChange={e => setNewLog({...newLog, note: e.target.value})} className="w-full p-3 bg-white dark:bg-slate-800 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-medium text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 focus:outline-none focus:border-yellow-500" rows={3} placeholder="e.g. Applied 50kg Urea per acre..." required />
+                <textarea value={newLog.note} onChange={e => setNewLog({...newLog, note: e.target.value})} className="w-full p-3 bg-white dark:bg-slate-800 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-medium text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 focus:outline-none focus:border-yellow-500" rows={3} placeholder={`e.g. Applied 50kg Urea per ${userProfile.areaUnit === 'acres' ? 'acre' : 'hectare'}...`} required />
               </div>
               <button type="submit" className="w-full bg-slate-900 dark:bg-slate-700 text-yellow-500 py-4 font-semibold hover:bg-slate-800 dark:hover:bg-slate-600 rounded-sm shadow-md">Save Entry</button>
             </form>
@@ -585,7 +582,7 @@ const CropManager: React.FC = () => {
                     <input required type="text" value={newCrop.variety} onChange={e => setNewCrop({...newCrop, variety: e.target.value})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500" placeholder="e.g. Pioneer P1197"/>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Area (Acres)</label>
+                    <label className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1">Area ({formatAreaLabel(userProfile.areaUnit)})</label>
                     <input required type="number" value={newCrop.area || ''} onChange={e => setNewCrop({...newCrop, area: Number(e.target.value)})} className="w-full px-4 py-3 border-2 border-slate-400 dark:border-slate-600 rounded-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400 bg-white dark:bg-slate-800 focus:outline-none focus:border-yellow-500" placeholder="e.g. 15.5"/>
                   </div>
                 </div>

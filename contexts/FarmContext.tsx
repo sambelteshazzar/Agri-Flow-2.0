@@ -7,7 +7,7 @@ import { MarketService } from '../services/marketService';
 import { LogService } from '../services/logService';
 import { CommunityService } from '../services/communityService';
 import { WeatherService } from '../services/weatherService';
-import { fetchAgNews } from '../services/geminiService';
+import { fetchAgNews, CountryContext } from '../services/geminiService';
 import { db, DB_KEYS } from '../services/persistence';
 import { MOCK_WEATHER, CURRENT_USER, GUEST_USER, INITIAL_ALERTS, COUNTRY_REGISTRY } from '../constants';
 import type { OnboardingData } from '../components/AuthModal';
@@ -420,7 +420,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const updateWeather = async () => {
       if (userLocation.latitude && userLocation.longitude) {
         try {
-          const localWeather = await WeatherService.getLocalWeather(userLocation.latitude, userLocation.longitude);
+          const localWeather = await WeatherService.getLocalWeather(userLocation.latitude, userLocation.longitude, userProfile.countryCode || undefined);
           setWeather(localWeather);
         } catch (e) {
           console.error("Failed to update local weather", e);
@@ -428,7 +428,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     };
     updateWeather();
-  }, [userLocation]);
+  }, [userLocation, userProfile.countryCode]);
 
   // --- Crop Actions ---
   const addCrop = useCallback(async (cropData: Omit<Crop, 'id'>) => {
@@ -539,7 +539,17 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const refreshNews = useCallback(async () => {
     setIsLoadingNews(true);
     try {
-      const articles = await fetchAgNews();
+      const countryCtx: CountryContext | undefined = userProfile.countryCode ? {
+        countryCode: userProfile.countryCode,
+        region: userProfile.region || '',
+        climateZone: userProfile.climateZone || 'temperate',
+        currencyCode: userProfile.currencyCode || 'USD',
+        currencySymbol: userProfile.currencySymbol || '$',
+        language: userProfile.language || 'en',
+        farmType: userProfile.farmType || 'mixed',
+        areaUnit: userProfile.areaUnit || 'ha',
+      } : undefined;
+      const articles = await fetchAgNews(countryCtx);
       setNewsArticles(articles);
     } catch (e) {
       console.error("News fetch failed", e);
@@ -547,7 +557,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } finally {
       setIsLoadingNews(false);
     }
-  }, [showToast]);
+  }, [showToast, userProfile.countryCode, userProfile.region, userProfile.climateZone, userProfile.currencyCode, userProfile.currencySymbol, userProfile.language, userProfile.farmType, userProfile.areaUnit]);
 
   // --- Log Actions ---
   const addActivityLog = useCallback(async (log: Omit<LogEntry, 'id'>) => {

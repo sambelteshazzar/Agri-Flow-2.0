@@ -2,10 +2,21 @@
 import React, { useState, useEffect } from 'react';
 import { CloudRain, Wind, Droplets, Thermometer, AlertTriangle, Calendar, CheckSquare, Square, MapPin, Activity, ShieldCheck, TrendingDown, TrendingUp, Sparkles, Loader2, Navigation, MapPinOff, Globe, X, Sprout, Beef, ArrowUpRight, ArrowDownRight, Minus, Clock, BarChart3, Leaf, Zap } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
-import { generateDailyTasks, getLiveAgriIntel } from '../services/geminiService';
+import { generateDailyTasks, getLiveAgriIntel, CountryContext } from '../services/geminiService';
 
 const Dashboard: React.FC = () => {
-  const { tasks, toggleTask, crops, addTask, livestock, marketPrices, userLocation, weather, alerts } = useFarm();
+  const { tasks, toggleTask, crops, addTask, livestock, marketPrices, userLocation, weather, alerts, userProfile } = useFarm();
+
+  const countryCtx: CountryContext | undefined = userProfile.countryCode ? {
+    countryCode: userProfile.countryCode,
+    region: userProfile.region || '',
+    climateZone: userProfile.climateZone || 'temperate',
+    currencyCode: userProfile.currencyCode || 'USD',
+    currencySymbol: userProfile.currencySymbol || '$',
+    language: userProfile.language || 'en',
+    farmType: userProfile.farmType || 'mixed',
+    areaUnit: userProfile.areaUnit || 'ha',
+  } : undefined;
   const [isGenerating, setIsGenerating] = useState(false);
   const [liveIntel, setLiveIntel] = useState<string | null>(null);
   const [isLoadingIntel, setIsLoadingIntel] = useState(false);
@@ -15,7 +26,7 @@ const Dashboard: React.FC = () => {
     const fetchIntel = async () => {
       setIsLoadingIntel(true);
       try {
-        const intel = await getLiveAgriIntel();
+        const intel = await getLiveAgriIntel(countryCtx);
         setLiveIntel(intel);
       } catch (e) {
         console.error("Intel fetch failed", e);
@@ -62,7 +73,7 @@ const Dashboard: React.FC = () => {
   const handleGenerateTasks = async () => {
     setIsGenerating(true);
     try {
-      const jsonString = await generateDailyTasks(weather, crops);
+      const jsonString = await generateDailyTasks(weather, crops, countryCtx);
       try {
         const newTasks: string[] = JSON.parse(jsonString);
         newTasks.forEach(taskText => addTask(taskText));

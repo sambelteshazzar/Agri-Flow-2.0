@@ -2,8 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useFarm } from '../contexts/FarmContext';
 import { Plus, Trash2, X, Beef, Tag, Activity, FileText, ClipboardList, Calendar, HeartPulse, Image as ImageIcon, Scan, AlertTriangle, Upload, Loader2, Stethoscope, Clipboard, Database } from 'lucide-react';
 import { Livestock, LogEntry } from '../types';
-import { analyzeCropImage } from '../services/geminiService'; // Reusing the multimodal analysis service
-import { INITIAL_LIVESTOCK } from '../constants';
+import { analyzeCropImage } from '../services/geminiService';
 
 // Helper to provide context-aware default images
 const getLivestockImage = (species: string) => {
@@ -62,10 +61,7 @@ const LivestockManager: React.FC = () => {
   };
 
   const loadSampleData = async () => {
-    for (const animal of INITIAL_LIVESTOCK) {
-      await addLivestock(animal as Omit<Livestock, 'id'>);
-    }
-    showToast("Demo livestock data loaded!", "success");
+    showToast("Your country-specific livestock data is already loaded from your onboarding profile.", "info");
   };
 
   const handleLogSubmit = async (e: React.FormEvent) => {
