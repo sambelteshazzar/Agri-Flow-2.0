@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { CloudRain, Wind, Droplets, Thermometer, AlertTriangle, Calendar, CheckSquare, Square, MapPin, Activity, ShieldCheck, TrendingDown, TrendingUp, Sparkles, Loader2, Navigation, MapPinOff, Globe, X, Sprout, Beef, ArrowUpRight, ArrowDownRight, Minus, Clock, BarChart3, Leaf, Zap } from 'lucide-react';
+import { CloudRain, Wind, Droplets, Thermometer, AlertTriangle, Calendar, CheckSquare, Square, MapPin, Activity, ShieldCheck, TrendingDown, TrendingUp, Sparkles, Loader2, Navigation, MapPinOff, Globe, X, Sprout, Beef, ArrowUpRight, ArrowDownRight, Minus, Clock, BarChart3, Leaf, Zap, Sun, Cloud, CloudDrizzle } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import { generateDailyTasks, getLiveAgriIntel, CountryContext } from '../services/geminiService';
 
@@ -45,22 +45,47 @@ const Dashboard: React.FC = () => {
 
   const getRiskColor = (risk: string) => {
     switch(risk) {
-      case 'Low': return 'text-green-600 dark:text-green-500';
-      case 'Moderate': return 'text-yellow-600 dark:text-yellow-500';
-      case 'High': return 'text-orange-600 dark:text-orange-500';
-      case 'Severe': return 'text-red-600 dark:text-red-500 animate-pulse';
-      default: return 'text-slate-500';
+      case 'Low': return 'text-field-600 dark:text-field-400';
+      case 'Moderate': return 'text-harvest-600 dark:text-harvest-400';
+      case 'High': return 'text-orange-600 dark:text-orange-400';
+      case 'Severe': return 'text-red-600 dark:text-red-400 animate-pulse';
+      default: return 'text-soil-500';
     }
   };
 
   const getRiskBg = (risk: string) => {
     switch(risk) {
-      case 'Low': return 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
-      case 'Moderate': return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
+      case 'Low': return 'bg-field-50 dark:bg-field-900/20 border-field-200 dark:border-field-800';
+      case 'Moderate': return 'bg-harvest-50 dark:bg-harvest-900/20 border-harvest-200 dark:border-harvest-800';
       case 'High': return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800';
       case 'Severe': return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
-      default: return 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700';
+      default: return 'bg-soil-50 dark:bg-[#183222] border-soil-200 dark:border-[#1C3A28]';
     }
+  };
+
+  const getWeatherGradient = () => {
+    const condition = weather.condition?.toLowerCase() || '';
+    if (condition.includes('rain') || condition.includes('shower') || condition.includes('drizzle')) {
+      return 'from-slate-700 via-slate-600 to-blue-700';
+    }
+    if (condition.includes('cloud') || condition.includes('overcast')) {
+      return 'from-slate-600 via-slate-500 to-slate-600';
+    }
+    if (condition.includes('sunny') || condition.includes('clear') || condition.includes('fair')) {
+      return 'from-amber-600 via-orange-500 to-amber-500';
+    }
+    if (condition.includes('storm') || condition.includes('thunder')) {
+      return 'from-slate-800 via-purple-800 to-slate-700';
+    }
+    return 'from-field-700 via-field-600 to-emerald-600';
+  };
+
+  const getWeatherIcon = () => {
+    const condition = weather.condition?.toLowerCase() || '';
+    if (condition.includes('rain') || condition.includes('shower') || condition.includes('drizzle')) return <CloudDrizzle className="w-12 h-12 text-white/90" />;
+    if (condition.includes('cloud') || condition.includes('overcast')) return <Cloud className="w-12 h-12 text-white/90" />;
+    if (condition.includes('sunny') || condition.includes('clear') || condition.includes('fair')) return <Sun className="w-12 h-12 text-harvest-300" />;
+    return <Sun className="w-12 h-12 text-white/90" />;
   };
 
   const handleTaskKeyDown = (e: React.KeyboardEvent, id: string) => {
@@ -99,7 +124,7 @@ const Dashboard: React.FC = () => {
 
       {/* Climate Risk Alert Banner */}
       {showWeatherAlert && (weather.climateRiskIndex === 'High' || weather.climateRiskIndex === 'Severe') && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 p-4 rounded-xl shadow-sm flex justify-between items-start animate-fade-in-up">
+        <div className="bg-red-50 dark:bg-red-900/15 border border-red-200 dark:border-red-800/50 text-red-800 dark:text-red-200 p-4 rounded-2xl shadow-sm flex justify-between items-start animate-fade-in-up">
             <div className="flex items-start">
                 <AlertTriangle className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0 text-red-500 dark:text-red-400" />
                 <div>
@@ -118,29 +143,29 @@ const Dashboard: React.FC = () => {
       )}
 
       {/* Page Header */}
-      <header className="mb-2 flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 dark:border-slate-700 pb-4">
+      <header className="mb-2 flex flex-col md:flex-row md:items-end justify-between pb-4 organic-divider pb-5">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Dashboard</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-primary-dynamic tracking-tight font-display">Dashboard</h2>
           <div className="flex items-center mt-2 gap-3 flex-wrap">
              {userLocation.latitude && userLocation.longitude ? (
-               <span className="inline-flex items-center text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-md text-xs font-medium border border-slate-200 dark:border-slate-700">
-                  <MapPin className="w-3.5 h-3.5 mr-1.5 text-green-600 dark:text-green-400" />
+               <span className="inline-flex items-center text-secondary-dynamic bg-soil-100/60 dark:bg-[#183222] px-2.5 py-1 rounded-lg text-xs font-medium border border-soil-200/60 dark:border-[#1C3A28]/60">
+                  <MapPin className="w-3.5 h-3.5 mr-1.5 text-field-600 dark:text-field-400" />
                   {userLocation.latitude.toFixed(4)}, {userLocation.longitude.toFixed(4)}
                </span>
              ) : (
-               <span className="inline-flex items-center text-slate-500 bg-slate-50 dark:bg-slate-900 px-2.5 py-1 rounded-md text-xs font-medium border border-slate-200 dark:border-slate-700">
+               <span className="inline-flex items-center text-soil-400 dark:text-[#5C7A68] bg-soil-50 dark:bg-[#12261A] px-2.5 py-1 rounded-lg text-xs font-medium border border-soil-200 dark:border-[#1C3A28]">
                   <MapPinOff className="w-3.5 h-3.5 mr-1.5" />
                   {userLocation.error ? 'Location unavailable' : 'Locating...'}
                </span>
              )}
-             <span className="text-slate-400 dark:text-slate-600">|</span>
-             <span className="text-slate-500 dark:text-slate-400 text-xs font-medium">Season 2026</span>
-             <span className="text-slate-400 dark:text-slate-600">|</span>
-             <span className="text-slate-500 dark:text-slate-400 text-xs font-medium">{weather.locationName}</span>
+             <span className="text-soil-300 dark:text-[#1C3A28]">·</span>
+             <span className="text-secondary-dynamic text-xs font-medium">Season 2026</span>
+             <span className="text-soil-300 dark:text-[#1C3A28]">·</span>
+             <span className="text-secondary-dynamic text-xs font-medium">{weather.locationName}</span>
           </div>
         </div>
         <div className="mt-4 md:mt-0">
-          <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border font-medium text-xs ${getRiskBg(weather.climateRiskIndex)}`}>
+          <div className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border font-semibold text-xs ${getRiskBg(weather.climateRiskIndex)}`}>
             <ShieldCheck className="w-4 h-4" />
             <span className={getRiskColor(weather.climateRiskIndex)}>{weather.climateRiskIndex} Climate Risk</span>
           </div>
@@ -155,8 +180,9 @@ const Dashboard: React.FC = () => {
             value: crops.length.toString(),
             detail: `${healthyCrops} healthy, ${attentionCrops} need attention`,
             icon: Sprout,
-            iconBg: 'bg-green-50 dark:bg-green-900/20',
-            iconColor: 'text-green-600 dark:text-green-400',
+            iconBg: 'bg-field-50 dark:bg-field-900/30',
+            iconColor: 'text-field-600 dark:text-field-400',
+            borderColor: 'border-field-200/60 dark:border-field-800/40',
             trend: healthyCrops > attentionCrops ? 'up' : 'down',
             trendLabel: healthyCrops > attentionCrops ? 'Mostly healthy' : 'Attention needed',
           },
@@ -165,8 +191,9 @@ const Dashboard: React.FC = () => {
             value: totalLivestockCount.toString(),
             detail: `${livestock.length} herds, ${healthyLivestock} healthy`,
             icon: Beef,
-            iconBg: 'bg-amber-50 dark:bg-amber-900/20',
-            iconColor: 'text-amber-600 dark:text-amber-400',
+            iconBg: 'bg-harvest-50 dark:bg-harvest-900/20',
+            iconColor: 'text-harvest-600 dark:text-harvest-400',
+            borderColor: 'border-harvest-200/60 dark:border-harvest-800/30',
             trend: 'up',
             trendLabel: 'All monitored',
           },
@@ -177,6 +204,7 @@ const Dashboard: React.FC = () => {
             icon: Calendar,
             iconBg: 'bg-blue-50 dark:bg-blue-900/20',
             iconColor: 'text-blue-600 dark:text-blue-400',
+            borderColor: 'border-blue-200/60 dark:border-blue-800/30',
             trend: pendingTasks === 0 ? 'up' : pendingTasks > 5 ? 'down' : 'neutral',
             trendLabel: pendingTasks === 0 ? 'All complete' : `${pendingTasks} pending`,
           },
@@ -185,81 +213,94 @@ const Dashboard: React.FC = () => {
             value: alerts.length.toString(),
             detail: alerts.filter(a => a.severity === 'critical').length > 0 ? 'Critical alert active' : 'No critical alerts',
             icon: AlertTriangle,
-            iconBg: alerts.filter(a => a.severity === 'critical').length > 0 ? 'bg-red-50 dark:bg-red-900/20' : 'bg-slate-50 dark:bg-slate-800',
-            iconColor: alerts.filter(a => a.severity === 'critical').length > 0 ? 'text-red-600 dark:text-red-400' : 'text-slate-500 dark:text-slate-400',
+            iconBg: alerts.filter(a => a.severity === 'critical').length > 0 ? 'bg-red-50 dark:bg-red-900/20' : 'bg-soil-50 dark:bg-[#183222]',
+            iconColor: alerts.filter(a => a.severity === 'critical').length > 0 ? 'text-red-600 dark:text-red-400' : 'text-soil-400 dark:text-[#5C7A68]',
+            borderColor: alerts.filter(a => a.severity === 'critical').length > 0 ? 'border-red-200/60 dark:border-red-800/30' : 'border-soil-200/60 dark:border-[#1C3A28]/40',
             trend: alerts.length === 0 ? 'up' : 'down',
             trendLabel: alerts.length === 0 ? 'All clear' : 'Review needed',
           },
-        ].map(kpi => (
-          <div key={kpi.label} className="bg-white dark:bg-slate-900 rounded-xl p-5 shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow">
-            <div className="flex items-start justify-between mb-3">
-              <div className={`p-2 rounded-lg ${kpi.iconBg}`}>
+        ].map((kpi, i) => (
+          <div key={kpi.label} className={`card-surface leaf-glow p-5 opacity-0 animate-stagger-${i + 1} border ${kpi.borderColor}`}>
+            <div className="flex items-start justify-between mb-3 relative z-10">
+              <div className={`p-2.5 rounded-xl ${kpi.iconBg} shadow-sm`}>
                 <kpi.icon className={`w-5 h-5 ${kpi.iconColor}`} />
               </div>
               <div className="flex items-center gap-1 text-xs font-medium">
-                {kpi.trend === 'up' && <ArrowUpRight className="w-3.5 h-3.5 text-green-500" />}
+                {kpi.trend === 'up' && <ArrowUpRight className="w-3.5 h-3.5 text-field-500" />}
                 {kpi.trend === 'down' && <ArrowDownRight className="w-3.5 h-3.5 text-orange-500" />}
-                {kpi.trend === 'neutral' && <Minus className="w-3.5 h-3.5 text-slate-400" />}
-                <span className={kpi.trend === 'up' ? 'text-green-600 dark:text-green-400' : kpi.trend === 'down' ? 'text-orange-600 dark:text-orange-400' : 'text-slate-500'}>
+                {kpi.trend === 'neutral' && <Minus className="w-3.5 h-3.5 text-soil-400" />}
+                <span className={kpi.trend === 'up' ? 'text-field-600 dark:text-field-400' : kpi.trend === 'down' ? 'text-orange-600 dark:text-orange-400' : 'text-secondary-dynamic'}>
                   {kpi.trendLabel}
                 </span>
               </div>
             </div>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{kpi.value}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{kpi.detail}</p>
+            <div className="text-2xl font-bold text-primary-dynamic relative z-10">{kpi.value}</div>
+            <p className="text-xs text-secondary-dynamic mt-1 relative z-10">{kpi.detail}</p>
           </div>
         ))}
       </div>
 
-      {/* Weather Section */}
-      <section className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800" aria-label="Weather Conditions">
-        <div className="flex items-center mb-5">
-          <Thermometer className="w-5 h-5 mr-2 text-orange-500" />
-          <h3 className="text-base font-bold text-slate-900 dark:text-white">Weather Conditions</h3>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Temperature</span>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{weather.temp}°C</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">{weather.condition}</div>
-          </div>
-          <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Humidity</span>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{weather.humidity}%</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Relative moisture</div>
-          </div>
-          <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Wind Speed</span>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{weather.windSpeed} <span className="text-base font-normal text-slate-500">km/h</span></div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Surface wind</div>
-          </div>
-          <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Forecast</span>
-            <div className="text-sm font-medium text-slate-900 dark:text-white mt-2 leading-snug">{weather.forecast}</div>
-            <div className="mt-2">
-              <span className={`inline-block text-xs font-bold px-2 py-0.5 rounded-md ${getRiskBg(weather.climateRiskIndex)} ${getRiskColor(weather.climateRiskIndex)}`}>
-                {weather.climateRiskIndex} Risk
-              </span>
+      {/* Weather Section — Atmospheric Gradient Header */}
+      <section className="relative overflow-hidden rounded-2xl shadow-lg animate-stagger-5" aria-label="Weather Conditions">
+        <div className={`bg-gradient-to-br ${getWeatherGradient()} p-6 md:p-8 relative`}>
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+          
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex items-center gap-5">
+              <div className="animate-float">
+                {getWeatherIcon()}
+              </div>
+              <div>
+                <h3 className="text-white/70 text-sm font-semibold mb-1">Weather Conditions</h3>
+                <div className="text-4xl md:text-5xl font-bold text-white tracking-tight">{weather.temp}°C</div>
+                <p className="text-white/80 text-sm font-medium mt-1">{weather.condition}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 md:gap-6 flex-1 max-w-md">
+              <div className="text-center">
+                <Droplets className="w-5 h-5 text-white/50 mx-auto mb-1.5" />
+                <div className="text-xl font-bold text-white">{weather.humidity}%</div>
+                <div className="text-[10px] text-white/60 font-medium mt-0.5">Humidity</div>
+              </div>
+              <div className="text-center">
+                <Wind className="w-5 h-5 text-white/50 mx-auto mb-1.5" />
+                <div className="text-xl font-bold text-white">{weather.windSpeed}<span className="text-sm font-normal text-white/50 ml-0.5">km/h</span></div>
+                <div className="text-[10px] text-white/60 font-medium mt-0.5">Wind</div>
+              </div>
+              <div className="text-center">
+                <Activity className="w-5 h-5 text-white/50 mx-auto mb-1.5" />
+                <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-lg ${getRiskBg(weather.climateRiskIndex)} ${getRiskColor(weather.climateRiskIndex)}`}>
+                  {weather.climateRiskIndex}
+                </span>
+                <div className="text-[10px] text-white/60 font-medium mt-1.5">Risk Level</div>
+              </div>
             </div>
           </div>
+
+          {weather.forecast && (
+            <div className="relative z-10 mt-5 pt-4 border-t border-white/15">
+              <p className="text-white/70 text-xs font-medium">{weather.forecast}</p>
+            </div>
+          )}
         </div>
       </section>
 
       {/* Market Intelligence */}
-      <section className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 relative overflow-hidden">
-        <div className="flex items-center mb-4">
-          <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600 dark:text-blue-400 mr-3">
+      <section className="card-surface sun-glow p-6 relative overflow-hidden animate-stagger-6">
+        <div className="flex items-center mb-4 relative z-10">
+          <div className="p-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 mr-3 shadow-sm">
             <Globe className="w-5 h-5" />
           </div>
-          <h3 className="text-base font-bold text-slate-900 dark:text-white">Market Intelligence</h3>
-          {isLoadingIntel && <Loader2 className="w-4 h-4 text-slate-400 animate-spin ml-3" />}
+          <h3 className="text-base font-bold text-primary-dynamic font-heading">Market Intelligence</h3>
+          {isLoadingIntel && <Loader2 className="w-4 h-4 text-soil-400 dark:text-[#5C7A68] animate-spin ml-3" />}
         </div>
-        <div className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
+        <div className="text-secondary-dynamic text-sm leading-relaxed relative z-10">
           {liveIntel ? (
-            liveIntel.split('\n').map((line, i) => <p key={i} className="mb-2 last:mb-0 border-l-2 border-blue-500 pl-3">{line}</p>)
+            liveIntel.split('\n').map((line, i) => <p key={i} className="mb-2.5 last:mb-0 border-l-2 border-field-500 dark:border-field-400 pl-3.5">{line}</p>)
           ) : (
-            <div className="flex items-center gap-2 text-slate-500 italic">
-              <Loader2 className="w-3 h-3 animate-spin"/>
+            <div className="flex items-center gap-2 text-soil-400 dark:text-[#5C7A68] italic">
+              <Loader2 className="w-3.5 h-3.5 animate-spin"/>
               <span>Loading market update...</span>
             </div>
           )}
@@ -270,38 +311,40 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {/* Alerts Panel */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-          <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+        <div className="card-surface overflow-hidden opacity-0 animate-stagger-3">
+          <div className="p-5 organic-divider pb-4 flex justify-between items-center">
             <div className="flex items-center">
-              <AlertTriangle className="w-5 h-5 mr-2 text-orange-500" />
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">Active Alerts</h3>
+              <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-xl text-orange-600 dark:text-orange-400 mr-3 shadow-sm">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-primary-dynamic font-heading">Active Alerts</h3>
             </div>
-            {alerts.length > 0 && <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 text-xs font-bold px-2.5 py-1 rounded-full">{alerts.length}</span>}
+            {alerts.length > 0 && <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs font-bold px-2.5 py-1 rounded-full">{alerts.length}</span>}
           </div>
-          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          <div className="divide-y divide-soil-100/60 dark:divide-[#1C3A28]/40">
             {alerts.length === 0 ? (
-              <div className="p-8 text-center text-slate-500 dark:text-slate-400">
-                <div className="w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <ShieldCheck className="w-6 h-6 text-green-600 dark:text-green-400" />
+              <div className="p-8 text-center text-secondary-dynamic">
+                <div className="w-12 h-12 bg-field-50 dark:bg-field-900/20 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                  <ShieldCheck className="w-6 h-6 text-field-600 dark:text-field-400" />
                 </div>
-                <p className="font-medium text-sm">No active alerts</p>
-                <p className="text-xs mt-1 text-slate-400">All systems operating normally</p>
+                <p className="font-semibold text-sm text-primary-dynamic">No active alerts</p>
+                <p className="text-xs mt-1 text-secondary-dynamic">Your farm is looking good</p>
               </div>
             ) : (
               alerts.map((alert) => (
-                <div key={alert.id} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <div key={alert.id} className="p-4 hover:bg-soil-50/50 dark:hover:bg-[#183222]/30 transition-colors">
                   <div className="flex justify-between items-start mb-1">
-                    <h4 className="font-bold text-slate-900 dark:text-white text-sm">{alert.title}</h4>
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0 ml-2 ${
-                      alert.category === 'FINANCIAL' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200' :
-                      alert.category === 'WEATHER' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200' :
-                      alert.category === 'LAND' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200' :
-                      'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200'
+                    <h4 className="font-semibold text-primary-dynamic text-sm">{alert.title}</h4>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg shrink-0 ml-2 ${
+                      alert.category === 'FINANCIAL' ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
+                      alert.category === 'WEATHER' ? 'bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300' :
+                      alert.category === 'LAND' ? 'bg-field-50 text-field-700 dark:bg-field-900/30 dark:text-field-300' :
+                      'bg-soil-50 text-soil-700 dark:bg-[#183222] dark:text-[#8BA898]'
                     }`}>
                       {alert.category}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{alert.message}</p>
+                  <p className="text-sm text-secondary-dynamic leading-relaxed">{alert.message}</p>
                 </div>
               ))
             )}
@@ -309,23 +352,25 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Daily Tasks Panel */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-          <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+        <div className="card-surface overflow-hidden opacity-0 animate-stagger-4">
+          <div className="p-5 organic-divider pb-4 flex justify-between items-center">
             <div className="flex items-center">
-              <Calendar className="w-5 h-5 mr-2 text-slate-500" />
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">Daily Tasks</h3>
+              <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 mr-3 shadow-sm">
+                <Calendar className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-primary-dynamic font-heading">Daily Tasks</h3>
             </div>
             <button
               onClick={handleGenerateTasks}
               disabled={isGenerating}
-              className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-xs font-bold transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 text-field-600 dark:text-field-400 hover:text-field-700 dark:hover:text-field-300 text-xs font-bold transition-colors disabled:opacity-50 bg-field-50 dark:bg-field-900/20 px-3 py-1.5 rounded-lg border border-field-200 dark:border-field-800"
             >
               {isGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
               {isGenerating ? "Generating..." : "AI Generate"}
             </button>
           </div>
 
-          <div className="bg-slate-50 dark:bg-slate-800/50 px-5 py-2.5 border-b border-slate-100 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 flex justify-between">
+          <div className="bg-soil-50/60 dark:bg-[#183222]/40 px-5 py-2.5 border-b border-soil-100/60 dark:border-[#1C3A28]/40 text-xs font-semibold text-secondary-dynamic flex justify-between">
             <span>{pendingTasks} remaining</span>
             <span>{completedToday} completed</span>
           </div>
@@ -340,19 +385,19 @@ const Dashboard: React.FC = () => {
                 onClick={() => toggleTask(task.id)}
                 onKeyDown={(e) => handleTaskKeyDown(e, task.id)}
                 className={`
-                  flex items-center p-4 cursor-pointer border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors focus:outline-none
-                  ${task.completed ? 'opacity-60' : ''}
+                  flex items-center p-4 cursor-pointer border-b border-soil-100/40 dark:border-[#1C3A28]/30 last:border-0 hover:bg-soil-50/40 dark:hover:bg-[#183222]/20 transition-colors focus:outline-none
+                  ${task.completed ? 'opacity-50' : ''}
                 `}
               >
-                <div className={`mr-3 ${task.completed ? 'text-slate-400 dark:text-slate-600' : 'text-green-600 dark:text-green-500'}`}>
-                  {task.completed ? <CheckSquare className="w-4.5 h-4.5" /> : <Square className="w-4.5 h-4.5" />}
+                <div className={`mr-3 ${task.completed ? 'text-soil-300 dark:text-[#1C3A28]' : 'text-field-600 dark:text-field-500'}`}>
+                  {task.completed ? <CheckSquare className="w-[18px] h-[18px]" /> : <Square className="w-[18px] h-[18px]" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium truncate ${task.completed ? 'line-through text-slate-500' : 'text-slate-900 dark:text-white'}`}>
+                  <p className={`text-sm font-medium truncate ${task.completed ? 'line-through text-soil-400 dark:text-[#5C7A68]' : 'text-primary-dynamic'}`}>
                     {task.text}
                   </p>
                   {task.priority === 'high' && !task.completed && (
-                    <span className="inline-block mt-1 text-[10px] bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 px-2 py-0.5 rounded-full font-semibold">
+                    <span className="inline-block mt-1 text-[10px] bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 px-2 py-0.5 rounded-lg font-semibold">
                       Priority
                     </span>
                   )}
@@ -361,11 +406,11 @@ const Dashboard: React.FC = () => {
             ))}
             {tasks.length === 0 && (
               <div className="p-8 text-center">
-                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400">
+                <div className="w-12 h-12 bg-soil-100 dark:bg-[#183222] rounded-2xl flex items-center justify-center mx-auto mb-3 text-soil-400 dark:text-[#5C7A68] shadow-sm">
                   <Calendar className="w-6 h-6"/>
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 font-medium text-sm">No tasks scheduled</p>
-                <button onClick={handleGenerateTasks} className="mt-2 text-blue-600 dark:text-blue-400 text-xs font-bold hover:underline">Generate with AI</button>
+                <p className="text-secondary-dynamic font-medium text-sm">No tasks scheduled</p>
+                <button onClick={handleGenerateTasks} className="mt-2 text-field-600 dark:text-field-400 text-xs font-bold hover:underline">Generate with AI</button>
               </div>
             )}
           </div>
@@ -374,33 +419,35 @@ const Dashboard: React.FC = () => {
 
       {/* Crop Status Quick View */}
       {crops.length > 0 && (
-        <section className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-          <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+        <section className="card-surface overflow-hidden animate-fade-in-up">
+          <div className="p-5 organic-divider pb-4 flex justify-between items-center">
             <div className="flex items-center">
-              <Sprout className="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">Crop Status Overview</h3>
+              <div className="p-2 bg-field-50 dark:bg-field-900/20 rounded-xl text-field-600 dark:text-field-400 mr-3 shadow-sm">
+                <Sprout className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-primary-dynamic font-heading">Crop Status Overview</h3>
             </div>
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{crops.length} total</span>
+            <span className="text-xs font-medium text-secondary-dynamic">{crops.length} total</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 dark:divide-slate-800">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-soil-100/60 dark:divide-[#1C3A28]/40">
             {crops.map(crop => {
               const statusStyles: Record<string, string> = {
-                'Healthy': 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800',
-                'Needs Attention': 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
+                'Healthy': 'bg-field-50 dark:bg-field-900/20 text-field-700 dark:text-field-300 border-field-200 dark:border-field-800',
+                'Needs Attention': 'bg-harvest-50 dark:bg-harvest-900/20 text-harvest-700 dark:text-harvest-300 border-harvest-200 dark:border-harvest-800',
                 'Critical': 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800',
                 'Harvest Ready': 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800',
               };
               const style = statusStyles[crop.status] || statusStyles['Healthy'];
               return (
-                <div key={crop.id} className="p-4 flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs font-bold ${style} border shrink-0`}>
+                <div key={crop.id} className="p-4 flex items-center gap-3 hover:bg-soil-50/30 dark:hover:bg-[#183222]/15 transition-colors">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${style} border shrink-0 shadow-sm`}>
                     {crop.name.charAt(0)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{crop.name}</p>
+                    <p className="text-sm font-semibold text-primary-dynamic truncate">{crop.name}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-slate-500 dark:text-slate-400">{crop.area} ac</span>
-                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${style} border`}>{crop.status}</span>
+                      <span className="text-xs text-secondary-dynamic">{crop.area} ac</span>
+                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-lg ${style} border`}>{crop.status}</span>
                     </div>
                   </div>
                 </div>

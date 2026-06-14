@@ -2,13 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { useFarm } from '../contexts/FarmContext';
 import { GraduationCap, PlayCircle, Check, Clock, BookOpen, BarChart, User, Star, Search, Filter, ArrowLeft, Play, FileText, Lock, Award, CheckCircle, Pause } from 'lucide-react';
 
-// Maps specific topics to real YouTube videos
 const COURSE_CONTENT_MAP: Record<string, string> = {
-  'Regenerative': 'h2P5z2Q3yJ0', // Kiss the Ground / Soil Health
-  'Tech': 'Q6sL-7sF_Gw', // Drone Farming
-  'Economics': '1s5o7s3y_wY', // Ag Economics (Proxy)
-  'Resilience': 'G9K7z9JcQj8', // Water Conservation
-  'Default': 'dQw4w9WgXcQ' // Fallback
+  'Regenerative': 'h2P5z2Q3yJ0',
+  'Tech': 'Q6sL-7sF_Gw',
+  'Economics': '1s5o7s3y_wY',
+  'Resilience': 'G9K7z9JcQj8',
+  'Default': 'dQw4w9WgXcQ'
 };
 
 const EducationHub: React.FC = () => {
@@ -28,10 +27,10 @@ const EducationHub: React.FC = () => {
 
   const getDifficultyColor = (diff: string) => {
     switch (diff) {
-      case 'Beginner': return 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400';
-      case 'Intermediate': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400';
+      case 'Beginner': return 'text-field-600 bg-field-100 dark:bg-field-900/30 dark:text-field-400';
+      case 'Intermediate': return 'text-harvest-600 bg-harvest-100 dark:bg-harvest-900/30 dark:text-harvest-400';
       case 'Advanced': return 'text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400';
-      default: return 'text-slate-600 bg-slate-100';
+      default: return 'text-soil-600 bg-soil-100 dark:bg-soil-800 dark:text-soil-300';
     }
   };
 
@@ -39,7 +38,6 @@ const EducationHub: React.FC = () => {
     setActiveCourseId(id);
     setCurrentLessonIdx(0);
     setIsPlaying(false);
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -51,10 +49,9 @@ const EducationHub: React.FC = () => {
 
   const handleLessonChange = (idx: number) => {
     setCurrentLessonIdx(idx);
-    setIsPlaying(false); // Reset play state for new lesson
+    setIsPlaying(false);
   };
 
-  // Helper to generate deterministic but realistic lesson titles
   const getLessonTitle = (index: number, total: number, category: string) => {
     if (index === 0) return "Introduction & Core Principles";
     if (index === total - 1) return "Final Assessment & Certification";
@@ -67,13 +64,10 @@ const EducationHub: React.FC = () => {
     };
 
     const specificTopics = topics[category] || ['Core Concept', 'Advanced Application', 'Case Studies', 'Field Implementation', 'Review'];
-    // Cycle through topics deterministically
     return `Module ${index}: ${specificTopics[(index - 1) % specificTopics.length]}`;
   };
 
-  // --- DETAILED COURSE VIEW ---
   if (activeCourse) {
-    // Generate lesson structure
     const lessons = Array.from({ length: activeCourse.lessonsCount }).map((_, i) => ({
       id: i,
       title: getLessonTitle(i, activeCourse.lessonsCount, activeCourse.category),
@@ -82,37 +76,32 @@ const EducationHub: React.FC = () => {
       isCompleted: i < currentLessonIdx
     }));
 
-    // Select video ID
     const videoId = COURSE_CONTENT_MAP[activeCourse.category] || COURSE_CONTENT_MAP['Default'];
 
     return (
       <div className="h-full flex flex-col animate-fade-in pb-10">
-        {/* Navigation Bar */}
-        <div className="flex items-center gap-4 mb-6 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div className="flex items-center gap-4 mb-6 organic-divider pb-4">
            <button 
              onClick={() => setActiveCourseId(null)}
-             className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group"
+             className="p-2 hover:bg-soil-100 dark:hover:bg-field-800 rounded-full transition-colors group"
            >
-             <ArrowLeft className="w-6 h-6 text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white" />
+             <ArrowLeft className="w-6 h-6 text-secondary-dynamic group-hover:text-primary-dynamic" />
            </button>
            <div>
              <div className="flex items-center gap-2 mb-1">
                <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${getDifficultyColor(activeCourse.difficulty)}`}>
                  {activeCourse.difficulty}
                </span>
-               <span className="text-slate-400 text-xs font-semibold">• {activeCourse.category}</span>
+               <span className="text-field-400 text-xs font-semibold">• {activeCourse.category}</span>
              </div>
-             <h1 className="text-2xl font-bold text-slate-900 dark:text-white leading-none">{activeCourse.title}</h1>
+             <h1 className="text-2xl font-bold text-primary-dynamic leading-none">{activeCourse.title}</h1>
            </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-           {/* Left: Player & Info */}
            <div className="lg:col-span-2 space-y-6">
-              {/* Video Player */}
               <div className="aspect-video bg-black rounded-2xl overflow-hidden relative group shadow-2xl">
                  {isPlaying ? (
-                   // Functional YouTube Embed with specific video ID
                    <iframe 
                      className="w-full h-full"
                      src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
@@ -142,7 +131,7 @@ const EducationHub: React.FC = () => {
                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                         <div className="flex items-center gap-4">
                            <div className="h-1 flex-1 bg-white/30 rounded-full overflow-hidden">
-                              <div className="h-full w-0 bg-yellow-500"></div>
+                              <div className="h-full w-0 bg-harvest-500"></div>
                            </div>
                            <span className="text-xs font-bold text-white font-mono">{lessons[currentLessonIdx].duration}</span>
                         </div>
@@ -151,32 +140,31 @@ const EducationHub: React.FC = () => {
                  )}
               </div>
 
-              {/* Course Description */}
-              <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
-                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">{lessons[currentLessonIdx].title}</h3>
-                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+              <div className="card-surface p-6 rounded-2xl">
+                 <h3 className="text-lg font-bold text-primary-dynamic mb-3">{lessons[currentLessonIdx].title}</h3>
+                 <p className="text-secondary-dynamic leading-relaxed mb-6">
                     In this lesson, we break down critical strategies for {activeCourse.category.toLowerCase()} success. 
                     {activeCourse.description} We focus on practical application in the field to minimize risk and maximize long-term yield stability.
                  </p>
                  
-                 <div className="flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-800">
+                 <div className="flex items-center justify-between pt-6 organic-divider">
                     <div className="flex items-center gap-3">
-                       <div className="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500">
+                       <div className="w-12 h-12 bg-soil-200 dark:bg-field-700 rounded-full flex items-center justify-center text-field-500">
                           <User className="w-6 h-6" />
                        </div>
                        <div>
-                          <p className="text-sm font-bold text-slate-900 dark:text-white">{activeCourse.instructor}</p>
-                          <p className="text-xs text-slate-500 font-medium">Lead Agronomist</p>
+                          <p className="text-sm font-bold text-primary-dynamic">{activeCourse.instructor}</p>
+                          <p className="text-xs text-field-500 font-medium">Lead Agronomist</p>
                        </div>
                     </div>
                     {activeCourse.completed ? (
-                       <div className="flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-xl font-bold text-sm">
+                       <div className="flex items-center gap-2 px-4 py-2 bg-field-100 dark:bg-field-900/30 text-field-700 dark:text-field-400 rounded-xl font-bold text-sm">
                           <Award className="w-5 h-5" /> Certificate Earned
                        </div>
                     ) : (
                        <button 
                          onClick={handleCompleteCourse}
-                         className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-semibold text-xs tracking-wide hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors shadow-lg"
+                         className="px-6 py-3 bg-field-800 dark:bg-harvest-500 text-white dark:text-field-900 rounded-xl font-semibold text-xs hover:bg-field-700 dark:hover:bg-harvest-400 transition-colors shadow-lg"
                        >
                           Mark Complete
                        </button>
@@ -185,12 +173,11 @@ const EducationHub: React.FC = () => {
               </div>
            </div>
 
-           {/* Right: Syllabus */}
            <div className="lg:col-span-1">
-              <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden h-full max-h-[calc(100vh-12rem)] flex flex-col">
-                 <div className="p-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                    <h3 className="font-semibold text-slate-900 dark:text-white text-sm">Course Syllabus</h3>
-                    <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
+              <div className="card-surface rounded-2xl overflow-hidden h-full max-h-[calc(100vh-12rem)] flex flex-col">
+                 <div className="p-5 border-b border-primary-dynamic bg-soil-50 dark:bg-field-800/50">
+                    <h3 className="font-semibold text-primary-dynamic text-sm">Course Syllabus</h3>
+                    <div className="mt-2 flex items-center gap-2 text-xs text-field-500">
                        <BookOpen className="w-4 h-4" />
                        <span>{activeCourse.lessonsCount} Lessons</span>
                        <span>•</span>
@@ -205,33 +192,32 @@ const EducationHub: React.FC = () => {
                          key={lesson.id}
                          onClick={() => !lesson.isLocked && handleLessonChange(idx)}
                          disabled={lesson.isLocked}
-                         className={`w-full text-left p-4 border-b border-slate-100 dark:border-slate-800 transition-colors flex items-start gap-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 ${currentLessonIdx === idx ? 'bg-blue-50 dark:bg-blue-900/10 border-l-4 border-l-blue-500' : 'border-l-4 border-l-transparent'}`}
+                         className={`w-full text-left p-4 border-b border-primary-dynamic transition-colors flex items-start gap-3 hover:bg-soil-50 dark:hover:bg-field-800/50 ${currentLessonIdx === idx ? 'bg-field-50 dark:bg-field-900/20 border-l-4 border-l-field-500' : 'border-l-4 border-l-transparent'}`}
                        >
                           <div className={`mt-0.5 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center border ${
-                             currentLessonIdx === idx ? 'bg-blue-500 border-blue-500 text-white' : 
-                             lesson.isLocked ? 'border-slate-300 text-slate-300' : 'border-green-500 text-green-500'
+                             currentLessonIdx === idx ? 'bg-field-500 border-field-500 text-white' : 
+                             lesson.isLocked ? 'border-soil-300 dark:border-field-600 text-soil-300 dark:text-field-500' : 'border-field-500 text-field-500'
                           }`}>
                              {lesson.isLocked ? <Lock className="w-3 h-3" /> : (currentLessonIdx === idx ? (isPlaying ? <Pause className="w-3 h-3 fill-current"/> : <Play className="w-3 h-3 fill-current" />) : <Check className="w-3 h-3" />)}
                           </div>
                           <div className="flex-1">
-                             <p className={`text-sm font-bold ${currentLessonIdx === idx ? 'text-blue-700 dark:text-blue-400' : lesson.isLocked ? 'text-slate-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                             <p className={`text-sm font-bold ${currentLessonIdx === idx ? 'text-field-700 dark:text-field-400' : lesson.isLocked ? 'text-field-400 dark:text-field-500' : 'text-secondary-dynamic'}`}>
                                 {lesson.title}
                              </p>
-                             <span className="text-[10px] font-mono text-slate-400 mt-1 block">{lesson.duration}</span>
+                             <span className="text-[10px] font-mono text-field-400 dark:text-field-500 mt-1 block">{lesson.duration}</span>
                           </div>
                        </button>
                     ))}
                  </div>
                  
-                 {/* Progress Footer */}
-                 <div className="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-                    <div className="flex justify-between text-xs font-bold text-slate-500 mb-2">
+                 <div className="p-4 bg-soil-50 dark:bg-field-900 border-t border-primary-dynamic">
+                    <div className="flex justify-between text-xs font-bold text-field-500 mb-2">
                        <span>Progress</span>
                        <span>{activeCourse.completed ? '100%' : `${Math.round((currentLessonIdx / activeCourse.lessonsCount) * 100)}%`}</span>
                     </div>
-                    <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div className="h-2 bg-soil-200 dark:bg-field-700 rounded-full overflow-hidden">
                        <div 
-                         className="h-full bg-green-500 transition-all duration-500"
+                         className="h-full bg-field-500 transition-all duration-500"
                          style={{ width: activeCourse.completed ? '100%' : `${(currentLessonIdx / activeCourse.lessonsCount) * 100}%` }}
                        ></div>
                     </div>
@@ -243,54 +229,50 @@ const EducationHub: React.FC = () => {
     );
   }
 
-  // --- CATALOG LIST VIEW (Original View) ---
   return (
     <div className="h-full flex flex-col space-y-6 animate-fade-in pb-10">
       
-      {/* Hero Section */}
-      <div className="relative bg-slate-900 rounded-3xl p-8 overflow-hidden shadow-2xl flex-shrink-0">
+      <div className="relative bg-field-800 dark:bg-field-950 rounded-3xl p-8 overflow-hidden shadow-2xl flex-shrink-0">
          <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center"></div>
-         <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+         <div className="absolute inset-0 bg-gradient-to-r from-field-800 dark:from-field-950 via-field-900/80 to-transparent"></div>
          <div className="relative z-10 max-w-2xl">
             <div className="flex items-center gap-2 mb-4">
-               <span className="px-3 py-1 rounded-full bg-yellow-500 text-slate-900 text-xs font-semibold">Premium Certification</span>
-               <div className="flex text-yellow-500"><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/></div>
+               <span className="px-3 py-1 rounded-full bg-harvest-500 text-field-900 text-xs font-semibold">Premium Certification</span>
+               <div className="flex text-harvest-500"><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/></div>
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-white font-heading mb-4 leading-tight">
                Master Regenerative <br/> Agriculture
             </h1>
-            <p className="text-slate-300 text-lg mb-8 font-medium leading-relaxed max-w-lg">
+            <p className="text-field-300 text-lg mb-8 font-medium leading-relaxed max-w-lg">
                Join over 10,000 farmers enhancing soil health and profitability. Led by world-class agronomists.
             </p>
-            <button className="bg-white text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-yellow-400 transition-colors shadow-lg flex items-center gap-2">
+            <button className="bg-white text-field-900 px-8 py-3 rounded-full font-semibold hover:bg-harvest-100 transition-colors shadow-lg flex items-center gap-2">
                Explore Courses <BookOpen className="w-4 h-4" />
             </button>
          </div>
       </div>
 
-      {/* Filter Bar */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar w-full md:w-auto">
             {categories.map(cat => (
                <button 
                  key={cat}
                  onClick={() => setFilterCategory(cat)}
-                 className={`px-5 py-2 rounded-full text-xs font-semibold transition-all border ${filterCategory === cat ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'}`}
+                 className={`px-5 py-2 rounded-full text-xs font-semibold transition-all border ${filterCategory === cat ? 'bg-field-800 dark:bg-harvest-100 text-white dark:text-field-900 border-field-800 dark:border-harvest-200' : 'bg-card-dynamic text-secondary-dynamic border-primary-dynamic hover:border-field-400 dark:hover:border-field-500'}`}
                >
                   {cat}
                </button>
             ))}
          </div>
          <div className="relative w-full md:w-64">
-            <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
-            <input type="text" placeholder="Search courses..." className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm font-medium focus:outline-none focus:border-slate-400 dark:focus:border-slate-500 text-slate-800 dark:text-white" />
+            <Search className="absolute left-3 top-2.5 w-4 h-4 text-field-400" />
+            <input type="text" placeholder="Search courses..." className="w-full pl-10 pr-4 py-2 bg-card-dynamic border border-primary-dynamic rounded-full text-sm font-medium focus:outline-none focus:border-field-400 dark:focus:border-field-500 text-primary-dynamic" />
          </div>
       </div>
 
-      {/* Courses Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
          {filteredModules.map(module => (
-            <div key={module.id} className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer" onClick={() => handleStartCourse(module.id)}>
+            <div key={module.id} className="card-surface rounded-2xl overflow-hidden flex flex-col group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer" onClick={() => handleStartCourse(module.id)}>
                <div className="relative h-48 overflow-hidden">
                   <div className="absolute top-3 left-3 z-10 flex gap-2">
                      <span className={`px-2 py-1 rounded text-[10px] font-semibold shadow-sm ${getDifficultyColor(module.difficulty)}`}>{module.difficulty}</span>
@@ -305,7 +287,7 @@ const EducationHub: React.FC = () => {
                   />
                   {module.completed && (
                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center backdrop-blur-[2px]">
-                        <div className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold text-xs flex items-center shadow-lg">
+                        <div className="bg-field-500 text-white px-4 py-2 rounded-full font-semibold text-xs flex items-center shadow-lg">
                            <Check className="w-4 h-4 mr-2" /> Completed
                         </div>
                      </div>
@@ -318,17 +300,17 @@ const EducationHub: React.FC = () => {
                   </div>
                </div>
                <div className="p-5 flex-1 flex flex-col">
-                  <h3 className="font-bold text-slate-900 dark:text-white text-lg leading-tight mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{module.title}</h3>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 mb-4">{module.description}</p>
+                  <h3 className="font-bold text-primary-dynamic text-lg leading-tight mb-2 group-hover:text-field-600 dark:group-hover:text-field-400 transition-colors">{module.title}</h3>
+                  <p className="text-secondary-dynamic text-sm line-clamp-2 mb-4">{module.description}</p>
                   
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
+                  <div className="mt-auto flex items-center justify-between pt-4 organic-divider">
                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 text-[10px] font-bold">
+                        <div className="w-6 h-6 rounded-full bg-soil-200 dark:bg-field-700 flex items-center justify-center text-field-500 dark:text-field-400 text-[10px] font-bold">
                            <User className="w-3 h-3" />
                         </div>
-                        <span className="text-xs font-bold text-slate-600 dark:text-slate-400">{module.instructor}</span>
+                        <span className="text-xs font-bold text-secondary-dynamic">{module.instructor}</span>
                      </div>
-                     <PlayCircle className="w-8 h-8 text-slate-300 dark:text-slate-600 group-hover:text-yellow-500 transition-colors" />
+                     <PlayCircle className="w-8 h-8 text-soil-300 dark:text-field-600 group-hover:text-harvest-500 transition-colors" />
                   </div>
                </div>
             </div>

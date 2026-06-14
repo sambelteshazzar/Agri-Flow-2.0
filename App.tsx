@@ -68,18 +68,12 @@ const AppContent: React.FC = () => {
     }
   };
 
-  // Feature 1: Page transitions — re-key on view change
-  // Feature 4: Scroll persistence — save/restore per tab
-  // Feature 6: Dynamic title + favicon
   useEffect(() => {
     if (prevViewRef.current !== currentView) {
-      // Save scroll of previous view
       if (mainRef.current) {
         scrollPositions.current[prevViewRef.current] = mainRef.current.scrollTop;
       }
-      // Trigger page transition animation
       setViewKey(k => k + 1);
-      // Restore scroll for new view
       requestAnimationFrame(() => {
         if (mainRef.current) {
           mainRef.current.scrollTop = scrollPositions.current[currentView] ?? 0;
@@ -88,11 +82,9 @@ const AppContent: React.FC = () => {
       prevViewRef.current = currentView;
     }
 
-    // Dynamic page title
     const title = getPageTitle(currentView);
     document.title = `${title} · AgriFlow`;
 
-    // Dynamic favicon
     const emoji = FAVICON_EMOJIS[currentView] || '🌱';
     const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement | null;
     if (link) {
@@ -100,7 +92,6 @@ const AppContent: React.FC = () => {
     }
   }, [currentView]);
 
-  // Feature 2: Command palette — Cmd+K / Ctrl+K
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -152,7 +143,7 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen h-[100dvh] bg-[#F8FAF5] dark:bg-slate-950 overflow-hidden relative transition-colors duration-300">
+    <div className="flex h-screen h-[100dvh] bg-app dark:bg-[#0C1810] overflow-hidden relative transition-colors duration-300">
 
       {/* GLOBAL TOAST CONTAINER */}
       <div className="fixed top-24 right-4 z-[9999] flex flex-col gap-3 pointer-events-none">
@@ -160,10 +151,10 @@ const AppContent: React.FC = () => {
           <div
             key={toast.id}
             className={`
-              pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-2xl backdrop-blur-md border animate-fade-in-up min-w-[300px] max-w-sm
-              ${toast.type === 'success' ? 'bg-green-50/90 dark:bg-green-900/90 border-green-200 dark:border-green-800 text-green-800 dark:text-green-100' : ''}
-              ${toast.type === 'error' ? 'bg-red-50/90 dark:bg-red-900/90 border-red-200 dark:border-red-800 text-red-800 dark:text-red-100' : ''}
-              ${toast.type === 'info' ? 'bg-slate-50/90 dark:bg-slate-800/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100' : ''}
+              pointer-events-auto flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border animate-fade-in-up min-w-[300px] max-w-sm
+              ${toast.type === 'success' ? 'bg-field-50/95 dark:bg-field-900/95 border-field-200 dark:border-field-800 text-field-800 dark:text-field-100' : ''}
+              ${toast.type === 'error' ? 'bg-red-50/95 dark:bg-red-900/95 border-red-200 dark:border-red-800 text-red-800 dark:text-red-100' : ''}
+              ${toast.type === 'info' ? 'bg-soil-50/95 dark:bg-[#12261A]/95 border-soil-200 dark:border-[#1C3A28] text-soil-800 dark:text-[#E8F0EA]' : ''}
             `}
           >
             <div className="shrink-0">
@@ -171,8 +162,8 @@ const AppContent: React.FC = () => {
               {toast.type === 'error' && <AlertCircle className="w-5 h-5" />}
               {toast.type === 'info' && <InfoIcon className="w-5 h-5" />}
             </div>
-            <p className="text-sm font-bold flex-1">{toast.message}</p>
-            <button onClick={() => removeToast(toast.id)} className="opacity-60 hover:opacity-100 transition-opacity">
+            <p className="text-sm font-semibold flex-1">{toast.message}</p>
+            <button onClick={() => removeToast(toast.id)} className="opacity-50 hover:opacity-100 transition-opacity">
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -208,92 +199,91 @@ const AppContent: React.FC = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-full overflow-hidden w-full relative pb-24 md:pb-0">
 
-        {/* TOP HEADER (Desktop & Mobile) */}
-        <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0 flex items-center justify-between px-4 md:px-8 z-20 shadow-sm transition-colors">
+        {/* TOP HEADER */}
+        <header className="h-[72px] bg-white/80 dark:bg-[#12261A]/80 backdrop-blur-xl border-b border-soil-200/60 dark:border-[#1C3A28]/60 shrink-0 flex items-center justify-between px-4 md:px-8 z-20 transition-colors">
 
           {/* Left: Mobile Toggle & Page Title */}
           <div className="flex items-center">
             <button
               onClick={() => setIsMobileOpen(true)}
-              className="md:hidden p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg mr-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="md:hidden p-2 text-soil-600 dark:text-[#8BA898] hover:bg-soil-100 dark:hover:bg-[#183222] rounded-xl mr-3 focus:outline-none"
               aria-label="Open Navigation Menu"
             >
               <Menu className="w-6 h-6" aria-hidden="true" />
             </button>
             <div>
-              <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white tracking-tight font-heading">
+              <h1 className="text-xl md:text-2xl font-bold text-primary-dynamic tracking-tight font-heading">
                 {getPageTitle(currentView)}
               </h1>
-              <p className="text-[10px] md:text-xs text-green-600 dark:text-green-400 font-medium hidden md:block">
-                All systems running smoothly
+              <p className="text-[10px] md:text-xs text-field-600 dark:text-field-400 font-medium hidden md:block">
+                Your farm at a glance
               </p>
             </div>
           </div>
 
           {/* Right: Profile & Controls */}
-          <div className="flex items-center gap-2 md:gap-6">
+          <div className="flex items-center gap-2 md:gap-5">
 
             {/* System Controls (Hidden on small mobile) */}
-            <div className="hidden md:flex items-center gap-3 border-r border-slate-200 dark:border-slate-800 pr-6">
-              {/* Command Palette Trigger */}
+            <div className="hidden md:flex items-center gap-3 border-r border-soil-200/60 dark:border-[#1C3A28]/60 pr-5">
               <button
                 onClick={() => setIsCommandPaletteOpen(true)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium bg-soil-50 dark:bg-[#183222] text-soil-500 dark:text-[#8BA898] border border-soil-200 dark:border-[#1C3A28] hover:bg-soil-100 dark:hover:bg-[#1E3D2A] transition-colors"
               >
                 <Search className="w-3.5 h-3.5" />
                 Search
-                <kbd className="ml-1.5 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-[9px] font-medium text-slate-400">
+                <kbd className="ml-1.5 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-lg bg-white dark:bg-[#0C1810] border border-soil-200 dark:border-[#1C3A28] text-[9px] font-medium text-soil-400 dark:text-[#8BA898]">
                   <Command className="w-2.5 h-2.5" />K
                 </kbd>
               </button>
 
               <button
                 onClick={() => setIsOnline(!isOnline)}
-                className={`flex items-center px-3 py-1.5 rounded-full text-[11px] font-medium transition-all border ${isOnline ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800'}`}
+                className={`flex items-center px-3 py-2 rounded-xl text-[11px] font-semibold transition-all border ${isOnline ? 'bg-field-50 dark:bg-field-900/30 text-field-700 dark:text-field-400 border-field-200 dark:border-field-800' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800'}`}
               >
-                {isOnline ? <Wifi className="w-3 h-3 mr-2" /> : <WifiOff className="w-3 h-3 mr-2" />}
+                {isOnline ? <Wifi className="w-3 h-3 mr-1.5" /> : <WifiOff className="w-3 h-3 mr-1.5" />}
                 {isOnline ? 'Online' : 'Offline'}
               </button>
-              <button className="flex items-center px-3 py-1.5 rounded-full text-[11px] font-medium bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                <Globe className="w-3 h-3 mr-2" /> EN
+              <button className="flex items-center px-3 py-2 rounded-xl text-[11px] font-semibold bg-soil-50 dark:bg-[#183222] text-soil-600 dark:text-[#8BA898] border border-soil-200 dark:border-[#1C3A28] hover:bg-soil-100 dark:hover:bg-[#1E3D2A] transition-colors">
+                <Globe className="w-3 h-3 mr-1.5" /> EN
               </button>
 
               {/* Notifications Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors focus:outline-none"
+                  className="relative p-2 text-soil-400 dark:text-[#8BA898] hover:text-soil-600 dark:hover:text-[#E8F0EA] transition-colors focus:outline-none"
                 >
                   <Bell className="w-5 h-5" />
-                  {unreadAlerts > 0 && <span className="absolute top-1.5 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-900"></span>}
+                  {unreadAlerts > 0 && <span className="absolute top-1.5 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-[#12261A]"></span>}
                 </button>
 
                 {showNotifications && (
-                  <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-200 dark:border-slate-800 z-50 animate-fade-in-up">
-                    <div className="bg-slate-50 dark:bg-slate-800 p-3 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
-                      <h3 className="text-xs font-semibold text-slate-800 dark:text-white">Alerts ({unreadAlerts})</h3>
-                      <button onClick={() => setShowNotifications(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                  <div className="absolute right-0 top-full mt-2 w-80 card-surface z-50 animate-fade-in-up overflow-hidden">
+                    <div className="bg-soil-50 dark:bg-[#183222] p-3 border-b border-soil-200 dark:border-[#1C3A28] flex justify-between items-center">
+                      <h3 className="text-xs font-semibold text-soil-800 dark:text-[#E8F0EA]">Alerts ({unreadAlerts})</h3>
+                      <button onClick={() => setShowNotifications(false)} className="text-soil-400 hover:text-soil-600 dark:hover:text-[#E8F0EA]">
                         <X className="w-4 h-4" />
                       </button>
                     </div>
                     <div className="max-h-96 overflow-y-auto">
                       {alerts.length > 0 ? alerts.map(alert => (
-                        <div key={alert.id} className="p-4 border-b border-slate-100 dark:border-slate-800 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer group">
+                        <div key={alert.id} className="p-4 border-b border-soil-100 dark:border-[#1C3A28] hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors cursor-pointer group">
                           <div className="flex items-start gap-3">
                             <div className="bg-red-100 dark:bg-red-900/30 p-1.5 rounded-full text-red-600 dark:text-red-400 mt-0.5"><AlertTriangle className="w-4 h-4" /></div>
                             <div>
-                              <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-red-700 dark:group-hover:text-red-400">{alert.title}</p>
-                              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{alert.message}</p>
-                               <p className="text-[10px] text-slate-400 font-medium mt-2">Just now</p>
+                              <p className="text-sm font-semibold text-primary-dynamic group-hover:text-red-700 dark:group-hover:text-red-400">{alert.title}</p>
+                              <p className="text-xs text-secondary-dynamic mt-1">{alert.message}</p>
+                               <p className="text-[10px] text-soil-400 dark:text-[#8BA898] font-medium mt-2">Just now</p>
                             </div>
                           </div>
                         </div>
                       )) : (
-                        <div className="p-4 text-center text-slate-400 text-xs">No active alerts</div>
+                        <div className="p-4 text-center text-soil-400 dark:text-[#8BA898] text-xs">No active alerts</div>
                       )}
                     </div>
-                    <div className="bg-slate-50 dark:bg-slate-800 p-2 border-t border-slate-200 dark:border-slate-700 text-center">
-                      <button className="text-[10px] font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-300">Mark all as read</button>
+                    <div className="bg-soil-50 dark:bg-[#183222] p-2 border-t border-soil-200 dark:border-[#1C3A28] text-center">
+                      <button className="text-[10px] font-semibold text-soil-500 dark:text-[#8BA898] hover:text-soil-800 dark:hover:text-[#E8F0EA]">Mark all as read</button>
                     </div>
                   </div>
                 )}
@@ -304,15 +294,15 @@ const AppContent: React.FC = () => {
             {isSignedIn ? (
               <div className="flex items-center gap-3">
                 <div className="text-right hidden md:block">
-                  <p className="text-sm font-bold text-slate-900 dark:text-white leading-none">{userProfile.name}</p>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-1">{userProfile.role}</p>
+                  <p className="text-sm font-semibold text-primary-dynamic leading-none">{userProfile.name}</p>
+                  <p className="text-[10px] text-secondary-dynamic font-medium mt-1">{userProfile.role}</p>
                 </div>
                 <div
                   onClick={() => navigate(NavigationTab.SETTINGS)}
                   className="relative cursor-pointer group"
                   title="Settings"
                 >
-                  <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-slate-900 dark:bg-slate-800 text-yellow-500 flex items-center justify-center font-bold text-lg border-2 border-white dark:border-slate-700 shadow-md group-hover:bg-slate-800 dark:group-hover:bg-slate-700 transition-colors overflow-hidden">
+                  <div className="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-field-800 dark:bg-field-700 text-harvest-400 flex items-center justify-center font-bold text-lg border-2 border-white dark:border-[#1E3D2A] shadow-lg group-hover:scale-105 transition-transform overflow-hidden">
                     {userProfile.avatar ? (
                       <img
                         src={userProfile.avatar}
@@ -326,13 +316,13 @@ const AppContent: React.FC = () => {
                       userProfile.name.charAt(0)
                     )}
                   </div>
-                  <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-900 ${isOnline ? 'bg-green-500' : 'bg-red-500'} shadow-sm`}></div>
+                  <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#12261A] ${isOnline ? 'bg-field-500' : 'bg-red-500'} shadow-sm`}></div>
                 </div>
               </div>
             ) : (
               <button
                 onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-slate-900 rounded-lg font-semibold text-sm transition-all shadow-md active:scale-95"
+                className="flex items-center gap-2 px-5 py-2.5 bg-harvest-500 hover:bg-harvest-400 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-harvest-500/20 active:scale-95"
               >
                 <LogIn className="w-4 h-4" /> Sign In
               </button>
@@ -341,10 +331,10 @@ const AppContent: React.FC = () => {
           </div>
         </header>
 
-        {/* Scrollable Content with page transition + scroll persistence */}
+        {/* Scrollable Content */}
         <main
           ref={mainRef}
-          className="flex-1 overflow-auto p-4 md:p-8 bg-[#F4F7F0] dark:bg-[#020617] transition-colors"
+          className="flex-1 overflow-auto p-4 md:p-8 bg-content dark:bg-[#0A1A0F] transition-colors custom-scrollbar"
         >
           <div key={viewKey} className="max-w-7xl mx-auto h-full animate-page-enter">
             {renderContent()}

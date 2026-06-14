@@ -34,7 +34,6 @@ const AIAdvisor: React.FC = () => {
   const [includeContext, setIncludeContext] = useState(false);
   const [soilContext, setSoilContext] = useState('');
   
-  // Voice State
   const [isCallActive, setIsCallActive] = useState(false);
   const [isConnectingCall, setIsConnectingCall] = useState(false);
   const [volumeLevel, setVolumeLevel] = useState(0);
@@ -42,7 +41,6 @@ const AIAdvisor: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  // Voice Refs
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const processorRef = useRef<ScriptProcessorNode | null>(null);
@@ -59,14 +57,12 @@ const AIAdvisor: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Clean up audio on unmount
   useEffect(() => {
     return () => {
       endCall();
     };
   }, []);
 
-  // --- AUDIO UTILS ---
   const b64ToUint8Array = (base64: string) => {
     const binaryString = atob(base64);
     const len = binaryString.length;
@@ -96,7 +92,6 @@ const AIAdvisor: React.FC = () => {
     return btoa(binary);
   };
 
-  // --- VOICE CALL HANDLERS ---
   const startCall = async () => {
     if (!process.env.API_KEY) {
       showToast("API Key missing", "error");
@@ -120,7 +115,7 @@ const AIAdvisor: React.FC = () => {
         model: 'gemini-2.5-flash-native-audio-preview-09-2025',
         config: {
           responseModalities: [Modality.AUDIO],
-          speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } } }, // Puck for a more professional advisor tone
+          speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } } },
           systemInstruction: {
             parts: [{ text: `You are AgriFlow's Senior Agricultural Consultant. 
             You are speaking with ${userProfile.name}.
@@ -140,7 +135,6 @@ const AIAdvisor: React.FC = () => {
             processor.onaudioprocess = (e) => {
               const inputData = e.inputBuffer.getChannelData(0);
               
-              // Throttled Volume Meter
               const now = Date.now();
               if (now - lastVolumeUpdateRef.current > 100) {
                 let sum = 0;
@@ -241,7 +235,6 @@ const AIAdvisor: React.FC = () => {
     activeSourcesRef.current.clear();
   };
 
-  // Client-side text formatter
   const formatMessage = (text: string) => {
     if (!text) return "";
     return text
@@ -251,7 +244,6 @@ const AIAdvisor: React.FC = () => {
       .replace(/^\s*\*\s/gm, '• ');    
   };
 
-  // --- TEXT/IMAGE SUBMIT HANDLER ---
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -293,7 +285,6 @@ const AIAdvisor: React.FC = () => {
       let responseSources = undefined;
 
       if (userMsg.image) {
-        // Image analysis
         responseText = await analyzeCropImage(userMsg.image, userMsg.text, countryCtx);
       } else {
         const result = await getFarmingAdvice(userMsg.text, countryCtx);
@@ -313,7 +304,7 @@ const AIAdvisor: React.FC = () => {
       const errorMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'model',
-        text: "System Error: Unable to process data request.",
+        text: "Something went wrong processing that request. Please try again.",
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMsg]);
@@ -325,64 +316,60 @@ const AIAdvisor: React.FC = () => {
   return (
     <div className="h-[calc(100vh-2rem)] flex flex-col md:h-[calc(100vh-3rem)] relative">
       
-      {/* VOICE CALL OVERLAY */}
       {isCallActive && (
-        <div className="absolute inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center animate-fade-in">
+        <div className="absolute inset-0 z-50 bg-field-950/95 flex flex-col items-center justify-center animate-fade-in">
            <div className="relative w-full max-w-md p-8 flex flex-col items-center text-center">
               <div className="mb-8 relative">
-                 <div className="w-32 h-32 rounded-full bg-yellow-500/20 flex items-center justify-center animate-pulse">
-                    <div className="w-24 h-24 rounded-full bg-yellow-500/40 flex items-center justify-center">
-                       <Mic className="w-12 h-12 text-yellow-400" />
+                 <div className="w-32 h-32 rounded-full bg-harvest-500/20 flex items-center justify-center animate-pulse">
+                    <div className="w-24 h-24 rounded-full bg-harvest-500/40 flex items-center justify-center">
+                       <Mic className="w-12 h-12 text-harvest-400" />
                     </div>
                  </div>
-                 {/* Visualizer Rings */}
-                 <div className="absolute inset-0 border-4 border-yellow-500/30 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>
-                 <div className="absolute inset-0 border-4 border-yellow-500/20 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }}></div>
+                 <div className="absolute inset-0 border-4 border-harvest-500/30 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>
+                 <div className="absolute inset-0 border-4 border-harvest-500/20 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }}></div>
               </div>
               
                <h3 className="text-2xl font-bold text-white mb-2 font-heading">Live Consultation</h3>
-               <p className="text-slate-400 mb-8 text-sm">Voice Call with Your AI Advisor</p>
+               <p className="text-field-300 mb-8 text-sm">Voice call with your AI advisor</p>
               
-              {/* Audio Visualizer Bar */}
-              <div className="flex gap-1 h-12 items-end justify-center mb-10 w-full max-w-[200px]">
-                 {[...Array(8)].map((_, i) => (
-                    <div 
-                      key={i} 
-                      className="w-3 bg-yellow-500 rounded-t-sm transition-all duration-75"
-                      style={{ 
-                        height: `${Math.max(10, volumeLevel * (0.5 + Math.random()))}%`,
-                        opacity: 0.5 + (volumeLevel / 200) 
-                      }}
-                    ></div>
-                 ))}
-              </div>
+               <div className="flex gap-1 h-12 items-end justify-center mb-10 w-full max-w-[200px]">
+                  {[...Array(8)].map((_, i) => (
+                     <div 
+                       key={i} 
+                       className="w-3 bg-harvest-500 rounded-t-sm transition-all duration-75"
+                       style={{ 
+                         height: `${Math.max(10, volumeLevel * (0.5 + Math.random()))}%`,
+                         opacity: 0.5 + (volumeLevel / 200) 
+                       }}
+                     ></div>
+                  ))}
+               </div>
 
-              <button 
-                onClick={endCall}
-                className="bg-red-600 hover:bg-red-700 text-white rounded-full p-6 shadow-lg shadow-red-600/30 transition-transform hover:scale-110 active:scale-95"
-              >
-                 <Phone className="w-8 h-8 rotate-[135deg]" />
-              </button>
-              <p className="text-slate-500 mt-4 text-xs font-semibold">End Call</p>
+               <button 
+                 onClick={endCall}
+                 className="bg-red-600 hover:bg-red-700 text-white rounded-full p-6 shadow-lg shadow-red-600/30 transition-transform hover:scale-110 active:scale-95"
+               >
+                  <Phone className="w-8 h-8 rotate-[135deg]" />
+               </button>
+               <p className="text-field-400 mt-4 text-xs font-semibold">End Call</p>
            </div>
         </div>
       )}
 
-      {/* HEADER */}
-      <div className="mb-4 flex items-center justify-between border-b-4 border-yellow-500 pb-2 transition-colors">
+      <div className="mb-4 flex items-center justify-between organic-divider pb-2 transition-colors">
         <div>
-           <h2 className="text-2xl font-bold text-slate-900 dark:text-white font-heading flex items-center">
-             <BrainCircuit className="w-6 h-6 text-yellow-500 mr-2" aria-hidden="true" />
+           <h2 className="text-2xl font-bold text-primary-dynamic font-heading flex items-center">
+             <BrainCircuit className="w-6 h-6 text-harvest-500 mr-2" aria-hidden="true" />
              AI Consultant
            </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-xs font-semibold">AI Assistant / Live Search / Vision</p>
+            <p className="text-secondary-dynamic text-xs font-semibold">AI Assistant / Live Search / Vision</p>
         </div>
         <button 
           onClick={isCallActive ? endCall : startCall}
           disabled={isConnectingCall}
           className={`
             flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs transition-all shadow-md
-            ${isConnectingCall ? 'bg-slate-200 text-slate-500' : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200'}
+            ${isConnectingCall ? 'bg-soil-100 text-soil-500 dark:bg-field-800 dark:text-field-400' : 'bg-field-800 dark:bg-harvest-100 text-white dark:text-field-900 hover:bg-field-700 dark:hover:bg-harvest-200'}
           `}
         >
           {isConnectingCall ? <Loader2 className="w-4 h-4 animate-spin"/> : <Phone className="w-4 h-4" />}
@@ -390,9 +377,8 @@ const AIAdvisor: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded shadow-inner overflow-hidden flex flex-col transition-colors relative">
+      <div className="flex-1 bg-content border border-primary-dynamic rounded-lg shadow-inner overflow-hidden flex flex-col transition-colors relative">
         
-        {/* Chat Area */}
         <div 
           className="flex-1 overflow-y-auto p-4 space-y-4"
           role="log"
@@ -404,18 +390,18 @@ const AIAdvisor: React.FC = () => {
               <div className={`
                 max-w-[90%] md:max-w-[80%] rounded p-4 shadow-sm border-l-4
                 ${msg.role === 'user' 
-                  ? 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 border-l-slate-500 dark:border-l-slate-400 text-slate-900 dark:text-white' 
-                  : 'bg-slate-800 text-slate-100 border-l-yellow-500'}
+                  ? 'bg-card-dynamic border-l-field-400 dark:border-l-field-500 text-primary-dynamic' 
+                  : 'bg-field-800 dark:bg-field-900 text-field-100 border-l-harvest-500'}
               `}>
                 {msg.role === 'model' && (
-                  <div className="flex items-center mb-2 pb-2 border-b border-slate-600">
-                    <Sparkles className="w-3 h-3 mr-2 text-yellow-500" aria-hidden="true" />
-                    <span className="text-[10px] font-semibold text-slate-300">Analysis</span>
+                  <div className="flex items-center mb-2 pb-2 border-b border-field-600">
+                    <Sparkles className="w-3 h-3 mr-2 text-harvest-500" aria-hidden="true" />
+                    <span className="text-[10px] font-semibold text-field-300">Analysis</span>
                   </div>
                 )}
                 
                 {msg.image && (
-                  <div className="p-1 bg-slate-200 dark:bg-slate-700 mb-2 rounded w-fit">
+                  <div className="p-1 bg-soil-100 dark:bg-field-700 mb-2 rounded w-fit">
                     <img src={msg.image} alt="User uploaded image" className="max-h-40 object-cover rounded-sm" />
                   </div>
                 )}
@@ -424,10 +410,9 @@ const AIAdvisor: React.FC = () => {
                    <p className="whitespace-pre-wrap leading-relaxed">{formatMessage(msg.text)}</p>
                 </div>
 
-                {/* Sources / Grounding Display */}
                 {msg.sources && msg.sources.length > 0 && (
-                  <div className="mt-4 pt-3 border-t border-slate-700">
-                    <div className="flex items-center gap-1 mb-2 text-slate-400">
+                  <div className="mt-4 pt-3 border-t border-field-700">
+                    <div className="flex items-center gap-1 mb-2 text-field-300">
                       <Globe className="w-3 h-3" />
                       <span className="text-[10px] font-semibold">Sources</span>
                     </div>
@@ -438,7 +423,7 @@ const AIAdvisor: React.FC = () => {
                           href={source.uri} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-[10px] text-slate-200 transition-colors border border-slate-600"
+                          className="flex items-center gap-1.5 px-2 py-1 bg-field-700 hover:bg-field-600 rounded text-[10px] text-field-200 transition-colors border border-field-600"
                         >
                           <span className="truncate max-w-[150px]">{source.title}</span>
                           <ExternalLink className="w-2.5 h-2.5 opacity-50" />
@@ -448,7 +433,7 @@ const AIAdvisor: React.FC = () => {
                   </div>
                 )}
                 
-                <p className="text-[10px] mt-2 text-right opacity-50 text-slate-400">
+                <p className="text-[10px] mt-2 text-right opacity-50 text-field-400">
                   {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
@@ -456,23 +441,22 @@ const AIAdvisor: React.FC = () => {
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-slate-800 rounded p-3 flex items-center gap-3 shadow-md">
-                <Loader2 className="w-4 h-4 animate-spin text-yellow-500" aria-hidden="true" />
-                <span className="text-xs font-semibold text-slate-300">Processing...</span>
+              <div className="bg-field-800 dark:bg-field-900 rounded p-3 flex items-center gap-3 shadow-md">
+                <Loader2 className="w-4 h-4 animate-spin text-harvest-500" aria-hidden="true" />
+                <span className="text-xs font-semibold text-field-300">Processing...</span>
               </div>
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Area */}
-        <div className="p-4 bg-white dark:bg-slate-800 border-t border-slate-300 dark:border-slate-700 transition-colors">
+        <div className="p-4 bg-card-dynamic border-t border-primary-dynamic transition-colors">
           {selectedImage && (
-            <div className="mb-3 flex items-center justify-between p-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded">
+            <div className="mb-3 flex items-center justify-between p-2 bg-soil-50 dark:bg-field-800 border border-primary-dynamic rounded">
               <div className="flex items-center gap-3">
                 <img src={selectedImage} alt="Thumbnail of attached image" className="w-10 h-10 object-cover rounded-sm" />
                 <div>
-                   <p className="text-xs font-semibold text-slate-800 dark:text-white">Image Attached</p>
+                   <p className="text-xs font-semibold text-primary-dynamic">Image Attached</p>
                 </div>
               </div>
               <button 
@@ -484,10 +468,9 @@ const AIAdvisor: React.FC = () => {
             </div>
           )}
 
-          {/* Context Expander */}
           {includeContext && (
-             <div className="mb-3 p-2 bg-slate-50 dark:bg-slate-900 rounded border border-slate-300 dark:border-slate-600 animate-fade-in">
-                <div className="flex items-center gap-2 mb-1 text-slate-700 dark:text-slate-300">
+             <div className="mb-3 p-2 bg-soil-50 dark:bg-field-900/50 rounded border border-primary-dynamic animate-fade-in">
+                <div className="flex items-center gap-2 mb-1 text-secondary-dynamic">
                    <Info className="w-4 h-4" aria-hidden="true" />
                    <label htmlFor="contextInput" className="text-xs font-semibold">Additional Context</label>
                 </div>
@@ -497,7 +480,7 @@ const AIAdvisor: React.FC = () => {
                    value={soilContext}
                    onChange={(e) => setSoilContext(e.target.value)}
                    placeholder="Enter soil conditions, weather, etc..."
-                   className="w-full text-sm p-2 bg-white dark:bg-slate-800 border border-slate-400 dark:border-slate-600 focus:outline-none focus:border-yellow-500 font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400"
+                   className="w-full text-sm p-2 bg-card-dynamic border border-primary-dynamic focus:outline-none focus:border-harvest-500 font-bold text-primary-dynamic placeholder-field-400"
                 />
              </div>
           )}
@@ -517,7 +500,7 @@ const AIAdvisor: React.FC = () => {
                <button
                  type="button"
                  onClick={() => setIncludeContext(!includeContext)}
-                 className={`p-3 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 ${includeContext ? 'bg-slate-200 dark:bg-slate-600 border-slate-400' : 'bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600'} text-slate-700 dark:text-slate-200`}
+                 className={`p-3 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-harvest-500 ${includeContext ? 'bg-soil-200 dark:bg-field-700 border-soil-400 dark:border-field-500' : 'bg-card-dynamic border-primary-dynamic hover:bg-soil-50 dark:hover:bg-field-800'} text-secondary-dynamic`}
                  title="Add Context"
                >
                  <Info className="w-5 h-5" aria-hidden="true" />
@@ -525,7 +508,7 @@ const AIAdvisor: React.FC = () => {
                <button
                  type="button"
                  onClick={() => fileInputRef.current?.click()}
-                 className={`p-3 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 ${selectedImage ? 'bg-slate-200 dark:bg-slate-600 border-slate-400' : 'bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600'} text-slate-700 dark:text-slate-200`}
+                 className={`p-3 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-harvest-500 ${selectedImage ? 'bg-soil-200 dark:bg-field-700 border-soil-400 dark:border-field-500' : 'bg-card-dynamic border-primary-dynamic hover:bg-soil-50 dark:hover:bg-field-800'} text-secondary-dynamic`}
                  title="Upload Image"
                >
                  <Camera className="w-5 h-5" aria-hidden="true" />
@@ -543,14 +526,14 @@ const AIAdvisor: React.FC = () => {
                   }
                 }}
                 placeholder="Ask AI or search live markets..."
-                className="w-full h-full min-h-[60px] max-h-[160px] pl-4 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-400 dark:border-slate-600 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent resize-none text-sm font-bold text-slate-900 dark:text-white placeholder-slate-600 dark:placeholder-slate-400"
+                className="w-full h-full min-h-[60px] max-h-[160px] pl-4 pr-4 py-3 bg-card-dynamic border border-primary-dynamic rounded focus:outline-none focus:ring-2 focus:ring-harvest-500 focus:border-transparent resize-none text-sm font-bold text-primary-dynamic placeholder-field-400"
               />
             </div>
             
             <button
               type="submit"
               disabled={isLoading || (!inputText.trim() && !selectedImage)}
-              className="p-3 mb-[2px] bg-yellow-500 text-slate-900 rounded hover:bg-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm flex items-center justify-center h-[60px] w-[60px] focus:outline-none focus:ring-2 focus:ring-slate-800"
+              className="p-3 mb-[2px] bg-harvest-500 text-field-900 rounded hover:bg-harvest-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm flex items-center justify-center h-[60px] w-[60px] focus:outline-none focus:ring-2 focus:ring-field-800"
             >
               {isLoading ? <Loader2 className="w-6 h-6 animate-spin" aria-hidden="true" /> : <Send className="w-6 h-6" aria-hidden="true" />}
             </button>

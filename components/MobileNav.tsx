@@ -22,46 +22,48 @@ const secondaryTabs = [
   { id: NavigationTab.EDUCATION, label: 'Learn', icon: GraduationCap },
   { id: NavigationTab.COMMUNITY, label: 'Social', icon: Users },
   { id: NavigationTab.LABOR, label: 'Labor', icon: HardHat },
-  { id: NavigationTab.SETTINGS, label: 'Settings', icon: Settings },
+  { id: NavigationTab.SETTINGS, label: 'More', icon: Settings },
 ];
 
 const MobileNav: React.FC<MobileNavProps> = ({ activeTab, onNavigate }) => {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 safe-area-bottom">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/[0.97] dark:bg-[#12261A]/[0.97] backdrop-blur-xl border-t border-soil-200/50 dark:border-[#1C3A28]/50 safe-area-bottom shadow-[0_-4px_20px_rgba(58,39,25,0.06)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
       <div className="flex flex-col">
-        <div className="flex items-center justify-around h-14 px-0.5">
+        <div className="flex items-center justify-around h-[52px] px-0.5">
           {primaryTabs.map(tab => {
             const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => onNavigate(tab.id)}
-                className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors rounded-lg ${
-                  isActive ? 'text-green-600 dark:text-green-400 bg-green-50/50 dark:bg-green-900/10' : 'text-slate-400 dark:text-slate-500'
+                className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all rounded-xl ${
+                  isActive ? 'text-field-600 dark:text-field-400' : 'text-soil-400 dark:text-[#5C7A68]'
                 }`}
               >
-                <tab.icon className={`w-5 h-5 ${isActive ? 'scale-110' : ''} transition-transform`} />
-                <span className={`text-[10px] font-medium ${isActive ? 'text-green-600 dark:text-green-400' : ''}`}>
+                <div className={`relative p-1 rounded-xl transition-all ${isActive ? 'bg-field-50 dark:bg-field-900/30' : ''}`}>
+                  <tab.icon className={`w-5 h-5 ${isActive ? 'scale-110' : ''} transition-transform`} />
+                  {isActive && <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-field-500 shadow-sm shadow-field-500/50" />}
+                </div>
+                <span className={`text-[10px] font-medium ${isActive ? 'text-field-600 dark:text-field-400 font-semibold' : ''}`}>
                   {tab.label}
                 </span>
-                {isActive && <div className="w-1 h-1 rounded-full bg-green-500 mt-0.5" />}
               </button>
             );
           })}
         </div>
-        <div className="flex items-center justify-around h-12 px-0.5 border-t border-slate-100 dark:border-slate-800/50">
+        <div className="flex items-center justify-around h-11 px-0.5 border-t border-soil-100/50 dark:border-[#1C3A28]/30">
           {secondaryTabs.map(tab => {
             const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => onNavigate(tab.id)}
-                className={`flex flex-col items-center justify-center gap-0 flex-1 h-full transition-colors rounded-lg ${
-                  isActive ? 'text-green-600 dark:text-green-400 bg-green-50/50 dark:bg-green-900/10' : 'text-slate-400 dark:text-slate-500'
+                className={`flex flex-col items-center justify-center gap-0 flex-1 h-full transition-all rounded-lg ${
+                  isActive ? 'text-field-600 dark:text-field-400' : 'text-soil-400 dark:text-[#5C7A68]'
                 }`}
               >
                 <tab.icon className={`w-4 h-4 ${isActive ? 'scale-110' : ''} transition-transform`} />
-                <span className={`text-[9px] font-medium ${isActive ? 'text-green-600 dark:text-green-400' : ''}`}>
+                <span className={`text-[9px] font-medium ${isActive ? 'text-field-600 dark:text-field-400 font-semibold' : ''}`}>
                   {tab.label}
                 </span>
               </button>

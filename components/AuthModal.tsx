@@ -87,55 +87,55 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
 
   const selectedCrops = selectedCountry ? selectedCountry.defaultCrops.slice(0, 4) : [];
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-lg animate-fade-in">
-      <div className="w-full max-w-2xl mx-4 rounded-3xl shadow-2xl overflow-hidden border border-slate-200/50 dark:border-slate-700/50 animate-fade-in-up bg-white dark:bg-slate-900 flex flex-col max-h-[90vh]">
+  const inputClasses = "w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl font-medium text-[var(--text-primary)] focus:outline-none focus:border-field-500 dark:focus:border-field-400 focus:ring-4 focus:ring-field-500/10 transition-all placeholder:text-[var(--text-tertiary)]";
 
-        {/* Header */}
-        <div className="flex justify-between items-start px-8 pt-8 pb-2">
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-field-950/90 backdrop-blur-lg animate-fade-in">
+      <div className="w-full max-w-2xl mx-4 rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-card)] animate-fade-in-up bg-[var(--bg-card)] flex flex-col max-h-[90vh]">
+
+        <div className="flex justify-between items-start px-8 pt-8 pb-2 bg-gradient-to-b from-field-950/5 to-transparent dark:from-field-950/30 dark:to-transparent">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center shadow-lg shadow-green-500/30">
+              <div className="w-8 h-8 bg-gradient-to-br from-field-500 to-harvest-500 rounded-lg flex items-center justify-center shadow-lg shadow-field-500/20">
                 <Sprout className="w-4 h-4 text-white" />
               </div>
-              <span className="text-white dark:text-white text-sm font-heading font-bold">AgriFlow</span>
+              <span className="text-[var(--text-primary)] text-sm font-heading font-bold">AgriFlow</span>
             </div>
-            <h2 className="text-2xl font-heading font-black text-slate-900 dark:text-white tracking-tight mt-3">
+            <h2 className="text-2xl font-heading font-bold text-[var(--text-primary)] mt-3">
               {step === 1 && 'Set up your profile'}
               {step === 2 && 'Where is your farm?'}
               {step === 3 && 'Tell us about your farm'}
               {step === 4 && 'All set!'}
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
+            <p className="text-sm text-[var(--text-secondary)] mt-1 font-medium">
               {step === 1 && 'We\'ll personalize AgriFlow to your needs.'}
               {step === 2 && 'We\'ll tailor crops, markets, and insights for your region.'}
               {step === 3 && 'A few details so we can set up your dashboard.'}
               {step === 4 && 'Here\'s a summary of your setup.'}
             </p>
           </div>
-          <button onClick={onClose} className="text-slate-300 hover:text-slate-500 dark:hover:text-slate-200 transition-colors p-1 -mr-1 -mt-1">
+          <button onClick={onClose} className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors p-1 -mr-1 -mt-1">
             <X className="w-6 h-6" />
           </button>
         </div>
 
-        {/* Step indicator */}
         <div className="px-8 pt-2 pb-4">
           <div className="flex items-center gap-2">
             {STEPS.map((s, i) => (
               <React.Fragment key={s.num}>
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                   step === s.num
-                    ? 'bg-green-500 text-white shadow-md shadow-green-500/25'
+                    ? 'bg-field-600 text-white shadow-md shadow-field-500/25'
                     : step > s.num
-                    ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                    ? 'bg-field-50 dark:bg-field-900/40 text-field-700 dark:text-field-400'
+                    : 'bg-[var(--bg-content)] text-[var(--text-tertiary)]'
                 }`}>
                   {step > s.num ? <Check className="w-3 h-3" /> : <span>{s.num}</span>}
                   <span className="hidden sm:inline">{s.label}</span>
                 </div>
                 {i < STEPS.length - 1 && (
                   <div className={`flex-1 h-0.5 rounded-full transition-all ${
-                    step > s.num ? 'bg-green-400' : 'bg-slate-200 dark:bg-slate-700'
+                    step > s.num ? 'bg-field-400' : 'bg-[var(--border-card)]'
                   }`} />
                 )}
               </React.Fragment>
@@ -143,35 +143,33 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
           </div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 px-8 pb-6 overflow-y-auto">
 
-          {/* Step 1: Name & Farm Name */}
           {step === 1 && (
             <div className="space-y-5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-400 mb-2">Your full name</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Your full name</label>
                 <div className="relative group">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-green-500 transition-colors" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors" />
                   <input
                     type="text"
                     value={name}
                     onChange={e => setName(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-medium text-slate-900 dark:text-white focus:outline-none focus:border-green-500 dark:focus:border-green-400 focus:ring-4 focus:ring-green-500/10 transition-all placeholder:text-slate-400"
+                    className={inputClasses}
                     placeholder="Adewale Okonkwo"
                     autoFocus
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-400 mb-2">Farm name <span className="text-slate-400 font-normal">(optional)</span></label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Farm name <span className="text-[var(--text-tertiary)] font-normal">(optional)</span></label>
                 <div className="relative group">
-                  <Tractor className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-green-500 transition-colors" />
+                  <Tractor className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors" />
                   <input
                     type="text"
                     value={farmName}
                     onChange={e => setFarmName(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-medium text-slate-900 dark:text-white focus:outline-none focus:border-green-500 dark:focus:border-green-400 focus:ring-4 focus:ring-green-500/10 transition-all placeholder:text-slate-400"
+                    className={inputClasses}
                     placeholder="Greenfield Farm"
                   />
                 </div>
@@ -179,16 +177,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
             </div>
           )}
 
-          {/* Step 2: Country Picker */}
           {step === 2 && (
             <div className="space-y-4">
               <div className="relative group">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-green-500 transition-colors" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors" />
                 <input
                   type="text"
                   value={countrySearch}
                   onChange={e => setCountrySearch(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-medium text-slate-900 dark:text-white focus:outline-none focus:border-green-500 dark:focus:border-green-400 focus:ring-4 focus:ring-green-500/10 transition-all placeholder:text-slate-400"
+                  className={inputClasses}
                   placeholder="Search countries..."
                   autoFocus
                 />
@@ -201,17 +198,17 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                     onClick={() => setSelectedCountry(country)}
                     className={`flex items-center gap-3 p-3.5 rounded-xl border-2 transition-all text-left ${
                       selectedCountry?.code === country.code
-                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20 shadow-md shadow-green-500/10'
-                        : 'border-slate-200 dark:border-slate-700 hover:border-green-300 dark:hover:border-green-700 bg-slate-50 dark:bg-slate-800/50'
+                        ? 'border-field-500 bg-field-50 dark:bg-field-900/20 shadow-md shadow-field-500/10'
+                        : 'border-[var(--border-card)] hover:border-field-300 dark:hover:border-field-700 bg-[var(--bg-content)]'
                     }`}
                   >
                     <span className="text-2xl leading-none">{country.flag}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{country.name}</p>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">{country.region} · {country.climateZone.replace('_', ' ')}</p>
+                      <p className="text-sm font-bold text-[var(--text-primary)] truncate">{country.name}</p>
+                      <p className="text-[11px] text-[var(--text-tertiary)] font-medium">{country.region} · {country.climateZone.replace('_', ' ')}</p>
                     </div>
                     {selectedCountry?.code === country.code && (
-                      <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-field-500 flex-shrink-0" />
                     )}
                   </button>
                 ))}
@@ -219,11 +216,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
             </div>
           )}
 
-          {/* Step 3: Farm Details */}
           {step === 3 && selectedCountry && (
             <div className="space-y-6">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-400 mb-3">Farm type</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-3">Farm type</label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                   {FARM_TYPE_OPTIONS.map(({ value, label, icon: Icon, desc }) => (
                     <button
@@ -232,19 +228,19 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                       onClick={() => setFarmType(value)}
                       className={`flex flex-col items-center gap-1.5 p-3.5 rounded-xl border-2 transition-all ${
                         farmType === value
-                          ? 'border-green-500 bg-green-50 dark:bg-green-900/20 shadow-md shadow-green-500/10'
-                          : 'border-slate-200 dark:border-slate-700 hover:border-green-300 dark:hover:border-green-700 bg-slate-50 dark:bg-slate-800/50'
+                          ? 'border-field-500 bg-field-50 dark:bg-field-900/20 shadow-md shadow-field-500/10'
+                          : 'border-[var(--border-card)] hover:border-field-300 dark:hover:border-field-700 bg-[var(--bg-content)]'
                       }`}
                     >
-                      <Icon className={`w-5 h-5 ${farmType === value ? 'text-green-500' : 'text-slate-400'}`} />
-                      <span className={`text-xs font-bold ${farmType === value ? 'text-green-700 dark:text-green-400' : 'text-slate-700 dark:text-slate-300'}`}>{label}</span>
-                      <span className="text-[10px] text-slate-400 text-center leading-tight">{desc}</span>
+                      <Icon className={`w-5 h-5 ${farmType === value ? 'text-field-500' : 'text-[var(--text-tertiary)]'}`} />
+                      <span className={`text-xs font-bold ${farmType === value ? 'text-field-700 dark:text-field-400' : 'text-[var(--text-primary)]'}`}>{label}</span>
+                      <span className="text-[10px] text-[var(--text-tertiary)] text-center leading-tight">{desc}</span>
                     </button>
                   ))}
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-400 mb-2">Farm size ({areaUnit})</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Farm size ({areaUnit})</label>
                 <div className="flex items-center gap-4">
                   <input
                     type="range"
@@ -253,20 +249,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                     step={areaUnit === 'acres' ? 10 : 5}
                     value={farmSize}
                     onChange={e => setFarmSize(Number(e.target.value))}
-                    className="flex-1 accent-green-500"
+                    className="flex-1 accent-field-500"
                   />
                   <div className="w-24 text-right">
-                    <span className="text-lg font-heading font-black text-slate-900 dark:text-white">{farmSize.toLocaleString()}</span>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium ml-1">{areaUnit}</span>
+                    <span className="text-lg font-heading font-bold text-[var(--text-primary)] font-mono">{farmSize.toLocaleString()}</span>
+                    <span className="text-xs text-[var(--text-tertiary)] font-medium ml-1">{areaUnit}</span>
                   </div>
                 </div>
               </div>
-              <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 border border-green-200 dark:border-green-800">
+              <div className="bg-field-50 dark:bg-field-900/20 rounded-xl p-4 border border-field-200 dark:border-field-800">
                 <div className="flex items-center gap-2 mb-2">
-                  <MapPin className="w-4 h-4 text-green-600 dark:text-green-400" />
-                  <span className="text-xs font-bold text-green-700 dark:text-green-400">Region defaults</span>
+                  <MapPin className="w-4 h-4 text-field-600 dark:text-field-400" />
+                  <span className="text-xs font-bold text-field-700 dark:text-field-400">Region defaults</span>
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   {selectedCountry.flag} <span className="font-semibold">{selectedCountry.name}</span> ·
                   Climate: <span className="font-medium">{selectedCountry.climateZone.replace('_', ' ')}</span> ·
                   Currency: <span className="font-medium">{selectedCountry.currencySymbol} ({selectedCountry.currencyCode})</span>
@@ -275,43 +271,46 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
             </div>
           )}
 
-          {/* Step 4: Confirmation */}
           {step === 4 && selectedCountry && (
             <div className="space-y-4">
-              <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-5 border border-slate-200 dark:border-slate-700 space-y-3">
+              <div className="card-surface p-5 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">Name</span>
-                  <span className="text-sm text-slate-900 dark:text-white font-bold">{name}</span>
+                  <span className="text-xs text-[var(--text-tertiary)] font-semibold">Name</span>
+                  <span className="text-sm text-[var(--text-primary)] font-bold">{name}</span>
                 </div>
+                <div className="organic-divider" />
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">Farm</span>
-                  <span className="text-sm text-slate-900 dark:text-white font-bold">{farmName || `${name}'s Farm`}</span>
+                  <span className="text-xs text-[var(--text-tertiary)] font-semibold">Farm</span>
+                  <span className="text-sm text-[var(--text-primary)] font-bold">{farmName || `${name}'s Farm`}</span>
                 </div>
+                <div className="organic-divider" />
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">Country</span>
-                  <span className="text-sm text-slate-900 dark:text-white font-bold">{selectedCountry.flag} {selectedCountry.name}</span>
+                  <span className="text-xs text-[var(--text-tertiary)] font-semibold">Country</span>
+                  <span className="text-sm text-[var(--text-primary)] font-bold">{selectedCountry.flag} {selectedCountry.name}</span>
                 </div>
+                <div className="organic-divider" />
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">Farm type</span>
-                  <span className="text-sm text-slate-900 dark:text-white font-bold capitalize">{farmType}</span>
+                  <span className="text-xs text-[var(--text-tertiary)] font-semibold">Farm type</span>
+                  <span className="text-sm text-[var(--text-primary)] font-bold capitalize">{farmType}</span>
                 </div>
+                <div className="organic-divider" />
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">Farm size</span>
-                  <span className="text-sm text-slate-900 dark:text-white font-bold">{farmSize.toLocaleString()} {areaUnit}</span>
+                  <span className="text-xs text-[var(--text-tertiary)] font-semibold">Farm size</span>
+                  <span className="text-sm text-[var(--text-primary)] font-bold font-mono">{farmSize.toLocaleString()} {areaUnit}</span>
                 </div>
               </div>
 
               {selectedCrops.length > 0 && (
                 <div>
-                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-400 mb-2">Your starter crops</p>
+                  <p className="text-xs font-semibold text-[var(--text-secondary)] mb-2">Your starter crops</p>
                   <div className="flex flex-wrap gap-2">
                     {selectedCrops.map(crop => (
-                      <span key={crop.id} className="px-3 py-1.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-full text-xs font-bold border border-green-200 dark:border-green-800">
+                      <span key={crop.id} className="px-3 py-1.5 bg-field-50 dark:bg-field-900/20 text-field-700 dark:text-field-400 rounded-full text-xs font-bold border border-field-200 dark:border-field-800">
                         {crop.name}
                       </span>
                     ))}
                     {selectedCountry.defaultCrops.length > 4 && (
-                      <span className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-full text-xs font-medium">
+                      <span className="px-3 py-1.5 bg-[var(--bg-content)] text-[var(--text-tertiary)] rounded-full text-xs font-medium">
                         +{selectedCountry.defaultCrops.length - 4} more
                       </span>
                     )}
@@ -319,8 +318,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                 </div>
               )}
 
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-4 border border-yellow-200 dark:border-yellow-800">
-                <p className="text-xs text-yellow-800 dark:text-yellow-300 font-medium">
+              <div className="bg-harvest-50 dark:bg-harvest-900/10 rounded-xl p-4 border border-harvest-200 dark:border-harvest-800/50">
+                <p className="text-xs text-harvest-700 dark:text-harvest-400 font-medium">
                   AgriFlow will configure your dashboard with {selectedCountry.name}-specific crops, livestock, market prices, weather, and community data.
                 </p>
               </div>
@@ -328,13 +327,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
           )}
         </div>
 
-        {/* Footer navigation */}
-        <div className="px-8 pb-6 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div className="px-8 pb-6 pt-3 border-t border-[var(--border-card)] flex items-center justify-between">
           {step > 1 ? (
             <button
               type="button"
               onClick={handleBack}
-              className="px-5 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+              className="px-5 py-3 text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
               Back
             </button>
@@ -347,7 +345,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               type="button"
               onClick={handleNext}
               disabled={!canNext()}
-              className="px-6 py-3.5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-green-500/25 hover:shadow-green-500/40 flex items-center gap-2 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-6 py-3.5 bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 font-bold text-sm rounded-xl transition-all shadow-lg shadow-field-500/15 dark:shadow-harvest-500/15 hover:shadow-field-500/25 dark:hover:shadow-harvest-500/25 flex items-center gap-2 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Continue
               <ChevronRight className="w-4 h-4" />
@@ -357,7 +355,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               type="button"
               onClick={handleSubmit}
               disabled={isAuthenticating}
-              className="px-8 py-3.5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-green-500/25 hover:shadow-green-500/40 flex items-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-3.5 bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 font-bold text-sm rounded-xl transition-all shadow-lg shadow-field-500/15 dark:shadow-harvest-500/15 hover:shadow-field-500/25 dark:hover:shadow-harvest-500/25 flex items-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isAuthenticating ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

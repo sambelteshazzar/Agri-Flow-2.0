@@ -181,22 +181,24 @@ const FarmLaborPlanner: React.FC = () => {
 
   const formatCurrency = (n: number) => currencySymbol + n.toLocaleString();
 
+  const inputClasses = "w-full px-3 py-2 rounded-lg border border-[var(--border-card)] bg-[var(--bg-content)] text-[var(--text-primary)] text-sm focus:ring-2 focus:ring-field-500 focus:border-transparent transition-colors";
+
   return (
     <div className="space-y-6 animate-fade-in pb-10">
-      <div className="border-b-4 border-slate-800 dark:border-slate-600 pb-4 transition-colors">
-        <h2 className="text-3xl font-semibold text-slate-900 dark:text-white font-heading">Farm Labor Planner</h2>
-        <p className="text-slate-600 dark:text-slate-400 font-semibold text-xs mt-1">Calculate Optimal Workforce for Your Farm</p>
+      <div className="pb-4 border-b border-[var(--border-card)]">
+        <h2 className="text-3xl font-semibold text-[var(--text-primary)] font-heading">Farm Labor Planner</h2>
+        <p className="text-[var(--text-secondary)] font-semibold text-xs mt-1">Calculate Optimal Workforce for Your Farm</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 space-y-5 shadow-sm transition-colors">
-          <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
-            <Sprout className="w-4 h-4 text-green-600" />
+        <div className="card-surface p-6 space-y-5">
+          <div className="flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)]">
+            <Sprout className="w-4 h-4 text-field-600 dark:text-field-400" />
             Farm Details
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Farm Size ({userProfile.areaUnit})</label>
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Farm Size ({userProfile.areaUnit})</label>
             <input
               type="number"
               min={0.5}
@@ -204,16 +206,16 @@ const FarmLaborPlanner: React.FC = () => {
               step={0.5}
               value={input.farmSizeHa}
               onChange={e => updateInput('farmSizeHa', parseFloat(e.target.value) || 0.5)}
-              className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+              className={inputClasses}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Main Crop</label>
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Main Crop</label>
             <select
               value={input.mainCrop}
               onChange={e => updateInput('mainCrop', e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+              className={inputClasses}
             >
               {Object.entries(CROP_LABELS).map(([key, label]) => (
                 <option key={key} value={key}>{label}</option>
@@ -222,11 +224,11 @@ const FarmLaborPlanner: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Secondary Crop</label>
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Secondary Crop</label>
             <select
               value={input.secondaryCrop}
               onChange={e => updateInput('secondaryCrop', e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+              className={inputClasses}
             >
               {Object.entries(CROP_LABELS).map(([key, label]) => (
                 <option key={key} value={key}>{label}</option>
@@ -235,7 +237,7 @@ const FarmLaborPlanner: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Livestock Count</label>
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Livestock Count</label>
             <input
               type="number"
               min={0}
@@ -243,12 +245,12 @@ const FarmLaborPlanner: React.FC = () => {
               step={1}
               value={input.livestockCount}
               onChange={e => updateInput('livestockCount', parseInt(e.target.value) || 0)}
-              className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+              className={inputClasses}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Family Workers Available</label>
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Family Workers Available</label>
             <input
               type="number"
               min={0}
@@ -256,26 +258,26 @@ const FarmLaborPlanner: React.FC = () => {
               step={1}
               value={input.familyWorkers}
               onChange={e => updateInput('familyWorkers', parseInt(e.target.value) || 0)}
-              className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+              className={inputClasses}
             />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 space-y-5 shadow-sm transition-colors">
-          <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
-            <Tractor className="w-4 h-4 text-yellow-600" />
+        <div className="card-surface p-6 space-y-5">
+          <div className="flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)]">
+            <Tractor className="w-4 h-4 text-harvest-500" />
             Farm Setup
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Season</label>
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Season</label>
             <div className="flex gap-2">
               <button
                 onClick={() => updateInput('season', 'rainy')}
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-xs border-2 transition-colors ${
                   input.season === 'rainy'
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-600'
+                    ? 'bg-field-600 text-white border-field-600'
+                    : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] border-[var(--border-card)]'
                 }`}
               >
                 <CloudRain className="w-4 h-4" />
@@ -285,8 +287,8 @@ const FarmLaborPlanner: React.FC = () => {
                 onClick={() => updateInput('season', 'dry')}
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-xs border-2 transition-colors ${
                   input.season === 'dry'
-                    ? 'bg-amber-600 text-white border-amber-600'
-                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-600'
+                    ? 'bg-harvest-500 text-field-950 border-harvest-500'
+                    : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] border-[var(--border-card)]'
                 }`}
               >
                 <Sun className="w-4 h-4" />
@@ -296,7 +298,7 @@ const FarmLaborPlanner: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Mechanization Level</label>
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Mechanization Level</label>
             <div className="flex gap-2">
               {([
                 { key: 'none', label: 'Manual' },
@@ -308,8 +310,8 @@ const FarmLaborPlanner: React.FC = () => {
                   onClick={() => updateInput('mechanization', opt.key)}
                   className={`flex-1 px-3 py-2.5 rounded-lg font-semibold text-xs border-2 transition-colors ${
                     input.mechanization === opt.key
-                      ? 'bg-slate-900 dark:bg-white text-yellow-500 dark:text-slate-900 border-slate-900 dark:border-white'
-                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-600'
+                      ? 'bg-field-800 dark:bg-harvest-500 text-white dark:text-field-950 border-field-800 dark:border-harvest-500'
+                      : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] border-[var(--border-card)]'
                   }`}
                 >
                   {opt.label}
@@ -319,7 +321,7 @@ const FarmLaborPlanner: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Irrigation Type</label>
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Irrigation Type</label>
             <div className="flex gap-2">
               {([
                 { key: 'rainfed', label: 'Rainfed' },
@@ -331,8 +333,8 @@ const FarmLaborPlanner: React.FC = () => {
                   onClick={() => updateInput('irrigationType', opt.key)}
                   className={`flex-1 px-3 py-2.5 rounded-lg font-semibold text-xs border-2 transition-colors ${
                     input.irrigationType === opt.key
-                      ? 'bg-green-600 text-white border-green-600'
-                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-600'
+                      ? 'bg-field-600 text-white border-field-600'
+                      : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] border-[var(--border-card)]'
                   }`}
                 >
                   {opt.label}
@@ -343,34 +345,34 @@ const FarmLaborPlanner: React.FC = () => {
 
           <button
             onClick={handleCalculate}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold text-sm transition-colors shadow-md active:scale-[0.98] mt-4"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 rounded-lg font-semibold text-sm transition-colors shadow-md active:scale-[0.98] mt-4"
           >
             <Calculator className="w-4 h-4" />
             Calculate Workforce
           </button>
 
           {showResults && (
-            <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-              <div className="flex items-center gap-2 text-green-700 dark:text-green-400 text-xs font-semibold mb-2">
+            <div className="mt-4 p-4 bg-field-50 dark:bg-field-900/20 rounded-lg border border-field-200 dark:border-field-800">
+              <div className="flex items-center gap-2 text-field-700 dark:text-field-400 text-xs font-semibold mb-2">
                 <CheckCircle2 className="w-4 h-4" />
                 Quick Summary
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div className="text-center p-2 bg-white dark:bg-slate-800 rounded-lg">
-                  <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">{result.totalWorkers}</div>
-                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400">Total Workers</div>
+                <div className="text-center p-2 card-inner rounded-lg">
+                  <div className="text-2xl font-bold text-[var(--text-primary)] font-mono">{result.totalWorkers}</div>
+                  <div className="text-[10px] font-medium text-[var(--text-tertiary)]">Total Workers</div>
                 </div>
-                <div className="text-center p-2 bg-white dark:bg-slate-800 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600 dark:text-green-400 font-mono">{result.peakWorkers}</div>
-                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400">Peak Season</div>
+                <div className="text-center p-2 card-inner rounded-lg">
+                  <div className="text-2xl font-bold text-field-600 dark:text-field-400 font-mono">{result.peakWorkers}</div>
+                  <div className="text-[10px] font-medium text-[var(--text-tertiary)]">Peak Season</div>
                 </div>
-                <div className="text-center p-2 bg-white dark:bg-slate-800 rounded-lg">
-                  <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 font-mono">{result.hiredWorkers}</div>
-                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400">Hired Needed</div>
+                <div className="text-center p-2 card-inner rounded-lg">
+                  <div className="text-2xl font-bold text-harvest-600 dark:text-harvest-400 font-mono">{result.hiredWorkers}</div>
+                  <div className="text-[10px] font-medium text-[var(--text-tertiary)]">Hired Needed</div>
                 </div>
-                <div className="text-center p-2 bg-white dark:bg-slate-800 rounded-lg">
-                  <div className="text-lg font-bold text-slate-900 dark:text-white font-mono">{formatCurrency(result.totalMonthlyCost)}</div>
-                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400">Monthly Cost</div>
+                <div className="text-center p-2 card-inner rounded-lg">
+                  <div className="text-lg font-bold text-[var(--text-primary)] font-mono">{formatCurrency(result.totalMonthlyCost)}</div>
+                  <div className="text-[10px] font-medium text-[var(--text-tertiary)]">Monthly Cost</div>
                 </div>
               </div>
             </div>
@@ -380,33 +382,33 @@ const FarmLaborPlanner: React.FC = () => {
 
       {showResults && (
         <div className="space-y-6 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm transition-colors">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white font-heading mb-4">Monthly Labor Schedule</h3>
+          <div className="card-surface p-6">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] font-heading mb-4">Monthly Labor Schedule</h3>
             <div className="space-y-2">
               {result.monthlyBreakdown.map((m, i) => (
                 <div key={m.month}>
                   <button
                     onClick={() => setExpandedMonth(expandedMonth === i ? null : i)}
-                    className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                    className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--bg-content)] transition-colors"
                   >
-                    <div className="w-10 text-xs font-bold text-slate-900 dark:text-white">{m.month}</div>
+                    <div className="w-10 text-xs font-bold text-[var(--text-primary)]">{m.month}</div>
                     <div className="flex-1">
-                      <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <div className="h-3 bg-[var(--bg-content)] rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-green-500 rounded-full transition-all duration-500"
+                          className="h-full bg-field-500 rounded-full transition-all duration-500"
                           style={{ width: `${(m.workers / result.peakWorkers) * 100}%` }}
                         />
                       </div>
                     </div>
-                    <div className="w-8 text-sm font-bold text-slate-900 dark:text-white font-mono text-right">{m.workers}</div>
-                    <div className="w-28 text-xs font-medium text-slate-500 dark:text-slate-400 truncate">{m.activity}</div>
-                    {expandedMonth === i ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                    <div className="w-8 text-sm font-bold text-[var(--text-primary)] font-mono text-right">{m.workers}</div>
+                    <div className="w-28 text-xs font-medium text-[var(--text-tertiary)] truncate">{m.activity}</div>
+                    {expandedMonth === i ? <ChevronUp className="w-4 h-4 text-[var(--text-tertiary)]" /> : <ChevronDown className="w-4 h-4 text-[var(--text-tertiary)]" />}
                   </button>
                   {expandedMonth === i && (
-                    <div className="ml-10 mr-4 mb-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-xs text-slate-600 dark:text-slate-400 space-y-1">
-                      <p><span className="font-medium text-slate-800 dark:text-white">Workers needed:</span> <span className="font-mono">{m.workers}</span></p>
-                      <p><span className="font-medium text-slate-800 dark:text-white">Primary activity:</span> {m.activity}</p>
-                      <p><span className="font-medium text-slate-800 dark:text-white">Labor cost:</span> <span className="font-mono">{formatCurrency(m.workers * dailyWage * WORKING_DAYS_PER_MONTH)}</span></p>
+                    <div className="ml-10 mr-4 mb-2 p-3 bg-[var(--bg-content)] rounded-lg text-xs text-[var(--text-secondary)] space-y-1">
+                      <p><span className="font-medium text-[var(--text-primary)]">Workers needed:</span> <span className="font-mono">{m.workers}</span></p>
+                      <p><span className="font-medium text-[var(--text-primary)]">Primary activity:</span> {m.activity}</p>
+                      <p><span className="font-medium text-[var(--text-primary)]">Labor cost:</span> <span className="font-mono">{formatCurrency(m.workers * dailyWage * WORKING_DAYS_PER_MONTH)}</span></p>
                     </div>
                   )}
                 </div>
@@ -415,68 +417,68 @@ const FarmLaborPlanner: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm transition-colors">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white font-heading mb-4">Cost Breakdown</h3>
+            <div className="card-surface p-6">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] font-heading mb-4">Cost Breakdown</h3>
               <div className="space-y-3">
                 {result.costEstimate.map(c => (
-                  <div key={c.category} className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-800 last:border-0">
-                    <span className="text-sm text-slate-700 dark:text-slate-300">{c.category}</span>
-                    <span className="text-sm font-bold text-slate-900 dark:text-white font-mono">{formatCurrency(c.amount)}</span>
+                  <div key={c.category} className="flex items-center justify-between py-2 border-b border-[var(--border-card)] last:border-0">
+                    <span className="text-sm text-[var(--text-secondary)]">{c.category}</span>
+                    <span className="text-sm font-bold text-[var(--text-primary)] font-mono">{formatCurrency(c.amount)}</span>
                   </div>
                 ))}
-                <div className="flex items-center justify-between pt-3 border-t-2 border-slate-300 dark:border-slate-600">
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">Total Monthly</span>
-                  <span className="text-sm font-bold text-green-600 dark:text-green-400 font-mono">{formatCurrency(result.totalMonthlyCost)}</span>
+                <div className="flex items-center justify-between pt-3 border-t-2 border-harvest-500/30">
+                  <span className="text-sm font-bold text-[var(--text-primary)]">Total Monthly</span>
+                  <span className="text-sm font-bold text-field-600 dark:text-field-400 font-mono">{formatCurrency(result.totalMonthlyCost)}</span>
                 </div>
               </div>
-              <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
+              <div className="mt-4 p-3 bg-harvest-50 dark:bg-harvest-900/10 rounded-lg border border-harvest-200 dark:border-harvest-800/50">
+                <p className="text-xs text-harvest-700 dark:text-harvest-400 font-medium">
                   Wage basis: <span className="font-mono">{currencySymbol}{dailyWage.toLocaleString()}/day</span> ({countryCfg?.name ?? 'Nigeria'} regional average, 2026)
                 </p>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm transition-colors">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white font-heading mb-4">Recommendations</h3>
+            <div className="card-surface p-6">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] font-heading mb-4">Recommendations</h3>
               <div className="space-y-3">
                 {result.recommendations.map((rec, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                    <Info className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
-                    <p className="text-sm text-slate-700 dark:text-slate-300">{rec}</p>
+                  <div key={i} className="flex items-start gap-3 p-3 bg-[var(--bg-content)] rounded-lg">
+                    <Info className="w-4 h-4 text-field-600 dark:text-field-400 mt-0.5 shrink-0" />
+                    <p className="text-sm text-[var(--text-secondary)]">{rec}</p>
                   </div>
                 ))}
               </div>
               {result.hiredWorkers === 0 && (
-                <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-600 dark:text-green-400" />
-                  <p className="text-xs text-green-700 dark:text-green-400 font-medium">No hired labor needed — your family team covers everything</p>
+                <div className="mt-4 p-3 bg-field-50 dark:bg-field-900/20 rounded-lg border border-field-200 dark:border-field-800 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-field-600 dark:text-field-400" />
+                  <p className="text-xs text-field-700 dark:text-field-400 font-medium">No hired labor needed — your family team covers everything</p>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm transition-colors">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white font-heading mb-4">Workforce Summary</h3>
+          <div className="card-surface p-6">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] font-heading mb-4">Workforce Summary</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                <Users className="w-6 h-6 text-slate-600 dark:text-slate-400 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-slate-900 dark:text-white font-mono">{result.totalWorkers}</div>
-                <div className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">Average Workers</div>
+              <div className="text-center p-4 bg-[var(--bg-content)] rounded-lg">
+                <Users className="w-6 h-6 text-[var(--text-tertiary)] mx-auto mb-2" />
+                <div className="text-3xl font-bold text-[var(--text-primary)] font-mono">{result.totalWorkers}</div>
+                <div className="text-xs font-medium text-[var(--text-tertiary)] mt-1">Average Workers</div>
               </div>
-              <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                <Sprout className="w-6 h-6 text-green-600 dark:text-green-400 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-green-600 dark:text-green-400 font-mono">{result.familyWorkers}</div>
-                <div className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">Family Workers</div>
+              <div className="text-center p-4 bg-field-50 dark:bg-field-900/20 rounded-lg">
+                <Sprout className="w-6 h-6 text-field-600 dark:text-field-400 mx-auto mb-2" />
+                <div className="text-3xl font-bold text-field-600 dark:text-field-400 font-mono">{result.familyWorkers}</div>
+                <div className="text-xs font-medium text-[var(--text-tertiary)] mt-1">Family Workers</div>
               </div>
-              <div className="text-center p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-                <Tractor className="w-6 h-6 text-amber-600 dark:text-amber-400 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-amber-600 dark:text-amber-400 font-mono">{result.hiredWorkers}</div>
-                <div className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">Hired Workers</div>
+              <div className="text-center p-4 bg-harvest-50 dark:bg-harvest-900/10 rounded-lg">
+                <Tractor className="w-6 h-6 text-harvest-600 dark:text-harvest-400 mx-auto mb-2" />
+                <div className="text-3xl font-bold text-harvest-600 dark:text-harvest-400 font-mono">{result.hiredWorkers}</div>
+                <div className="text-xs font-medium text-[var(--text-tertiary)] mt-1">Hired Workers</div>
               </div>
               <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
                 <AlertCircle className="w-6 h-6 text-red-500 dark:text-red-400 mx-auto mb-2" />
                 <div className="text-3xl font-bold text-red-600 dark:text-red-400 font-mono">{result.peakWorkers}</div>
-                <div className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">Peak Season Max</div>
+                <div className="text-xs font-medium text-[var(--text-tertiary)] mt-1">Peak Season Max</div>
               </div>
             </div>
           </div>
