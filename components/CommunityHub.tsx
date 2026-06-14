@@ -1,13 +1,52 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Users, ShoppingBag, MessageSquare, Search, CheckCircle, MapPin, Plus, X, Send, Hash, 
   ThumbsUp, Share2, MoreHorizontal, Image as ImageIcon, Heart, MessageCircle, TrendingUp,
   UserPlus, Globe, BadgeCheck, Camera, Bell, ChevronRight, Settings,
-  Calendar, BarChart2, Zap, XCircle, Leaf, PackageSearch, ArrowRight, LayoutGrid, Users2
+  Calendar, BarChart2, Zap, XCircle, Leaf, PackageSearch, ArrowRight, LayoutGrid, Users2,
+  HelpCircle, Award, Target, Handshake, Cloud, DollarSign, Flame, BookOpen, Sparkles
 } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import { MarketplaceListing, ForumPost, ForumReply, Story, NavigationTab } from '../types';
+
+interface Question {
+  id: string;
+  author: string;
+  authorAvatar?: string;
+  title: string;
+  body: string;
+  category: string;
+  answers: Answer[];
+  likes: number;
+  solved: boolean;
+  date: string;
+}
+
+interface Answer {
+  id: string;
+  author: string;
+  authorAvatar?: string;
+  content: string;
+  isExpert: boolean;
+  accepted: boolean;
+  likes: number;
+  date: string;
+}
+
+interface Challenge {
+  id: string;
+  title: string;
+  description: string;
+  crop: string;
+  xp: number;
+  participants: number;
+  daysLeft: number;
+  progress: number;
+  icon: React.ElementType;
+}
+
+type CommunityTab = 'FEED' | 'GROUPS' | 'MARKET' | 'QA';
 
 const CommunityHub: React.FC = () => {
   const { 
@@ -15,7 +54,7 @@ const CommunityHub: React.FC = () => {
     listings, posts, chatMessages, stories: contextStories, trends, suggestedUsers, followedUserIds, likedPostIds,
     addListing, addPost, getPostReplies, addPostReply, likePost,
     sendChatMessage, toggleFollowUser,
-    showToast, userLocation,
+    showToast, userLocation, weather, alerts, marketPrices,
     pollData, pollVoted, handlePollVote,
     navigate
   } = useFarm();

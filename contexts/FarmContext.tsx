@@ -99,8 +99,32 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [alerts, setAlerts] = useState<SystemAlert[]>(INITIAL_ALERTS);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   
-  // Navigation State
-  const [currentView, setCurrentView] = useState<NavigationTab>(NavigationTab.DASHBOARD);
+  const VIEW_HASH: Record<NavigationTab, string> = {
+    [NavigationTab.DASHBOARD]: 'dashboard',
+    [NavigationTab.CROPS]: 'crops',
+    [NavigationTab.LIVESTOCK]: 'livestock',
+    [NavigationTab.MARKET]: 'market',
+    [NavigationTab.NEWS]: 'news',
+    [NavigationTab.AI_ADVISOR]: 'ai',
+    [NavigationTab.CALCULATOR]: 'calculators',
+    [NavigationTab.EDUCATION]: 'learn',
+    [NavigationTab.COMMUNITY]: 'community',
+    [NavigationTab.LABOR]: 'labor',
+    [NavigationTab.SETTINGS]: 'settings',
+  };
+
+  const HASH_TO_VIEW: Record<string, NavigationTab> = Object.fromEntries(
+    Object.entries(VIEW_HASH).map(([k, v]) => [v, k as NavigationTab])
+  );
+
+  const [currentView, setCurrentView] = useState<NavigationTab>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '');
+      const view = HASH_TO_VIEW[hash];
+      if (view) return view;
+    }
+    return NavigationTab.DASHBOARD;
+  });
 
   // Theme State
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -224,12 +248,32 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     refreshLocation();
   }, []);
 
-  // Navigation Logic
   const navigate = useCallback((view: NavigationTab) => {
     setCurrentView(view);
+    const hash = VIEW_HASH[view] || 'dashboard';
+    if (window.location.hash.replace('#', '') !== hash) {
+      window.history.pushState(null, '', `#${hash}`);
+    }
   }, []);
 
-  // Theme Logic
+  useEffect(() => {
+    const onPopState = () => {
+      const hash = window.location.hash.replace('#', '');
+      const view = HASH_TO_VIEW[hash];
+      if (view) setCurrentView(view);
+      else setCurrentView(NavigationTab.DASHBOARD);
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  useEffect(() => {
+    const hash = VIEW_HASH[currentView] || 'dashboard';
+    if (window.location.hash.replace('#', '') !== hash) {
+      window.history.replaceState(null, '', `#${hash}`);
+    }
+  }, [currentView]);
+
   const toggleTheme = useCallback(() => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   }, []);

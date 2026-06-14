@@ -206,7 +206,7 @@ const AppContent: React.FC = () => {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden w-full relative pb-16 md:pb-0">
+      <div className="flex-1 flex flex-col h-full overflow-hidden w-full relative pb-24 md:pb-0">
 
         {/* TOP HEADER (Desktop & Mobile) */}
         <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0 flex items-center justify-between px-4 md:px-8 z-20 shadow-sm transition-colors">
