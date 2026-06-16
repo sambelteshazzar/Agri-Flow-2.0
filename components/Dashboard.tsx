@@ -359,14 +359,14 @@ const Dashboard: React.FC = () => {
               </div>
               <h3 className="text-base font-bold text-primary-dynamic font-heading">Daily Tasks</h3>
             </div>
-            <button
-              onClick={handleGenerateTasks}
-              disabled={isGenerating}
-              className="flex items-center gap-1.5 text-field-600 dark:text-field-400 hover:text-field-700 dark:hover:text-field-300 text-xs font-bold transition-colors disabled:opacity-50 bg-field-50 dark:bg-field-900/20 px-3 py-1.5 rounded-lg border border-field-200 dark:border-field-800"
-            >
-              {isGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-              {isGenerating ? "Generating..." : "AI Generate"}
-            </button>
+             <button
+               onClick={handleGenerateTasks}
+               disabled={isGenerating}
+               className="flex items-center gap-2 text-field-600 dark:text-field-400 hover:text-field-700 dark:hover:text-field-300 text-xs font-bold transition-colors disabled:opacity-50 bg-field-50 dark:bg-field-900/20 px-4 py-2 rounded-lg border border-field-200 dark:border-field-800"
+             >
+               {isGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+               {isGenerating ? "Generating..." : "AI Generate"}
+             </button>
           </div>
 
           <div className="bg-soil-50/60 dark:bg-[#183222]/40 px-5 py-2.5 border-b border-soil-100/60 dark:border-[#1C3A28]/40 text-xs font-semibold text-secondary-dynamic flex justify-between">
@@ -376,18 +376,18 @@ const Dashboard: React.FC = () => {
 
           <div role="list" className="max-h-80 overflow-y-auto custom-scrollbar">
             {tasks.map((task) => (
-              <div
-                key={task.id}
-                role="checkbox"
-                aria-checked={task.completed}
-                tabIndex={0}
-                onClick={() => toggleTask(task.id)}
-                onKeyDown={(e) => handleTaskKeyDown(e, task.id)}
-                className={`
-                  flex items-center p-4 cursor-pointer border-b border-soil-100/40 dark:border-[#1C3A28]/30 last:border-0 hover:bg-soil-50/40 dark:hover:bg-[#183222]/20 transition-colors focus:outline-none
-                  ${task.completed ? 'opacity-50' : ''}
-                `}
-              >
+               <div
+                 key={task.id}
+                 role="checkbox"
+                 aria-checked={task.completed}
+                 tabIndex={0}
+                 onClick={() => toggleTask(task.id)}
+                 onKeyDown={(e) => handleTaskKeyDown(e, task.id)}
+                 className={`
+                   flex items-center p-5 cursor-pointer border-b border-soil-100/40 dark:border-[#1C3A28]/30 last:border-0 hover:bg-soil-50/40 dark:hover:bg-[#183222]/20 transition-colors
+                   ${task.completed ? 'opacity-50' : ''}
+                 `}
+               >
                 <div className={`mr-3 ${task.completed ? 'text-soil-300 dark:text-[#1C3A28]' : 'text-field-600 dark:text-field-500'}`}>
                   {task.completed ? <CheckSquare className="w-[18px] h-[18px]" /> : <Square className="w-[18px] h-[18px]" />}
                 </div>

@@ -87,36 +87,44 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
 
   const selectedCrops = selectedCountry ? selectedCountry.defaultCrops.slice(0, 4) : [];
 
-  const inputClasses = "w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl font-medium text-[var(--text-primary)] focus:outline-none focus:border-field-500 dark:focus:border-field-400 focus:ring-4 focus:ring-field-500/10 transition-all placeholder:text-[var(--text-tertiary)]";
+   const inputClasses = "w-full pl-12 pr-4 py-4 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl font-medium text-[var(--text-primary)] focus-visible:ring-2 focus-visible:ring-field-500 focus-visible:ring-offset-2 transition-all placeholder:text-[var(--text-tertiary)]";
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-field-950/90 backdrop-blur-lg animate-fade-in">
       <div className="w-full max-w-2xl mx-4 rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-card)] animate-fade-in-up bg-[var(--bg-card)] flex flex-col max-h-[90vh]">
 
-        <div className="flex justify-between items-start px-8 pt-8 pb-2 bg-gradient-to-b from-field-950/5 to-transparent dark:from-field-950/30 dark:to-transparent">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-8 h-8 bg-gradient-to-br from-field-500 to-harvest-500 rounded-lg flex items-center justify-center shadow-lg shadow-field-500/20">
-                <Sprout className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-[var(--text-primary)] text-sm font-heading font-bold">AgriFlow</span>
-            </div>
-            <h2 className="text-2xl font-heading font-bold text-[var(--text-primary)] mt-3">
-              {step === 1 && 'Set up your profile'}
-              {step === 2 && 'Where is your farm?'}
-              {step === 3 && 'Tell us about your farm'}
-              {step === 4 && 'All set!'}
-            </h2>
-            <p className="text-sm text-[var(--text-secondary)] mt-1 font-medium">
-              {step === 1 && 'We\'ll personalize AgriFlow to your needs.'}
-              {step === 2 && 'We\'ll tailor crops, markets, and insights for your region.'}
-              {step === 3 && 'A few details so we can set up your dashboard.'}
-              {step === 4 && 'Here\'s a summary of your setup.'}
-            </p>
+        <div className="relative px-8 pt-8 pb-4">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--bg-field-50)_0%_,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(30,58,40,0.3)_0%_,transparent_70%)]"></div>
           </div>
-          <button onClick={onClose} className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors p-1 -mr-1 -mt-1">
-            <X className="w-6 h-6" />
-          </button>
+          <div className="flex justify-between items-start">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-10 h-10 bg-gradient-to-br from-field-500 to-harvest-500 rounded-xl flex items-center justify-center shadow-lg shadow-field-500/20">
+                  <Sprout className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[var(--text-primary)] text-sm font-heading font-bold">AgriFlow</span>
+                  <span className="text-[var(--text-tertiary)] text-xs font-medium">Your farming intelligence platform</span>
+                </div>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-[var(--text-primary)] mt-2">
+                {step === 1 && 'Set up your profile'}
+                {step === 2 && 'Where is your farm?'}
+                {step === 3 && 'Tell us about your farm'}
+                {step === 4 && 'All set!'}
+              </h2>
+               <p className="text-sm text-[var(--text-secondary)] mt-2 font-medium max-w-xl">
+                 {step === 1 && "We'll personalize AgriFlow to your needs."}
+                 {step === 2 && "We'll tailor crops, markets, and insights for your region."}
+                 {step === 3 && "A few details so we can set up your dashboard."}
+                 {step === 4 && "Here's a summary of your setup."}
+               </p>
+            </div>
+            <button onClick={onClose} className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors p-2 -mr-2 -mt-2">
+              <X className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
         <div className="px-8 pt-2 pb-4">
@@ -196,11 +204,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                     key={country.code}
                     type="button"
                     onClick={() => setSelectedCountry(country)}
-                    className={`flex items-center gap-3 p-3.5 rounded-xl border-2 transition-all text-left ${
-                      selectedCountry?.code === country.code
-                        ? 'border-field-500 bg-field-50 dark:bg-field-900/20 shadow-md shadow-field-500/10'
-                        : 'border-[var(--border-card)] hover:border-field-300 dark:hover:border-field-700 bg-[var(--bg-content)]'
-                    }`}
+                     className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left ${
+                       selectedCountry?.code === country.code
+                         ? 'border-field-500 bg-field-50 dark:bg-field-900/20 shadow-md shadow-field-500/10'
+                         : 'border-[var(--border-card)] hover:border-field-300 dark:hover:border-field-700 bg-[var(--bg-content)]'
+                     }`}
                   >
                     <span className="text-2xl leading-none">{country.flag}</span>
                     <div className="flex-1 min-w-0">
@@ -226,11 +234,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                       key={value}
                       type="button"
                       onClick={() => setFarmType(value)}
-                      className={`flex flex-col items-center gap-1.5 p-3.5 rounded-xl border-2 transition-all ${
-                        farmType === value
-                          ? 'border-field-500 bg-field-50 dark:bg-field-900/20 shadow-md shadow-field-500/10'
-                          : 'border-[var(--border-card)] hover:border-field-300 dark:hover:border-field-700 bg-[var(--bg-content)]'
-                      }`}
+                       className={`flex flex-col items-center gap-1.5 p-4 rounded-xl border-2 transition-all ${
+                         farmType === value
+                           ? 'border-field-500 bg-field-50 dark:bg-field-900/20 shadow-md shadow-field-500/10'
+                           : 'border-[var(--border-card)] hover:border-field-300 dark:hover:border-field-700 bg-[var(--bg-content)]'
+                       }`}
                     >
                       <Icon className={`w-5 h-5 ${farmType === value ? 'text-field-500' : 'text-[var(--text-tertiary)]'}`} />
                       <span className={`text-xs font-bold ${farmType === value ? 'text-field-700 dark:text-field-400' : 'text-[var(--text-primary)]'}`}>{label}</span>
@@ -329,42 +337,42 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
 
         <div className="px-8 pb-6 pt-3 border-t border-[var(--border-card)] flex items-center justify-between">
           {step > 1 ? (
-            <button
-              type="button"
-              onClick={handleBack}
-              className="px-5 py-3 text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              Back
-            </button>
+             <button
+               type="button"
+               onClick={handleBack}
+               className="px-5 py-4 text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+             >
+               Back
+             </button>
           ) : (
             <div />
           )}
 
-          {step < 4 ? (
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={!canNext()}
-              className="px-6 py-3.5 bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 font-bold text-sm rounded-xl transition-all shadow-lg shadow-field-500/15 dark:shadow-harvest-500/15 hover:shadow-field-500/25 dark:hover:shadow-harvest-500/25 flex items-center gap-2 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Continue
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={isAuthenticating}
-              className="px-8 py-3.5 bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 font-bold text-sm rounded-xl transition-all shadow-lg shadow-field-500/15 dark:shadow-harvest-500/15 hover:shadow-field-500/25 dark:hover:shadow-harvest-500/25 flex items-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isAuthenticating ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <Sprout className="w-5 h-5" />
-              )}
-              {isAuthenticating ? 'Setting up...' : 'Launch AgriFlow'}
-            </button>
-          )}
+           {step < 4 ? (
+             <button
+               type="button"
+               onClick={handleNext}
+               disabled={!canNext()}
+               className="px-8 py-4 bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 font-bold text-sm rounded-xl transition-all shadow-lg shadow-field-500/15 dark:shadow-harvest-500/15 hover:shadow-field-500/25 dark:hover:shadow-harvest-500/25 flex items-center gap-2 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+             >
+               Continue
+               <ChevronRight className="w-4 h-4" />
+             </button>
+           ) : (
+             <button
+               type="button"
+               onClick={handleSubmit}
+               disabled={isAuthenticating}
+               className="px-10 py-4 bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 font-bold text-sm rounded-xl transition-all shadow-lg shadow-field-500/15 dark:shadow-harvest-500/15 hover:shadow-field-500/25 dark:hover:shadow-harvest-500/25 flex items-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+             >
+               {isAuthenticating ? (
+                 <Loader2 className="w-5 h-5 animate-spin" />
+               ) : (
+                 <Sprout className="w-5 h-5" />
+               )}
+               {isAuthenticating ? 'Setting up...' : 'Launch AgriFlow'}
+             </button>
+           )}
         </div>
       </div>
     </div>
