@@ -15,7 +15,7 @@ import FarmLaborPlanner from './components/FarmLaborPlanner';
 import GetStarted from './components/GetStarted';
 import SettingsPage from './components/Settings';
 import VoiceAgent from './components/VoiceAgent';
-import AuthModal from './components/AuthModal';
+import { LoginPage } from './components/LoginPage';
 import CommandPalette from './components/CommandPalette';
 import MobileNav from './components/MobileNav';
 import { NavigationTab } from './types';
@@ -103,10 +103,13 @@ const AppContent: React.FC = () => {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  const handleStart = () => {
-    setHasStarted(true);
-    localStorage.setItem('agriflow_has_started', 'true');
-  };
+   const handleStart = () => {
+     setHasStarted(true);
+     localStorage.setItem('agriflow_has_started', 'true');
+   };
+     const handleOpenAuth = () => {
+       setIsAuthModalOpen(true);
+     };
 
   const renderContent = () => {
     switch (currentView) {
@@ -133,14 +136,41 @@ const AppContent: React.FC = () => {
     setIsMobileOpen(false);
   };
 
-  const handleAuthSubmit = async (data: OnboardingData) => {
-    await login(data);
-    setIsAuthModalOpen(false);
-  };
+   const handleAuthSubmit = async (email: string, password: string, remember: boolean) => {
+     const dummyData: OnboardingData = {
+       name: email.split('@')[0] || email,
+       farmName: `${email.split('@')[0]}'s Farm`,
+       countryCode: 'NG',
+       farmType: 'mixed',
+       farmSize: 1,
+       areaUnit: 'ha',
+     };
+     await login(dummyData);
+     setIsAuthModalOpen(false);
+     setHasStarted(true);
+     localStorage.setItem('agriflow_has_started', 'true');
+   };
 
-  if (!hasStarted) {
-    return <GetStarted onStart={handleStart} />;
-  }
+   const handleSignup = async (data: OnboardingData & { email: string; password: string }) => {
+     await login(data);
+     setIsAuthModalOpen(false);
+     setHasStarted(true);
+     localStorage.setItem('agriflow_has_started', 'true');
+   };
+
+    if (!hasStarted) {
+      return (
+        <>
+          <GetStarted onStart={handleOpenAuth} />
+           <LoginPage
+             isOpen={isAuthModalOpen}
+             onClose={() => setIsAuthModalOpen(false)}
+             onLogin={handleAuthSubmit}
+             onSignup={handleSignup}
+           />
+        </>
+      );
+    }
 
   return (
     <div className="flex h-screen h-[100dvh] bg-app dark:bg-[#0C1810] overflow-hidden relative transition-colors duration-300">
@@ -173,12 +203,13 @@ const AppContent: React.FC = () => {
       {/* --- GLOBAL VOICE AGENT --- */}
       <VoiceAgent />
 
-      {/* SIGN IN / SIGN UP MODAL */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        onLogin={handleAuthSubmit}
-      />
+       {/* SIGN IN / SIGN UP MODAL */}
+        <LoginPage
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onLogin={handleAuthSubmit}
+          onSignup={handleSignup}
+        />
 
       {/* COMMAND PALETTE */}
       <CommandPalette

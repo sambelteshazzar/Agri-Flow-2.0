@@ -109,15 +109,18 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
             Your complete farming companion — from planting to harvest, with smart AI by your side.
           </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col md:flex-row gap-5 items-center animate-fade-in-up">
-            <button 
-              onClick={onStart}
-              className="group px-10 py-5 bg-green-600 hover:bg-green-500 text-white font-bold text-lg rounded-full transition-all shadow-[0_0_30px_rgba(22,163,74,0.3)] hover:shadow-[0_0_50px_rgba(22,163,74,0.5)] flex items-center gap-3 w-full md:w-auto justify-center"
-            >
-              Get started
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+           {/* CTA Buttons */}
+           <div className="flex flex-col md:flex-row gap-5 items-center animate-fade-in-up">
+              <button 
+                onClick={() => {
+                  console.log('GetStarted button clicked');
+                  onStart();
+                }}
+                className="group px-10 py-5 bg-green-600 hover:bg-green-500 text-white font-bold text-lg rounded-full transition-all shadow-[0_0_30px_rgba(22,163,74,0.3)] hover:shadow-[0_0_50px_rgba(22,163,74,0.5)] flex items-center gap-3 w-full md:w-auto justify-center"
+              >
+                Sign in
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
             <button 
               onClick={() => scrollToSection(featuresRef)}
               className="px-10 py-5 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-white font-bold text-lg rounded-full transition-all w-full md:w-auto"
