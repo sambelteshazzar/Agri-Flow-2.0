@@ -80,12 +80,12 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
            <button onClick={() => scrollToSection(architectureRef)} className="hover:text-white cursor-pointer transition-colors">How it works</button>
            <button onClick={() => scrollToSection(aboutRef)} className="hover:text-white cursor-pointer transition-colors">About</button>
             <div className="w-px h-4 bg-field-700"></div>
-            <button 
-              onClick={onStart} 
-              className="px-5 py-2 bg-white text-field-950 rounded-full font-bold hover:bg-green-400 hover:text-field-950 transition-all shadow-lg"
-            >
-              Start farming
-            </button>
+             <button 
+               onClick={onStart} 
+               className="px-5 py-2 bg-white text-field-950 rounded-full font-bold hover:bg-green-400 hover:text-field-950 transition-all shadow-lg"
+             >
+               Sign in
+             </button>
         </div>
       </nav>
 
@@ -99,11 +99,10 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
             Now with Smart AI — Your farming companion
           </div>
           
-          {/* Main Heading */}
-          <h1 className="text-6xl md:text-8xl font-black font-heading tracking-tight leading-[0.9] text-white mb-8 animate-fade-in-up drop-shadow-2xl">
-            Growing <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-300 to-teal-500">Smarter.</span>
-          </h1>
+           {/* Main Heading */}
+            <h1 className="text-6xl md:text-8xl font-black font-heading tracking-tight leading-[0.9] text-white mb-8 animate-fade-in-up drop-shadow-2xl">
+              Smart Farming Solutions for West African Farmers
+            </h1>
           
           {/* Subheading */}
           <p className="text-xl md:text-2xl text-field-300 max-w-2xl font-medium leading-relaxed mb-12 animate-fade-in-up border-l-4 border-green-500 pl-6">

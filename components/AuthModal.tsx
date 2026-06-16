@@ -90,41 +90,36 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
    const inputClasses = "w-full pl-12 pr-4 py-4 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl font-medium text-[var(--text-primary)] focus-visible:ring-2 focus-visible:ring-field-500 focus-visible:ring-offset-2 transition-all placeholder:text-[var(--text-tertiary)]";
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-field-950/90 backdrop-blur-lg animate-fade-in">
-      <div className="w-full max-w-2xl mx-4 rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-card)] animate-fade-in-up bg-[var(--bg-card)] flex flex-col max-h-[90vh]">
+       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-field-950/90 backdrop-blur-lg animate-fade-in">
+       <div className="w-full max-w-2xl mx-4 rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-card)] animate-fade-in-up bg-[var(--bg-card)] flex flex-col max-h-[90vh] card-surface">
 
         <div className="relative px-8 pt-8 pb-4">
           <div className="absolute inset-0 pointer-events-none">
             <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--bg-field-50)_0%_,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(30,58,40,0.3)_0%_,transparent_70%)]"></div>
           </div>
-          <div className="flex justify-between items-start">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-10 h-10 bg-gradient-to-br from-field-500 to-harvest-500 rounded-xl flex items-center justify-center shadow-lg shadow-field-500/20">
-                  <Sprout className="w-5 h-5 text-white" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[var(--text-primary)] text-sm font-heading font-bold">AgriFlow</span>
-                  <span className="text-[var(--text-tertiary)] text-xs font-medium">Your farming intelligence platform</span>
-                </div>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-heading font-bold text-[var(--text-primary)] mt-2">
-                {step === 1 && 'Set up your profile'}
-                {step === 2 && 'Where is your farm?'}
-                {step === 3 && 'Tell us about your farm'}
-                {step === 4 && 'All set!'}
-              </h2>
-               <p className="text-sm text-[var(--text-secondary)] mt-2 font-medium max-w-xl">
-                 {step === 1 && "We'll personalize AgriFlow to your needs."}
-                 {step === 2 && "We'll tailor crops, markets, and insights for your region."}
-                 {step === 3 && "A few details so we can set up your dashboard."}
-                 {step === 4 && "Here's a summary of your setup."}
-               </p>
-            </div>
-            <button onClick={onClose} className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors p-2 -mr-2 -mt-2">
-              <X className="w-6 h-6" />
-            </button>
-          </div>
+           <div className="flex flex-col items-center text-center py-6">
+             <div className="flex items-center gap-2 mb-4">
+               <div className="w-12 h-12 bg-gradient-to-br from-field-500 to-harvest-500 rounded-xl flex items-center justify-center shadow-lg shadow-field-500/20">
+                 <Sprout className="w-6 h-6 text-white" />
+               </div>
+               <div className="flex flex-col">
+                 <span className="text-[var(--text-primary)] text-base font-heading font-bold">AgriFlow</span>
+                 <span className="text-[var(--text-tertiary)] text-sm font-medium">Your farming intelligence platform</span>
+               </div>
+             </div>
+             <h2 className="text-3xl md:text-4xl font-heading font-bold text-[var(--text-primary)] mt-4">
+               {step === 1 && 'Set up your profile'}
+               {step === 2 && 'Where is your farm?'}
+               {step === 3 && 'Tell us about your farm'}
+               {step === 4 && 'All set!'}
+             </h2>
+              <p className="text-sm text-[var(--text-secondary)] mt-2 font-medium max-w-xl">
+                {step === 1 && "We'll personalize AgriFlow to your needs."}
+                {step === 2 && "We'll tailor crops, markets, and insights for your region."}
+                {step === 3 && "A few details so we can set up your dashboard."}
+                {step === 4 && "Here's a summary of your setup."}
+              </p>
+           </div>
         </div>
 
         <div className="px-8 pt-2 pb-4">
