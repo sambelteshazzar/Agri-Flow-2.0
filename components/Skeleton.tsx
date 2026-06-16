@@ -10,7 +10,7 @@ interface SkeletonProps {
 }
 
 export const Skeleton: React.FC<SkeletonProps> = ({ className = '', variant = 'rect', width, height, count = 1 }) => {
-  const base = 'rounded-lg bg-slate-200 dark:bg-slate-800 animate-shimmer relative overflow-hidden';
+  const base = 'rounded-lg bg-[var(--bg-content)] animate-shimmer relative overflow-hidden';
 
   const variants: Record<string, string> = {
     card: `${base} h-40 w-full`,
@@ -48,7 +48,7 @@ export const DashboardSkeleton: React.FC = () => (
 export const CardGridSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {Array.from({ length: count }, (_, i) => (
-      <div key={i} className="rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+      <div key={i} className="rounded-xl border border-[var(--border-card)] overflow-hidden">
         <Skeleton variant="rect" className="h-36 rounded-none" />
         <div className="p-4 space-y-3">
           <Skeleton variant="line" className="h-5 w-3/4" />

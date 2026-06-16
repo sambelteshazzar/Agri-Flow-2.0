@@ -28,19 +28,19 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-[#F8FAF5] dark:bg-slate-900 p-4 font-sans">
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-slate-200 dark:border-slate-700">
+        <div className="min-h-screen flex items-center justify-center bg-[var(--bg-app)] p-4 font-sans">
+          <div className="bg-[var(--bg-card)] p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-[var(--border-card)]">
             <div className="w-20 h-20 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
               <AlertTriangle className="w-10 h-10 text-amber-600 dark:text-amber-400" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 font-heading">Something went wrong</h1>
-            <p className="text-slate-600 dark:text-slate-400 mb-8 text-sm font-medium leading-relaxed">
+            <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2 font-heading">Something went wrong</h1>
+            <p className="text-[var(--text-secondary)] mb-8 text-sm font-medium leading-relaxed">
               We hit an unexpected bump in the field. Don't worry — your data is safe. Try refreshing to get back on track.
             </p>
             
             {this.state.error && (
-              <div className="bg-slate-100 dark:bg-slate-950 p-4 rounded-lg mb-8 text-left border border-slate-200 dark:border-slate-800 overflow-hidden">
-                  <p className="text-[10px] font-semibold text-slate-500 mb-1">Error details</p>
+              <div className="bg-[var(--bg-content)] p-4 rounded-lg mb-8 text-left border border-[var(--border-card)] overflow-hidden">
+                  <p className="text-[10px] font-semibold text-[var(--text-tertiary)] mb-1">Error details</p>
                   <code className="text-xs font-mono text-red-600 dark:text-red-400 block break-words">
                     {this.state.error.message}
                   </code>

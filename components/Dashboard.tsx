@@ -66,16 +66,16 @@ const Dashboard: React.FC = () => {
   const getWeatherGradient = () => {
     const condition = weather.condition?.toLowerCase() || '';
     if (condition.includes('rain') || condition.includes('shower') || condition.includes('drizzle')) {
-      return 'from-slate-700 via-slate-600 to-blue-700';
+      return 'from-field-800 via-field-700 to-field-600';
     }
     if (condition.includes('cloud') || condition.includes('overcast')) {
-      return 'from-slate-600 via-slate-500 to-slate-600';
+      return 'from-field-700 via-field-600 to-field-700';
     }
     if (condition.includes('sunny') || condition.includes('clear') || condition.includes('fair')) {
       return 'from-amber-600 via-orange-500 to-amber-500';
     }
     if (condition.includes('storm') || condition.includes('thunder')) {
-      return 'from-slate-800 via-purple-800 to-slate-700';
+      return 'from-field-900 via-field-800 to-field-700';
     }
     return 'from-field-700 via-field-600 to-emerald-600';
   };

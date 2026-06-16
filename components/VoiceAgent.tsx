@@ -327,7 +327,7 @@ const VoiceAgent: React.FC = () => {
       
       {/* Visualizer Overlay */}
       {isActive && (
-        <div className="bg-slate-900/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/10 w-72 mb-2 animate-fade-in-up">
+        <div className="bg-field-950/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/10 w-72 mb-2 animate-fade-in-up">
            <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
                  <span className="relative flex h-3 w-3">
@@ -336,7 +336,7 @@ const VoiceAgent: React.FC = () => {
                  </span>
                  <span className="text-xs font-semibold text-white">Voice OS Active</span>
               </div>
-              <button onClick={disconnect} className="text-slate-400 hover:text-white transition-colors"><X className="w-4 h-4"/></button>
+              <button onClick={disconnect} className="text-[var(--text-tertiary)] hover:text-white transition-colors"><X className="w-4 h-4"/></button>
            </div>
            
            <div className="h-16 flex items-center justify-center gap-1">
@@ -349,7 +349,7 @@ const VoiceAgent: React.FC = () => {
               ))}
            </div>
            
-           <div className="mt-4 pt-3 border-t border-white/10 text-[10px] text-slate-400 text-center">
+            <div className="mt-4 pt-3 border-t border-white/10 text-[10px] text-[var(--text-tertiary)] text-center">
               Listening for commands...
            </div>
         </div>
@@ -363,7 +363,7 @@ const VoiceAgent: React.FC = () => {
           w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all active:scale-95 border-4
           ${isActive 
             ? 'bg-red-500 hover:bg-red-600 border-red-400 text-white animate-pulse' 
-            : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-700 dark:border-slate-200 hover:scale-110'}
+            : 'bg-field-950 dark:bg-white text-white dark:text-field-950 border-field-700 dark:border-soil-200 hover:scale-110'}
         `}
       >
         {isConnecting ? (

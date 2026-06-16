@@ -40,7 +40,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
     <div 
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="h-screen w-full bg-slate-900 text-white font-sans selection:bg-green-500 selection:text-white overflow-y-auto overflow-x-hidden relative scroll-smooth"
+      className="h-screen w-full bg-field-950 text-white font-sans selection:bg-green-500 selection:text-white overflow-y-auto overflow-x-hidden relative scroll-smooth"
     >
       
       {/* --- CINEMATIC BACKGROUND LAYER (Fixed relative to viewport) --- */}
@@ -52,8 +52,8 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
         ></div>
         
         {/* Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-900/80 to-slate-900/40"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/50 to-slate-950"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-field-950/95 via-field-900/80 to-field-900/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-field-900/50 to-field-950"></div>
 
         {/* Interactive Glow */}
         <div 
@@ -66,7 +66,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       </div>
 
       {/* --- NAVIGATION (Sticky) --- */}
-      <nav className="sticky top-0 z-50 w-full p-6 flex justify-between items-center border-b border-white/5 bg-slate-950/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 w-full p-6 flex justify-between items-center border-b border-white/5 bg-field-950/80 backdrop-blur-md">
         <div className="flex items-center gap-3">
            <div className="bg-green-600 p-2 rounded-lg shadow-lg shadow-green-500/20">
              <Sprout className="w-6 h-6 text-white" />
@@ -75,14 +75,14 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
              <span className="text-xl font-bold tracking-tight font-heading leading-none">Agri<span className="text-green-400">Flow</span></span>
            </div>
         </div>
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-field-300">
            <button onClick={() => scrollToSection(featuresRef)} className="hover:text-white cursor-pointer transition-colors">Features</button>
            <button onClick={() => scrollToSection(architectureRef)} className="hover:text-white cursor-pointer transition-colors">How it works</button>
            <button onClick={() => scrollToSection(aboutRef)} className="hover:text-white cursor-pointer transition-colors">About</button>
-           <div className="w-px h-4 bg-slate-700"></div>
+            <div className="w-px h-4 bg-field-700"></div>
             <button 
               onClick={onStart} 
-              className="px-5 py-2 bg-white text-slate-900 rounded-full font-bold hover:bg-green-400 hover:text-slate-900 transition-all shadow-lg"
+              className="px-5 py-2 bg-white text-field-950 rounded-full font-bold hover:bg-green-400 hover:text-field-950 transition-all shadow-lg"
             >
               Start farming
             </button>
@@ -106,7 +106,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
           </h1>
           
           {/* Subheading */}
-          <p className="text-xl md:text-2xl text-slate-300 max-w-2xl font-medium leading-relaxed mb-12 animate-fade-in-up border-l-4 border-green-500 pl-6">
+          <p className="text-xl md:text-2xl text-field-300 max-w-2xl font-medium leading-relaxed mb-12 animate-fade-in-up border-l-4 border-green-500 pl-6">
             Your complete farming companion — from planting to harvest, with smart AI by your side.
           </p>
 
@@ -131,29 +131,29 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       </div>
 
       {/* --- LIVE TICKER --- */}
-      <div className="relative z-20 bg-slate-950/80 border-y border-slate-800 py-4 backdrop-blur-md overflow-hidden">
+      <div className="relative z-20 bg-field-950/80 border-y border-field-800 py-4 backdrop-blur-md overflow-hidden">
          <div className="flex animate-marquee whitespace-nowrap gap-24 max-w-7xl mx-auto">
             {[1, 2, 3, 4].map((i) => (
               <React.Fragment key={i}>
-                 <div className="flex items-center gap-4 text-sm font-semibold text-slate-400">
-                  <Globe className="w-4 h-4 text-blue-500" /> 
-                  <span className="text-slate-200">Live market data</span>
+                  <div className="flex items-center gap-4 text-sm font-semibold text-field-500">
+                   <Globe className="w-4 h-4 text-blue-500"/>
+                   <span className="text-field-200">Live market data</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
-                  <span className="text-white font-semibold">Maize</span> 
-                  <span className="text-green-400">₦28,500 (+8.2%)</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
-                  <span className="text-white font-semibold">Cowpea</span> 
-                  <span className="text-red-400">₦35,000 (-3.5%)</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
-                  <span className="text-white font-semibold">Millet</span> 
-                  <span className="text-green-400">₦20,000 (+12.0%)</span>
-                </div>
-                <div className="flex items-center gap-4 text-sm font-semibold text-slate-400">
-                  <CloudLightning className="w-4 h-4 text-yellow-500" /> 
-                  <span className="text-slate-200">Weather updates live</span>
+                 <div className="flex items-center gap-2 text-sm font-medium text-field-500">
+                   <span className="text-white font-semibold">Maize</span>
+                   <span className="text-green-400">₦28,500 (+8.2%)</span>
+                 </div>
+                 <div className="flex items-center gap-2 text-sm font-medium text-field-500">
+                   <span className="text-white font-semibold">Cowpea</span>
+                   <span className="text-red-400">₦35,000 (-3.5%)</span>
+                 </div>
+                 <div className="flex items-center gap-2 text-sm font-medium text-field-500">
+                   <span className="text-white font-semibold">Millet</span>
+                   <span className="text-green-400">₦20,000 (+12.0%)</span>
+                 </div>
+                 <div className="flex items-center gap-4 text-sm font-semibold text-field-500">
+                   <CloudLightning className="w-4 h-4 text-yellow-500"/>
+                   <span className="text-field-200">Weather updates live</span>
                 </div>
               </React.Fragment>
             ))}
@@ -161,7 +161,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       </div>
 
       {/* --- FEATURES GRID --- */}
-      <div ref={featuresRef} className="relative z-10 w-full bg-slate-950 border-t border-slate-800">
+      <div ref={featuresRef} className="relative z-10 w-full bg-field-950 border-t border-field-800">
         <div className="max-w-7xl mx-auto px-6 py-32">
           
           <div className="mb-20">
@@ -169,7 +169,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-heading">
                 Everything your farm needs
               </h2>
-              <p className="text-slate-400 text-xl leading-relaxed max-w-3xl">
+              <p className="text-field-400 text-xl leading-relaxed max-w-3xl">
                 AgriFlow brings all your farm data into one clear, easy-to-use interface. No more jumping between spreadsheets and apps.
               </p>
           </div>
@@ -186,12 +186,12 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
               { icon: Calculator, color: 'text-teal-400', bg: 'bg-teal-500/10', title: 'Calculators', desc: 'Quick tools for irrigation, fertilizer, and planting calculations.' },
               { icon: Globe, color: 'text-orange-400', bg: 'bg-orange-500/10', title: 'News', desc: 'Stay informed on climate trends, trade policies, and market shifts.' },
             ].map((item, idx) => (
-              <div key={idx} className="p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-slate-600 hover:bg-slate-800/50 transition-all group">
+              <div key={idx} className="p-8 rounded-3xl bg-field-900 border border-field-800 hover:border-field-600 hover:bg-field-800/50 transition-all group">
                 <div className={`w-14 h-14 ${item.bg} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                   <item.icon className={`w-7 h-7 ${item.color}`} />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-                <p className="text-slate-400 leading-relaxed text-sm font-medium">{item.desc}</p>
+                <p className="text-field-400 leading-relaxed text-sm font-medium">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -199,7 +199,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       </div>
 
       {/* --- ARCHITECTURE SECTION --- */}
-      <div ref={architectureRef} className="relative z-10 w-full bg-slate-900 border-t border-slate-800 py-32">
+      <div ref={architectureRef} className="relative z-10 w-full bg-field-900 border-t border-field-800 py-32">
         <div className="max-w-7xl mx-auto px-6">
            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                <div>
@@ -207,36 +207,36 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
                      <Cpu className="w-3 h-3" /> How it works
                   </div>
                   <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-heading">Works where you work</h2>
-                  <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+                   <p className="text-field-400 text-lg mb-8 leading-relaxed">
                      AgriFlow runs right in your browser — even with spotty rural internet. When you're back online, everything syncs seamlessly so you never lose your data.
                   </p>
                  
                  <div className="space-y-6">
                     <div className="flex gap-4">
-                       <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center shrink-0 border border-slate-700">
-                          <Code className="w-6 h-6 text-sky-400" />
-                       </div>
-                        <div>
-                           <h4 className="text-white font-bold text-lg">Fast & responsive</h4>
-                           <p className="text-slate-500 text-sm">Built with React and TailwindCSS for a smooth, snappy experience on any device — phone, tablet, or desktop.</p>
+                        <div className="w-12 h-12 rounded-xl bg-field-800 flex items-center justify-center shrink-0 border border-field-700">
+                           <Code className="w-6 h-6 text-sky-400" />
                         </div>
-                     </div>
-                     <div className="flex gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center shrink-0 border border-slate-700">
-                           <Shield className="w-6 h-6 text-emerald-400" />
-                        </div>
-                        <div>
-                           <h4 className="text-white font-bold text-lg">Works offline</h4>
-                           <p className="text-slate-500 text-sm">Your data stays safe locally and syncs automatically when connectivity returns.</p>
-                        </div>
-                     </div>
+                         <div>
+                            <h4 className="text-white font-bold text-lg">Fast & responsive</h4>
+                            <p className="text-field-500 text-sm">Built with React and TailwindCSS for a smooth, snappy experience on any device — phone, tablet, or desktop.</p>
+                         </div>
+                      </div>
                       <div className="flex gap-4">
-                         <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center shrink-0 border border-slate-700">
-                            <BrainCircuit className="w-6 h-6 text-purple-400" />
+                         <div className="w-12 h-12 rounded-xl bg-field-800 flex items-center justify-center shrink-0 border border-field-700">
+                            <Shield className="w-6 h-6 text-emerald-400" />
                          </div>
                          <div>
-                            <h4 className="text-white font-bold text-lg">Smart AI built in</h4>
-                            <p className="text-slate-500 text-sm">Get intelligent insights for crop analysis, weather forecasting, and personalized agronomy advice.</p>
+                            <h4 className="text-white font-bold text-lg">Works offline</h4>
+                            <p className="text-field-500 text-sm">Your data stays safe locally and syncs automatically when connectivity returns.</p>
+                         </div>
+                      </div>
+                       <div className="flex gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-field-800 flex items-center justify-center shrink-0 border border-field-700">
+                             <BrainCircuit className="w-6 h-6 text-purple-400" />
+                          </div>
+                          <div>
+                             <h4 className="text-white font-bold text-lg">Smart AI built in</h4>
+                             <p className="text-field-500 text-sm">Get intelligent insights for crop analysis, weather forecasting, and personalized agronomy advice.</p>
                          </div>
                       </div>
                  </div>
@@ -244,9 +244,9 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
               
                <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-tr from-green-500/10 to-emerald-500/10 blur-3xl rounded-full"></div>
-                  <div className="relative bg-slate-950 border border-slate-800 rounded-3xl p-8 shadow-2xl">
-                     <div className="flex justify-between items-center mb-8 pb-4 border-b border-slate-800">
-                        <span className="text-slate-400 text-xs font-medium">Tech overview</span>
+                   <div className="relative bg-field-950 border border-field-800 rounded-3xl p-8 shadow-2xl">
+                      <div className="flex justify-between items-center mb-8 pb-4 border-b border-field-800">
+                         <span className="text-field-400 text-xs font-medium">Tech overview</span>
                         <div className="flex gap-2">
                            <div className="w-3 h-3 rounded-full bg-red-500"></div>
                            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -255,26 +255,26 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
                      </div>
                      <div className="space-y-4 text-sm">
                         <div className="flex justify-between">
-                           <span className="text-slate-500">Framework</span>
-                           <span className="text-sky-400 font-medium">React 19</span>
-                        </div>
-                        <div className="flex justify-between">
-                           <span className="text-slate-500">Styling</span>
-                           <span className="text-sky-400 font-medium">TailwindCSS</span>
-                        </div>
-                         <div className="flex justify-between">
-                            <span className="text-slate-500">AI Engine</span>
-                            <span className="text-purple-400 font-medium">Smart AI Advisor</span>
+                            <span className="text-field-500">Framework</span>
+                            <span className="text-sky-400 font-medium">React 19</span>
                          </div>
-                        <div className="flex justify-between">
-                           <span className="text-slate-500">Charts</span>
-                           <span className="text-orange-400 font-medium">Recharts</span>
-                        </div>
-                        <div className="flex justify-between">
-                           <span className="text-slate-500">Icons</span>
-                           <span className="text-white font-medium">Lucide</span>
-                        </div>
-                        <div className="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500">
+                         <div className="flex justify-between">
+                            <span className="text-field-500">Styling</span>
+                            <span className="text-sky-400 font-medium">TailwindCSS</span>
+                         </div>
+                          <div className="flex justify-between">
+                             <span className="text-field-500">AI Engine</span>
+                             <span className="text-purple-400 font-medium">Smart AI Advisor</span>
+                          </div>
+                         <div className="flex justify-between">
+                            <span className="text-field-500">Charts</span>
+                            <span className="text-orange-400 font-medium">Recharts</span>
+                         </div>
+                         <div className="flex justify-between">
+                            <span className="text-field-500">Icons</span>
+                            <span className="text-white font-medium">Lucide</span>
+                         </div>
+                         <div className="mt-6 pt-4 border-t border-field-800 text-xs text-field-500">
                            All modules ready<br/>
                            Offline support enabled<br/>
                            Ready to grow with you
@@ -287,7 +287,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       </div>
 
       {/* --- MISSION / ABOUT SECTION --- */}
-      <div ref={aboutRef} className="relative z-10 w-full bg-slate-950 border-t border-slate-800 py-32">
+      <div ref={aboutRef} className="relative z-10 w-full bg-field-950 border-t border-field-800 py-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1">
@@ -296,27 +296,27 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
                   <span className="text-green-400 font-semibold text-sm">Our mission</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Farming for the Next Century</h2>
-              <p className="text-slate-400 text-lg leading-relaxed mb-6">
-                We believe that the future of agriculture lies at the intersection of traditional wisdom and advanced technology. 
+              <p className="text-field-400 text-lg leading-relaxed mb-6">
+                 We believe that the future of agriculture lies at the intersection of traditional wisdom and advanced technology.
               </p>
-              <p className="text-slate-400 text-lg leading-relaxed mb-8">
+              <p className="text-field-400 text-lg leading-relaxed mb-8">
                 In an era of climate uncertainty, AgriFlow provides the digital infrastructure needed to secure yields, protect soil health, and ensure profitability for generations to come.
               </p>
               
               <button 
                 onClick={onStart}
-                 className="px-8 py-4 bg-white text-slate-900 rounded-full font-bold hover:bg-green-400 transition-colors shadow-lg"
+                 className="px-8 py-4 bg-white text-field-950 rounded-full font-bold hover:bg-green-400 transition-colors shadow-lg"
               >
                 Get started
               </button>
             </div>
             
-            <div className="order-1 lg:order-2 relative h-[500px] rounded-3xl overflow-hidden shadow-2xl border border-slate-800 group">
+            <div className="order-1 lg:order-2 relative h-[500px] rounded-3xl overflow-hidden shadow-2xl border border-field-800 group">
                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"></div>
-               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-               <div className="absolute bottom-0 left-0 p-10 w-full bg-gradient-to-t from-slate-950/90 to-transparent">
+               <div className="absolute inset-0 bg-gradient-to-t from-field-950 via-field-950/20 to-transparent"></div>
+               <div className="absolute bottom-0 left-0 p-10 w-full bg-gradient-to-t from-field-950/90 to-transparent">
                    <p className="text-white font-bold text-3xl font-heading mb-3">"Better data, better harvests."</p>
-                   <p className="text-slate-400 text-sm font-medium">- The AgriFlow Team</p>
+                    <p className="text-field-400 text-sm font-medium">- The AgriFlow Team</p>
                </div>
             </div>
           </div>
@@ -324,11 +324,11 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       </div>
       
       {/* Footer */}
-      <div className="bg-slate-950 border-t border-slate-900 py-12 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-slate-600 text-sm">
-          <div className="flex items-center gap-3 mb-4 md:mb-0">
-            <div className="bg-slate-900 p-2 rounded border border-slate-800"><Sprout className="w-5 h-5 text-green-700" /></div>
-             <span className="font-medium text-slate-500">AgriFlow &copy; 2026</span>
+      <div className="bg-field-950 border-t border-field-900 py-12 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-field-600 text-sm">
+           <div className="flex items-center gap-3 mb-4 md:mb-0">
+             <div className="bg-field-900 p-2 rounded border border-field-800"><Sprout className="w-5 h-5 text-green-700" /></div>
+              <span className="font-medium text-field-500">AgriFlow &copy; 2026</span>
           </div>
           <div className="flex gap-8">
             <button onClick={(e) => handlePlaceholderLink(e, 'Privacy')} className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0">Privacy</button>
