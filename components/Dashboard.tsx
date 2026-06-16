@@ -142,10 +142,9 @@ const Dashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Page Header */}
-      <header className="mb-2 flex flex-col md:flex-row md:items-end justify-between pb-4 organic-divider pb-5">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-primary-dynamic tracking-tight font-display">Dashboard</h2>
+       {/* Page Header */}
+       <header className="mb-2 flex flex-col md:flex-row md:items-end justify-between pb-4 organic-divider pb-5">
+         <div>
           <div className="flex items-center mt-2 gap-3 flex-wrap">
              {userLocation.latitude && userLocation.longitude ? (
                <span className="inline-flex items-center text-secondary-dynamic bg-soil-100/60 dark:bg-[#183222] px-2.5 py-1 rounded-lg text-xs font-medium border border-soil-200/60 dark:border-[#1C3A28]/60">
