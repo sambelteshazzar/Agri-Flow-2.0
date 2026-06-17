@@ -82,7 +82,7 @@ npm run preview
 │   ├── ResourceCalculator.tsx # Fertilizer & irrigation
 │   ├── EducationHub.tsx    # Learning modules
 │   ├── CommunityHub.tsx    # Social, forum, marketplace
-│   ├── GamesHub.tsx        # Mini-games
+│   ├── Farm Labour.tsx        # Mini-games
 │   ├── Settings.tsx        # Profile, theme, data
 │   ├── Sidebar.tsx         # Navigation
 │   ├── VoiceAgent.tsx      # Global voice agent

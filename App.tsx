@@ -190,10 +190,11 @@ const AppContent: React.FC = () => {
     <div className="flex h-screen h-[100dvh] bg-app dark:bg-[#0C1810] overflow-hidden relative transition-colors duration-300">
 
       {/* GLOBAL TOAST CONTAINER */}
-      <div className="fixed top-24 right-4 z-[9999] flex flex-col gap-3 pointer-events-none">
+      <div aria-live="polite" aria-atomic="false" className="fixed top-24 right-4 z-[9999] flex flex-col gap-3 pointer-events-none">
         {toasts.map(toast => (
           <div
             key={toast.id}
+            role="alert"
             className={`
               pointer-events-auto flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border animate-fade-in-up min-w-[300px] max-w-sm
               ${toast.type === 'success' ? 'bg-field-50/95 dark:bg-field-900/95 border-field-200 dark:border-field-800 text-field-800 dark:text-field-100' : ''}
@@ -202,13 +203,13 @@ const AppContent: React.FC = () => {
             `}
           >
             <div className="shrink-0">
-              {toast.type === 'success' && <CheckCircle className="w-5 h-5" />}
-              {toast.type === 'error' && <AlertCircle className="w-5 h-5" />}
-              {toast.type === 'info' && <InfoIcon className="w-5 h-5" />}
+              {toast.type === 'success' && <CheckCircle className="w-5 h-5" aria-hidden="true" />}
+              {toast.type === 'error' && <AlertCircle className="w-5 h-5" aria-hidden="true" />}
+              {toast.type === 'info' && <InfoIcon className="w-5 h-5" aria-hidden="true" />}
             </div>
             <p className="text-sm font-semibold flex-1">{toast.message}</p>
-            <button onClick={() => removeToast(toast.id)} className="opacity-50 hover:opacity-100 transition-opacity">
-              <X className="w-4 h-4" />
+            <button onClick={() => removeToast(toast.id)} aria-label="Dismiss notification" className="opacity-50 hover:opacity-100 transition-opacity">
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
         ))}
