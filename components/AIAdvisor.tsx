@@ -345,11 +345,12 @@ const AIAdvisor: React.FC = () => {
                   ))}
                </div>
 
-               <button 
-                 onClick={endCall}
-                 className="bg-red-600 hover:bg-red-700 text-white rounded-full p-6 shadow-lg shadow-red-600/30 transition-transform hover:scale-110 active:scale-95"
-               >
-                  <Phone className="w-8 h-8 rotate-[135deg]" />
+                <button 
+                  onClick={endCall}
+                  aria-label="End call"
+                  className="bg-red-600 hover:bg-red-700 text-white rounded-full p-6 shadow-lg shadow-red-600/30 transition-transform hover:scale-110 active:scale-95"
+                >
+                   <Phone className="w-8 h-8 rotate-[135deg]" aria-hidden="true" />
                </button>
                <p className="text-field-400 mt-4 text-xs font-semibold">End Call</p>
            </div>
@@ -532,6 +533,7 @@ const AIAdvisor: React.FC = () => {
             
             <button
               type="submit"
+              aria-label="Send message"
               disabled={isLoading || (!inputText.trim() && !selectedImage)}
               className="p-3 mb-[2px] bg-harvest-500 text-field-900 rounded hover:bg-harvest-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm flex items-center justify-center h-[60px] w-[60px] focus:outline-none focus:ring-2 focus:ring-field-800"
             >

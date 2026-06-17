@@ -824,7 +824,7 @@ const CommunityHub: React.FC = () => {
                           </div>
                           <form onSubmit={(e) => { e.preventDefault(); if(chatInput.trim()) { sendChatMessage({ channelId: activeChannel, author: userProfile.name, text: chatInput, isMe: true, avatar: userProfile.avatar }); setChatInput(''); setTimeout(() => chatEndRef.current?.scrollIntoView(), 100); } }} className="p-3 bg-[var(--bg-card)] border-t border-[var(--border-card)] flex gap-2">
                              <input value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Type a message..." className="flex-1 bg-[var(--bg-content)] border-transparent focus:border-harvest-500 focus:bg-[var(--bg-card)] rounded-xl px-4 py-2.5 text-sm transition-all focus:outline-none" />
-                             <button type="submit" className="bg-field-800 dark:bg-harvest-500 text-white dark:text-field-950 p-2.5 rounded-xl shadow-md hover:scale-105 transition-transform"><Send className="w-5 h-5"/></button>
+                             <button type="submit" aria-label="Send message" className="bg-field-800 dark:bg-harvest-500 text-white dark:text-field-950 p-2.5 rounded-xl shadow-md hover:scale-105 transition-transform"><Send className="w-5 h-5" aria-hidden="true"/></button>
                           </form>
                        </div>
                     </div>
@@ -872,7 +872,7 @@ const CommunityHub: React.FC = () => {
                               <div className="flex items-start gap-4">
                                  {/* Vote column */}
                                  <div className="flex flex-col items-center gap-1 shrink-0 pt-0.5">
-                                    <button onClick={() => handleLikeQuestion(q.id)} className="p-1 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors">
+                                    <button onClick={() => handleLikeQuestion(q.id)} aria-label="Upvote question" className="p-1 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors">
                                        <ThumbsUp className={`w-5 h-5 ${q.likes > 0 ? 'text-green-500' : 'text-[var(--text-tertiary)]'}`} />
                                     </button>
                                     <span className="text-sm font-bold text-[var(--text-secondary)]">{q.likes}</span>
@@ -961,7 +961,7 @@ const CommunityHub: React.FC = () => {
            <div className="bg-[var(--bg-card)] w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden scale-100 transition-all">
              <div className="px-6 py-4 border-b border-[var(--border-card)] flex justify-between items-center bg-[var(--bg-content)]">
                 <h3 className="font-bold text-[var(--text-primary)] text-lg">Create Post</h3>
-                <button onClick={() => { setIsPostModalOpen(false); setPostImage(null); }} className="text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] p-1 rounded-full"><X className="w-5 h-5"/></button>
+                <button onClick={() => { setIsPostModalOpen(false); setPostImage(null); }} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] p-1 rounded-full"><X className="w-5 h-5" aria-hidden="true"/></button>
              </div>
              <form onSubmit={async (e) => { e.preventDefault(); if (newPost.content) { await addPost({ ...newPost, title: newPost.title || newPost.content.substring(0, 30)+'...', author: userProfile.name, image: postImage } as any); setIsPostModalOpen(false); setNewPost({ title: '', category: 'General', author: userProfile.name, content: '' }); setPostImage(null); } }}>
                <div className="p-6">
@@ -971,11 +971,11 @@ const CommunityHub: React.FC = () => {
                   </div>
                   <input placeholder="Title (Optional)" value={newPost.title} onChange={e => setNewPost({...newPost, title: e.target.value})} className="w-full mb-2 text-lg font-bold placeholder-[var(--text-tertiary)] border-none focus:ring-0 p-0 bg-transparent text-[var(--text-primary)]"/>
                   <textarea placeholder="What's happening on your farm?" value={newPost.content} onChange={e => setNewPost({...newPost, content: e.target.value})} className="w-full h-32 resize-none border-none focus:ring-0 p-0 text-[var(--text-secondary)] placeholder-[var(--text-tertiary)] text-sm bg-transparent" autoFocus/>
-                  {postImage && <div className="relative mt-2 rounded-xl overflow-hidden bg-[var(--bg-content)] border border-[var(--border-card)]"><img src={postImage} className="w-full h-48 object-cover" /><button type="button" onClick={() => setPostImage(null)} className="absolute top-2 right-2 p-1 bg-black/60 text-white rounded-full hover:bg-black/80"><X className="w-4 h-4" /></button></div>}
+                  {postImage && <div className="relative mt-2 rounded-xl overflow-hidden bg-[var(--bg-content)] border border-[var(--border-card)]"><img src={postImage} className="w-full h-48 object-cover" /><button type="button" onClick={() => setPostImage(null)} aria-label="Remove image" className="absolute top-2 right-2 p-1 bg-black/60 text-white rounded-full hover:bg-black/80"><X className="w-4 h-4" aria-hidden="true" /></button></div>}
                </div>
                <div className="px-6 py-4 bg-[var(--bg-content)] border-t border-[var(--border-card)] flex justify-between items-center">
                   <div className="flex gap-2">
-                     <button type="button" onClick={() => postFileRef.current?.click()} className="p-2 hover:bg-green-100 text-[var(--text-secondary)] hover:text-green-600 rounded-full transition-colors"><ImageIcon className="w-5 h-5"/></button>
+                     <button type="button" onClick={() => postFileRef.current?.click()} aria-label="Attach image" className="p-2 hover:bg-green-100 text-[var(--text-secondary)] hover:text-green-600 rounded-full transition-colors"><ImageIcon className="w-5 h-5" aria-hidden="true"/></button>
                      <input type="file" ref={postFileRef} accept="image/*" onChange={(e) => handleFileRead(e.target.files?.[0], (res) => setPostImage(res))} className="hidden" />
                   </div>
                   <button type="submit" disabled={!newPost.content} className="bg-field-800 dark:bg-harvest-500 text-white dark:text-field-950 px-6 py-2 rounded-full font-semibold text-xs hover:opacity-90 disabled:opacity-50 transition-all shadow-md active:scale-[0.98]">Post Update</button>
@@ -989,7 +989,7 @@ const CommunityHub: React.FC = () => {
       {isListingModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-field-950/60 backdrop-blur-sm animate-fade-in">
            <div className="bg-[var(--bg-card)] w-full max-w-md rounded-2xl shadow-2xl p-6 relative max-h-[90vh] overflow-y-auto">
-             <button onClick={() => { setIsListingModalOpen(false); setListingImage(null); }} className="absolute top-4 right-4 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"><X className="w-6 h-6" /></button>
+             <button onClick={() => { setIsListingModalOpen(false); setListingImage(null); }} aria-label="Close" className="absolute top-4 right-4 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"><X className="w-6 h-6" aria-hidden="true" /></button>
              <div className="mb-6"><h3 className="font-semibold text-2xl text-[var(--text-primary)] font-heading">New Listing</h3><p className="text-[var(--text-secondary)] text-xs mt-1">Marketplace / Create</p></div>
              <form onSubmit={async (e) => { 
                 e.preventDefault(); 
@@ -1031,7 +1031,7 @@ const CommunityHub: React.FC = () => {
            <div className="bg-[var(--bg-card)] w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
              <div className="px-6 py-4 border-b border-[var(--border-card)] flex justify-between items-center bg-amber-50 dark:bg-amber-950/20">
                 <h3 className="font-bold text-amber-900 dark:text-amber-200 text-lg flex items-center gap-2"><HelpCircle className="w-5 h-5" /> Ask a Question</h3>
-                <button onClick={() => { setIsQuestionModalOpen(false); setNewQuestion({ title: '', body: '', category: 'General' }); }} className="text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] p-1 rounded-full"><X className="w-5 h-5"/></button>
+                <button onClick={() => { setIsQuestionModalOpen(false); setNewQuestion({ title: '', body: '', category: 'General' }); }} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] p-1 rounded-full"><X className="w-5 h-5" aria-hidden="true"/></button>
              </div>
              <div className="p-6 space-y-4">
                 <div>
@@ -1068,8 +1068,8 @@ const CommunityHub: React.FC = () => {
         <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center animate-fade-in">
            <div className="absolute top-4 left-4 right-4 flex gap-2 z-20"><div className="h-1 bg-white/30 rounded-full flex-1 overflow-hidden"><div className="h-full bg-white transition-all duration-[50ms] ease-linear" style={{ width: `${storyProgress}%` }}></div></div></div>
            <div className="absolute top-8 left-4 z-20 flex items-center gap-3"><div className="w-8 h-8 rounded-full border border-white/20 overflow-hidden"><img src={viewingStory.img} className="w-full h-full object-cover" /></div><span className="text-white font-bold text-sm shadow-black drop-shadow-md">{viewingStory.name}</span><span className="text-white/60 text-xs font-medium">2h</span></div>
-           <button onClick={() => setViewingStory(null)} className="absolute top-8 right-4 z-20 text-white hover:text-white/80 transition-colors"><XCircle className="w-8 h-8" /></button>
-           <div className="w-full h-full max-w-md bg-black relative flex items-center justify-center"><img src={viewingStory.img} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1595211877493-41a4e65eda99?w=800&q=80'; }} /><div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent"><div className="flex gap-4"><input type="text" placeholder="Send message..." className="flex-1 bg-transparent border border-white/30 rounded-full px-4 py-2 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white" /><button className="p-2 hover:bg-white/10 rounded-full transition-colors"><Heart className="w-6 h-6 text-white" /></button></div></div></div>
+           <button onClick={() => setViewingStory(null)} aria-label="Close story" className="absolute top-8 right-4 z-20 text-white hover:text-white/80 transition-colors"><XCircle className="w-8 h-8" aria-hidden="true" /></button>
+           <div className="w-full h-full max-w-md bg-black relative flex items-center justify-center"><img src={viewingStory.img} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1595211877493-41a4e65eda99?w=800&q=80'; }} /><div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent"><div className="flex gap-4"><input type="text" placeholder="Send message..." className="flex-1 bg-transparent border border-white/30 rounded-full px-4 py-2 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white" /><button aria-label="React to story" className="p-2 hover:bg-white/10 rounded-full transition-colors"><Heart className="w-6 h-6 text-white" aria-hidden="true" /></button></div></div></div>
         </div>
       )}
 
