@@ -82,10 +82,11 @@ const EducationHub: React.FC = () => {
       <div className="h-full flex flex-col animate-fade-in pb-10">
         <div className="flex items-center gap-4 mb-6 organic-divider pb-4">
            <button 
-             onClick={() => setActiveCourseId(null)}
-             className="p-2 hover:bg-soil-100 dark:hover:bg-field-800 rounded-full transition-colors group"
-           >
-             <ArrowLeft className="w-6 h-6 text-secondary-dynamic group-hover:text-primary-dynamic" />
+              onClick={() => setActiveCourseId(null)}
+              aria-label="Go back to course list"
+              className="p-2 hover:bg-soil-100 dark:hover:bg-field-800 rounded-full transition-colors group"
+            >
+              <ArrowLeft className="w-6 h-6 text-secondary-dynamic group-hover:text-primary-dynamic" aria-hidden="true" />
            </button>
            <div>
              <div className="flex items-center gap-2 mb-1">
@@ -123,9 +124,10 @@ const EducationHub: React.FC = () => {
                      <div className="absolute inset-0 flex items-center justify-center">
                         <button 
                           onClick={() => setIsPlaying(true)}
+                          aria-label="Play course video"
                           className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center hover:scale-110 transition-transform cursor-pointer border-2 border-white/50"
                         >
-                           <Play className="w-8 h-8 text-white fill-white ml-1" />
+                           <Play className="w-8 h-8 text-white fill-white ml-1" aria-hidden="true" />
                         </button>
                      </div>
                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">

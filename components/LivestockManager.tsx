@@ -241,7 +241,7 @@ const LivestockManager: React.FC = () => {
 
                  <div className="flex gap-2 border-t border-[var(--border-card)] pt-3">
                    <button onClick={() => openRecordsModal(animal.id)} className="flex-1 py-2 text-xs font-semibold bg-[var(--bg-content)] dark:bg-field-800 hover:bg-soil-300 dark:hover:bg-field-700 text-[var(--text-primary)] dark:text-[var(--text-primary)] rounded transition-colors border border-[var(--border-card)] dark:border-field-600 focus:outline-none focus:ring-2 focus:ring-field-400">Records</button>
-                   <button onClick={() => deleteLivestock(animal.id)} className="px-3 py-2 text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] hover:text-red-600 dark:hover:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border border-[var(--border-card)] focus:outline-none focus:ring-2 focus:ring-red-500"><Trash2 className="w-4 h-4" /></button>
+                   <button onClick={() => deleteLivestock(animal.id)} aria-label="Delete livestock entry" className="px-3 py-2 text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] hover:text-red-600 dark:hover:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border border-[var(--border-card)] focus:outline-none focus:ring-2 focus:ring-red-500"><Trash2 className="w-4 h-4" aria-hidden="true" /></button>
                 </div>
               </div>
             </div>
@@ -257,7 +257,7 @@ const LivestockManager: React.FC = () => {
               <h3 className="text-xl font-bold text-white font-semibold flex items-center">
                  <ClipboardList className="w-5 h-5 mr-2 text-yellow-500" /> Herd Records
               </h3>
-              <button onClick={() => setIsRecordsModalOpen(false)} className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" /></button>
+              <button onClick={() => setIsRecordsModalOpen(false)} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
             </div>
             
             <div className="p-6 flex-1 overflow-y-auto">
@@ -303,7 +303,7 @@ const LivestockManager: React.FC = () => {
           <div className="bg-[var(--bg-card)] dark:bg-field-950 w-full max-w-lg shadow-2xl rounded-md border border-field-600 max-h-[90vh] overflow-y-auto">
              <div className="bg-field-950 p-5 flex justify-between items-center border-b-4 border-yellow-500 sticky top-0 z-10">
                 <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Beef className="w-5 h-5 mr-2 text-yellow-500" /> New Herd Entry</h3>
-                <button onClick={() => setIsModalOpen(false)} className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" /></button>
+                <button onClick={() => setIsModalOpen(false)} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
              </div>
              <div className="p-6">
                 <form onSubmit={handleAddSubmit} className="space-y-4">
@@ -370,7 +370,7 @@ const LivestockManager: React.FC = () => {
            <div className="bg-[var(--bg-content)] dark:bg-field-950 w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-field-600">
                <div className="bg-field-950 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
                  <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Stethoscope className="w-5 h-5 mr-2 text-red-500" /> Animal Health Check</h3>
-                <button onClick={resetScanner} className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" /></button>
+                <button onClick={resetScanner} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
               </div>
               <div className="p-6 overflow-y-auto">
                  {!scanResult ? (

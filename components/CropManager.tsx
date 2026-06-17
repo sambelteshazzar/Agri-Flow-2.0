@@ -336,9 +336,10 @@ const CropManager: React.FC = () => {
           <div className="bg-field-950 border-l-4 border-yellow-500 rounded-r-lg shadow-2xl p-4 text-white relative">
             <button 
               onClick={dismissSuggestion}
+              aria-label="Dismiss suggestion"
               className="absolute top-2 right-2 text-[var(--text-tertiary)] hover:text-white"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
             
             <div className="flex items-start gap-3">
@@ -490,7 +491,7 @@ const CropManager: React.FC = () => {
 <h3 className="text-xl font-bold text-white flex items-center">
                   <ClipboardList className="w-5 h-5 mr-2 text-yellow-500" /> Log Activity
               </h3>
-              <button onClick={() => setIsLogModalOpen(false)} className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" /></button>
+              <button onClick={() => setIsLogModalOpen(false)} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
             </div>
             <form onSubmit={handleLogSubmit} className="p-6 space-y-4">
               <div>
@@ -519,7 +520,7 @@ const CropManager: React.FC = () => {
           <div className="bg-[var(--bg-card)] w-full max-w-lg shadow-2xl rounded-md border border-field-600 max-h-[90vh] overflow-y-auto">
             <div className="bg-field-950 p-5 flex justify-between items-center border-b-4 border-yellow-500 sticky top-0 z-10">
               <h3 className="text-xl font-semibold text-white flex items-center"><Sprout className="w-5 h-5 mr-2 text-yellow-500" /> Register New Plot</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" /></button>
+              <button onClick={() => setIsModalOpen(false)} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
             </div>
             <div className="p-6">
               
@@ -639,7 +640,7 @@ const CropManager: React.FC = () => {
            <div className="bg-[var(--bg-content)] w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-field-600">
               <div className="bg-field-950 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
                 <h3 className="text-xl font-semibold text-white flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-500" /> Crop Health Check</h3>
-                <button onClick={resetScanner} className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" /></button>
+                <button onClick={resetScanner} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
               </div>
               <div className="p-6 overflow-y-auto">
                  {!scanResult ? (
