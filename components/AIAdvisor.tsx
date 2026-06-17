@@ -338,7 +338,7 @@ const AIAdvisor: React.FC = () => {
                        key={i} 
                        className="w-3 bg-harvest-500 rounded-t-sm transition-all duration-75"
                        style={{ 
-                         height: `${Math.max(10, volumeLevel * (0.5 + Math.random()))}%`,
+                         height: `${Math.max(10, volumeLevel * (0.4 + i * 0.1))}%`,
                          opacity: 0.5 + (volumeLevel / 200) 
                        }}
                      ></div>

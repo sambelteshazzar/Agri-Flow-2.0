@@ -109,7 +109,7 @@ const CommunityHub: React.FC = () => {
     listings, posts, chatMessages, stories: contextStories, trends, suggestedUsers, followedUserIds, likedPostIds,
     addListing, addPost, getPostReplies, addPostReply, likePost,
     sendChatMessage, toggleFollowUser,
-    showToast, userLocation, weather, alerts, marketPrices,
+    showToast, weather, alerts, marketPrices,
     pollData, pollVoted, handlePollVote,
     navigate
   } = useFarm();
@@ -178,11 +178,11 @@ const CommunityHub: React.FC = () => {
       { id: 'fm3', name: 'Emeka Nwosu', location: 'Abuja, Nigeria', match: 81, crops: ['Maize', 'Sorghum'], role: 'Grain Farmer', avatar: '' },
     ].filter(() => country === 'NG' || country === '').concat(
       country !== 'NG' && country !== '' ? [
-        { id: 'fm1b', name: 'Nearby Farmer', location: userLocation || 'Your Region', match: 85, crops: ['Local Crops'], role: 'Farmer', avatar: '' },
-        { id: 'fm2b', name: 'Regional Grower', location: userLocation || 'Your Region', match: 78, crops: ['Seasonal Crops'], role: 'Producer', avatar: '' },
+        { id: 'fm1b', name: 'Nearby Farmer', location: userProfile.countryCode ? `Region ${userProfile.countryCode}` : 'Your Region', match: 85, crops: ['Local Crops'], role: 'Farmer', avatar: '' },
+        { id: 'fm2b', name: 'Regional Grower', location: userProfile.countryCode ? `Region ${userProfile.countryCode}` : 'Your Region', match: 78, crops: ['Seasonal Crops'], role: 'Producer', avatar: '' },
       ] : []
     );
-  }, [userProfile?.countryCode, userLocation]);
+  }, [userProfile?.countryCode]);
 
   const locationAlerts = useMemo(() => {
     const weatherAlerts = alerts.filter(a => a.category === 'WEATHER').slice(0, 2);
@@ -727,7 +727,7 @@ const CommunityHub: React.FC = () => {
                                        <div key={reply.id} className="flex gap-3">
                                           <div className="w-8 h-8 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0"><img src={`https://i.pravatar.cc/150?u=${reply.author}`} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reply.author)}&background=random`; }} /></div>
                                           <div className="flex-1 bg-[var(--bg-card)] p-3 rounded-2xl rounded-tl-none border border-[var(--border-card)] shadow-sm">
-                                             <div className="flex justify-between items-center mb-1"><span className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1">{reply.author} {Math.random() > 0.7 && <Shield className="w-3 h-3 text-amber-500" />}</span><span className="text-[10px] text-[var(--text-tertiary)]">{getRelativeTime(reply.date)}</span></div>
+                                             <div className="flex justify-between items-center mb-1"><span className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1">{reply.author} {reply.id.charCodeAt(reply.id.length - 1) % 3 === 0 && <Shield className="w-3 h-3 text-amber-500" />}</span><span className="text-[10px] text-[var(--text-tertiary)]">{getRelativeTime(reply.date)}</span></div>
                                              <p className="text-sm text-[var(--text-secondary)]">{reply.content}</p>
                                           </div>
                                        </div>

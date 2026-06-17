@@ -71,7 +71,7 @@ const EducationHub: React.FC = () => {
     const lessons = Array.from({ length: activeCourse.lessonsCount }).map((_, i) => ({
       id: i,
       title: getLessonTitle(i, activeCourse.lessonsCount, activeCourse.category),
-      duration: `${Math.floor(Math.random() * 15 + 15)}:00`,
+      duration: `${15 + (i % 5) * 3}:00`,
       isLocked: i > currentLessonIdx,
       isCompleted: i < currentLessonIdx
     }));

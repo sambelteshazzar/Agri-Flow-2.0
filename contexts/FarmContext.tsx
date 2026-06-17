@@ -373,11 +373,13 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [showToast]);
 
   const updateUserProfile = useCallback(async (updates: Partial<UserProfile>) => {
-    const newProfile = { ...userProfile, ...updates };
-    setUserProfile(newProfile);
-    await db.saveUserProfile(newProfile);
+    setUserProfile(prev => {
+      const newProfile = { ...prev, ...updates };
+      db.saveUserProfile(newProfile);
+      return newProfile;
+    });
     showToast('Profile updated', 'success');
-  }, [userProfile, showToast]);
+  }, [showToast]);
 
   const resetApp = useCallback(() => {
     // Clear Local Storage Keys for App

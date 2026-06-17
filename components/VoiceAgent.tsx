@@ -344,7 +344,7 @@ const VoiceAgent: React.FC = () => {
                  <div 
                    key={i} 
                    className="w-2 bg-gradient-to-t from-green-500 to-green-300 rounded-full transition-all duration-75"
-                   style={{ height: `${Math.max(10, volume * (1 + Math.random()))}%` }}
+                   style={{ height: `${Math.max(10, volume * (0.6 + i * 0.15))}%` }}
                  ></div>
               ))}
            </div>

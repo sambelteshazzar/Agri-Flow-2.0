@@ -10,7 +10,7 @@ const NewsHub: React.FC = () => {
     if (newsArticles.length === 0) {
       refreshNews();
     }
-  }, []);
+  }, [refreshNews, newsArticles.length]);
 
   const handleNewsClick = (e: React.MouseEvent, url?: string) => {
     if (!url || url === '#' || url.trim() === '') {
