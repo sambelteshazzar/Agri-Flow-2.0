@@ -13,7 +13,7 @@ Smart farming management platform — a command center for monitoring fields, li
 - **Resource Calculator** — Fertilizer and irrigation calculators with crop-specific presets
 - **Education Hub** — Learning modules with embedded video, progress tracking, and certificates
 - **Community Hub** — Social feed, forum, marketplace, chat channels, and polls
-- **Games Arcade** — Crop Defender, Eco Tycoon, and Poultry Builder mini-games
+- **Farm Labour** — Calculate the optimal work force of the farm
 - **Voice Agent** — Floating voice button for hands-free navigation and queries
 - **Settings** — Profile editing, dark/light theme, data export/import, factory reset
 

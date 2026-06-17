@@ -1,26 +1,34 @@
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import { Menu, Wifi, WifiOff, Globe, Bell, X, AlertTriangle, TrendingUp, Info, LogIn, User, Loader2, CheckCircle, AlertCircle, Info as InfoIcon, Search, Command } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import CropManager from './components/CropManager';
 import LivestockManager from './components/LivestockManager';
-import EducationHub from './components/EducationHub';
-import MarketAnalytics from './components/MarketAnalytics';
-import NewsHub from './components/NewsHub';
-import AIAdvisor from './components/AIAdvisor';
-import ResourceCalculator from './components/ResourceCalculator';
-import CommunityHub from './components/CommunityHub';
-import FarmLaborPlanner from './components/FarmLaborPlanner';
-import GetStarted from './components/GetStarted';
-import SettingsPage from './components/Settings';
-import VoiceAgent from './components/VoiceAgent';
-import { LoginPage } from './components/LoginPage';
-import CommandPalette from './components/CommandPalette';
 import MobileNav from './components/MobileNav';
+import CommandPalette from './components/CommandPalette';
+import GetStarted from './components/GetStarted';
+import { LoginPage } from './components/LoginPage';
+
+const EducationHub = lazy(() => import('./components/EducationHub'));
+const MarketAnalytics = lazy(() => import('./components/MarketAnalytics'));
+const NewsHub = lazy(() => import('./components/NewsHub'));
+const AIAdvisor = lazy(() => import('./components/AIAdvisor'));
+const ResourceCalculator = lazy(() => import('./components/ResourceCalculator'));
+const CommunityHub = lazy(() => import('./components/CommunityHub'));
+const FarmLaborPlanner = lazy(() => import('./components/FarmLaborPlanner'));
+const SettingsPage = lazy(() => import('./components/Settings'));
+const VoiceAgent = lazy(() => import('./components/VoiceAgent'));
+
 import { NavigationTab } from './types';
 import type { OnboardingData } from './components/AuthModal';
 import { FarmProvider, useFarm } from './contexts/FarmContext';
+
+const LazyLoader: React.FC = () => (
+  <div className="flex items-center justify-center h-64">
+    <Loader2 className="w-8 h-8 animate-spin text-field-500" />
+  </div>
+);
 
 const FAVICON_EMOJIS: Record<string, string> = {
   [NavigationTab.DASHBOARD]: '📊',
@@ -112,20 +120,26 @@ const AppContent: React.FC = () => {
      };
 
   const renderContent = () => {
-    switch (currentView) {
-      case NavigationTab.DASHBOARD: return <Dashboard />;
-      case NavigationTab.CROPS: return <CropManager />;
-      case NavigationTab.LIVESTOCK: return <LivestockManager />;
-      case NavigationTab.CALCULATOR: return <ResourceCalculator />;
-      case NavigationTab.COMMUNITY: return <CommunityHub />;
-      case NavigationTab.EDUCATION: return <EducationHub />;
-      case NavigationTab.MARKET: return <MarketAnalytics />;
-      case NavigationTab.NEWS: return <NewsHub />;
-      case NavigationTab.AI_ADVISOR: return <AIAdvisor />;
-      case NavigationTab.LABOR: return <FarmLaborPlanner />;
-      case NavigationTab.SETTINGS: return <SettingsPage />;
-      default: return <Dashboard />;
-    }
+    return (
+      <Suspense fallback={<LazyLoader />}>
+        {(() => {
+          switch (currentView) {
+            case NavigationTab.DASHBOARD: return <Dashboard />;
+            case NavigationTab.CROPS: return <CropManager />;
+            case NavigationTab.LIVESTOCK: return <LivestockManager />;
+            case NavigationTab.CALCULATOR: return <ResourceCalculator />;
+            case NavigationTab.COMMUNITY: return <CommunityHub />;
+            case NavigationTab.EDUCATION: return <EducationHub />;
+            case NavigationTab.MARKET: return <MarketAnalytics />;
+            case NavigationTab.NEWS: return <NewsHub />;
+            case NavigationTab.AI_ADVISOR: return <AIAdvisor />;
+            case NavigationTab.LABOR: return <FarmLaborPlanner />;
+            case NavigationTab.SETTINGS: return <SettingsPage />;
+            default: return <Dashboard />;
+          }
+        })()}
+      </Suspense>
+    );
   };
 
   const handleLogout = () => {
@@ -201,7 +215,7 @@ const AppContent: React.FC = () => {
       </div>
 
       {/* --- GLOBAL VOICE AGENT --- */}
-      <VoiceAgent />
+      <Suspense fallback={null}><VoiceAgent /></Suspense>
 
        {/* SIGN IN / SIGN UP MODAL */}
         <LoginPage
