@@ -42,14 +42,14 @@ const ResourceCalculator: React.FC = () => {
            <button 
              onClick={() => setMode('FERTILIZER')}
              aria-pressed={mode === 'FERTILIZER'}
-             className={`px-4 py-2 rounded font-semibold text-xs border-2 focus:outline-none focus:ring-2 focus:ring-crimson-500 transition-colors ${mode === 'FERTILIZER' ? 'bg-crimson-800 dark:bg-sunburst-100 text-sunburst-500 dark:text-crimson-900 border-crimson-800 dark:border-sunburst-200' : 'bg-card-dynamic text-secondary-dynamic border-primary-dynamic'}`}
+             className={`px-4 py-2 rounded font-semibold text-xs border-2 focus:outline-none focus:ring-2 focus:ring-jade-500 transition-colors ${mode === 'FERTILIZER' ? 'bg-jade-800 dark:bg-sunburst-100 text-sunburst-500 dark:text-jade-900 border-jade-800 dark:border-sunburst-200' : 'bg-card-dynamic text-secondary-dynamic border-primary-dynamic'}`}
            >
              Fertilizer
            </button>
            <button 
              onClick={() => setMode('IRRIGATION')}
              aria-pressed={mode === 'IRRIGATION'}
-             className={`px-4 py-2 rounded font-semibold text-xs border-2 focus:outline-none focus:ring-2 focus:ring-crimson-500 transition-colors ${mode === 'IRRIGATION' ? 'bg-crimson-700 dark:bg-crimson-600 text-white border-crimson-700 dark:border-crimson-600' : 'bg-card-dynamic text-secondary-dynamic border-primary-dynamic'}`}
+             className={`px-4 py-2 rounded font-semibold text-xs border-2 focus:outline-none focus:ring-2 focus:ring-jade-500 transition-colors ${mode === 'IRRIGATION' ? 'bg-jade-700 dark:bg-jade-600 text-white border-jade-700 dark:border-jade-600' : 'bg-card-dynamic text-secondary-dynamic border-primary-dynamic'}`}
            >
              Irrigation
            </button>
@@ -60,7 +60,7 @@ const ResourceCalculator: React.FC = () => {
         
         <div className="card-surface p-6">
            <h3 className="text-xl font-semibold text-primary-dynamic mb-6 flex items-center">
-             {mode === 'FERTILIZER' ? <Sprout className="w-6 h-6 mr-2 text-crimson-600 dark:text-crimson-400" aria-hidden="true"/> : <Droplets className="w-6 h-6 mr-2 text-crimson-600 dark:text-crimson-400" aria-hidden="true"/>}
+             {mode === 'FERTILIZER' ? <Sprout className="w-6 h-6 mr-2 text-jade-600 dark:text-jade-400" aria-hidden="true"/> : <Droplets className="w-6 h-6 mr-2 text-jade-600 dark:text-jade-400" aria-hidden="true"/>}
              {mode === 'FERTILIZER' ? 'Nutrient Planner' : 'Water Scheduler'}
            </h3>
 
@@ -89,7 +89,7 @@ const ResourceCalculator: React.FC = () => {
                      <span className={unitCls} aria-hidden="true">ha</span>
                    </div>
                 </div>
-                 <button onClick={calculateFertilizer} className="w-full bg-crimson-800 dark:bg-sunburst-500 text-white dark:text-crimson-950 py-4 font-semibold hover:bg-crimson-700 dark:hover:bg-sunburst-400 mt-4 focus:outline-none focus:ring-2 focus:ring-sunburst-500 focus:ring-offset-2 rounded transition-colors shadow-lg">Calculate Requirements</button>
+                 <button onClick={calculateFertilizer} className="w-full bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 py-4 font-semibold hover:bg-jade-700 dark:hover:bg-sunburst-400 mt-4 focus:outline-none focus:ring-2 focus:ring-sunburst-500 focus:ring-offset-2 rounded transition-colors shadow-lg">Calculate Requirements</button>
              </div>
            ) : (
              <div className="space-y-4">
@@ -124,33 +124,33 @@ const ResourceCalculator: React.FC = () => {
                      <span className={unitCls} aria-hidden="true">ha</span>
                    </div>
                 </div>
-                <button onClick={calculateIrrigation} className="w-full bg-crimson-700 dark:bg-crimson-600 text-white py-4 font-semibold hover:bg-crimson-600 dark:hover:bg-crimson-500 mt-4 focus:outline-none focus:ring-2 focus:ring-crimson-400 focus:ring-offset-2 rounded transition-colors shadow-lg">Calculate Water Needs</button>
+                <button onClick={calculateIrrigation} className="w-full bg-jade-700 dark:bg-jade-600 text-white py-4 font-semibold hover:bg-jade-600 dark:hover:bg-jade-500 mt-4 focus:outline-none focus:ring-2 focus:ring-jade-400 focus:ring-offset-2 rounded transition-colors shadow-lg">Calculate Water Needs</button>
              </div>
            )}
         </div>
 
-        <div className="bg-crimson-800 dark:bg-crimson-950 text-white p-6 rounded shadow-lg border-l-8 border-sunburst-500 flex flex-col justify-center relative overflow-hidden transition-colors" role="status" aria-live="polite">
+        <div className="bg-jade-800 dark:bg-jade-950 text-white p-6 rounded shadow-lg border-l-8 border-sunburst-500 flex flex-col justify-center relative overflow-hidden transition-colors" role="status" aria-live="polite">
            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
            
            <div className="relative z-10 text-center">
-              <h4 className="text-crimson-300 font-semibold text-sm mb-4">Calculated Output</h4>
+              <h4 className="text-jade-300 font-semibold text-sm mb-4">Calculated Output</h4>
               
               {mode === 'FERTILIZER' ? (
                 <>
                   <div className="text-7xl font-bold font-heading text-white mb-2">{fertResult}</div>
                   <div className="text-sunburst-500 text-xl font-bold mb-6">Kilograms Needed</div>
                   <div className="card-inner p-4 rounded text-left">
-                    <p className="text-xs text-crimson-300 font-semibold mb-2">Cost Estimation</p>
+                    <p className="text-xs text-jade-300 font-semibold mb-2">Cost Estimation</p>
                     <p className="text-sm">At current market rates (~$1.20/kg), this application will cost approximately <span className="text-white font-bold">${(fertResult * 1.2).toFixed(2)}</span>.</p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="text-7xl font-bold font-heading text-crimson-300 mb-2">{irrigationResult.toLocaleString()}</div>
+                  <div className="text-7xl font-bold font-heading text-jade-300 mb-2">{irrigationResult.toLocaleString()}</div>
                   <div className="text-white text-xl font-bold mb-6">Liters / Day</div>
                   <div className="card-inner p-4 rounded text-left">
-                    <p className="text-xs text-crimson-300 font-semibold mb-2">Conservation Tip</p>
-                    <p className="text-sm">Switching to Drip Irrigation (90% Eff) would save <span className="text-crimson-400 font-bold">{(irrigationResult - (irrigationResult * (efficiency/0.9))).toLocaleString()} Liters</span> daily.</p>
+                    <p className="text-xs text-jade-300 font-semibold mb-2">Conservation Tip</p>
+                    <p className="text-sm">Switching to Drip Irrigation (90% Eff) would save <span className="text-jade-400 font-bold">{(irrigationResult - (irrigationResult * (efficiency/0.9))).toLocaleString()} Liters</span> daily.</p>
                   </div>
                 </>
               )}

@@ -336,7 +336,7 @@ const VoiceAgent: React.FC = () => {
       
       {/* Visualizer Overlay */}
       {isActive && (
-        <div className="bg-crimson-950/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/10 w-72 mb-2 animate-fade-in-up">
+        <div className="bg-jade-950/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/10 w-72 mb-2 animate-fade-in-up">
            <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
                  <span className="relative flex h-3 w-3">
@@ -372,7 +372,7 @@ const VoiceAgent: React.FC = () => {
           w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all active:scale-95 border-4
           ${isActive 
             ? 'bg-red-500 hover:bg-red-600 border-red-400 text-white animate-pulse' 
-            : 'bg-crimson-950 dark:bg-white text-white dark:text-crimson-950 border-crimson-700 dark:border-terra-200 hover:scale-110'}
+            : 'bg-jade-950 dark:bg-white text-white dark:text-jade-950 border-jade-700 dark:border-terra-200 hover:scale-110'}
         `}
       >
         {isConnecting ? (

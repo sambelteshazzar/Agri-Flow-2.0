@@ -62,18 +62,18 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
         className={`
           fixed top-0 left-0 z-[70] h-full w-[260px] bg-sidebar-dynamic text-primary-dynamic
           shadow-2xl md:shadow-none transform transition-transform duration-300 ease-in-out
-          border-r border-terra-200/50 dark:border-[#1C3A28]/50
+          border-r border-terra-200/50 dark:border-[#1E5A47]/50
           md:translate-x-0 md:static md:h-screen flex flex-col
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
         {/* Branding Header */}
-        <div className="flex items-center px-5 h-[72px] border-b border-terra-200/50 dark:border-[#1C3A28]/50 shrink-0">
-          <div className="bg-crimson-600 dark:bg-crimson-500 rounded-xl p-2 mr-3 shadow-lg shadow-crimson-600/20 dark:shadow-crimson-500/10">
+        <div className="flex items-center px-5 h-[72px] border-b border-terra-200/50 dark:border-[#1E5A47]/50 shrink-0">
+          <div className="bg-jade-600 dark:bg-jade-500 rounded-xl p-2 mr-3 shadow-lg shadow-jade-600/20 dark:shadow-jade-500/10">
             <Leaf className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-tight text-primary-dynamic font-heading">Agri<span className="text-crimson-600 dark:text-crimson-400">Flow</span></h1>
+            <h1 className="text-lg font-bold tracking-tight text-primary-dynamic font-heading">Agri<span className="text-jade-600 dark:text-jade-400">Flow</span></h1>
             <p className="text-[9px] text-secondary-dynamic font-medium -mt-0.5">Smart Farming</p>
           </div>
         </div>
@@ -82,7 +82,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5 custom-scrollbar">
           {navGroups.map(group => (
             <div key={group.label}>
-              <p className="px-3 mb-1.5 text-[10px] font-semibold text-terra-400 dark:text-[#8BA898] tracking-wide">{group.label}</p>
+              <p className="px-3 mb-1.5 text-[10px] font-semibold text-terra-400 dark:text-[#7BA896] tracking-wide">{group.label}</p>
               <div className="space-y-0.5">
                 {group.items.map((item) => {
                   const isActive = activeTab === item.id;
@@ -93,16 +93,16 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
                       className={`
                         w-full flex items-center px-3 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium relative
                         ${isActive 
-                          ? 'bg-crimson-50 dark:bg-crimson-900/30 text-crimson-700 dark:text-crimson-400 shadow-sm' 
-                          : 'text-secondary-dynamic hover:bg-terra-100/60 dark:hover:bg-[#183222]/60 hover:text-primary-dynamic'
+                          ? 'bg-jade-50 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400 shadow-sm' 
+                          : 'text-secondary-dynamic hover:bg-terra-100/60 dark:hover:bg-[#163D2F]/60 hover:text-primary-dynamic'
                         }
                       `}
                     >
                       {isActive && (
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-crimson-500 rounded-r-full" />
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-jade-500 rounded-r-full" />
                       )}
                       <item.icon 
-                        className={`w-[18px] h-[18px] mr-3 ${isActive ? 'text-crimson-600 dark:text-crimson-400' : 'text-terra-400 dark:text-[#5C7A68]'}`} 
+                        className={`w-[18px] h-[18px] mr-3 ${isActive ? 'text-jade-600 dark:text-jade-400' : 'text-terra-400 dark:text-[#4D8A72]'}`} 
                       />
                       <span>{item.label}</span>
                     </button>
@@ -114,12 +114,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
         </nav>
 
         {/* Footer Actions */}
-        <div className="p-3 border-t border-terra-200/50 dark:border-[#1C3A28]/50 shrink-0">
+        <div className="p-3 border-t border-terra-200/50 dark:border-[#1E5A47]/50 shrink-0">
            <button 
              onClick={() => handleNavClick(NavigationTab.SETTINGS)}
-             className={`w-full flex items-center px-3 py-2.5 rounded-xl text-sm font-medium mb-1 transition-colors ${activeTab === NavigationTab.SETTINGS ? 'bg-crimson-50 dark:bg-crimson-900/30 text-crimson-700 dark:text-crimson-400' : 'text-secondary-dynamic hover:bg-terra-100/60 dark:hover:bg-[#183222]/60'}`}
+             className={`w-full flex items-center px-3 py-2.5 rounded-xl text-sm font-medium mb-1 transition-colors ${activeTab === NavigationTab.SETTINGS ? 'bg-jade-50 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400' : 'text-secondary-dynamic hover:bg-terra-100/60 dark:hover:bg-[#163D2F]/60'}`}
           >
-            <SettingsIcon className="w-[18px] h-[18px] mr-3 text-terra-400 dark:text-[#5C7A68]" />
+            <SettingsIcon className="w-[18px] h-[18px] mr-3 text-terra-400 dark:text-[#4D8A72]" />
             Settings
           </button>
            <button 
@@ -129,7 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
             <LogOut className="w-[18px] h-[18px] mr-3" />
             Log Out
           </button>
-          <p className="text-center text-[9px] text-terra-400/60 dark:text-[#5C7A68]/60 mt-3">© 2026 AgriFlow Inc.</p>
+          <p className="text-center text-[9px] text-terra-400/60 dark:text-[#4D8A72]/60 mt-3">© 2026 AgriFlow Inc.</p>
         </div>
       </aside>
     </>

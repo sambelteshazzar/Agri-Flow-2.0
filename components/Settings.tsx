@@ -81,20 +81,20 @@ const Settings: React.FC = () => {
         {/* PROFILE CARD */}
         <div className="card-surface p-6">
            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[var(--border-card)]">
-              <User className="w-6 h-6 text-crimson-600 dark:text-crimson-400" />
+              <User className="w-6 h-6 text-jade-600 dark:text-jade-400" />
               <h3 className="text-lg font-semibold text-[var(--text-primary)]">Profile Settings</h3>
            </div>
            
            <form onSubmit={handleProfileSave} className="space-y-4">
               <div className="flex items-center gap-4 mb-4">
-                 <img src={formData.avatar} alt="Avatar Preview" className="w-16 h-16 rounded-full border-4 border-terra-200 dark:border-crimson-700 object-cover" />
+                 <img src={formData.avatar} alt="Avatar Preview" className="w-16 h-16 rounded-full border-4 border-terra-200 dark:border-jade-700 object-cover" />
                  <div className="flex-1">
                     <label className="block text-xs font-semibold text-[var(--text-tertiary)] mb-1">Avatar URL</label>
                     <input 
                       type="text" 
                       value={formData.avatar} 
                       onChange={e => setFormData({...formData, avatar: e.target.value})}
-                      className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-medium focus:outline-none focus:border-crimson-500 text-[var(--text-primary)]"
+                      className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-medium focus:outline-none focus:border-jade-500 text-[var(--text-primary)]"
                     />
                  </div>
               </div>
@@ -106,7 +106,7 @@ const Settings: React.FC = () => {
                       type="text" 
                       value={formData.name} 
                       onChange={e => setFormData({...formData, name: e.target.value})}
-                      className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-bold focus:outline-none focus:border-crimson-500 text-[var(--text-primary)]"
+                      className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-bold focus:outline-none focus:border-jade-500 text-[var(--text-primary)]"
                     />
                  </div>
                  <div>
@@ -115,7 +115,7 @@ const Settings: React.FC = () => {
                       type="text" 
                       value={formData.role} 
                       onChange={e => setFormData({...formData, role: e.target.value})}
-                      className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-medium focus:outline-none focus:border-crimson-500 text-[var(--text-primary)]"
+                      className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-medium focus:outline-none focus:border-jade-500 text-[var(--text-primary)]"
                     />
                  </div>
               </div>
@@ -126,7 +126,7 @@ const Settings: React.FC = () => {
                    type="text" 
                    value={formData.farmName} 
                    onChange={e => setFormData({...formData, farmName: e.target.value})}
-                   className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-bold focus:outline-none focus:border-crimson-500 text-[var(--text-primary)]"
+                   className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-bold focus:outline-none focus:border-jade-500 text-[var(--text-primary)]"
                  />
               </div>
 
@@ -136,14 +136,14 @@ const Settings: React.FC = () => {
                    value={formData.bio} 
                    onChange={e => setFormData({...formData, bio: e.target.value})}
                    rows={3}
-                   className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-medium focus:outline-none focus:border-crimson-500 resize-none text-[var(--text-primary)]"
+                   className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-medium focus:outline-none focus:border-jade-500 resize-none text-[var(--text-primary)]"
                  />
               </div>
 
               <button 
                 type="submit" 
                 disabled={isSaving}
-                className="w-full py-3 bg-crimson-800 dark:bg-sunburst-500 hover:bg-crimson-700 dark:hover:bg-sunburst-400 text-white dark:text-crimson-950 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 bg-jade-800 dark:bg-sunburst-500 hover:bg-jade-700 dark:hover:bg-sunburst-400 text-white dark:text-jade-950 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
               >
                 {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Update Profile</>}
               </button>
@@ -164,7 +164,7 @@ const Settings: React.FC = () => {
                  </div>
                  <button 
                    onClick={toggleTheme}
-                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${theme === 'dark' ? 'bg-crimson-600' : 'bg-terra-300'}`}
+                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${theme === 'dark' ? 'bg-jade-600' : 'bg-terra-300'}`}
                  >
                     <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${theme === 'dark' ? 'translate-x-6' : 'translate-x-1'}`} />
                  </button>
@@ -174,16 +174,16 @@ const Settings: React.FC = () => {
            {/* Data Management */}
            <div className="card-surface p-6">
               <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
-                 <Shield className="w-5 h-5 text-crimson-500" /> Data Center
+                 <Shield className="w-5 h-5 text-jade-500" /> Data Center
               </h3>
               
               <div className="space-y-4">
                  <div className="grid grid-cols-2 gap-4">
-                    <button onClick={handleExportData} className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-terra-300 dark:border-crimson-700 rounded-lg hover:bg-terra-50 dark:hover:bg-crimson-900/50 transition-colors group">
-                       <Download className="w-6 h-6 text-[var(--text-tertiary)] group-hover:text-crimson-500 mb-2" />
+                    <button onClick={handleExportData} className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-terra-300 dark:border-jade-700 rounded-lg hover:bg-terra-50 dark:hover:bg-jade-900/50 transition-colors group">
+                       <Download className="w-6 h-6 text-[var(--text-tertiary)] group-hover:text-jade-500 mb-2" />
                        <span className="text-xs font-semibold text-[var(--text-secondary)]">Backup Data</span>
                     </button>
-                    <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-terra-300 dark:border-crimson-700 rounded-lg hover:bg-terra-50 dark:hover:bg-crimson-900/50 transition-colors group cursor-pointer">
+                    <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-terra-300 dark:border-jade-700 rounded-lg hover:bg-terra-50 dark:hover:bg-jade-900/50 transition-colors group cursor-pointer">
                        <Upload className="w-6 h-6 text-[var(--text-tertiary)] group-hover:text-sunburst-500 mb-2" />
                        <span className="text-xs font-semibold text-[var(--text-secondary)]">Import Data</span>
                        <input type="file" accept=".json" className="hidden" onChange={handleImportData} />

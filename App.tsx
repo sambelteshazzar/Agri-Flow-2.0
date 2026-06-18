@@ -26,7 +26,7 @@ import { FarmProvider, useFarm } from './contexts/FarmContext';
 
 const LazyLoader: React.FC = () => (
   <div className="flex items-center justify-center h-64">
-    <Loader2 className="w-8 h-8 animate-spin text-crimson-500" />
+    <Loader2 className="w-8 h-8 animate-spin text-jade-500" />
   </div>
 );
 
@@ -197,9 +197,9 @@ const AppContent: React.FC = () => {
             role="alert"
             className={`
               pointer-events-auto flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border animate-fade-in-up min-w-[300px] max-w-sm
-              ${toast.type === 'success' ? 'bg-crimson-50/95 dark:bg-crimson-900/95 border-crimson-200 dark:border-crimson-800 text-crimson-800 dark:text-crimson-100' : ''}
+              ${toast.type === 'success' ? 'bg-jade-50/95 dark:bg-jade-900/95 border-jade-200 dark:border-jade-800 text-jade-800 dark:text-jade-100' : ''}
               ${toast.type === 'error' ? 'bg-red-50/95 dark:bg-red-900/95 border-red-200 dark:border-red-800 text-red-800 dark:text-red-100' : ''}
-              ${toast.type === 'info' ? 'bg-terra-50/95 dark:bg-[#12261A]/95 border-terra-200 dark:border-[#1C3A28] text-terra-800 dark:text-[#E8F0EA]' : ''}
+              ${toast.type === 'info' ? 'bg-terra-50/95 dark:bg-[#12261A]/95 border-terra-200 dark:border-[#1E5A47] text-terra-800 dark:text-[#E8F0EA]' : ''}
             `}
           >
             <div className="shrink-0">
@@ -246,13 +246,13 @@ const AppContent: React.FC = () => {
       <div className="flex-1 flex flex-col h-full overflow-hidden w-full relative pb-24 md:pb-0">
 
         {/* TOP HEADER */}
-        <header className="h-[72px] bg-white/80 dark:bg-[#12261A]/80 backdrop-blur-xl border-b border-terra-200/60 dark:border-[#1C3A28]/60 shrink-0 flex items-center justify-between px-4 md:px-8 z-20 transition-colors">
+        <header className="h-[72px] bg-white/80 dark:bg-[#12261A]/80 backdrop-blur-xl border-b border-terra-200/60 dark:border-[#1E5A47]/60 shrink-0 flex items-center justify-between px-4 md:px-8 z-20 transition-colors">
 
           {/* Left: Mobile Toggle & Page Title */}
           <div className="flex items-center">
             <button
               onClick={() => setIsMobileOpen(true)}
-              className="md:hidden p-2 text-terra-600 dark:text-[#8BA898] hover:bg-terra-100 dark:hover:bg-[#183222] rounded-xl mr-3 focus:outline-none"
+              className="md:hidden p-2 text-terra-600 dark:text-[#7BA896] hover:bg-terra-100 dark:hover:bg-[#163D2F] rounded-xl mr-3 focus:outline-none"
               aria-label="Open Navigation Menu"
             >
               <Menu className="w-6 h-6" aria-hidden="true" />
@@ -261,7 +261,7 @@ const AppContent: React.FC = () => {
               <h1 className="text-xl md:text-2xl font-bold text-primary-dynamic tracking-tight font-heading">
                 {getPageTitle(currentView)}
               </h1>
-              <p className="text-[10px] md:text-xs text-crimson-600 dark:text-crimson-400 font-medium hidden md:block">
+              <p className="text-[10px] md:text-xs text-jade-600 dark:text-jade-400 font-medium hidden md:block">
                 Your farm at a glance
               </p>
             </div>
@@ -271,26 +271,26 @@ const AppContent: React.FC = () => {
           <div className="flex items-center gap-2 md:gap-5">
 
             {/* System Controls (Hidden on small mobile) */}
-            <div className="hidden md:flex items-center gap-3 border-r border-terra-200/60 dark:border-[#1C3A28]/60 pr-5">
+            <div className="hidden md:flex items-center gap-3 border-r border-terra-200/60 dark:border-[#1E5A47]/60 pr-5">
               <button
                 onClick={() => setIsCommandPaletteOpen(true)}
-                className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium bg-terra-50 dark:bg-[#183222] text-terra-500 dark:text-[#8BA898] border border-terra-200 dark:border-[#1C3A28] hover:bg-terra-100 dark:hover:bg-[#1E3D2A] transition-colors"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium bg-terra-50 dark:bg-[#163D2F] text-terra-500 dark:text-[#7BA896] border border-terra-200 dark:border-[#1E5A47] hover:bg-terra-100 dark:hover:bg-[#1E3D2A] transition-colors"
               >
                 <Search className="w-3.5 h-3.5" />
                 Search
-                <kbd className="ml-1.5 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-lg bg-white dark:bg-[#0C1810] border border-terra-200 dark:border-[#1C3A28] text-[9px] font-medium text-terra-400 dark:text-[#8BA898]">
+                <kbd className="ml-1.5 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-lg bg-white dark:bg-[#0C1810] border border-terra-200 dark:border-[#1E5A47] text-[9px] font-medium text-terra-400 dark:text-[#7BA896]">
                   <Command className="w-2.5 h-2.5" />K
                 </kbd>
               </button>
 
               <button
                 onClick={() => setIsOnline(!isOnline)}
-                className={`flex items-center px-3 py-2 rounded-xl text-[11px] font-semibold transition-all border ${isOnline ? 'bg-crimson-50 dark:bg-crimson-900/30 text-crimson-700 dark:text-crimson-400 border-crimson-200 dark:border-crimson-800' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800'}`}
+                className={`flex items-center px-3 py-2 rounded-xl text-[11px] font-semibold transition-all border ${isOnline ? 'bg-jade-50 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400 border-jade-200 dark:border-jade-800' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800'}`}
               >
                 {isOnline ? <Wifi className="w-3 h-3 mr-1.5" /> : <WifiOff className="w-3 h-3 mr-1.5" />}
                 {isOnline ? 'Online' : 'Offline'}
               </button>
-              <button className="flex items-center px-3 py-2 rounded-xl text-[11px] font-semibold bg-terra-50 dark:bg-[#183222] text-terra-600 dark:text-[#8BA898] border border-terra-200 dark:border-[#1C3A28] hover:bg-terra-100 dark:hover:bg-[#1E3D2A] transition-colors">
+              <button className="flex items-center px-3 py-2 rounded-xl text-[11px] font-semibold bg-terra-50 dark:bg-[#163D2F] text-terra-600 dark:text-[#7BA896] border border-terra-200 dark:border-[#1E5A47] hover:bg-terra-100 dark:hover:bg-[#1E3D2A] transition-colors">
                 <Globe className="w-3 h-3 mr-1.5" /> EN
               </button>
 
@@ -298,7 +298,7 @@ const AppContent: React.FC = () => {
               <div className="relative">
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative p-2 text-terra-400 dark:text-[#8BA898] hover:text-terra-600 dark:hover:text-[#E8F0EA] transition-colors focus:outline-none"
+                  className="relative p-2 text-terra-400 dark:text-[#7BA896] hover:text-terra-600 dark:hover:text-[#E8F0EA] transition-colors focus:outline-none"
                 >
                   <Bell className="w-5 h-5" />
                   {unreadAlerts > 0 && <span className="absolute top-1.5 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-[#12261A]"></span>}
@@ -306,7 +306,7 @@ const AppContent: React.FC = () => {
 
                 {showNotifications && (
                   <div className="absolute right-0 top-full mt-2 w-80 card-surface z-50 animate-fade-in-up overflow-hidden">
-                    <div className="bg-terra-50 dark:bg-[#183222] p-3 border-b border-terra-200 dark:border-[#1C3A28] flex justify-between items-center">
+                    <div className="bg-terra-50 dark:bg-[#163D2F] p-3 border-b border-terra-200 dark:border-[#1E5A47] flex justify-between items-center">
                       <h3 className="text-xs font-semibold text-terra-800 dark:text-[#E8F0EA]">Alerts ({unreadAlerts})</h3>
                       <button onClick={() => setShowNotifications(false)} className="text-terra-400 hover:text-terra-600 dark:hover:text-[#E8F0EA]">
                         <X className="w-4 h-4" />
@@ -314,22 +314,22 @@ const AppContent: React.FC = () => {
                     </div>
                     <div className="max-h-96 overflow-y-auto">
                       {alerts.length > 0 ? alerts.map(alert => (
-                        <div key={alert.id} className="p-4 border-b border-terra-100 dark:border-[#1C3A28] hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors cursor-pointer group">
+                        <div key={alert.id} className="p-4 border-b border-terra-100 dark:border-[#1E5A47] hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors cursor-pointer group">
                           <div className="flex items-start gap-3">
                             <div className="bg-red-100 dark:bg-red-900/30 p-1.5 rounded-full text-red-600 dark:text-red-400 mt-0.5"><AlertTriangle className="w-4 h-4" /></div>
                             <div>
                               <p className="text-sm font-semibold text-primary-dynamic group-hover:text-red-700 dark:group-hover:text-red-400">{alert.title}</p>
                               <p className="text-xs text-secondary-dynamic mt-1">{alert.message}</p>
-                               <p className="text-[10px] text-terra-400 dark:text-[#8BA898] font-medium mt-2">Just now</p>
+                               <p className="text-[10px] text-terra-400 dark:text-[#7BA896] font-medium mt-2">Just now</p>
                             </div>
                           </div>
                         </div>
                       )) : (
-                        <div className="p-4 text-center text-terra-400 dark:text-[#8BA898] text-xs">No active alerts</div>
+                        <div className="p-4 text-center text-terra-400 dark:text-[#7BA896] text-xs">No active alerts</div>
                       )}
                     </div>
-                    <div className="bg-terra-50 dark:bg-[#183222] p-2 border-t border-terra-200 dark:border-[#1C3A28] text-center">
-                      <button className="text-[10px] font-semibold text-terra-500 dark:text-[#8BA898] hover:text-terra-800 dark:hover:text-[#E8F0EA]">Mark all as read</button>
+                    <div className="bg-terra-50 dark:bg-[#163D2F] p-2 border-t border-terra-200 dark:border-[#1E5A47] text-center">
+                      <button className="text-[10px] font-semibold text-terra-500 dark:text-[#7BA896] hover:text-terra-800 dark:hover:text-[#E8F0EA]">Mark all as read</button>
                     </div>
                   </div>
                 )}
@@ -348,7 +348,7 @@ const AppContent: React.FC = () => {
                   className="relative cursor-pointer group"
                   title="Settings"
                 >
-                  <div className="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-crimson-800 dark:bg-crimson-700 text-sunburst-400 flex items-center justify-center font-bold text-lg border-2 border-white dark:border-[#1E3D2A] shadow-lg group-hover:scale-105 transition-transform overflow-hidden">
+                  <div className="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-jade-800 dark:bg-jade-700 text-sunburst-400 flex items-center justify-center font-bold text-lg border-2 border-white dark:border-[#1E3D2A] shadow-lg group-hover:scale-105 transition-transform overflow-hidden">
                     {userProfile.avatar ? (
                       <img
                         src={userProfile.avatar}
@@ -362,7 +362,7 @@ const AppContent: React.FC = () => {
                       userProfile.name.charAt(0)
                     )}
                   </div>
-                  <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#12261A] ${isOnline ? 'bg-crimson-500' : 'bg-red-500'} shadow-sm`}></div>
+                  <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#12261A] ${isOnline ? 'bg-jade-500' : 'bg-red-500'} shadow-sm`}></div>
                 </div>
               </div>
             ) : (

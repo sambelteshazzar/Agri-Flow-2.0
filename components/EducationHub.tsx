@@ -27,7 +27,7 @@ const EducationHub: React.FC = () => {
 
   const getDifficultyColor = (diff: string) => {
     switch (diff) {
-      case 'Beginner': return 'text-crimson-600 bg-crimson-100 dark:bg-crimson-900/30 dark:text-crimson-400';
+      case 'Beginner': return 'text-jade-600 bg-jade-100 dark:bg-jade-900/30 dark:text-jade-400';
       case 'Intermediate': return 'text-sunburst-600 bg-sunburst-100 dark:bg-sunburst-900/30 dark:text-sunburst-400';
       case 'Advanced': return 'text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400';
       default: return 'text-terra-600 bg-terra-100 dark:bg-terra-800 dark:text-terra-300';
@@ -85,7 +85,7 @@ const EducationHub: React.FC = () => {
            <button 
               onClick={() => setActiveCourseId(null)}
               aria-label="Go back to course list"
-              className="p-2 hover:bg-terra-100 dark:hover:bg-crimson-800 rounded-full transition-colors group"
+              className="p-2 hover:bg-terra-100 dark:hover:bg-jade-800 rounded-full transition-colors group"
             >
               <ArrowLeft className="w-6 h-6 text-secondary-dynamic group-hover:text-primary-dynamic" aria-hidden="true" />
            </button>
@@ -94,7 +94,7 @@ const EducationHub: React.FC = () => {
                <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${getDifficultyColor(activeCourse.difficulty)}`}>
                  {activeCourse.difficulty}
                </span>
-               <span className="text-crimson-400 text-xs font-semibold">• {activeCourse.category}</span>
+               <span className="text-jade-400 text-xs font-semibold">• {activeCourse.category}</span>
              </div>
              <h1 className="text-2xl font-bold text-primary-dynamic leading-none">{activeCourse.title}</h1>
            </div>
@@ -152,22 +152,22 @@ const EducationHub: React.FC = () => {
                  
                  <div className="flex items-center justify-between pt-6 organic-divider">
                     <div className="flex items-center gap-3">
-                       <div className="w-12 h-12 bg-terra-200 dark:bg-crimson-700 rounded-full flex items-center justify-center text-crimson-500">
+                       <div className="w-12 h-12 bg-terra-200 dark:bg-jade-700 rounded-full flex items-center justify-center text-jade-500">
                           <User className="w-6 h-6" />
                        </div>
                        <div>
                           <p className="text-sm font-bold text-primary-dynamic">{activeCourse.instructor}</p>
-                          <p className="text-xs text-crimson-500 font-medium">Lead Agronomist</p>
+                          <p className="text-xs text-jade-500 font-medium">Lead Agronomist</p>
                        </div>
                     </div>
                     {activeCourse.completed ? (
-                       <div className="flex items-center gap-2 px-4 py-2 bg-crimson-100 dark:bg-crimson-900/30 text-crimson-700 dark:text-crimson-400 rounded-xl font-bold text-sm">
+                       <div className="flex items-center gap-2 px-4 py-2 bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400 rounded-xl font-bold text-sm">
                           <Award className="w-5 h-5" /> Certificate Earned
                        </div>
                     ) : (
                        <button 
                          onClick={handleCompleteCourse}
-                         className="px-6 py-3 bg-crimson-800 dark:bg-sunburst-500 text-white dark:text-crimson-900 rounded-xl font-semibold text-xs hover:bg-crimson-700 dark:hover:bg-sunburst-400 transition-colors shadow-lg"
+                         className="px-6 py-3 bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-900 rounded-xl font-semibold text-xs hover:bg-jade-700 dark:hover:bg-sunburst-400 transition-colors shadow-lg"
                        >
                           Mark Complete
                        </button>
@@ -178,9 +178,9 @@ const EducationHub: React.FC = () => {
 
            <div className="lg:col-span-1">
               <div className="card-surface rounded-2xl overflow-hidden h-full max-h-[calc(100vh-12rem)] flex flex-col">
-                 <div className="p-5 border-b border-primary-dynamic bg-terra-50 dark:bg-crimson-800/50">
+                 <div className="p-5 border-b border-primary-dynamic bg-terra-50 dark:bg-jade-800/50">
                     <h3 className="font-semibold text-primary-dynamic text-sm">Course Syllabus</h3>
-                    <div className="mt-2 flex items-center gap-2 text-xs text-crimson-500">
+                    <div className="mt-2 flex items-center gap-2 text-xs text-jade-500">
                        <BookOpen className="w-4 h-4" />
                        <span>{activeCourse.lessonsCount} Lessons</span>
                        <span>•</span>
@@ -195,32 +195,32 @@ const EducationHub: React.FC = () => {
                          key={lesson.id}
                          onClick={() => !lesson.isLocked && handleLessonChange(idx)}
                          disabled={lesson.isLocked}
-                         className={`w-full text-left p-4 border-b border-primary-dynamic transition-colors flex items-start gap-3 hover:bg-terra-50 dark:hover:bg-crimson-800/50 ${currentLessonIdx === idx ? 'bg-crimson-50 dark:bg-crimson-900/20 border-l-4 border-l-crimson-500' : 'border-l-4 border-l-transparent'}`}
+                         className={`w-full text-left p-4 border-b border-primary-dynamic transition-colors flex items-start gap-3 hover:bg-terra-50 dark:hover:bg-jade-800/50 ${currentLessonIdx === idx ? 'bg-jade-50 dark:bg-jade-900/20 border-l-4 border-l-jade-500' : 'border-l-4 border-l-transparent'}`}
                        >
                           <div className={`mt-0.5 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center border ${
-                             currentLessonIdx === idx ? 'bg-crimson-500 border-crimson-500 text-white' : 
-                             lesson.isLocked ? 'border-terra-300 dark:border-crimson-600 text-terra-300 dark:text-crimson-500' : 'border-crimson-500 text-crimson-500'
+                             currentLessonIdx === idx ? 'bg-jade-500 border-jade-500 text-white' : 
+                             lesson.isLocked ? 'border-terra-300 dark:border-jade-600 text-terra-300 dark:text-jade-500' : 'border-jade-500 text-jade-500'
                           }`}>
                              {lesson.isLocked ? <Lock className="w-3 h-3" /> : (currentLessonIdx === idx ? (isPlaying ? <Pause className="w-3 h-3 fill-current"/> : <Play className="w-3 h-3 fill-current" />) : <Check className="w-3 h-3" />)}
                           </div>
                           <div className="flex-1">
-                             <p className={`text-sm font-bold ${currentLessonIdx === idx ? 'text-crimson-700 dark:text-crimson-400' : lesson.isLocked ? 'text-crimson-400 dark:text-crimson-500' : 'text-secondary-dynamic'}`}>
+                             <p className={`text-sm font-bold ${currentLessonIdx === idx ? 'text-jade-700 dark:text-jade-400' : lesson.isLocked ? 'text-jade-400 dark:text-jade-500' : 'text-secondary-dynamic'}`}>
                                 {lesson.title}
                              </p>
-                             <span className="text-[10px] font-mono text-crimson-400 dark:text-crimson-500 mt-1 block">{lesson.duration}</span>
+                             <span className="text-[10px] font-mono text-jade-400 dark:text-jade-500 mt-1 block">{lesson.duration}</span>
                           </div>
                        </button>
                     ))}
                  </div>
                  
-                 <div className="p-4 bg-terra-50 dark:bg-crimson-900 border-t border-primary-dynamic">
-                    <div className="flex justify-between text-xs font-bold text-crimson-500 mb-2">
+                 <div className="p-4 bg-terra-50 dark:bg-jade-900 border-t border-primary-dynamic">
+                    <div className="flex justify-between text-xs font-bold text-jade-500 mb-2">
                        <span>Progress</span>
                        <span>{activeCourse.completed ? '100%' : `${Math.round((currentLessonIdx / activeCourse.lessonsCount) * 100)}%`}</span>
                     </div>
-                    <div className="h-2 bg-terra-200 dark:bg-crimson-700 rounded-full overflow-hidden">
+                    <div className="h-2 bg-terra-200 dark:bg-jade-700 rounded-full overflow-hidden">
                        <div 
-                         className="h-full bg-crimson-500 transition-all duration-500"
+                         className="h-full bg-jade-500 transition-all duration-500"
                          style={{ width: activeCourse.completed ? '100%' : `${(currentLessonIdx / activeCourse.lessonsCount) * 100}%` }}
                        ></div>
                     </div>
@@ -235,21 +235,21 @@ const EducationHub: React.FC = () => {
   return (
     <div className="h-full flex flex-col space-y-6 animate-fade-in pb-10">
       
-      <div className="relative bg-crimson-800 dark:bg-crimson-950 rounded-3xl p-8 overflow-hidden shadow-2xl flex-shrink-0">
+      <div className="relative bg-jade-800 dark:bg-jade-950 rounded-3xl p-8 overflow-hidden shadow-2xl flex-shrink-0">
          <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center"></div>
-         <div className="absolute inset-0 bg-gradient-to-r from-crimson-800 dark:from-crimson-950 via-crimson-900/80 to-transparent"></div>
+         <div className="absolute inset-0 bg-gradient-to-r from-jade-800 dark:from-jade-950 via-jade-900/80 to-transparent"></div>
          <div className="relative z-10 max-w-2xl">
             <div className="flex items-center gap-2 mb-4">
-               <span className="px-3 py-1 rounded-full bg-sunburst-500 text-crimson-900 text-xs font-semibold">Premium Certification</span>
+               <span className="px-3 py-1 rounded-full bg-sunburst-500 text-jade-900 text-xs font-semibold">Premium Certification</span>
                <div className="flex text-sunburst-500"><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/><Star className="w-3 h-3 fill-current"/></div>
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-white font-heading mb-4 leading-tight">
                Master Regenerative <br/> Agriculture
             </h1>
-            <p className="text-crimson-300 text-lg mb-8 font-medium leading-relaxed max-w-lg">
+            <p className="text-jade-300 text-lg mb-8 font-medium leading-relaxed max-w-lg">
                Join over 10,000 farmers enhancing soil health and profitability. Led by world-class agronomists.
             </p>
-            <button className="bg-white text-crimson-900 px-8 py-3 rounded-full font-semibold hover:bg-sunburst-100 transition-colors shadow-lg flex items-center gap-2">
+            <button className="bg-white text-jade-900 px-8 py-3 rounded-full font-semibold hover:bg-sunburst-100 transition-colors shadow-lg flex items-center gap-2">
                Explore Courses <BookOpen className="w-4 h-4" />
             </button>
          </div>
@@ -261,15 +261,15 @@ const EducationHub: React.FC = () => {
                <button 
                  key={cat}
                  onClick={() => setFilterCategory(cat)}
-                 className={`px-5 py-2 rounded-full text-xs font-semibold transition-all border ${filterCategory === cat ? 'bg-crimson-800 dark:bg-sunburst-100 text-white dark:text-crimson-900 border-crimson-800 dark:border-sunburst-200' : 'bg-card-dynamic text-secondary-dynamic border-primary-dynamic hover:border-crimson-400 dark:hover:border-crimson-500'}`}
+                 className={`px-5 py-2 rounded-full text-xs font-semibold transition-all border ${filterCategory === cat ? 'bg-jade-800 dark:bg-sunburst-100 text-white dark:text-jade-900 border-jade-800 dark:border-sunburst-200' : 'bg-card-dynamic text-secondary-dynamic border-primary-dynamic hover:border-jade-400 dark:hover:border-jade-500'}`}
                >
                   {cat}
                </button>
             ))}
          </div>
          <div className="relative w-full md:w-64">
-            <Search className="absolute left-3 top-2.5 w-4 h-4 text-crimson-400" />
-            <input type="text" placeholder="Search courses..." className="w-full pl-10 pr-4 py-2 bg-card-dynamic border border-primary-dynamic rounded-full text-sm font-medium focus:outline-none focus:border-crimson-400 dark:focus:border-crimson-500 text-primary-dynamic" />
+            <Search className="absolute left-3 top-2.5 w-4 h-4 text-jade-400" />
+            <input type="text" placeholder="Search courses..." className="w-full pl-10 pr-4 py-2 bg-card-dynamic border border-primary-dynamic rounded-full text-sm font-medium focus:outline-none focus:border-jade-400 dark:focus:border-jade-500 text-primary-dynamic" />
          </div>
       </div>
 
@@ -290,7 +290,7 @@ const EducationHub: React.FC = () => {
                   />
                   {module.completed && (
                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center backdrop-blur-[2px]">
-                        <div className="bg-crimson-500 text-white px-4 py-2 rounded-full font-semibold text-xs flex items-center shadow-lg">
+                        <div className="bg-jade-500 text-white px-4 py-2 rounded-full font-semibold text-xs flex items-center shadow-lg">
                            <Check className="w-4 h-4 mr-2" /> Completed
                         </div>
                      </div>
@@ -303,17 +303,17 @@ const EducationHub: React.FC = () => {
                   </div>
                </div>
                <div className="p-5 flex-1 flex flex-col">
-                  <h3 className="font-bold text-primary-dynamic text-lg leading-tight mb-2 group-hover:text-crimson-600 dark:group-hover:text-crimson-400 transition-colors">{module.title}</h3>
+                  <h3 className="font-bold text-primary-dynamic text-lg leading-tight mb-2 group-hover:text-jade-600 dark:group-hover:text-jade-400 transition-colors">{module.title}</h3>
                   <p className="text-secondary-dynamic text-sm line-clamp-2 mb-4">{module.description}</p>
                   
                   <div className="mt-auto flex items-center justify-between pt-4 organic-divider">
                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-terra-200 dark:bg-crimson-700 flex items-center justify-center text-crimson-500 dark:text-crimson-400 text-[10px] font-bold">
+                        <div className="w-6 h-6 rounded-full bg-terra-200 dark:bg-jade-700 flex items-center justify-center text-jade-500 dark:text-jade-400 text-[10px] font-bold">
                            <User className="w-3 h-3" />
                         </div>
                         <span className="text-xs font-bold text-secondary-dynamic">{module.instructor}</span>
                      </div>
-                     <PlayCircle className="w-8 h-8 text-terra-300 dark:text-crimson-600 group-hover:text-sunburst-500 transition-colors" />
+                     <PlayCircle className="w-8 h-8 text-terra-300 dark:text-jade-600 group-hover:text-sunburst-500 transition-colors" />
                   </div>
                </div>
             </div>

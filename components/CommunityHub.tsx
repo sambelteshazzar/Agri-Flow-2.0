@@ -320,7 +320,7 @@ const CommunityHub: React.FC = () => {
   };
 
   const IntroOverlay = () => (
-    <div className={`absolute inset-0 z-50 bg-crimson-950 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-700 ${!showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+    <div className={`absolute inset-0 z-50 bg-jade-950 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-700 ${!showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
       
       <div className="absolute inset-0 opacity-40">
         {!introBgError ? (
@@ -331,11 +331,11 @@ const CommunityHub: React.FC = () => {
             onError={() => setIntroBgError(true)}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-green-900/40 via-crimson-900 to-crimson-950"></div>
+          <div className="w-full h-full bg-gradient-to-br from-green-900/40 via-jade-900 to-jade-950"></div>
         )}
       </div>
       
-      <div className="absolute inset-0 bg-gradient-to-t from-crimson-950 via-crimson-950/80 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-jade-950 via-jade-950/80 to-transparent"></div>
       
       <div className="relative z-10 max-w-3xl animate-fade-in-up">
         <div className="flex justify-center mb-6">
@@ -346,7 +346,7 @@ const CommunityHub: React.FC = () => {
         <h1 className="text-6xl md:text-8xl font-black text-white mb-6 font-heading">
           Agri-<span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-yellow-400">Connect</span>
         </h1>
-        <p className="text-lg md:text-xl text-crimson-300 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
+        <p className="text-lg md:text-xl text-jade-300 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
           Connect with thousands of growers, trade equipment in the marketplace, and share real-time insights to build a more resilient future.
         </p>
         
@@ -354,23 +354,23 @@ const CommunityHub: React.FC = () => {
            <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10">
               <ShoppingBag className="w-8 h-8 text-yellow-400 mb-4" />
               <h3 className="text-white font-bold text-lg mb-2">Marketplace</h3>
-              <p className="text-crimson-400 text-sm">Buy, sell, and trade equipment and harvest directly.</p>
+              <p className="text-jade-400 text-sm">Buy, sell, and trade equipment and harvest directly.</p>
            </div>
            <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10">
               <HelpCircle className="w-8 h-8 text-blue-400 mb-4" />
               <h3 className="text-white font-bold text-lg mb-2">Q&A Hub</h3>
-              <p className="text-crimson-400 text-sm">Ask questions, get expert answers, and share your knowledge.</p>
+              <p className="text-jade-400 text-sm">Ask questions, get expert answers, and share your knowledge.</p>
            </div>
            <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10">
               <Zap className="w-8 h-8 text-green-400 mb-4" />
               <h3 className="text-white font-bold text-lg mb-2">Live Intel</h3>
-              <p className="text-crimson-400 text-sm">Real-time alerts on prices, pests, and weather.</p>
+              <p className="text-jade-400 text-sm">Real-time alerts on prices, pests, and weather.</p>
            </div>
         </div>
 
         <button 
           onClick={() => setShowIntro(false)}
-          className="group relative px-10 py-4 bg-sunburst-50 text-crimson-950 font-semibold rounded-full hover:bg-sunburst-100 transition-all shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(34,197,94,0.4)] flex items-center gap-3 mx-auto"
+          className="group relative px-10 py-4 bg-sunburst-50 text-jade-950 font-semibold rounded-full hover:bg-sunburst-100 transition-all shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(34,197,94,0.4)] flex items-center gap-3 mx-auto"
         >
           Enter Community
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -475,7 +475,7 @@ const CommunityHub: React.FC = () => {
 
   const renderRightSidebarContent = () => (
     <div className="flex flex-col gap-6">
-       <div className="bg-crimson-950 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden shrink-0">
+       <div className="bg-jade-950 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden shrink-0">
           <div className="relative z-10">
              <div className="flex items-center justify-between mb-4"><h4 className="font-bold text-xs flex items-center gap-2"><BarChart2 className="w-4 h-4 text-yellow-400"/> Community Poll</h4></div>
              <p className="text-sm font-bold mb-4 leading-snug">What's your main strategy for the 2026 dry season?</p>
@@ -488,7 +488,7 @@ const CommunityHub: React.FC = () => {
                    </button>
                 ))}
              </div>
-             <p className="text-[10px] text-crimson-400 mt-4 text-center">{pollData.reduce((a,b) => a + b.votes, 0).toLocaleString()} votes • 12h left</p>
+             <p className="text-[10px] text-jade-400 mt-4 text-center">{pollData.reduce((a,b) => a + b.votes, 0).toLocaleString()} votes • 12h left</p>
           </div>
        </div>
 
@@ -542,7 +542,7 @@ const CommunityHub: React.FC = () => {
         <div className="hidden lg:flex lg:col-span-3 flex-col gap-6 overflow-y-auto custom-scrollbar h-full">
            {/* Profile Card */}
            <div className="card-surface overflow-hidden relative group">
-              <div className="h-24 bg-gradient-to-r from-crimson-800 to-crimson-950 relative">
+              <div className="h-24 bg-gradient-to-r from-jade-800 to-jade-950 relative">
                  {isSignedIn && (
                    <button 
                      onClick={() => navigate(NavigationTab.SETTINGS)} 
@@ -691,7 +691,7 @@ const CommunityHub: React.FC = () => {
                             <button onClick={() => setIsPostModalOpen(true)} className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-[var(--bg-content)] text-[var(--text-secondary)] text-xs font-semibold transition-colors"><ImageIcon className="w-4 h-4 text-green-500"/> Photo</button>
                             <button onClick={() => setIsPostModalOpen(true)} className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-[var(--bg-content)] text-[var(--text-secondary)] text-xs font-semibold transition-colors"><Camera className="w-4 h-4 text-blue-500"/> Video</button>
                          </div>
-                         <button onClick={() => setIsPostModalOpen(true)} className="bg-crimson-800 dark:bg-sunburst-500 text-white dark:text-crimson-950 px-5 py-2 rounded-xl font-semibold text-xs shadow-lg active:scale-[0.98] transition-all">Post</button>
+                         <button onClick={() => setIsPostModalOpen(true)} className="bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 px-5 py-2 rounded-xl font-semibold text-xs shadow-lg active:scale-[0.98] transition-all">Post</button>
                       </div>
                    </div>
 
@@ -762,8 +762,8 @@ const CommunityHub: React.FC = () => {
                                         }
                                       } 
                                    }} className="flex gap-2">
-                                      <input value={replyInput} onChange={e => setReplyInput(e.target.value)} className="flex-1 bg-[var(--bg-card)] border border-[var(--border-card)] rounded-full px-4 py-2 text-sm focus:outline-none focus:border-crimson-500" placeholder="Write a reply..." />
-                                      <button type="submit" className="bg-crimson-600 text-white p-2 rounded-full hover:bg-crimson-700"><Send className="w-4 h-4" /></button>
+                                      <input value={replyInput} onChange={e => setReplyInput(e.target.value)} className="flex-1 bg-[var(--bg-card)] border border-[var(--border-card)] rounded-full px-4 py-2 text-sm focus:outline-none focus:border-jade-500" placeholder="Write a reply..." />
+                                      <button type="submit" className="bg-jade-600 text-white p-2 rounded-full hover:bg-jade-700"><Send className="w-4 h-4" /></button>
                                    </form>
                                  )}
                               </div>
@@ -800,7 +800,7 @@ const CommunityHub: React.FC = () => {
                                <div className="flex items-center text-xs text-[var(--text-secondary)] mb-4"><MapPin className="w-3 h-3 mr-1"/> {item.location}</div>
                                <div className="mt-auto pt-4 border-t border-[var(--border-card)] flex justify-between items-center">
                                   <span className="text-[10px] font-semibold text-[var(--text-tertiary)]">{getRelativeTime(item.date)}</span>
-                                  <button onClick={() => showToast(`Contact: ${item.contact}`, 'success')} className="text-xs font-semibold text-crimson-600 dark:text-crimson-400 hover:underline">Contact Seller</button>
+                                  <button onClick={() => showToast(`Contact: ${item.contact}`, 'success')} className="text-xs font-semibold text-jade-600 dark:text-jade-400 hover:underline">Contact Seller</button>
                                </div>
                             </div>
                          </div>
@@ -830,7 +830,7 @@ const CommunityHub: React.FC = () => {
                              {chatMessages.filter(m => m.channelId === activeChannel).map(msg => (
                                 <div key={msg.id} className={`flex gap-3 ${msg.isMe ? 'flex-row-reverse' : ''} animate-fade-in-up`}>
                                    <div className="w-8 h-8 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0"><img src={msg.avatar} className="w-full h-full object-cover" onError={(e) => e.currentTarget.src = `https://ui-avatars.com/api/?name=${msg.author}`} /></div>
-                                   <div className={`max-w-[75%] p-3 rounded-2xl text-sm shadow-sm ${msg.isMe ? 'bg-sunburst-500 text-crimson-950 rounded-tr-none font-medium' : 'bg-[var(--bg-card)] text-[var(--text-secondary)] rounded-tl-none border border-[var(--border-card)]'}`}>
+                                   <div className={`max-w-[75%] p-3 rounded-2xl text-sm shadow-sm ${msg.isMe ? 'bg-sunburst-500 text-jade-950 rounded-tr-none font-medium' : 'bg-[var(--bg-card)] text-[var(--text-secondary)] rounded-tl-none border border-[var(--border-card)]'}`}>
                                       {!msg.isMe && <div className="text-[10px] font-semibold text-[var(--text-tertiary)] mb-1">{msg.author}</div>}
                                       {msg.text}
                                    </div>
@@ -840,7 +840,7 @@ const CommunityHub: React.FC = () => {
                           </div>
                           <form onSubmit={(e) => { e.preventDefault(); if(chatInput.trim()) { sendChatMessage({ channelId: activeChannel, author: userProfile.name, text: chatInput, isMe: true, avatar: userProfile.avatar }); setChatInput(''); setTimeout(() => chatEndRef.current?.scrollIntoView(), 100); } }} className="p-3 bg-[var(--bg-card)] border-t border-[var(--border-card)] flex gap-2">
                              <input value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Type a message..." className="flex-1 bg-[var(--bg-content)] border-transparent focus:border-sunburst-500 focus:bg-[var(--bg-card)] rounded-xl px-4 py-2.5 text-sm transition-all focus:outline-none" />
-                             <button type="submit" aria-label="Send message" className="bg-crimson-800 dark:bg-sunburst-500 text-white dark:text-crimson-950 p-2.5 rounded-xl shadow-md hover:scale-105 transition-transform"><Send className="w-5 h-5" aria-hidden="true"/></button>
+                             <button type="submit" aria-label="Send message" className="bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 p-2.5 rounded-xl shadow-md hover:scale-105 transition-transform"><Send className="w-5 h-5" aria-hidden="true"/></button>
                           </form>
                        </div>
                     </div>
@@ -973,7 +973,7 @@ const CommunityHub: React.FC = () => {
 
       {/* CREATE POST MODAL */}
       {isPostModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-crimson-950/60 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-jade-950/60 backdrop-blur-sm animate-fade-in">
            <div className="bg-[var(--bg-card)] w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden scale-100 transition-all">
              <div className="px-6 py-4 border-b border-[var(--border-card)] flex justify-between items-center bg-[var(--bg-content)]">
                 <h3 className="font-bold text-[var(--text-primary)] text-lg">Create Post</h3>
@@ -994,7 +994,7 @@ const CommunityHub: React.FC = () => {
                      <button type="button" onClick={() => postFileRef.current?.click()} aria-label="Attach image" className="p-2 hover:bg-green-100 text-[var(--text-secondary)] hover:text-green-600 rounded-full transition-colors"><ImageIcon className="w-5 h-5" aria-hidden="true"/></button>
                      <input type="file" ref={postFileRef} accept="image/*" onChange={(e) => handleFileRead(e.target.files?.[0], (res) => setPostImage(res))} className="hidden" />
                   </div>
-                  <button type="submit" disabled={!newPost.content} className="bg-crimson-800 dark:bg-sunburst-500 text-white dark:text-crimson-950 px-6 py-2 rounded-full font-semibold text-xs hover:opacity-90 disabled:opacity-50 transition-all shadow-md active:scale-[0.98]">Post Update</button>
+                  <button type="submit" disabled={!newPost.content} className="bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 px-6 py-2 rounded-full font-semibold text-xs hover:opacity-90 disabled:opacity-50 transition-all shadow-md active:scale-[0.98]">Post Update</button>
                </div>
              </form>
            </div>
@@ -1003,7 +1003,7 @@ const CommunityHub: React.FC = () => {
 
       {/* CREATE LISTING MODAL */}
       {isListingModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-crimson-950/60 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-jade-950/60 backdrop-blur-sm animate-fade-in">
            <div className="bg-[var(--bg-card)] w-full max-w-md rounded-2xl shadow-2xl p-6 relative max-h-[90vh] overflow-y-auto">
              <button onClick={() => { setIsListingModalOpen(false); setListingImage(null); }} aria-label="Close" className="absolute top-4 right-4 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"><X className="w-6 h-6" aria-hidden="true" /></button>
              <div className="mb-6"><h3 className="font-semibold text-2xl text-[var(--text-primary)] font-heading">New Listing</h3><p className="text-[var(--text-secondary)] text-xs mt-1">Marketplace / Create</p></div>
@@ -1035,7 +1035,7 @@ const CommunityHub: React.FC = () => {
                   </div>
                   <input placeholder="Contact Info" value={newListing.contact} onChange={e => setNewListing({...newListing, contact: e.target.value})} className="w-full p-3 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl font-bold outline-none text-[var(--text-primary)] text-sm" />
                </div>
-               <button className="w-full bg-crimson-800 dark:bg-sunburst-500 text-white dark:text-crimson-950 py-4 rounded-xl font-semibold hover:opacity-90 shadow-lg active:scale-[0.98] mt-2">Publish Listing</button>
+               <button className="w-full bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 py-4 rounded-xl font-semibold hover:opacity-90 shadow-lg active:scale-[0.98] mt-2">Publish Listing</button>
              </form>
            </div>
         </div>
@@ -1043,7 +1043,7 @@ const CommunityHub: React.FC = () => {
 
       {/* ASK QUESTION MODAL */}
       {isQuestionModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-crimson-950/60 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-jade-950/60 backdrop-blur-sm animate-fade-in">
            <div className="bg-[var(--bg-card)] w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
              <div className="px-6 py-4 border-b border-[var(--border-card)] flex justify-between items-center bg-amber-50 dark:bg-amber-950/20">
                 <h3 className="font-bold text-amber-900 dark:text-amber-200 text-lg flex items-center gap-2"><HelpCircle className="w-5 h-5" /> Ask a Question</h3>
@@ -1091,7 +1091,7 @@ const CommunityHub: React.FC = () => {
 
       {/* CREATE STORY MODAL */}
       {isStoryModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-crimson-950/80 backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md animate-fade-in">
            <div className="bg-[var(--bg-card)] w-full max-w-sm rounded-2xl shadow-2xl p-6 relative flex flex-col items-center text-center">
               <button onClick={() => { setIsStoryModalOpen(false); setNewStoryImage(null); }} aria-label="Close" className="absolute top-4 right-4 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"><X className="w-6 h-6" aria-hidden="true" /></button>
               <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">Add to Story</h3>
