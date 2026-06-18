@@ -79,7 +79,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose, onNavi
 
   return (
     <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[15vh] animate-fade-in" onClick={onClose}>
-      <div className="absolute inset-0 bg-field-950/60 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-crimson-950/60 backdrop-blur-sm" />
       <div
         className="relative w-full max-w-lg mx-4 bg-[var(--bg-card)] rounded-2xl shadow-2xl border border-[var(--border-card)] overflow-hidden animate-fade-in-up"
         onClick={e => e.stopPropagation()}
@@ -115,13 +115,13 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose, onNavi
                       onMouseEnter={() => setSelectedIndex(globalIndex)}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                         globalIndex === selectedIndex
-                          ? 'bg-field-50 dark:bg-field-900/20 text-field-700 dark:text-field-400'
+                          ? 'bg-crimson-50 dark:bg-crimson-900/20 text-crimson-700 dark:text-crimson-400'
                           : 'text-[var(--text-secondary)] hover:bg-[var(--bg-content)]'
                       }`}
                     >
-                      <cmd.icon className={`w-4 h-4 shrink-0 ${globalIndex === selectedIndex ? 'text-field-500' : 'text-[var(--text-tertiary)]'}`} />
+                      <cmd.icon className={`w-4 h-4 shrink-0 ${globalIndex === selectedIndex ? 'text-crimson-500' : 'text-[var(--text-tertiary)]'}`} />
                       <span className="font-medium flex-1 text-left">{cmd.label}</span>
-                      {globalIndex === selectedIndex && <ArrowRight className="w-3.5 h-3.5 text-field-500" />}
+                      {globalIndex === selectedIndex && <ArrowRight className="w-3.5 h-3.5 text-crimson-500" />}
                     </button>
                   );
                 })}

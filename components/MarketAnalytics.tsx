@@ -102,7 +102,7 @@ const MarketAnalytics: React.FC = () => {
         <div>
           <h2 className="text-3xl font-bold text-[var(--text-primary)] font-heading">Market Intelligence</h2>
           <div className="flex items-center gap-3 mt-1">
-             <span className="flex items-center text-xs font-semibold text-field-700 dark:text-field-300 bg-field-100 dark:bg-field-900/30 px-2 py-0.5 rounded border border-field-200 dark:border-field-800">
+             <span className="flex items-center text-xs font-semibold text-crimson-700 dark:text-crimson-300 bg-crimson-100 dark:bg-crimson-900/30 px-2 py-0.5 rounded border border-crimson-200 dark:border-crimson-800">
                <Zap className="w-3 h-3 mr-1" /> Live Feed Active
              </span>
              <span className="text-[var(--text-tertiary)] text-xs font-semibold">•</span>
@@ -111,7 +111,7 @@ const MarketAnalytics: React.FC = () => {
         </div>
         <button 
           onClick={refreshMarketPrices}
-          className="mt-4 md:mt-0 flex items-center px-4 py-2 bg-field-800 dark:bg-harvest-500 text-white dark:text-field-950 border border-transparent rounded-lg hover:opacity-90 transition-all text-xs font-semibold shadow-lg active:scale-95"
+          className="mt-4 md:mt-0 flex items-center px-4 py-2 bg-crimson-800 dark:bg-sunburst-500 text-white dark:text-crimson-950 border border-transparent rounded-lg hover:opacity-90 transition-all text-xs font-semibold shadow-lg active:scale-95"
         >
           <RefreshCw className="w-4 h-4 mr-2" />
           Sync Quotes
@@ -129,26 +129,26 @@ const MarketAnalytics: React.FC = () => {
               className={`
                 cursor-pointer relative p-5 shadow-sm hover:shadow-xl transition-all duration-300 group rounded-xl
                 ${isSelected 
-                  ? 'bg-field-800 dark:bg-field-900 scale-105 z-10 border-l-4 border-l-harvest-500 ring-1 ring-harvest-500/20' 
-                  : 'card-surface border-l-4 border-l-soil-300 dark:border-l-field-700 hover:scale-[1.02]'}
+                  ? 'bg-crimson-800 dark:bg-crimson-900 scale-105 z-10 border-l-4 border-l-sunburst-500 ring-1 ring-sunburst-500/20' 
+                  : 'card-surface border-l-4 border-l-terra-300 dark:border-l-crimson-700 hover:scale-[1.02]'}
               `}
             >
-              {isSelected && <div className="absolute top-2 right-2"><MousePointer2 className="w-4 h-4 text-harvest-500 animate-pulse"/></div>}
+              {isSelected && <div className="absolute top-2 right-2"><MousePointer2 className="w-4 h-4 text-sunburst-500 animate-pulse"/></div>}
               <div className="flex justify-between items-start mb-2">
                 <h3 className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-[var(--text-primary)]'}`}>{item.cropName}</h3>
-                <div className={`p-1 rounded ${item.trend === 'up' ? 'bg-field-100 text-field-700 dark:bg-field-900/50 dark:text-field-300' : item.trend === 'down' ? 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400' : 'bg-soil-100 text-soil-600 dark:bg-soil-800/50 dark:text-soil-400'}`}>
+                <div className={`p-1 rounded ${item.trend === 'up' ? 'bg-crimson-100 text-crimson-700 dark:bg-crimson-900/50 dark:text-crimson-300' : item.trend === 'down' ? 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400' : 'bg-terra-100 text-terra-600 dark:bg-terra-800/50 dark:text-terra-400'}`}>
                    {item.trend === 'up' && <TrendingUp className="w-4 h-4" />}
                    {item.trend === 'down' && <TrendingDown className="w-4 h-4" />}
                    {item.trend === 'stable' && <Minus className="w-4 h-4" />}
                 </div>
               </div>
               <div className="flex items-end gap-2 mb-1">
-                <span className={`text-3xl font-bold font-heading ${isSelected ? 'text-harvest-400' : 'text-[var(--text-primary)]'}`}>${item.price.toFixed(2)}</span>
-                <span className={`text-xs font-bold mb-1.5 ${item.changePercentage > 0 ? 'text-field-600 dark:text-field-400' : 'text-red-600 dark:text-red-400'}`}>
+                <span className={`text-3xl font-bold font-heading ${isSelected ? 'text-sunburst-400' : 'text-[var(--text-primary)]'}`}>${item.price.toFixed(2)}</span>
+                <span className={`text-xs font-bold mb-1.5 ${item.changePercentage > 0 ? 'text-crimson-600 dark:text-crimson-400' : 'text-red-600 dark:text-red-400'}`}>
                   {item.changePercentage > 0 ? '+' : ''}{item.changePercentage}%
                 </span>
               </div>
-              <div className={`text-[10px] font-semibold ${isSelected ? 'text-field-300' : 'text-[var(--text-tertiary)]'}`}>
+              <div className={`text-[10px] font-semibold ${isSelected ? 'text-crimson-300' : 'text-[var(--text-tertiary)]'}`}>
                  Per {item.unit}
               </div>
             </div>
@@ -163,17 +163,17 @@ const MarketAnalytics: React.FC = () => {
            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <div>
                  <h3 className="text-xl font-bold text-[var(--text-primary)] flex items-center gap-2">
-                    <Activity className="w-5 h-5 text-field-600 dark:text-field-400" />
+                    <Activity className="w-5 h-5 text-crimson-600 dark:text-crimson-400" />
                     Price Action: {selectedCrop}
                  </h3>
                  <p className="text-xs text-[var(--text-secondary)] font-medium mt-1">Real-time exchange data & volatility analysis</p>
               </div>
-              <div className="flex bg-soil-100 dark:bg-field-900/50 p-1 rounded-lg border border-soil-200 dark:border-field-800">
+              <div className="flex bg-terra-100 dark:bg-crimson-900/50 p-1 rounded-lg border border-terra-200 dark:border-crimson-800">
                  {['1W', '1M', '3M'].map((range) => (
                     <button 
                       key={range}
                       onClick={() => setTimeRange(range as any)}
-                      className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${timeRange === range ? 'bg-white dark:bg-field-800 text-[var(--text-primary)] shadow-sm border border-soil-200 dark:border-field-700' : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'}`}
+                      className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${timeRange === range ? 'bg-white dark:bg-crimson-800 text-[var(--text-primary)] shadow-sm border border-terra-200 dark:border-crimson-700' : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'}`}
                     >
                        {range}
                     </button>
@@ -245,25 +245,25 @@ const MarketAnalytics: React.FC = () => {
         <div className="space-y-6">
            
            {/* Market Sentiment Card */}
-           <div className="bg-field-950 text-white p-6 rounded-xl shadow-xl relative overflow-hidden border border-field-800">
-              <div className="absolute inset-0 bg-gradient-to-br from-field-900 to-field-950 z-0"></div>
+           <div className="bg-crimson-950 text-white p-6 rounded-xl shadow-xl relative overflow-hidden border border-crimson-800">
+              <div className="absolute inset-0 bg-gradient-to-br from-crimson-900 to-crimson-950 z-0"></div>
               <div className="relative z-10">
-                 <h4 className="text-xs font-semibold text-field-400 mb-4 flex items-center">
+                 <h4 className="text-xs font-semibold text-crimson-400 mb-4 flex items-center">
                     <PieChart className="w-4 h-4 mr-2" /> Market Sentiment
                  </h4>
                  
                  <div className="flex justify-between items-end mb-2">
-                    <span className="text-3xl font-black text-harvest-400">{activeTickerData?.trend === 'up' ? 'BULLISH' : activeTickerData?.trend === 'down' ? 'BEARISH' : 'NEUTRAL'}</span>
-                    <div className={`p-2 rounded-lg ${activeTickerData?.trend === 'up' ? 'bg-field-500/20 text-field-400' : activeTickerData?.trend === 'down' ? 'bg-red-500/20 text-red-400' : 'bg-soil-500/20 text-soil-400'}`}>
+                    <span className="text-3xl font-black text-sunburst-400">{activeTickerData?.trend === 'up' ? 'BULLISH' : activeTickerData?.trend === 'down' ? 'BEARISH' : 'NEUTRAL'}</span>
+                    <div className={`p-2 rounded-lg ${activeTickerData?.trend === 'up' ? 'bg-crimson-500/20 text-crimson-400' : activeTickerData?.trend === 'down' ? 'bg-red-500/20 text-red-400' : 'bg-terra-500/20 text-terra-400'}`}>
                        {activeTickerData?.trend === 'up' ? <ArrowUpRight className="w-6 h-6"/> : activeTickerData?.trend === 'down' ? <ArrowDownRight className="w-6 h-6"/> : <Minus className="w-6 h-6"/>}
                     </div>
                  </div>
                  
-                 <div className="w-full h-2 bg-field-800 rounded-full mt-2 overflow-hidden flex">
-                    <div className="h-full bg-field-500 transition-all duration-1000" style={{ width: activeTickerData?.trend === 'up' ? '75%' : activeTickerData?.trend === 'down' ? '25%' : '50%' }}></div>
+                 <div className="w-full h-2 bg-crimson-800 rounded-full mt-2 overflow-hidden flex">
+                    <div className="h-full bg-crimson-500 transition-all duration-1000" style={{ width: activeTickerData?.trend === 'up' ? '75%' : activeTickerData?.trend === 'down' ? '25%' : '50%' }}></div>
                     <div className="h-full bg-red-500 flex-1"></div>
                  </div>
-                 <div className="flex justify-between text-[10px] font-semibold mt-2 text-field-400">
+                 <div className="flex justify-between text-[10px] font-semibold mt-2 text-crimson-400">
                     <span>Buy Pressure</span>
                     <span>Sell Pressure</span>
                  </div>
@@ -271,12 +271,12 @@ const MarketAnalytics: React.FC = () => {
                  <div className="organic-divider !border-t-0 my-4"></div>
 
                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs font-medium text-field-400">Volatility Index</span>
-                    <span className="text-sm font-bold text-harvest-400">High (14.2)</span>
+                    <span className="text-xs font-medium text-crimson-400">Volatility Index</span>
+                    <span className="text-sm font-bold text-sunburst-400">High (14.2)</span>
                  </div>
                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-medium text-field-400">24h Volume</span>
-                    <span className="text-sm font-bold text-field-300">4.2M Tons</span>
+                    <span className="text-xs font-medium text-crimson-400">24h Volume</span>
+                    <span className="text-sm font-bold text-crimson-300">4.2M Tons</span>
                  </div>
               </div>
            </div>
@@ -291,7 +291,7 @@ const MarketAnalytics: React.FC = () => {
                     <div key={i} className="flex items-center justify-between text-xs animate-fade-in-up" style={{ animationDelay: `${i * 150}ms` }}>
                        <div className="flex items-center gap-2">
                           <span className="text-[var(--text-tertiary)] font-mono font-medium">{new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                          <span className={`font-bold px-1.5 py-0.5 rounded text-[10px] ${i % 2 === 0 ? 'bg-field-100 text-field-700 dark:bg-field-900/30 dark:text-field-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
+                          <span className={`font-bold px-1.5 py-0.5 rounded text-[10px] ${i % 2 === 0 ? 'bg-crimson-100 text-crimson-700 dark:bg-crimson-900/30 dark:text-crimson-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
                              {i % 2 === 0 ? 'BUY' : 'SELL'}
                           </span>
                        </div>
@@ -315,10 +315,10 @@ const MarketAnalytics: React.FC = () => {
            </div>
            <div className="hidden md:flex gap-4">
               <div className="flex items-center gap-2 text-xs font-semibold text-[var(--text-secondary)]">
-                 <div className="w-3 h-3 bg-field-500 rounded-full"></div> Gross Revenue
+                 <div className="w-3 h-3 bg-crimson-500 rounded-full"></div> Gross Revenue
               </div>
               <div className="flex items-center gap-2 text-xs font-semibold text-[var(--text-secondary)]">
-                 <div className="w-3 h-3 bg-harvest-600 rounded-full"></div> Input Costs
+                 <div className="w-3 h-3 bg-sunburst-600 rounded-full"></div> Input Costs
               </div>
            </div>
         </div>

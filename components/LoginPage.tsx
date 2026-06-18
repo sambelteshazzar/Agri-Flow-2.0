@@ -134,43 +134,43 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-field-950/90 backdrop-blur-xl"
+        className="absolute inset-0 bg-crimson-950/90 backdrop-blur-xl"
         onClick={onClose}
       />
 
       {/* Main Container */}
-      <div className="relative z-10 w-full max-w-[960px] mx-4 my-4 flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-field-800/60 animate-fade-in-up max-h-[92vh]">
+      <div className="relative z-10 w-full max-w-[960px] mx-4 my-4 flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-crimson-800/60 animate-fade-in-up max-h-[92vh]">
 
         {/* ── LEFT PANEL (Branding) ── */}
-        <div className="hidden md:flex w-[420px] shrink-0 relative overflow-hidden flex-col justify-between p-10 bg-field-950">
+        <div className="hidden md:flex w-[420px] shrink-0 relative overflow-hidden flex-col justify-between p-10 bg-crimson-950">
           {/* Background image */}
           <div
             className="absolute inset-0 bg-cover bg-center opacity-30 animate-slow-zoom"
             style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1527847263472-aa5338d178b8?q=80&w=1200&auto=format&fit=crop")' }}
           />
           {/* Gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-field-950 via-field-950/80 to-field-950/40" />
-          <div className="absolute inset-0 bg-gradient-to-r from-field-950/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-crimson-950 via-crimson-950/80 to-crimson-950/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-crimson-950/60 to-transparent" />
 
           {/* Glow accent */}
-          <div className="absolute -top-20 -right-20 w-80 h-80 bg-field-500/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-harvest-500/8 rounded-full blur-3xl" />
+          <div className="absolute -top-20 -right-20 w-80 h-80 bg-crimson-500/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-sunburst-500/8 rounded-full blur-3xl" />
 
           {/* Top: Logo */}
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-11 h-11 bg-gradient-to-br from-field-500 to-harvest-500 rounded-xl flex items-center justify-center shadow-lg shadow-field-500/30">
+              <div className="w-11 h-11 bg-gradient-to-br from-crimson-500 to-sunburst-500 rounded-xl flex items-center justify-center shadow-lg shadow-crimson-500/30">
                 <Sprout className="w-6 h-6 text-white" />
               </div>
               <div>
-                <span className="text-white text-lg font-heading font-bold tracking-tight">Agri<span className="text-field-400">Flow</span></span>
+                <span className="text-white text-lg font-heading font-bold tracking-tight">Agri<span className="text-crimson-400">Flow</span></span>
               </div>
             </div>
 
             <h1 className="text-3xl font-display text-white leading-snug mb-3">
               Smart farming<br />starts here
             </h1>
-            <p className="text-field-400 text-sm leading-relaxed max-w-[280px]">
+            <p className="text-crimson-400 text-sm leading-relaxed max-w-[280px]">
               Your complete farming companion — from planting to harvest, with AI-powered insights by your side.
             </p>
           </div>
@@ -183,16 +183,16 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                 { icon: Globe, text: 'Region-specific market prices & weather' },
                 { icon: Sprout, text: 'AI-powered agronomy & diagnostics' },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 text-field-300">
-                  <div className="w-9 h-9 rounded-lg bg-field-800/60 border border-field-700/50 flex items-center justify-center shrink-0">
-                    <item.icon className="w-4 h-4 text-field-400" />
+                <div key={i} className="flex items-center gap-3 text-crimson-300">
+                  <div className="w-9 h-9 rounded-lg bg-crimson-800/60 border border-crimson-700/50 flex items-center justify-center shrink-0">
+                    <item.icon className="w-4 h-4 text-crimson-400" />
                   </div>
                   <span className="text-[13px] font-medium">{item.text}</span>
                 </div>
               ))}
             </div>
 
-            <p className="text-[11px] text-field-600 font-medium">
+            <p className="text-[11px] text-crimson-600 font-medium">
               Trusted by 10,000+ farmers across West Africa
             </p>
           </div>
@@ -204,7 +204,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 md:top-5 md:right-5 z-20 w-10 h-10 flex items-center justify-center rounded-xl bg-field-950/10 dark:bg-field-950/40 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-field-950/15 dark:hover:bg-field-950/50 transition-all border border-transparent hover:border-[var(--border-card)]"
+            className="absolute top-4 right-4 md:top-5 md:right-5 z-20 w-10 h-10 flex items-center justify-center rounded-xl bg-crimson-950/10 dark:bg-crimson-950/40 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-crimson-950/15 dark:hover:bg-crimson-950/50 transition-all border border-transparent hover:border-[var(--border-card)]"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -212,10 +212,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
 
           {/* Mobile logo (visible only on small screens) */}
           <div className="md:hidden flex items-center gap-2.5 px-8 pt-8 pb-2">
-            <div className="w-9 h-9 bg-gradient-to-br from-field-500 to-harvest-500 rounded-lg flex items-center justify-center shadow-md shadow-field-500/20">
+            <div className="w-9 h-9 bg-gradient-to-br from-crimson-500 to-sunburst-500 rounded-lg flex items-center justify-center shadow-md shadow-crimson-500/20">
               <Sprout className="w-5 h-5 text-white" />
             </div>
-            <span className="text-[var(--text-primary)] text-base font-heading font-bold tracking-tight">Agri<span className="text-field-500">Flow</span></span>
+            <span className="text-[var(--text-primary)] text-base font-heading font-bold tracking-tight">Agri<span className="text-crimson-500">Flow</span></span>
           </div>
 
           {/* Scrollable Form Area */}
@@ -241,7 +241,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                   <div>
                     <label htmlFor="signin-email" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Email address</label>
                     <div className="relative group">
-                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors pointer-events-none" />
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors pointer-events-none" />
                       <input
                         id="signin-email"
                         type="email"
@@ -250,7 +250,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         placeholder="you@farm.example.com"
                         required
                         autoComplete="email"
-                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-field-500 focus:ring-0 transition-all outline-none"
+                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-crimson-500 focus:ring-0 transition-all outline-none"
                       />
                     </div>
                   </div>
@@ -259,7 +259,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                   <div>
                     <label htmlFor="signin-password" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Password</label>
                     <div className="relative group">
-                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors pointer-events-none" />
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors pointer-events-none" />
                       <input
                         id="signin-password"
                         type={showPassword ? 'text' : 'password'}
@@ -268,7 +268,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         placeholder="Enter your password"
                         required
                         autoComplete="current-password"
-                        className="w-full pl-11 pr-12 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-field-500 focus:ring-0 transition-all outline-none"
+                        className="w-full pl-11 pr-12 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-crimson-500 focus:ring-0 transition-all outline-none"
                       />
                       <button
                         type="button"
@@ -291,13 +291,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                           onChange={e => setRemember(e.target.checked)}
                           className="peer sr-only"
                         />
-                        <div className="w-[18px] h-[18px] rounded-md border-2 border-[var(--border-card)] bg-[var(--bg-content)] peer-checked:bg-field-600 peer-checked:border-field-600 transition-all flex items-center justify-center group-hover:border-field-400">
+                        <div className="w-[18px] h-[18px] rounded-md border-2 border-[var(--border-card)] bg-[var(--bg-content)] peer-checked:bg-crimson-600 peer-checked:border-crimson-600 transition-all flex items-center justify-center group-hover:border-crimson-400">
                           {remember && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
                         </div>
                       </div>
                       <span className="text-[var(--text-secondary)] text-[13px] font-medium">Remember this device</span>
                     </label>
-                    <button type="button" className="text-field-600 dark:text-field-400 text-[13px] font-semibold hover:underline">
+                    <button type="button" className="text-crimson-600 dark:text-crimson-400 text-[13px] font-semibold hover:underline">
                       Forgot password?
                     </button>
                   </div>
@@ -306,7 +306,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 py-3.5 font-bold text-sm rounded-xl transition-all shadow-lg shadow-field-500/15 dark:shadow-harvest-500/20 hover:shadow-field-500/25 dark:hover:shadow-harvest-500/30 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-crimson-800 dark:bg-sunburst-500 hover:bg-crimson-700 dark:hover:bg-sunburst-400 text-white dark:text-crimson-950 py-3.5 font-bold text-sm rounded-xl transition-all shadow-lg shadow-crimson-500/15 dark:shadow-sunburst-500/20 hover:shadow-crimson-500/25 dark:hover:shadow-sunburst-500/30 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
@@ -328,7 +328,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                     <div>
                       <label htmlFor="signup-name" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Full name</label>
                       <div className="relative group">
-                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors pointer-events-none" />
+                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors pointer-events-none" />
                         <input
                           id="signup-name"
                           type="text"
@@ -337,21 +337,21 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                           placeholder="Adewale Okonkwo"
                           required
                           autoComplete="name"
-                          className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-field-500 focus:ring-0 transition-all outline-none"
+                          className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-crimson-500 focus:ring-0 transition-all outline-none"
                         />
                       </div>
                     </div>
                     <div>
                       <label htmlFor="signup-farm" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Farm name <span className="font-normal text-[var(--text-tertiary)]">(opt.)</span></label>
                       <div className="relative group">
-                        <Tractor className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors pointer-events-none" />
+                        <Tractor className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors pointer-events-none" />
                         <input
                           id="signup-farm"
                           type="text"
                           value={farmName}
                           onChange={e => setFarmName(e.target.value)}
                           placeholder="Greenfield Farm"
-                          className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-field-500 focus:ring-0 transition-all outline-none"
+                          className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-crimson-500 focus:ring-0 transition-all outline-none"
                         />
                       </div>
                     </div>
@@ -361,7 +361,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                   <div>
                     <label htmlFor="signup-email" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Email address</label>
                     <div className="relative group">
-                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors pointer-events-none" />
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors pointer-events-none" />
                       <input
                         id="signup-email"
                         type="email"
@@ -370,7 +370,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         placeholder="you@farm.example.com"
                         required
                         autoComplete="email"
-                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-field-500 focus:ring-0 transition-all outline-none"
+                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-crimson-500 focus:ring-0 transition-all outline-none"
                       />
                     </div>
                   </div>
@@ -379,7 +379,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                   <div>
                     <label htmlFor="signup-password" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Password</label>
                     <div className="relative group">
-                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors pointer-events-none" />
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors pointer-events-none" />
                       <input
                         id="signup-password"
                         type={showPassword ? 'text' : 'password'}
@@ -389,7 +389,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         required
                         autoComplete="new-password"
                         minLength={6}
-                        className="w-full pl-11 pr-12 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-field-500 focus:ring-0 transition-all outline-none"
+                        className="w-full pl-11 pr-12 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-crimson-500 focus:ring-0 transition-all outline-none"
                       />
                       <button
                         type="button"
@@ -406,7 +406,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                   <div>
                     <label htmlFor="signup-confirm" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Confirm password</label>
                     <div className="relative group">
-                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors pointer-events-none" />
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors pointer-events-none" />
                       <input
                         id="signup-confirm"
                         type={showConfirmPassword ? 'text' : 'password'}
@@ -416,7 +416,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         required
                         autoComplete="new-password"
                         minLength={6}
-                        className="w-full pl-11 pr-12 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-field-500 focus:ring-0 transition-all outline-none"
+                        className="w-full pl-11 pr-12 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-crimson-500 focus:ring-0 transition-all outline-none"
                       />
                       <button
                         type="button"
@@ -436,7 +436,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                   <div>
                     <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Country</label>
                     <div className="relative group">
-                      <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors pointer-events-none" />
+                      <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors pointer-events-none" />
                       <input
                         type="text"
                         value={selectedCountry ? `${selectedCountry.flag} ${selectedCountry.name}` : countrySearch}
@@ -452,7 +452,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         }}
                         placeholder="Search your country..."
                         required={!selectedCountry}
-                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-field-500 focus:ring-0 transition-all outline-none"
+                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-crimson-500 focus:ring-0 transition-all outline-none"
                       />
                     </div>
                     {/* Country dropdown */}
@@ -466,7 +466,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                               setSelectedCountry({ code: c.code, name: c.name, flag: c.flag });
                               setCountrySearch('');
                             }}
-                            className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-field-50 dark:hover:bg-field-900/20 transition-colors"
+                            className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-crimson-50 dark:hover:bg-crimson-900/20 transition-colors"
                           >
                             <span className="text-lg leading-none">{c.flag}</span>
                             <span className="text-sm font-medium text-[var(--text-primary)]">{c.name}</span>
@@ -477,9 +477,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                       </div>
                     )}
                     {selectedCountry && (
-                      <div className="mt-1.5 flex items-center gap-2 px-3 py-2 bg-field-50 dark:bg-field-900/20 rounded-lg border border-field-200 dark:border-field-800">
+                      <div className="mt-1.5 flex items-center gap-2 px-3 py-2 bg-crimson-50 dark:bg-crimson-900/20 rounded-lg border border-crimson-200 dark:border-crimson-800">
                         <span className="text-base">{selectedCountry.flag}</span>
-                        <span className="text-xs font-semibold text-field-700 dark:text-field-400">{selectedCountry.name}</span>
+                        <span className="text-xs font-semibold text-crimson-700 dark:text-crimson-400">{selectedCountry.name}</span>
                         <button
                           type="button"
                           onClick={() => { setSelectedCountry(null); setCountrySearch(''); }}
@@ -502,12 +502,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                           onClick={() => setFarmType(value)}
                           className={`flex flex-col items-center gap-1 py-3 px-2 rounded-xl border-2 transition-all text-center ${
                             farmType === value
-                              ? 'border-field-500 bg-field-50 dark:bg-field-900/20 shadow-md shadow-field-500/10'
-                              : 'border-[var(--border-card)] bg-[var(--bg-content)] hover:border-field-300 dark:hover:border-field-700'
+                              ? 'border-crimson-500 bg-crimson-50 dark:bg-crimson-900/20 shadow-md shadow-crimson-500/10'
+                              : 'border-[var(--border-card)] bg-[var(--bg-content)] hover:border-crimson-300 dark:hover:border-crimson-700'
                           }`}
                         >
-                          <Icon className={`w-5 h-5 ${farmType === value ? 'text-field-500' : 'text-[var(--text-tertiary)]'}`} />
-                          <span className={`text-[11px] font-bold leading-tight ${farmType === value ? 'text-field-700 dark:text-field-400' : 'text-[var(--text-primary)]'}`}>{label}</span>
+                          <Icon className={`w-5 h-5 ${farmType === value ? 'text-crimson-500' : 'text-[var(--text-tertiary)]'}`} />
+                          <span className={`text-[11px] font-bold leading-tight ${farmType === value ? 'text-crimson-700 dark:text-crimson-400' : 'text-[var(--text-primary)]'}`}>{label}</span>
                           <span className="text-[9px] text-[var(--text-tertiary)] leading-tight hidden sm:block">{desc}</span>
                         </button>
                       ))}
@@ -518,7 +518,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                   <button
                     type="submit"
                     disabled={isLoading || !selectedCountry || password !== confirmPassword || confirmPassword.length < 6}
-                    className="w-full bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 py-3.5 font-bold text-sm rounded-xl transition-all shadow-lg shadow-field-500/15 dark:shadow-harvest-500/20 hover:shadow-field-500/25 dark:hover:shadow-harvest-500/30 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-crimson-800 dark:bg-sunburst-500 hover:bg-crimson-700 dark:hover:bg-sunburst-400 text-white dark:text-crimson-950 py-3.5 font-bold text-sm rounded-xl transition-all shadow-lg shadow-crimson-500/15 dark:shadow-sunburst-500/20 hover:shadow-crimson-500/25 dark:hover:shadow-sunburst-500/30 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
@@ -539,7 +539,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                   <button
                     type="button"
                     onClick={() => switchMode(mode === 'signin' ? 'signup' : 'signin')}
-                    className="text-field-600 dark:text-field-400 font-bold hover:underline"
+                    className="text-crimson-600 dark:text-crimson-400 font-bold hover:underline"
                   >
                     {mode === 'signin' ? 'Create one' : 'Sign in'}
                   </button>

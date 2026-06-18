@@ -242,16 +242,16 @@ const CropManager: React.FC = () => {
       case 'Needs Attention': return 'bg-yellow-500';
       case 'Critical': return 'bg-red-600';
       case 'Harvest Ready': return 'bg-blue-600';
-      default: return 'bg-soil-300';
+      default: return 'bg-terra-300';
     }
   };
 
   const getWaterEfficiencyColor = (efficiency: string) => {
     switch (efficiency) {
       case 'High': return 'bg-green-100 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300';
-      case 'Moderate': return 'bg-field-100 border-field-200 text-field-800 dark:bg-field-900/30 dark:border-field-800 dark:text-field-300';
+      case 'Moderate': return 'bg-crimson-100 border-crimson-200 text-crimson-800 dark:bg-crimson-900/30 dark:border-crimson-800 dark:text-crimson-300';
       case 'Low': return 'bg-red-100 border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300';
-      default: return 'bg-[var(--bg-content)] border-[var(--border-card)] text-[var(--text-primary)] dark:bg-field-900/30 dark:border-field-800 dark:text-field-300';
+      default: return 'bg-[var(--bg-content)] border-[var(--border-card)] text-[var(--text-primary)] dark:bg-crimson-900/30 dark:border-crimson-800 dark:text-crimson-300';
     }
   };
 
@@ -333,7 +333,7 @@ const CropManager: React.FC = () => {
       {/* -- SMART SUGGESTION MODAL -- */}
       {suggestion && (
         <div className="fixed bottom-6 right-6 z-[60] max-w-sm w-full animate-fade-in-up">
-          <div className="bg-field-950 border-l-4 border-yellow-500 rounded-r-lg shadow-2xl p-4 text-white relative">
+          <div className="bg-crimson-950 border-l-4 border-yellow-500 rounded-r-lg shadow-2xl p-4 text-white relative">
             <button 
               onClick={dismissSuggestion}
               aria-label="Dismiss suggestion"
@@ -356,13 +356,13 @@ const CropManager: React.FC = () => {
                 <div className="flex gap-2">
                   <button 
                     onClick={confirmSuggestion}
-                    className="bg-yellow-500 hover:bg-yellow-400 text-field-950 px-3 py-1.5 rounded text-xs font-semibold flex items-center"
+                    className="bg-yellow-500 hover:bg-yellow-400 text-crimson-950 px-3 py-1.5 rounded text-xs font-semibold flex items-center"
                   >
                     <Check className="w-3 h-3 mr-1" /> Update Status
                   </button>
                   <button 
                     onClick={dismissSuggestion}
-                    className="bg-transparent border border-field-600 text-[var(--text-tertiary)] hover:text-white hover:border-field-400 px-3 py-1.5 rounded text-xs font-semibold"
+                    className="bg-transparent border border-crimson-600 text-[var(--text-tertiary)] hover:text-white hover:border-crimson-400 px-3 py-1.5 rounded text-xs font-semibold"
                   >
                     Ignore
                   </button>
@@ -387,7 +387,7 @@ const CropManager: React.FC = () => {
           <button onClick={() => setIsScannerOpen(true)} className="flex items-center px-4 py-3 bg-red-600 text-white rounded font-semibold hover:bg-red-700 transition-colors shadow-sm border border-red-800 focus:outline-none focus:ring-2 focus:ring-red-500">
             <Scan className="w-5 h-5 mr-2" /> Scan Pest/Disease
           </button>
-          <button onClick={() => setIsModalOpen(true)} className="flex items-center px-6 py-3 bg-field-800 dark:bg-harvest-500 text-white rounded font-semibold hover:bg-green-800 transition-colors shadow-sm border border-green-900 focus:outline-none focus:ring-2 focus:ring-green-500">
+          <button onClick={() => setIsModalOpen(true)} className="flex items-center px-6 py-3 bg-crimson-800 dark:bg-sunburst-500 text-white rounded font-semibold hover:bg-green-800 transition-colors shadow-sm border border-green-900 focus:outline-none focus:ring-2 focus:ring-green-500">
             <Plus className="w-5 h-5 mr-2" /> Add Plot
           </button>
         </div>
@@ -428,7 +428,7 @@ const CropManager: React.FC = () => {
                     e.currentTarget.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop';
                   }}
                 />
-                <div className="absolute top-0 right-0 bg-field-950 text-white px-3 py-1 m-2 rounded text-xs font-semibold shadow-md border border-field-700">{crop.status}</div>
+                <div className="absolute top-0 right-0 bg-crimson-950 text-white px-3 py-1 m-2 rounded text-xs font-semibold shadow-md border border-crimson-700">{crop.status}</div>
                 <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4">
                   <h3 className="text-2xl font-bold text-white font-heading leading-none shadow-black drop-shadow-md">{crop.name}</h3>
                   <span className="text-white text-sm font-semibold drop-shadow-md">{crop.variety}</span>
@@ -470,7 +470,7 @@ const CropManager: React.FC = () => {
                 </div>
 
                 <div className="mt-auto flex gap-3">
-<button onClick={() => openLogModal(crop.id)} className="flex-1 py-3 bg-field-800 dark:bg-field-700 text-white text-sm font-semibold rounded hover:bg-field-950 dark:hover:bg-field-600 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-field-500 cursor-pointer active:scale-95">
+<button onClick={() => openLogModal(crop.id)} className="flex-1 py-3 bg-crimson-800 dark:bg-crimson-700 text-white text-sm font-semibold rounded hover:bg-crimson-950 dark:hover:bg-crimson-600 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-crimson-500 cursor-pointer active:scale-95">
                      Log Activity
                   </button>
                   <button onClick={() => deleteCrop(crop.id)} aria-label={`Delete ${crop.name} plot`} className="px-3 py-2 bg-[var(--bg-card)] text-[var(--text-secondary)] rounded hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-colors border-2 border-[var(--border-card)] hover:border-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer active:scale-95">
@@ -485,9 +485,9 @@ const CropManager: React.FC = () => {
 
       {/* Log Activity Modal */}
       {isLogModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-field-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
-          <div className="bg-[var(--bg-card)] w-full max-w-md shadow-2xl rounded-md border border-field-600">
-            <div className="bg-field-950 p-5 flex justify-between items-center border-b-4 border-yellow-500">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-crimson-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
+          <div className="bg-[var(--bg-card)] w-full max-w-md shadow-2xl rounded-md border border-crimson-600">
+            <div className="bg-crimson-950 p-5 flex justify-between items-center border-b-4 border-yellow-500">
 <h3 className="text-xl font-bold text-white flex items-center">
                   <ClipboardList className="w-5 h-5 mr-2 text-yellow-500" /> Log Activity
               </h3>
@@ -496,7 +496,7 @@ const CropManager: React.FC = () => {
             <form onSubmit={handleLogSubmit} className="p-6 space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1">Activity Type</label>
-                <select value={newLog.type} onChange={e => setNewLog({...newLog, type: e.target.value as any})} className="w-full p-3 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-field-500/10">
+                <select value={newLog.type} onChange={e => setNewLog({...newLog, type: e.target.value as any})} className="w-full p-3 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-crimson-500/10">
                    <option value="Observation">Observation</option>
                    <option value="Action">Action (Water/Weed)</option>
                    <option value="Input">Input (Fertilizer)</option>
@@ -506,9 +506,9 @@ const CropManager: React.FC = () => {
               </div>
               <div>
                 <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1">Details</label>
-                <textarea value={newLog.note} onChange={e => setNewLog({...newLog, note: e.target.value})} className="w-full p-3 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-sm font-medium text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-field-500/10" rows={3} placeholder={`e.g. Applied 50kg Urea per ${userProfile.areaUnit === 'acres' ? 'acre' : 'hectare'}...`} required />
+                <textarea value={newLog.note} onChange={e => setNewLog({...newLog, note: e.target.value})} className="w-full p-3 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-sm font-medium text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-crimson-500/10" rows={3} placeholder={`e.g. Applied 50kg Urea per ${userProfile.areaUnit === 'acres' ? 'acre' : 'hectare'}...`} required />
               </div>
-              <button type="submit" className="w-full bg-field-950 dark:bg-field-700 text-yellow-500 py-4 font-semibold hover:bg-field-900 dark:hover:bg-field-600 rounded-sm shadow-md">Save Entry</button>
+              <button type="submit" className="w-full bg-crimson-950 dark:bg-crimson-700 text-yellow-500 py-4 font-semibold hover:bg-crimson-900 dark:hover:bg-crimson-600 rounded-sm shadow-md">Save Entry</button>
             </form>
           </div>
         </div>
@@ -516,9 +516,9 @@ const CropManager: React.FC = () => {
 
       {/* Add Crop Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-field-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
-          <div className="bg-[var(--bg-card)] w-full max-w-lg shadow-2xl rounded-md border border-field-600 max-h-[90vh] overflow-y-auto">
-            <div className="bg-field-950 p-5 flex justify-between items-center border-b-4 border-yellow-500 sticky top-0 z-10">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-crimson-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
+          <div className="bg-[var(--bg-card)] w-full max-w-lg shadow-2xl rounded-md border border-crimson-600 max-h-[90vh] overflow-y-auto">
+            <div className="bg-crimson-950 p-5 flex justify-between items-center border-b-4 border-yellow-500 sticky top-0 z-10">
               <h3 className="text-xl font-semibold text-white flex items-center"><Sprout className="w-5 h-5 mr-2 text-yellow-500" /> Register New Plot</h3>
               <button onClick={() => setIsModalOpen(false)} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
             </div>
@@ -574,7 +574,7 @@ const CropManager: React.FC = () => {
                          type="text" 
                          value={newCrop.imageUrl} 
                          onChange={e => setNewCrop({...newCrop, imageUrl: e.target.value})} 
-                         className="w-full px-4 py-2 border-[var(--border-card)] bg-[var(--bg-content)] focus:border-yellow-500 dark:focus:border-yellow-500 focus:ring-4 focus:ring-field-500/10 rounded-sm font-medium text-[var(--text-primary)] text-xs mb-2"
+                         className="w-full px-4 py-2 border-[var(--border-card)] bg-[var(--bg-content)] focus:border-yellow-500 dark:focus:border-yellow-500 focus:ring-4 focus:ring-crimson-500/10 rounded-sm font-medium text-[var(--text-primary)] text-xs mb-2"
                          placeholder="https://example.com/image.jpg"
                        />
                        <p className="text-[10px] text-[var(--text-secondary)] font-medium">
@@ -586,32 +586,32 @@ const CropManager: React.FC = () => {
 
                 <div>
                   <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1">Crop Type</label>
-                  <input required ref={firstInputRef} type="text" value={newCrop.name} onChange={e => handleNameChange(e.target.value)} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] placeholder-[var(--text-secondary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-field-500/10" placeholder="e.g. Cowpea"/>
+                  <input required ref={firstInputRef} type="text" value={newCrop.name} onChange={e => handleNameChange(e.target.value)} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] placeholder-[var(--text-secondary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-crimson-500/10" placeholder="e.g. Cowpea"/>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1">Variety</label>
-                    <input required type="text" value={newCrop.variety} onChange={e => setNewCrop({...newCrop, variety: e.target.value})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] placeholder-[var(--text-secondary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-field-500/10" placeholder="e.g. Pioneer P1197"/>
+                    <input required type="text" value={newCrop.variety} onChange={e => setNewCrop({...newCrop, variety: e.target.value})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] placeholder-[var(--text-secondary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-crimson-500/10" placeholder="e.g. Pioneer P1197"/>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1">Area ({formatAreaLabel(userProfile.areaUnit)})</label>
-                    <input required type="number" value={newCrop.area || ''} onChange={e => setNewCrop({...newCrop, area: Number(e.target.value)})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] placeholder-[var(--text-secondary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-field-500/10" placeholder="e.g. 15.5"/>
+                    <input required type="number" value={newCrop.area || ''} onChange={e => setNewCrop({...newCrop, area: Number(e.target.value)})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] placeholder-[var(--text-secondary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-crimson-500/10" placeholder="e.g. 15.5"/>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1">Plant Date</label>
-                    <input required type="date" value={newCrop.plantingDate} onChange={e => setNewCrop({...newCrop, plantingDate: e.target.value})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-field-500/10" />
+                    <input required type="date" value={newCrop.plantingDate} onChange={e => setNewCrop({...newCrop, plantingDate: e.target.value})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-crimson-500/10" />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1">Est Harvest</label>
-                    <input required type="date" value={newCrop.harvestDate} onChange={e => setNewCrop({...newCrop, harvestDate: e.target.value})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-field-500/10" />
+                    <input required type="date" value={newCrop.harvestDate} onChange={e => setNewCrop({...newCrop, harvestDate: e.target.value})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-crimson-500/10" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1">Water Efficiency</label>
-                    <select value={newCrop.waterEfficiency} onChange={e => setNewCrop({...newCrop, waterEfficiency: e.target.value as any})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-field-500/10">
+                    <select value={newCrop.waterEfficiency} onChange={e => setNewCrop({...newCrop, waterEfficiency: e.target.value as any})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-crimson-500/10">
                       <option value="High">High</option>
                       <option value="Moderate">Moderate</option>
                       <option value="Low">Low</option>
@@ -619,7 +619,7 @@ const CropManager: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1">Soil Health</label>
-                    <select value={newCrop.soilHealth} onChange={e => setNewCrop({...newCrop, soilHealth: e.target.value as any})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-field-500/10">
+                    <select value={newCrop.soilHealth} onChange={e => setNewCrop({...newCrop, soilHealth: e.target.value as any})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] rounded-sm font-bold text-[var(--text-primary)] bg-[var(--bg-content)] focus:outline-none focus:border-yellow-500 focus:ring-4 focus:ring-crimson-500/10">
                        <option value="Excellent">Excellent</option>
                        <option value="Good">Good</option>
                        <option value="Degraded">Degraded</option>
@@ -627,7 +627,7 @@ const CropManager: React.FC = () => {
                     </select>
                   </div>
                 </div>
-                <button type="submit" className="w-full bg-yellow-500 text-field-950 py-4 font-semibold hover:bg-yellow-400 rounded-sm shadow-md">Confirm & Save</button>
+                <button type="submit" className="w-full bg-yellow-500 text-crimson-950 py-4 font-semibold hover:bg-yellow-400 rounded-sm shadow-md">Confirm & Save</button>
               </form>
             </div>
           </div>
@@ -636,9 +636,9 @@ const CropManager: React.FC = () => {
 
       {/* Scanner Modal */}
       {isScannerOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-field-950/90 backdrop-blur-md" role="dialog" aria-modal="true">
-           <div className="bg-[var(--bg-content)] w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-field-600">
-              <div className="bg-field-950 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-crimson-950/90 backdrop-blur-md" role="dialog" aria-modal="true">
+           <div className="bg-[var(--bg-content)] w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-crimson-600">
+              <div className="bg-crimson-950 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
                 <h3 className="text-xl font-semibold text-white flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-500" /> Crop Health Check</h3>
                 <button onClick={resetScanner} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
               </div>
@@ -649,7 +649,7 @@ const CropManager: React.FC = () => {
                          <input type="file" accept="image/*" className="hidden" ref={scanInputRef} onChange={handleScanUpload} />
                          {scanImage ? <img src={scanImage} className="max-h-48 object-contain" /> : <><Upload className="w-12 h-12 text-[var(--text-secondary)] mb-4" /><p className="text-[var(--text-primary)] font-semibold">Tap to Upload</p></>}
                       </div>
-                      <textarea value={scanContext} onChange={e => setScanContext(e.target.value)} className="w-full p-3 border-2 border-[var(--border-card)] rounded font-medium text-[var(--text-primary)] placeholder-[var(--text-secondary)] bg-[var(--bg-content)] focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-field-500/10" placeholder="Add specific observation notes here..." rows={3} />
+                      <textarea value={scanContext} onChange={e => setScanContext(e.target.value)} className="w-full p-3 border-2 border-[var(--border-card)] rounded font-medium text-[var(--text-primary)] placeholder-[var(--text-secondary)] bg-[var(--bg-content)] focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-crimson-500/10" placeholder="Add specific observation notes here..." rows={3} />
                       <button onClick={performScan} disabled={!scanImage || isScanning} className="w-full py-4 bg-red-600 text-white font-semibold hover:bg-red-700 rounded-sm shadow-md flex items-center justify-center">
                         {isScanning ? <Loader2 className="animate-spin w-5 h-5 mr-2" /> : 'Run Health Check'}
                       </button>
@@ -657,7 +657,7 @@ const CropManager: React.FC = () => {
                  ) : (
                    <div className="space-y-4">
                       <div className="bg-[var(--bg-card)] border-l-4 border-red-600 p-6 shadow-sm"><p className="whitespace-pre-wrap font-medium text-[var(--text-primary)]">{scanResult}</p></div>
-                      <button onClick={() => setScanResult('')} className="w-full py-3 bg-field-800 text-white font-semibold rounded-sm">Scan Again</button>
+                      <button onClick={() => setScanResult('')} className="w-full py-3 bg-crimson-800 text-white font-semibold rounded-sm">Scan Again</button>
                    </div>
                  )}
               </div>

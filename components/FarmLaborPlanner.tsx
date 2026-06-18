@@ -181,7 +181,7 @@ const FarmLaborPlanner: React.FC = () => {
 
   const formatCurrency = (n: number) => currencySymbol + n.toLocaleString();
 
-  const inputClasses = "w-full px-3 py-2 rounded-lg border border-[var(--border-card)] bg-[var(--bg-content)] text-[var(--text-primary)] text-sm focus:ring-2 focus:ring-field-500 focus:border-transparent transition-colors";
+  const inputClasses = "w-full px-3 py-2 rounded-lg border border-[var(--border-card)] bg-[var(--bg-content)] text-[var(--text-primary)] text-sm focus:ring-2 focus:ring-crimson-500 focus:border-transparent transition-colors";
 
   return (
     <div className="space-y-6 animate-fade-in pb-10">
@@ -193,7 +193,7 @@ const FarmLaborPlanner: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card-surface p-6 space-y-5">
           <div className="flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)]">
-            <Sprout className="w-4 h-4 text-field-600 dark:text-field-400" />
+            <Sprout className="w-4 h-4 text-crimson-600 dark:text-crimson-400" />
             Farm Details
           </div>
 
@@ -265,7 +265,7 @@ const FarmLaborPlanner: React.FC = () => {
 
         <div className="card-surface p-6 space-y-5">
           <div className="flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)]">
-            <Tractor className="w-4 h-4 text-harvest-500" />
+            <Tractor className="w-4 h-4 text-sunburst-500" />
             Farm Setup
           </div>
 
@@ -276,7 +276,7 @@ const FarmLaborPlanner: React.FC = () => {
                 onClick={() => updateInput('season', 'rainy')}
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-xs border-2 transition-colors ${
                   input.season === 'rainy'
-                    ? 'bg-field-600 text-white border-field-600'
+                    ? 'bg-crimson-600 text-white border-crimson-600'
                     : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] border-[var(--border-card)]'
                 }`}
               >
@@ -287,7 +287,7 @@ const FarmLaborPlanner: React.FC = () => {
                 onClick={() => updateInput('season', 'dry')}
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-xs border-2 transition-colors ${
                   input.season === 'dry'
-                    ? 'bg-harvest-500 text-field-950 border-harvest-500'
+                    ? 'bg-sunburst-500 text-crimson-950 border-sunburst-500'
                     : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] border-[var(--border-card)]'
                 }`}
               >
@@ -310,7 +310,7 @@ const FarmLaborPlanner: React.FC = () => {
                   onClick={() => updateInput('mechanization', opt.key)}
                   className={`flex-1 px-3 py-2.5 rounded-lg font-semibold text-xs border-2 transition-colors ${
                     input.mechanization === opt.key
-                      ? 'bg-field-800 dark:bg-harvest-500 text-white dark:text-field-950 border-field-800 dark:border-harvest-500'
+                      ? 'bg-crimson-800 dark:bg-sunburst-500 text-white dark:text-crimson-950 border-crimson-800 dark:border-sunburst-500'
                       : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] border-[var(--border-card)]'
                   }`}
                 >
@@ -333,7 +333,7 @@ const FarmLaborPlanner: React.FC = () => {
                   onClick={() => updateInput('irrigationType', opt.key)}
                   className={`flex-1 px-3 py-2.5 rounded-lg font-semibold text-xs border-2 transition-colors ${
                     input.irrigationType === opt.key
-                      ? 'bg-field-600 text-white border-field-600'
+                      ? 'bg-crimson-600 text-white border-crimson-600'
                       : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] border-[var(--border-card)]'
                   }`}
                 >
@@ -345,15 +345,15 @@ const FarmLaborPlanner: React.FC = () => {
 
           <button
             onClick={handleCalculate}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 rounded-lg font-semibold text-sm transition-colors shadow-md active:scale-[0.98] mt-4"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-crimson-800 dark:bg-sunburst-500 hover:bg-crimson-700 dark:hover:bg-sunburst-400 text-white dark:text-crimson-950 rounded-lg font-semibold text-sm transition-colors shadow-md active:scale-[0.98] mt-4"
           >
             <Calculator className="w-4 h-4" />
             Calculate Workforce
           </button>
 
           {showResults && (
-            <div className="mt-4 p-4 bg-field-50 dark:bg-field-900/20 rounded-lg border border-field-200 dark:border-field-800">
-              <div className="flex items-center gap-2 text-field-700 dark:text-field-400 text-xs font-semibold mb-2">
+            <div className="mt-4 p-4 bg-crimson-50 dark:bg-crimson-900/20 rounded-lg border border-crimson-200 dark:border-crimson-800">
+              <div className="flex items-center gap-2 text-crimson-700 dark:text-crimson-400 text-xs font-semibold mb-2">
                 <CheckCircle2 className="w-4 h-4" />
                 Quick Summary
               </div>
@@ -363,11 +363,11 @@ const FarmLaborPlanner: React.FC = () => {
                   <div className="text-[10px] font-medium text-[var(--text-tertiary)]">Total Workers</div>
                 </div>
                 <div className="text-center p-2 card-inner rounded-lg">
-                  <div className="text-2xl font-bold text-field-600 dark:text-field-400 font-mono">{result.peakWorkers}</div>
+                  <div className="text-2xl font-bold text-crimson-600 dark:text-crimson-400 font-mono">{result.peakWorkers}</div>
                   <div className="text-[10px] font-medium text-[var(--text-tertiary)]">Peak Season</div>
                 </div>
                 <div className="text-center p-2 card-inner rounded-lg">
-                  <div className="text-2xl font-bold text-harvest-600 dark:text-harvest-400 font-mono">{result.hiredWorkers}</div>
+                  <div className="text-2xl font-bold text-sunburst-600 dark:text-sunburst-400 font-mono">{result.hiredWorkers}</div>
                   <div className="text-[10px] font-medium text-[var(--text-tertiary)]">Hired Needed</div>
                 </div>
                 <div className="text-center p-2 card-inner rounded-lg">
@@ -395,7 +395,7 @@ const FarmLaborPlanner: React.FC = () => {
                     <div className="flex-1">
                       <div className="h-3 bg-[var(--bg-content)] rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-field-500 rounded-full transition-all duration-500"
+                          className="h-full bg-crimson-500 rounded-full transition-all duration-500"
                           style={{ width: `${(m.workers / result.peakWorkers) * 100}%` }}
                         />
                       </div>
@@ -426,13 +426,13 @@ const FarmLaborPlanner: React.FC = () => {
                     <span className="text-sm font-bold text-[var(--text-primary)] font-mono">{formatCurrency(c.amount)}</span>
                   </div>
                 ))}
-                <div className="flex items-center justify-between pt-3 border-t-2 border-harvest-500/30">
+                <div className="flex items-center justify-between pt-3 border-t-2 border-sunburst-500/30">
                   <span className="text-sm font-bold text-[var(--text-primary)]">Total Monthly</span>
-                  <span className="text-sm font-bold text-field-600 dark:text-field-400 font-mono">{formatCurrency(result.totalMonthlyCost)}</span>
+                  <span className="text-sm font-bold text-crimson-600 dark:text-crimson-400 font-mono">{formatCurrency(result.totalMonthlyCost)}</span>
                 </div>
               </div>
-              <div className="mt-4 p-3 bg-harvest-50 dark:bg-harvest-900/10 rounded-lg border border-harvest-200 dark:border-harvest-800/50">
-                <p className="text-xs text-harvest-700 dark:text-harvest-400 font-medium">
+              <div className="mt-4 p-3 bg-sunburst-50 dark:bg-sunburst-900/10 rounded-lg border border-sunburst-200 dark:border-sunburst-800/50">
+                <p className="text-xs text-sunburst-700 dark:text-sunburst-400 font-medium">
                   Wage basis: <span className="font-mono">{currencySymbol}{dailyWage.toLocaleString()}/day</span> ({countryCfg?.name ?? 'Nigeria'} regional average, 2026)
                 </p>
               </div>
@@ -443,15 +443,15 @@ const FarmLaborPlanner: React.FC = () => {
               <div className="space-y-3">
                 {result.recommendations.map((rec, i) => (
                   <div key={i} className="flex items-start gap-3 p-3 bg-[var(--bg-content)] rounded-lg">
-                    <Info className="w-4 h-4 text-field-600 dark:text-field-400 mt-0.5 shrink-0" />
+                    <Info className="w-4 h-4 text-crimson-600 dark:text-crimson-400 mt-0.5 shrink-0" />
                     <p className="text-sm text-[var(--text-secondary)]">{rec}</p>
                   </div>
                 ))}
               </div>
               {result.hiredWorkers === 0 && (
-                <div className="mt-4 p-3 bg-field-50 dark:bg-field-900/20 rounded-lg border border-field-200 dark:border-field-800 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-field-600 dark:text-field-400" />
-                  <p className="text-xs text-field-700 dark:text-field-400 font-medium">No hired labor needed — your family team covers everything</p>
+                <div className="mt-4 p-3 bg-crimson-50 dark:bg-crimson-900/20 rounded-lg border border-crimson-200 dark:border-crimson-800 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-crimson-600 dark:text-crimson-400" />
+                  <p className="text-xs text-crimson-700 dark:text-crimson-400 font-medium">No hired labor needed — your family team covers everything</p>
                 </div>
               )}
             </div>
@@ -465,14 +465,14 @@ const FarmLaborPlanner: React.FC = () => {
                 <div className="text-3xl font-bold text-[var(--text-primary)] font-mono">{result.totalWorkers}</div>
                 <div className="text-xs font-medium text-[var(--text-tertiary)] mt-1">Average Workers</div>
               </div>
-              <div className="text-center p-4 bg-field-50 dark:bg-field-900/20 rounded-lg">
-                <Sprout className="w-6 h-6 text-field-600 dark:text-field-400 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-field-600 dark:text-field-400 font-mono">{result.familyWorkers}</div>
+              <div className="text-center p-4 bg-crimson-50 dark:bg-crimson-900/20 rounded-lg">
+                <Sprout className="w-6 h-6 text-crimson-600 dark:text-crimson-400 mx-auto mb-2" />
+                <div className="text-3xl font-bold text-crimson-600 dark:text-crimson-400 font-mono">{result.familyWorkers}</div>
                 <div className="text-xs font-medium text-[var(--text-tertiary)] mt-1">Family Workers</div>
               </div>
-              <div className="text-center p-4 bg-harvest-50 dark:bg-harvest-900/10 rounded-lg">
-                <Tractor className="w-6 h-6 text-harvest-600 dark:text-harvest-400 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-harvest-600 dark:text-harvest-400 font-mono">{result.hiredWorkers}</div>
+              <div className="text-center p-4 bg-sunburst-50 dark:bg-sunburst-900/10 rounded-lg">
+                <Tractor className="w-6 h-6 text-sunburst-600 dark:text-sunburst-400 mx-auto mb-2" />
+                <div className="text-3xl font-bold text-sunburst-600 dark:text-sunburst-400 font-mono">{result.hiredWorkers}</div>
                 <div className="text-xs font-medium text-[var(--text-tertiary)] mt-1">Hired Workers</div>
               </div>
               <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">

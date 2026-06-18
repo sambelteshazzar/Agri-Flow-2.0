@@ -87,19 +87,19 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
 
   const selectedCrops = selectedCountry ? selectedCountry.defaultCrops.slice(0, 4) : [];
 
-   const inputClasses = "w-full pl-12 pr-4 py-4 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl font-medium text-[var(--text-primary)] focus-visible:ring-2 focus-visible:ring-field-500 focus-visible:ring-offset-2 transition-all placeholder:text-[var(--text-tertiary)]";
+   const inputClasses = "w-full pl-12 pr-4 py-4 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl font-medium text-[var(--text-primary)] focus-visible:ring-2 focus-visible:ring-crimson-500 focus-visible:ring-offset-2 transition-all placeholder:text-[var(--text-tertiary)]";
 
   return (
-       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-field-950/90 backdrop-blur-lg animate-fade-in">
+       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-crimson-950/90 backdrop-blur-lg animate-fade-in">
        <div className="w-full max-w-2xl mx-4 rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-card)] animate-fade-in-up bg-[var(--bg-card)] flex flex-col max-h-[90vh] card-surface">
 
         <div className="relative px-8 pt-8 pb-4">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--bg-field-50)_0%_,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(30,58,40,0.3)_0%_,transparent_70%)]"></div>
+            <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--bg-crimson-50)_0%_,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(30,58,40,0.3)_0%_,transparent_70%)]"></div>
           </div>
            <div className="flex flex-col items-center text-center py-6">
              <div className="flex items-center gap-2 mb-4">
-               <div className="w-12 h-12 bg-gradient-to-br from-field-500 to-harvest-500 rounded-xl flex items-center justify-center shadow-lg shadow-field-500/20">
+               <div className="w-12 h-12 bg-gradient-to-br from-crimson-500 to-sunburst-500 rounded-xl flex items-center justify-center shadow-lg shadow-crimson-500/20">
                  <Sprout className="w-6 h-6 text-white" />
                </div>
                <div className="flex flex-col">
@@ -128,9 +128,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               <React.Fragment key={s.num}>
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                   step === s.num
-                    ? 'bg-field-600 text-white shadow-md shadow-field-500/25'
+                    ? 'bg-crimson-600 text-white shadow-md shadow-crimson-500/25'
                     : step > s.num
-                    ? 'bg-field-50 dark:bg-field-900/40 text-field-700 dark:text-field-400'
+                    ? 'bg-crimson-50 dark:bg-crimson-900/40 text-crimson-700 dark:text-crimson-400'
                     : 'bg-[var(--bg-content)] text-[var(--text-tertiary)]'
                 }`}>
                   {step > s.num ? <Check className="w-3 h-3" /> : <span>{s.num}</span>}
@@ -138,7 +138,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                 </div>
                 {i < STEPS.length - 1 && (
                   <div className={`flex-1 h-0.5 rounded-full transition-all ${
-                    step > s.num ? 'bg-field-400' : 'bg-[var(--border-card)]'
+                    step > s.num ? 'bg-crimson-400' : 'bg-[var(--border-card)]'
                   }`} />
                 )}
               </React.Fragment>
@@ -153,7 +153,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               <div>
                 <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Your full name</label>
                 <div className="relative group">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors" />
                   <input
                     type="text"
                     value={name}
@@ -167,7 +167,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               <div>
                 <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Farm name <span className="text-[var(--text-tertiary)] font-normal">(optional)</span></label>
                 <div className="relative group">
-                  <Tractor className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors" />
+                  <Tractor className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors" />
                   <input
                     type="text"
                     value={farmName}
@@ -183,7 +183,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
           {step === 2 && (
             <div className="space-y-4">
               <div className="relative group">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-field-500 transition-colors" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-crimson-500 transition-colors" />
                 <input
                   type="text"
                   value={countrySearch}
@@ -201,8 +201,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                     onClick={() => setSelectedCountry(country)}
                      className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left ${
                        selectedCountry?.code === country.code
-                         ? 'border-field-500 bg-field-50 dark:bg-field-900/20 shadow-md shadow-field-500/10'
-                         : 'border-[var(--border-card)] hover:border-field-300 dark:hover:border-field-700 bg-[var(--bg-content)]'
+                         ? 'border-crimson-500 bg-crimson-50 dark:bg-crimson-900/20 shadow-md shadow-crimson-500/10'
+                         : 'border-[var(--border-card)] hover:border-crimson-300 dark:hover:border-crimson-700 bg-[var(--bg-content)]'
                      }`}
                   >
                     <span className="text-2xl leading-none">{country.flag}</span>
@@ -211,7 +211,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                       <p className="text-[11px] text-[var(--text-tertiary)] font-medium">{country.region} · {country.climateZone.replace('_', ' ')}</p>
                     </div>
                     {selectedCountry?.code === country.code && (
-                      <Check className="w-5 h-5 text-field-500 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-crimson-500 flex-shrink-0" />
                     )}
                   </button>
                 ))}
@@ -231,12 +231,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                       onClick={() => setFarmType(value)}
                        className={`flex flex-col items-center gap-1.5 p-4 rounded-xl border-2 transition-all ${
                          farmType === value
-                           ? 'border-field-500 bg-field-50 dark:bg-field-900/20 shadow-md shadow-field-500/10'
-                           : 'border-[var(--border-card)] hover:border-field-300 dark:hover:border-field-700 bg-[var(--bg-content)]'
+                           ? 'border-crimson-500 bg-crimson-50 dark:bg-crimson-900/20 shadow-md shadow-crimson-500/10'
+                           : 'border-[var(--border-card)] hover:border-crimson-300 dark:hover:border-crimson-700 bg-[var(--bg-content)]'
                        }`}
                     >
-                      <Icon className={`w-5 h-5 ${farmType === value ? 'text-field-500' : 'text-[var(--text-tertiary)]'}`} />
-                      <span className={`text-xs font-bold ${farmType === value ? 'text-field-700 dark:text-field-400' : 'text-[var(--text-primary)]'}`}>{label}</span>
+                      <Icon className={`w-5 h-5 ${farmType === value ? 'text-crimson-500' : 'text-[var(--text-tertiary)]'}`} />
+                      <span className={`text-xs font-bold ${farmType === value ? 'text-crimson-700 dark:text-crimson-400' : 'text-[var(--text-primary)]'}`}>{label}</span>
                       <span className="text-[10px] text-[var(--text-tertiary)] text-center leading-tight">{desc}</span>
                     </button>
                   ))}
@@ -252,7 +252,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                     step={areaUnit === 'acres' ? 10 : 5}
                     value={farmSize}
                     onChange={e => setFarmSize(Number(e.target.value))}
-                    className="flex-1 accent-field-500"
+                    className="flex-1 accent-crimson-500"
                   />
                   <div className="w-24 text-right">
                     <span className="text-lg font-heading font-bold text-[var(--text-primary)] font-mono">{farmSize.toLocaleString()}</span>
@@ -260,10 +260,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                   </div>
                 </div>
               </div>
-              <div className="bg-field-50 dark:bg-field-900/20 rounded-xl p-4 border border-field-200 dark:border-field-800">
+              <div className="bg-crimson-50 dark:bg-crimson-900/20 rounded-xl p-4 border border-crimson-200 dark:border-crimson-800">
                 <div className="flex items-center gap-2 mb-2">
-                  <MapPin className="w-4 h-4 text-field-600 dark:text-field-400" />
-                  <span className="text-xs font-bold text-field-700 dark:text-field-400">Region defaults</span>
+                  <MapPin className="w-4 h-4 text-crimson-600 dark:text-crimson-400" />
+                  <span className="text-xs font-bold text-crimson-700 dark:text-crimson-400">Region defaults</span>
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   {selectedCountry.flag} <span className="font-semibold">{selectedCountry.name}</span> ·
@@ -308,7 +308,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                   <p className="text-xs font-semibold text-[var(--text-secondary)] mb-2">Your starter crops</p>
                   <div className="flex flex-wrap gap-2">
                     {selectedCrops.map(crop => (
-                      <span key={crop.id} className="px-3 py-1.5 bg-field-50 dark:bg-field-900/20 text-field-700 dark:text-field-400 rounded-full text-xs font-bold border border-field-200 dark:border-field-800">
+                      <span key={crop.id} className="px-3 py-1.5 bg-crimson-50 dark:bg-crimson-900/20 text-crimson-700 dark:text-crimson-400 rounded-full text-xs font-bold border border-crimson-200 dark:border-crimson-800">
                         {crop.name}
                       </span>
                     ))}
@@ -321,8 +321,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                 </div>
               )}
 
-              <div className="bg-harvest-50 dark:bg-harvest-900/10 rounded-xl p-4 border border-harvest-200 dark:border-harvest-800/50">
-                <p className="text-xs text-harvest-700 dark:text-harvest-400 font-medium">
+              <div className="bg-sunburst-50 dark:bg-sunburst-900/10 rounded-xl p-4 border border-sunburst-200 dark:border-sunburst-800/50">
+                <p className="text-xs text-sunburst-700 dark:text-sunburst-400 font-medium">
                   AgriFlow will configure your dashboard with {selectedCountry.name}-specific crops, livestock, market prices, weather, and community data.
                 </p>
               </div>
@@ -348,7 +348,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                type="button"
                onClick={handleNext}
                disabled={!canNext()}
-               className="px-8 py-4 bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 font-bold text-sm rounded-xl transition-all shadow-lg shadow-field-500/15 dark:shadow-harvest-500/15 hover:shadow-field-500/25 dark:hover:shadow-harvest-500/25 flex items-center gap-2 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+               className="px-8 py-4 bg-crimson-800 dark:bg-sunburst-500 hover:bg-crimson-700 dark:hover:bg-sunburst-400 text-white dark:text-crimson-950 font-bold text-sm rounded-xl transition-all shadow-lg shadow-crimson-500/15 dark:shadow-sunburst-500/15 hover:shadow-crimson-500/25 dark:hover:shadow-sunburst-500/25 flex items-center gap-2 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
              >
                Continue
                <ChevronRight className="w-4 h-4" />
@@ -358,7 +358,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                type="button"
                onClick={handleSubmit}
                disabled={isAuthenticating}
-               className="px-10 py-4 bg-field-800 dark:bg-harvest-500 hover:bg-field-700 dark:hover:bg-harvest-400 text-white dark:text-field-950 font-bold text-sm rounded-xl transition-all shadow-lg shadow-field-500/15 dark:shadow-harvest-500/15 hover:shadow-field-500/25 dark:hover:shadow-harvest-500/25 flex items-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+               className="px-10 py-4 bg-crimson-800 dark:bg-sunburst-500 hover:bg-crimson-700 dark:hover:bg-sunburst-400 text-white dark:text-crimson-950 font-bold text-sm rounded-xl transition-all shadow-lg shadow-crimson-500/15 dark:shadow-sunburst-500/15 hover:shadow-crimson-500/25 dark:hover:shadow-sunburst-500/25 flex items-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
              >
                {isAuthenticating ? (
                  <Loader2 className="w-5 h-5 animate-spin" />

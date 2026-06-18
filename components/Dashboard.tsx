@@ -45,46 +45,46 @@ const Dashboard: React.FC = () => {
 
   const getRiskColor = (risk: string) => {
     switch(risk) {
-      case 'Low': return 'text-field-600 dark:text-field-400';
-      case 'Moderate': return 'text-harvest-600 dark:text-harvest-400';
+      case 'Low': return 'text-crimson-600 dark:text-crimson-400';
+      case 'Moderate': return 'text-sunburst-600 dark:text-sunburst-400';
       case 'High': return 'text-orange-600 dark:text-orange-400';
       case 'Severe': return 'text-red-600 dark:text-red-400 animate-pulse';
-      default: return 'text-soil-500';
+      default: return 'text-terra-500';
     }
   };
 
   const getRiskBg = (risk: string) => {
     switch(risk) {
-      case 'Low': return 'bg-field-50 dark:bg-field-900/20 border-field-200 dark:border-field-800';
-      case 'Moderate': return 'bg-harvest-50 dark:bg-harvest-900/20 border-harvest-200 dark:border-harvest-800';
+      case 'Low': return 'bg-crimson-50 dark:bg-crimson-900/20 border-crimson-200 dark:border-crimson-800';
+      case 'Moderate': return 'bg-sunburst-50 dark:bg-sunburst-900/20 border-sunburst-200 dark:border-sunburst-800';
       case 'High': return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800';
       case 'Severe': return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
-      default: return 'bg-soil-50 dark:bg-[#183222] border-soil-200 dark:border-[#1C3A28]';
+      default: return 'bg-terra-50 dark:bg-[#183222] border-terra-200 dark:border-[#1C3A28]';
     }
   };
 
   const getWeatherGradient = () => {
     const condition = weather.condition?.toLowerCase() || '';
     if (condition.includes('rain') || condition.includes('shower') || condition.includes('drizzle')) {
-      return 'from-field-800 via-field-700 to-field-600';
+      return 'from-crimson-800 via-crimson-700 to-crimson-600';
     }
     if (condition.includes('cloud') || condition.includes('overcast')) {
-      return 'from-field-700 via-field-600 to-field-700';
+      return 'from-crimson-700 via-crimson-600 to-crimson-700';
     }
     if (condition.includes('sunny') || condition.includes('clear') || condition.includes('fair')) {
       return 'from-amber-600 via-orange-500 to-amber-500';
     }
     if (condition.includes('storm') || condition.includes('thunder')) {
-      return 'from-field-900 via-field-800 to-field-700';
+      return 'from-crimson-900 via-crimson-800 to-crimson-700';
     }
-    return 'from-field-700 via-field-600 to-emerald-600';
+    return 'from-crimson-700 via-crimson-600 to-emerald-600';
   };
 
   const getWeatherIcon = () => {
     const condition = weather.condition?.toLowerCase() || '';
     if (condition.includes('rain') || condition.includes('shower') || condition.includes('drizzle')) return <CloudDrizzle className="w-12 h-12 text-white/90" />;
     if (condition.includes('cloud') || condition.includes('overcast')) return <Cloud className="w-12 h-12 text-white/90" />;
-    if (condition.includes('sunny') || condition.includes('clear') || condition.includes('fair')) return <Sun className="w-12 h-12 text-harvest-300" />;
+    if (condition.includes('sunny') || condition.includes('clear') || condition.includes('fair')) return <Sun className="w-12 h-12 text-sunburst-300" />;
     return <Sun className="w-12 h-12 text-white/90" />;
   };
 
@@ -147,19 +147,19 @@ const Dashboard: React.FC = () => {
          <div>
           <div className="flex items-center mt-2 gap-3 flex-wrap">
              {userLocation.latitude && userLocation.longitude ? (
-               <span className="inline-flex items-center text-secondary-dynamic bg-soil-100/60 dark:bg-[#183222] px-2.5 py-1 rounded-lg text-xs font-medium border border-soil-200/60 dark:border-[#1C3A28]/60">
-                  <MapPin className="w-3.5 h-3.5 mr-1.5 text-field-600 dark:text-field-400" />
+               <span className="inline-flex items-center text-secondary-dynamic bg-terra-100/60 dark:bg-[#183222] px-2.5 py-1 rounded-lg text-xs font-medium border border-terra-200/60 dark:border-[#1C3A28]/60">
+                  <MapPin className="w-3.5 h-3.5 mr-1.5 text-crimson-600 dark:text-crimson-400" />
                   {userLocation.latitude.toFixed(4)}, {userLocation.longitude.toFixed(4)}
                </span>
              ) : (
-               <span className="inline-flex items-center text-soil-400 dark:text-[#5C7A68] bg-soil-50 dark:bg-[#12261A] px-2.5 py-1 rounded-lg text-xs font-medium border border-soil-200 dark:border-[#1C3A28]">
+               <span className="inline-flex items-center text-terra-400 dark:text-[#5C7A68] bg-terra-50 dark:bg-[#12261A] px-2.5 py-1 rounded-lg text-xs font-medium border border-terra-200 dark:border-[#1C3A28]">
                   <MapPinOff className="w-3.5 h-3.5 mr-1.5" />
                   {userLocation.error ? 'Location unavailable' : 'Locating...'}
                </span>
              )}
-             <span className="text-soil-300 dark:text-[#1C3A28]">·</span>
+             <span className="text-terra-300 dark:text-[#1C3A28]">·</span>
              <span className="text-secondary-dynamic text-xs font-medium">Season 2026</span>
-             <span className="text-soil-300 dark:text-[#1C3A28]">·</span>
+             <span className="text-terra-300 dark:text-[#1C3A28]">·</span>
              <span className="text-secondary-dynamic text-xs font-medium">{weather.locationName}</span>
           </div>
         </div>
@@ -179,9 +179,9 @@ const Dashboard: React.FC = () => {
             value: crops.length.toString(),
             detail: `${healthyCrops} healthy, ${attentionCrops} need attention`,
             icon: Sprout,
-            iconBg: 'bg-field-50 dark:bg-field-900/30',
-            iconColor: 'text-field-600 dark:text-field-400',
-            borderColor: 'border-field-200/60 dark:border-field-800/40',
+            iconBg: 'bg-crimson-50 dark:bg-crimson-900/30',
+            iconColor: 'text-crimson-600 dark:text-crimson-400',
+            borderColor: 'border-crimson-200/60 dark:border-crimson-800/40',
             trend: healthyCrops > attentionCrops ? 'up' : 'down',
             trendLabel: healthyCrops > attentionCrops ? 'Mostly healthy' : 'Attention needed',
           },
@@ -190,9 +190,9 @@ const Dashboard: React.FC = () => {
             value: totalLivestockCount.toString(),
             detail: `${livestock.length} herds, ${healthyLivestock} healthy`,
             icon: Beef,
-            iconBg: 'bg-harvest-50 dark:bg-harvest-900/20',
-            iconColor: 'text-harvest-600 dark:text-harvest-400',
-            borderColor: 'border-harvest-200/60 dark:border-harvest-800/30',
+            iconBg: 'bg-sunburst-50 dark:bg-sunburst-900/20',
+            iconColor: 'text-sunburst-600 dark:text-sunburst-400',
+            borderColor: 'border-sunburst-200/60 dark:border-sunburst-800/30',
             trend: 'up',
             trendLabel: 'All monitored',
           },
@@ -212,9 +212,9 @@ const Dashboard: React.FC = () => {
             value: alerts.length.toString(),
             detail: alerts.filter(a => a.severity === 'critical').length > 0 ? 'Critical alert active' : 'No critical alerts',
             icon: AlertTriangle,
-            iconBg: alerts.filter(a => a.severity === 'critical').length > 0 ? 'bg-red-50 dark:bg-red-900/20' : 'bg-soil-50 dark:bg-[#183222]',
-            iconColor: alerts.filter(a => a.severity === 'critical').length > 0 ? 'text-red-600 dark:text-red-400' : 'text-soil-400 dark:text-[#5C7A68]',
-            borderColor: alerts.filter(a => a.severity === 'critical').length > 0 ? 'border-red-200/60 dark:border-red-800/30' : 'border-soil-200/60 dark:border-[#1C3A28]/40',
+            iconBg: alerts.filter(a => a.severity === 'critical').length > 0 ? 'bg-red-50 dark:bg-red-900/20' : 'bg-terra-50 dark:bg-[#183222]',
+            iconColor: alerts.filter(a => a.severity === 'critical').length > 0 ? 'text-red-600 dark:text-red-400' : 'text-terra-400 dark:text-[#5C7A68]',
+            borderColor: alerts.filter(a => a.severity === 'critical').length > 0 ? 'border-red-200/60 dark:border-red-800/30' : 'border-terra-200/60 dark:border-[#1C3A28]/40',
             trend: alerts.length === 0 ? 'up' : 'down',
             trendLabel: alerts.length === 0 ? 'All clear' : 'Review needed',
           },
@@ -225,10 +225,10 @@ const Dashboard: React.FC = () => {
                 <kpi.icon className={`w-5 h-5 ${kpi.iconColor}`} />
               </div>
               <div className="flex items-center gap-1 text-xs font-medium">
-                {kpi.trend === 'up' && <ArrowUpRight className="w-3.5 h-3.5 text-field-500" />}
+                {kpi.trend === 'up' && <ArrowUpRight className="w-3.5 h-3.5 text-crimson-500" />}
                 {kpi.trend === 'down' && <ArrowDownRight className="w-3.5 h-3.5 text-orange-500" />}
-                {kpi.trend === 'neutral' && <Minus className="w-3.5 h-3.5 text-soil-400" />}
-                <span className={kpi.trend === 'up' ? 'text-field-600 dark:text-field-400' : kpi.trend === 'down' ? 'text-orange-600 dark:text-orange-400' : 'text-secondary-dynamic'}>
+                {kpi.trend === 'neutral' && <Minus className="w-3.5 h-3.5 text-terra-400" />}
+                <span className={kpi.trend === 'up' ? 'text-crimson-600 dark:text-crimson-400' : kpi.trend === 'down' ? 'text-orange-600 dark:text-orange-400' : 'text-secondary-dynamic'}>
                   {kpi.trendLabel}
                 </span>
               </div>
@@ -292,13 +292,13 @@ const Dashboard: React.FC = () => {
             <Globe className="w-5 h-5" />
           </div>
           <h3 className="text-base font-bold text-primary-dynamic font-heading">Market Intelligence</h3>
-          {isLoadingIntel && <Loader2 className="w-4 h-4 text-soil-400 dark:text-[#5C7A68] animate-spin ml-3" />}
+          {isLoadingIntel && <Loader2 className="w-4 h-4 text-terra-400 dark:text-[#5C7A68] animate-spin ml-3" />}
         </div>
         <div className="text-secondary-dynamic text-sm leading-relaxed relative z-10">
           {liveIntel ? (
-            liveIntel.split('\n').map((line, i) => <p key={i} className="mb-2.5 last:mb-0 border-l-2 border-field-500 dark:border-field-400 pl-3.5">{line}</p>)
+            liveIntel.split('\n').map((line, i) => <p key={i} className="mb-2.5 last:mb-0 border-l-2 border-crimson-500 dark:border-crimson-400 pl-3.5">{line}</p>)
           ) : (
-            <div className="flex items-center gap-2 text-soil-400 dark:text-[#5C7A68] italic">
+            <div className="flex items-center gap-2 text-terra-400 dark:text-[#5C7A68] italic">
               <Loader2 className="w-3.5 h-3.5 animate-spin"/>
               <span>Loading market update...</span>
             </div>
@@ -320,25 +320,25 @@ const Dashboard: React.FC = () => {
             </div>
             {alerts.length > 0 && <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs font-bold px-2.5 py-1 rounded-full">{alerts.length}</span>}
           </div>
-          <div className="divide-y divide-soil-100/60 dark:divide-[#1C3A28]/40">
+          <div className="divide-y divide-terra-100/60 dark:divide-[#1C3A28]/40">
             {alerts.length === 0 ? (
               <div className="p-8 text-center text-secondary-dynamic">
-                <div className="w-12 h-12 bg-field-50 dark:bg-field-900/20 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
-                  <ShieldCheck className="w-6 h-6 text-field-600 dark:text-field-400" />
+                <div className="w-12 h-12 bg-crimson-50 dark:bg-crimson-900/20 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                  <ShieldCheck className="w-6 h-6 text-crimson-600 dark:text-crimson-400" />
                 </div>
                 <p className="font-semibold text-sm text-primary-dynamic">No active alerts</p>
                 <p className="text-xs mt-1 text-secondary-dynamic">Your farm is looking good</p>
               </div>
             ) : (
               alerts.map((alert) => (
-                <div key={alert.id} className="p-4 hover:bg-soil-50/50 dark:hover:bg-[#183222]/30 transition-colors">
+                <div key={alert.id} className="p-4 hover:bg-terra-50/50 dark:hover:bg-[#183222]/30 transition-colors">
                   <div className="flex justify-between items-start mb-1">
                     <h4 className="font-semibold text-primary-dynamic text-sm">{alert.title}</h4>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg shrink-0 ml-2 ${
                       alert.category === 'FINANCIAL' ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
                       alert.category === 'WEATHER' ? 'bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300' :
-                      alert.category === 'LAND' ? 'bg-field-50 text-field-700 dark:bg-field-900/30 dark:text-field-300' :
-                      'bg-soil-50 text-soil-700 dark:bg-[#183222] dark:text-[#8BA898]'
+                      alert.category === 'LAND' ? 'bg-crimson-50 text-crimson-700 dark:bg-crimson-900/30 dark:text-crimson-300' :
+                      'bg-terra-50 text-terra-700 dark:bg-[#183222] dark:text-[#8BA898]'
                     }`}>
                       {alert.category}
                     </span>
@@ -362,14 +362,14 @@ const Dashboard: React.FC = () => {
              <button
                onClick={handleGenerateTasks}
                disabled={isGenerating}
-               className="flex items-center gap-2 text-field-600 dark:text-field-400 hover:text-field-700 dark:hover:text-field-300 text-xs font-bold transition-colors disabled:opacity-50 bg-field-50 dark:bg-field-900/20 px-4 py-2 rounded-lg border border-field-200 dark:border-field-800"
+               className="flex items-center gap-2 text-crimson-600 dark:text-crimson-400 hover:text-crimson-700 dark:hover:text-crimson-300 text-xs font-bold transition-colors disabled:opacity-50 bg-crimson-50 dark:bg-crimson-900/20 px-4 py-2 rounded-lg border border-crimson-200 dark:border-crimson-800"
              >
                {isGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
                {isGenerating ? "Generating..." : "AI Generate"}
              </button>
           </div>
 
-          <div className="bg-soil-50/60 dark:bg-[#183222]/40 px-5 py-2.5 border-b border-soil-100/60 dark:border-[#1C3A28]/40 text-xs font-semibold text-secondary-dynamic flex justify-between">
+          <div className="bg-terra-50/60 dark:bg-[#183222]/40 px-5 py-2.5 border-b border-terra-100/60 dark:border-[#1C3A28]/40 text-xs font-semibold text-secondary-dynamic flex justify-between">
             <span>{pendingTasks} remaining</span>
             <span>{completedToday} completed</span>
           </div>
@@ -384,15 +384,15 @@ const Dashboard: React.FC = () => {
                  onClick={() => toggleTask(task.id)}
                  onKeyDown={(e) => handleTaskKeyDown(e, task.id)}
                  className={`
-                   flex items-center p-5 cursor-pointer border-b border-soil-100/40 dark:border-[#1C3A28]/30 last:border-0 hover:bg-soil-50/40 dark:hover:bg-[#183222]/20 transition-colors
+                   flex items-center p-5 cursor-pointer border-b border-terra-100/40 dark:border-[#1C3A28]/30 last:border-0 hover:bg-terra-50/40 dark:hover:bg-[#183222]/20 transition-colors
                    ${task.completed ? 'opacity-50' : ''}
                  `}
                >
-                <div className={`mr-3 ${task.completed ? 'text-soil-300 dark:text-[#1C3A28]' : 'text-field-600 dark:text-field-500'}`}>
+                <div className={`mr-3 ${task.completed ? 'text-terra-300 dark:text-[#1C3A28]' : 'text-crimson-600 dark:text-crimson-500'}`}>
                   {task.completed ? <CheckSquare className="w-[18px] h-[18px]" /> : <Square className="w-[18px] h-[18px]" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium truncate ${task.completed ? 'line-through text-soil-400 dark:text-[#5C7A68]' : 'text-primary-dynamic'}`}>
+                  <p className={`text-sm font-medium truncate ${task.completed ? 'line-through text-terra-400 dark:text-[#5C7A68]' : 'text-primary-dynamic'}`}>
                     {task.text}
                   </p>
                   {task.priority === 'high' && !task.completed && (
@@ -405,11 +405,11 @@ const Dashboard: React.FC = () => {
             ))}
             {tasks.length === 0 && (
               <div className="p-8 text-center">
-                <div className="w-12 h-12 bg-soil-100 dark:bg-[#183222] rounded-2xl flex items-center justify-center mx-auto mb-3 text-soil-400 dark:text-[#5C7A68] shadow-sm">
+                <div className="w-12 h-12 bg-terra-100 dark:bg-[#183222] rounded-2xl flex items-center justify-center mx-auto mb-3 text-terra-400 dark:text-[#5C7A68] shadow-sm">
                   <Calendar className="w-6 h-6"/>
                 </div>
                 <p className="text-secondary-dynamic font-medium text-sm">No tasks scheduled</p>
-                <button onClick={handleGenerateTasks} className="mt-2 text-field-600 dark:text-field-400 text-xs font-bold hover:underline">Generate with AI</button>
+                <button onClick={handleGenerateTasks} className="mt-2 text-crimson-600 dark:text-crimson-400 text-xs font-bold hover:underline">Generate with AI</button>
               </div>
             )}
           </div>
@@ -421,24 +421,24 @@ const Dashboard: React.FC = () => {
         <section className="card-surface overflow-hidden animate-fade-in-up">
           <div className="p-5 organic-divider pb-4 flex justify-between items-center">
             <div className="flex items-center">
-              <div className="p-2 bg-field-50 dark:bg-field-900/20 rounded-xl text-field-600 dark:text-field-400 mr-3 shadow-sm">
+              <div className="p-2 bg-crimson-50 dark:bg-crimson-900/20 rounded-xl text-crimson-600 dark:text-crimson-400 mr-3 shadow-sm">
                 <Sprout className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-primary-dynamic font-heading">Crop Status Overview</h3>
             </div>
             <span className="text-xs font-medium text-secondary-dynamic">{crops.length} total</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-soil-100/60 dark:divide-[#1C3A28]/40">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-terra-100/60 dark:divide-[#1C3A28]/40">
             {crops.map(crop => {
               const statusStyles: Record<string, string> = {
-                'Healthy': 'bg-field-50 dark:bg-field-900/20 text-field-700 dark:text-field-300 border-field-200 dark:border-field-800',
-                'Needs Attention': 'bg-harvest-50 dark:bg-harvest-900/20 text-harvest-700 dark:text-harvest-300 border-harvest-200 dark:border-harvest-800',
+                'Healthy': 'bg-crimson-50 dark:bg-crimson-900/20 text-crimson-700 dark:text-crimson-300 border-crimson-200 dark:border-crimson-800',
+                'Needs Attention': 'bg-sunburst-50 dark:bg-sunburst-900/20 text-sunburst-700 dark:text-sunburst-300 border-sunburst-200 dark:border-sunburst-800',
                 'Critical': 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800',
                 'Harvest Ready': 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800',
               };
               const style = statusStyles[crop.status] || statusStyles['Healthy'];
               return (
-                <div key={crop.id} className="p-4 flex items-center gap-3 hover:bg-soil-50/30 dark:hover:bg-[#183222]/15 transition-colors">
+                <div key={crop.id} className="p-4 flex items-center gap-3 hover:bg-terra-50/30 dark:hover:bg-[#183222]/15 transition-colors">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${style} border shrink-0 shadow-sm`}>
                     {crop.name.charAt(0)}
                   </div>

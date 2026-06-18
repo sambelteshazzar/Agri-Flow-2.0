@@ -348,7 +348,7 @@ export const INITIAL_POSTS: ForumPost[] = [
     id: '3', 
     author: 'AgriSolar Nigeria', 
     title: 'Solar irrigation pump review: Grundfos vs Lobera for dry season', 
-    content: 'We field-tested both solar pump systems in Kebbi State. Flow rates under partial cloud cover and cost per hectare results inside...',
+    content: 'We crimson-tested both solar pump systems in Kebbi State. Flow rates under partial cloud cover and cost per hectare results inside...',
     replies: 14, 
     likes: 28,
     category: 'Equipment',

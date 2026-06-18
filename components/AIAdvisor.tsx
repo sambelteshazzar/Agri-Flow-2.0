@@ -321,26 +321,26 @@ const AIAdvisor: React.FC = () => {
     <div className="h-[calc(100vh-2rem)] flex flex-col md:h-[calc(100vh-3rem)] relative">
       
       {isCallActive && (
-        <div className="absolute inset-0 z-50 bg-field-950/95 flex flex-col items-center justify-center animate-fade-in">
+        <div className="absolute inset-0 z-50 bg-crimson-950/95 flex flex-col items-center justify-center animate-fade-in">
            <div className="relative w-full max-w-md p-8 flex flex-col items-center text-center">
               <div className="mb-8 relative">
-                 <div className="w-32 h-32 rounded-full bg-harvest-500/20 flex items-center justify-center animate-pulse">
-                    <div className="w-24 h-24 rounded-full bg-harvest-500/40 flex items-center justify-center">
-                       <Mic className="w-12 h-12 text-harvest-400" />
+                 <div className="w-32 h-32 rounded-full bg-sunburst-500/20 flex items-center justify-center animate-pulse">
+                    <div className="w-24 h-24 rounded-full bg-sunburst-500/40 flex items-center justify-center">
+                       <Mic className="w-12 h-12 text-sunburst-400" />
                     </div>
                  </div>
-                 <div className="absolute inset-0 border-4 border-harvest-500/30 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>
-                 <div className="absolute inset-0 border-4 border-harvest-500/20 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }}></div>
+                 <div className="absolute inset-0 border-4 border-sunburst-500/30 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>
+                 <div className="absolute inset-0 border-4 border-sunburst-500/20 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }}></div>
               </div>
               
                <h3 className="text-2xl font-bold text-white mb-2 font-heading">Live Consultation</h3>
-               <p className="text-field-300 mb-8 text-sm">Voice call with your AI advisor</p>
+               <p className="text-crimson-300 mb-8 text-sm">Voice call with your AI advisor</p>
               
                <div className="flex gap-1 h-12 items-end justify-center mb-10 w-full max-w-[200px]">
                   {[...Array(8)].map((_, i) => (
                      <div 
                        key={i} 
-                       className="w-3 bg-harvest-500 rounded-t-sm transition-all duration-75"
+                       className="w-3 bg-sunburst-500 rounded-t-sm transition-all duration-75"
                        style={{ 
                          height: `${Math.max(10, volumeLevel * (0.4 + i * 0.1))}%`,
                          opacity: 0.5 + (volumeLevel / 200) 
@@ -356,7 +356,7 @@ const AIAdvisor: React.FC = () => {
                 >
                    <Phone className="w-8 h-8 rotate-[135deg]" aria-hidden="true" />
                </button>
-               <p className="text-field-400 mt-4 text-xs font-semibold">End Call</p>
+               <p className="text-crimson-400 mt-4 text-xs font-semibold">End Call</p>
            </div>
         </div>
       )}
@@ -364,7 +364,7 @@ const AIAdvisor: React.FC = () => {
       <div className="mb-4 flex items-center justify-between organic-divider pb-2 transition-colors">
         <div>
            <h2 className="text-2xl font-bold text-primary-dynamic font-heading flex items-center">
-             <BrainCircuit className="w-6 h-6 text-harvest-500 mr-2" aria-hidden="true" />
+             <BrainCircuit className="w-6 h-6 text-sunburst-500 mr-2" aria-hidden="true" />
              AI Consultant
            </h2>
             <p className="text-secondary-dynamic text-xs font-semibold">AI Assistant / Live Search / Vision</p>
@@ -374,7 +374,7 @@ const AIAdvisor: React.FC = () => {
           disabled={isConnectingCall}
           className={`
             flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs transition-all shadow-md
-            ${isConnectingCall ? 'bg-soil-100 text-soil-500 dark:bg-field-800 dark:text-field-400' : 'bg-field-800 dark:bg-harvest-100 text-white dark:text-field-900 hover:bg-field-700 dark:hover:bg-harvest-200'}
+            ${isConnectingCall ? 'bg-terra-100 text-terra-500 dark:bg-crimson-800 dark:text-crimson-400' : 'bg-crimson-800 dark:bg-sunburst-100 text-white dark:text-crimson-900 hover:bg-crimson-700 dark:hover:bg-sunburst-200'}
           `}
         >
           {isConnectingCall ? <Loader2 className="w-4 h-4 animate-spin"/> : <Phone className="w-4 h-4" />}
@@ -395,18 +395,18 @@ const AIAdvisor: React.FC = () => {
               <div className={`
                 max-w-[90%] md:max-w-[80%] rounded p-4 shadow-sm border-l-4
                 ${msg.role === 'user' 
-                  ? 'bg-card-dynamic border-l-field-400 dark:border-l-field-500 text-primary-dynamic' 
-                  : 'bg-field-800 dark:bg-field-900 text-field-100 border-l-harvest-500'}
+                  ? 'bg-card-dynamic border-l-crimson-400 dark:border-l-crimson-500 text-primary-dynamic' 
+                  : 'bg-crimson-800 dark:bg-crimson-900 text-crimson-100 border-l-sunburst-500'}
               `}>
                 {msg.role === 'model' && (
-                  <div className="flex items-center mb-2 pb-2 border-b border-field-600">
-                    <Sparkles className="w-3 h-3 mr-2 text-harvest-500" aria-hidden="true" />
-                    <span className="text-[10px] font-semibold text-field-300">Analysis</span>
+                  <div className="flex items-center mb-2 pb-2 border-b border-crimson-600">
+                    <Sparkles className="w-3 h-3 mr-2 text-sunburst-500" aria-hidden="true" />
+                    <span className="text-[10px] font-semibold text-crimson-300">Analysis</span>
                   </div>
                 )}
                 
                 {msg.image && (
-                  <div className="p-1 bg-soil-100 dark:bg-field-700 mb-2 rounded w-fit">
+                  <div className="p-1 bg-terra-100 dark:bg-crimson-700 mb-2 rounded w-fit">
                     <img src={msg.image} alt="User uploaded image" className="max-h-40 object-cover rounded-sm" />
                   </div>
                 )}
@@ -416,8 +416,8 @@ const AIAdvisor: React.FC = () => {
                 </div>
 
                 {msg.sources && msg.sources.length > 0 && (
-                  <div className="mt-4 pt-3 border-t border-field-700">
-                    <div className="flex items-center gap-1 mb-2 text-field-300">
+                  <div className="mt-4 pt-3 border-t border-crimson-700">
+                    <div className="flex items-center gap-1 mb-2 text-crimson-300">
                       <Globe className="w-3 h-3" />
                       <span className="text-[10px] font-semibold">Sources</span>
                     </div>
@@ -428,7 +428,7 @@ const AIAdvisor: React.FC = () => {
                           href={source.uri} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 px-2 py-1 bg-field-700 hover:bg-field-600 rounded text-[10px] text-field-200 transition-colors border border-field-600"
+                          className="flex items-center gap-1.5 px-2 py-1 bg-crimson-700 hover:bg-crimson-600 rounded text-[10px] text-crimson-200 transition-colors border border-crimson-600"
                         >
                           <span className="truncate max-w-[150px]">{source.title}</span>
                           <ExternalLink className="w-2.5 h-2.5 opacity-50" />
@@ -438,7 +438,7 @@ const AIAdvisor: React.FC = () => {
                   </div>
                 )}
                 
-                <p className="text-[10px] mt-2 text-right opacity-50 text-field-400">
+                <p className="text-[10px] mt-2 text-right opacity-50 text-crimson-400">
                   {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
@@ -446,9 +446,9 @@ const AIAdvisor: React.FC = () => {
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-field-800 dark:bg-field-900 rounded p-3 flex items-center gap-3 shadow-md">
-                <Loader2 className="w-4 h-4 animate-spin text-harvest-500" aria-hidden="true" />
-                <span className="text-xs font-semibold text-field-300">Processing...</span>
+              <div className="bg-crimson-800 dark:bg-crimson-900 rounded p-3 flex items-center gap-3 shadow-md">
+                <Loader2 className="w-4 h-4 animate-spin text-sunburst-500" aria-hidden="true" />
+                <span className="text-xs font-semibold text-crimson-300">Processing...</span>
               </div>
             </div>
           )}
@@ -457,7 +457,7 @@ const AIAdvisor: React.FC = () => {
 
         <div className="p-4 bg-card-dynamic border-t border-primary-dynamic transition-colors">
           {selectedImage && (
-            <div className="mb-3 flex items-center justify-between p-2 bg-soil-50 dark:bg-field-800 border border-primary-dynamic rounded">
+            <div className="mb-3 flex items-center justify-between p-2 bg-terra-50 dark:bg-crimson-800 border border-primary-dynamic rounded">
               <div className="flex items-center gap-3">
                 <img src={selectedImage} alt="Thumbnail of attached image" className="w-10 h-10 object-cover rounded-sm" />
                 <div>
@@ -474,7 +474,7 @@ const AIAdvisor: React.FC = () => {
           )}
 
           {includeContext && (
-             <div className="mb-3 p-2 bg-soil-50 dark:bg-field-900/50 rounded border border-primary-dynamic animate-fade-in">
+             <div className="mb-3 p-2 bg-terra-50 dark:bg-crimson-900/50 rounded border border-primary-dynamic animate-fade-in">
                 <div className="flex items-center gap-2 mb-1 text-secondary-dynamic">
                    <Info className="w-4 h-4" aria-hidden="true" />
                    <label htmlFor="contextInput" className="text-xs font-semibold">Additional Context</label>
@@ -485,7 +485,7 @@ const AIAdvisor: React.FC = () => {
                    value={soilContext}
                    onChange={(e) => setSoilContext(e.target.value)}
                    placeholder="Enter soil conditions, weather, etc..."
-                   className="w-full text-sm p-2 bg-card-dynamic border border-primary-dynamic focus:outline-none focus:border-harvest-500 font-bold text-primary-dynamic placeholder-field-400"
+                   className="w-full text-sm p-2 bg-card-dynamic border border-primary-dynamic focus:outline-none focus:border-sunburst-500 font-bold text-primary-dynamic placeholder-crimson-400"
                 />
              </div>
           )}
@@ -505,7 +505,7 @@ const AIAdvisor: React.FC = () => {
                <button
                  type="button"
                  onClick={() => setIncludeContext(!includeContext)}
-                 className={`p-3 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-harvest-500 ${includeContext ? 'bg-soil-200 dark:bg-field-700 border-soil-400 dark:border-field-500' : 'bg-card-dynamic border-primary-dynamic hover:bg-soil-50 dark:hover:bg-field-800'} text-secondary-dynamic`}
+                 className={`p-3 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-sunburst-500 ${includeContext ? 'bg-terra-200 dark:bg-crimson-700 border-terra-400 dark:border-crimson-500' : 'bg-card-dynamic border-primary-dynamic hover:bg-terra-50 dark:hover:bg-crimson-800'} text-secondary-dynamic`}
                  title="Add Context"
                >
                  <Info className="w-5 h-5" aria-hidden="true" />
@@ -513,7 +513,7 @@ const AIAdvisor: React.FC = () => {
                <button
                  type="button"
                  onClick={() => fileInputRef.current?.click()}
-                 className={`p-3 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-harvest-500 ${selectedImage ? 'bg-soil-200 dark:bg-field-700 border-soil-400 dark:border-field-500' : 'bg-card-dynamic border-primary-dynamic hover:bg-soil-50 dark:hover:bg-field-800'} text-secondary-dynamic`}
+                 className={`p-3 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-sunburst-500 ${selectedImage ? 'bg-terra-200 dark:bg-crimson-700 border-terra-400 dark:border-crimson-500' : 'bg-card-dynamic border-primary-dynamic hover:bg-terra-50 dark:hover:bg-crimson-800'} text-secondary-dynamic`}
                  title="Upload Image"
                >
                  <Camera className="w-5 h-5" aria-hidden="true" />
@@ -531,7 +531,7 @@ const AIAdvisor: React.FC = () => {
                   }
                 }}
                 placeholder="Ask AI or search live markets..."
-                className="w-full h-full min-h-[60px] max-h-[160px] pl-4 pr-4 py-3 bg-card-dynamic border border-primary-dynamic rounded focus:outline-none focus:ring-2 focus:ring-harvest-500 focus:border-transparent resize-none text-sm font-bold text-primary-dynamic placeholder-field-400"
+                className="w-full h-full min-h-[60px] max-h-[160px] pl-4 pr-4 py-3 bg-card-dynamic border border-primary-dynamic rounded focus:outline-none focus:ring-2 focus:ring-sunburst-500 focus:border-transparent resize-none text-sm font-bold text-primary-dynamic placeholder-crimson-400"
               />
             </div>
             
@@ -539,7 +539,7 @@ const AIAdvisor: React.FC = () => {
               type="submit"
               aria-label="Send message"
               disabled={isLoading || (!inputText.trim() && !selectedImage)}
-              className="p-3 mb-[2px] bg-harvest-500 text-field-900 rounded hover:bg-harvest-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm flex items-center justify-center h-[60px] w-[60px] focus:outline-none focus:ring-2 focus:ring-field-800"
+              className="p-3 mb-[2px] bg-sunburst-500 text-crimson-900 rounded hover:bg-sunburst-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm flex items-center justify-center h-[60px] w-[60px] focus:outline-none focus:ring-2 focus:ring-crimson-800"
             >
               {isLoading ? <Loader2 className="w-6 h-6 animate-spin" aria-hidden="true" /> : <Send className="w-6 h-6" aria-hidden="true" />}
             </button>
