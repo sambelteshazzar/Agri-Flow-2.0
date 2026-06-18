@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Camera, Send, Loader2, Sparkles, Info, BrainCircuit, ExternalLink, Globe, X, Phone, Mic, MicOff, Activity } from 'lucide-react';
 import { getFarmingAdvice, analyzeCropImage, CountryContext } from '../services/geminiService';
 import { ChatMessage } from '../types';
@@ -19,6 +19,9 @@ const AIAdvisor: React.FC = () => {
     farmType: userProfile.farmType || 'mixed',
     areaUnit: userProfile.areaUnit || 'ha',
   } : undefined;
+
+  const userNameRef = useRef(userProfile.name);
+  userNameRef.current = userProfile.name;
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -56,12 +59,6 @@ const AIAdvisor: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  useEffect(() => {
-    return () => {
-      endCall();
-    };
-  }, []);
 
   const b64ToUint8Array = (base64: string) => {
     const binaryString = atob(base64);
@@ -118,7 +115,7 @@ const AIAdvisor: React.FC = () => {
           speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } } },
           systemInstruction: {
             parts: [{ text: `You are AgriFlow's Senior Agricultural Consultant. 
-            You are speaking with ${userProfile.name}.
+            You are speaking with ${userNameRef.current}.
             Provide detailed, scientific, yet practical farming advice.
             Focus on regenerative agriculture, cost-savings, and yield optimization.
             Keep responses conversational but concise.` }]
@@ -132,7 +129,7 @@ const AIAdvisor: React.FC = () => {
             const source = ctx.createMediaStreamSource(stream);
             const processor = ctx.createScriptProcessor(4096, 1, 1);
             
-            processor.onaudioprocess = (e) => {
+            processor.onaudioprocess = async (e) => {
               const inputData = e.inputBuffer.getChannelData(0);
               
               const now = Date.now();
@@ -147,14 +144,17 @@ const AIAdvisor: React.FC = () => {
               const pcm16 = floatTo16BitPCM(inputData);
               const b64Data = arrayBufferToBase64(pcm16.buffer);
               
-              sessionPromise.then(session => {
-                session.sendRealtimeInput({
+              try {
+                const session = await sessionPromise;
+                if (session) session.sendRealtimeInput({
                   media: { 
                     mimeType: `audio/pcm;rate=${ctx.sampleRate}`, 
                     data: b64Data 
                   }
                 });
-              });
+              } catch (_e) {
+                // Session closed or not ready — ignore stale sends
+              }
             };
 
             source.connect(processor);
@@ -205,7 +205,7 @@ const AIAdvisor: React.FC = () => {
     }
   };
 
-  const endCall = () => {
+  const endCall = useCallback(() => {
     setIsCallActive(false);
     setIsConnectingCall(false);
     setVolumeLevel(0);
@@ -233,7 +233,11 @@ const AIAdvisor: React.FC = () => {
     
     activeSourcesRef.current.forEach(s => { try { s.stop(); } catch(e){} });
     activeSourcesRef.current.clear();
-  };
+  }, []);
+
+  useEffect(() => {
+    return () => { endCall(); };
+  }, [endCall]);
 
   const formatMessage = (text: string) => {
     if (!text) return "";

@@ -166,7 +166,7 @@ const VoiceAgent: React.FC = () => {
             const source = ctx.createMediaStreamSource(stream);
             const processor = ctx.createScriptProcessor(4096, 1, 1);
             
-            processor.onaudioprocess = (e) => {
+            processor.onaudioprocess = async (e) => {
               const inputData = e.inputBuffer.getChannelData(0);
               
               // Optimized Volume Meter (Throttle updates)
@@ -183,14 +183,17 @@ const VoiceAgent: React.FC = () => {
               const pcm16 = floatTo16BitPCM(inputData);
               const b64Data = arrayBufferToBase64(pcm16.buffer);
               
-              sessionPromise.then(session => {
-                session.sendRealtimeInput({
+              try {
+                const session = await sessionPromise;
+                if (session) session.sendRealtimeInput({
                   media: { 
-                    mimeType: `audio/pcm;rate=${ctx.sampleRate}`, // Dynamic Rate Fix
+                    mimeType: `audio/pcm;rate=${ctx.sampleRate}`,
                     data: b64Data 
                   }
                 });
-              });
+              } catch (_e) {
+                // Session closed or not ready — ignore stale sends
+              }
             };
 
             source.connect(processor);
@@ -210,8 +213,10 @@ const VoiceAgent: React.FC = () => {
                     navigate(dest as NavigationTab);
                     result = { output: `Navigated to ${dest}` };
                   } else if (fc.name === 'setTheme') {
-                    toggleTheme();
-                    result = { output: `Theme toggled` };
+                    const mode = (fc.args as any).mode;
+                    const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                    if (mode && mode !== currentTheme) toggleTheme();
+                    result = { output: `Theme set to ${mode || 'toggled'}` };
                   } else if (fc.name === 'createTask') {
                     const { text, priority } = fc.args as any;
                     addTask(`${text} ${priority === 'high' ? '(High Priority)' : ''}`);
@@ -236,15 +241,18 @@ const VoiceAgent: React.FC = () => {
                   result = { error: 'Action failed' };
                 }
 
-                sessionPromise.then(session => {
-                  session.sendToolResponse({
+                try {
+                  const session = await sessionPromise;
+                  if (session) session.sendToolResponse({
                     functionResponses: [{
                       id: fc.id,
                       name: fc.name,
                       response: { result }
                     }]
                   });
-                });
+                } catch (_e) {
+                  // Session closed — ignore stale tool responses
+                }
               }
             }
 
@@ -297,6 +305,7 @@ const VoiceAgent: React.FC = () => {
     setIsConnecting(false);
     setVolume(0);
     
+    sessionRef.current = null;
     if (mediaStreamRef.current) {
       mediaStreamRef.current.getTracks().forEach(track => track.stop());
       mediaStreamRef.current = null;

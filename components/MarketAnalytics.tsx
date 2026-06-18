@@ -296,7 +296,7 @@ const MarketAnalytics: React.FC = () => {
                           </span>
                        </div>
                        <span className="font-bold text-[var(--text-primary)]">
-                          {[150, 350, 250][i]}T @ ${activeTickerData?.price.toFixed(2)}
+                           {[150, 350, 250][i]}T @ ${activeTickerData?.price?.toFixed(2) ?? '—'}
                        </span>
                     </div>
                  ))}

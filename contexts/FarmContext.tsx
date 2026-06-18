@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef } from 'react';
 import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab } from '../types';
 import { CropService } from '../services/cropService';
 import { LivestockService } from '../services/livestockService';
@@ -279,40 +279,55 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   // Toast Logic
+  const toastTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+
   const showToast = useCallback((message: string, type: ToastMessage['type'] = 'info') => {
     const id = Date.now().toString();
     setToasts(prev => [...prev, { id, message, type }]);
-    // Auto remove
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== id));
+      toastTimersRef.current.delete(id);
     }, 4000);
+    toastTimersRef.current.set(id, timer);
   }, []);
 
   const removeToast = useCallback((id: string) => {
+    const timer = toastTimersRef.current.get(id);
+    if (timer) {
+      clearTimeout(timer);
+      toastTimersRef.current.delete(id);
+    }
     setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      toastTimersRef.current.forEach(timer => clearTimeout(timer));
+      toastTimersRef.current.clear();
+    };
   }, []);
 
   // Poll Logic
   const handlePollVote = useCallback((optionId: number) => {
-    if (pollVoted !== null) return;
-    setPollVoted(optionId);
-    
-    setPollData(prev => {
-      const updated = prev.map(opt => {
-        if (opt.id === optionId) {
-          return { ...opt, votes: opt.votes + 1 };
-        }
-        return opt;
+    setPollVoted(prev => {
+      if (prev !== null) return prev;
+      setPollData(data => {
+        const updated = data.map(opt => {
+          if (opt.id === optionId) {
+            return { ...opt, votes: opt.votes + 1 };
+          }
+          return opt;
+        });
+        const totalVotes = updated.reduce((acc, curr) => acc + curr.votes, 0);
+        return updated.map(opt => ({
+          ...opt,
+          percent: Math.round((opt.votes / totalVotes) * 100)
+        }));
       });
-      
-      const totalVotes = updated.reduce((acc, curr) => acc + curr.votes, 0);
-      return updated.map(opt => ({
-        ...opt,
-        percent: Math.round((opt.votes / totalVotes) * 100)
-      }));
+      showToast('Vote submitted', 'success');
+      return optionId;
     });
-    showToast('Vote submitted', 'success');
-  }, [pollVoted, showToast]);
+  }, [showToast]);
 
   // --- Auth Logic ---
   const login = useCallback(async (data: OnboardingData) => {
@@ -373,11 +388,12 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [showToast]);
 
   const updateUserProfile = useCallback(async (updates: Partial<UserProfile>) => {
+    let newProfile: UserProfile | null = null;
     setUserProfile(prev => {
-      const newProfile = { ...prev, ...updates };
-      db.saveUserProfile(newProfile);
+      newProfile = { ...prev, ...updates };
       return newProfile;
     });
+    if (newProfile) await db.saveUserProfile(newProfile);
     showToast('Profile updated', 'success');
   }, [showToast]);
 
@@ -498,30 +514,33 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // --- Task Actions ---
   const toggleTask = useCallback((id: string) => {
+    let snap: Task[] | null = null;
     setTasks(prevTasks => {
-      const updatedTasks = prevTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
-      db.saveTasks(updatedTasks);
-      return updatedTasks;
+      snap = prevTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+      return snap;
     });
+    if (snap) db.saveTasks(snap);
   }, []);
 
   const addTask = useCallback((text: string) => {
+    let snap: Task[] | null = null;
     setTasks(prevTasks => {
       const newTask: Task = { id: Date.now().toString(), text, completed: false, priority: 'normal' };
-      const updatedTasks = [newTask, ...prevTasks];
-      db.saveTasks(updatedTasks);
-      return updatedTasks;
+      snap = [newTask, ...prevTasks];
+      return snap;
     });
+    if (snap) db.saveTasks(snap);
     showToast('New task added', 'success');
   }, [showToast]);
 
   // --- Education Actions ---
   const completeModule = useCallback((id: string) => {
+    let snap: LearningModule[] | null = null;
     setLearningModules(prevModules => {
-      const updatedModules = prevModules.map(m => m.id === id ? { ...m, completed: true } : m);
-      db.saveModules(updatedModules);
-      return updatedModules;
+      snap = prevModules.map(m => m.id === id ? { ...m, completed: true } : m);
+      return snap;
     });
+    if (snap) db.saveModules(snap);
     showToast('Course completed! Certificate saved.', 'success');
   }, [showToast]);
 
@@ -656,22 +675,38 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setAlerts(prev => prev.filter(a => a.id !== id));
   }, []);
 
+  const contextValue = useMemo(() => ({
+    userProfile, isSignedIn, alerts,
+    theme, toggleTheme, currentView, navigate,
+    toasts, showToast, removeToast,
+    crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
+    stories, trends, suggestedUsers, followedUserIds, likedPostIds,
+    pollData, pollVoted, handlePollVote,
+    login, logout, updateUserProfile, resetApp,
+    addCrop, deleteCrop, updateCropStatus, addLivestock, deleteLivestock, updateLivestockStatus, toggleTask, addTask, completeModule, 
+    refreshMarketPrices, refreshNews, refreshLocation,
+    addActivityLog, getLogsByRef, 
+    addListing, markListingSold, 
+    addPost, getPostReplies, addPostReply, likePost,
+    sendChatMessage, toggleFollowUser, dismissAlert
+  }), [
+    userProfile, isSignedIn, alerts,
+    theme, toggleTheme, currentView, navigate,
+    toasts, showToast, removeToast,
+    crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
+    stories, trends, suggestedUsers, followedUserIds, likedPostIds,
+    pollData, pollVoted, handlePollVote,
+    login, logout, updateUserProfile, resetApp,
+    addCrop, deleteCrop, updateCropStatus, addLivestock, deleteLivestock, updateLivestockStatus, toggleTask, addTask, completeModule, 
+    refreshMarketPrices, refreshNews, refreshLocation,
+    addActivityLog, getLogsByRef, 
+    addListing, markListingSold, 
+    addPost, getPostReplies, addPostReply, likePost,
+    sendChatMessage, toggleFollowUser, dismissAlert
+  ]);
+
   return (
-    <FarmContext.Provider value={{ 
-      userProfile, isSignedIn, alerts,
-      theme, toggleTheme, currentView, navigate,
-      toasts, showToast, removeToast,
-      crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
-      stories, trends, suggestedUsers, followedUserIds, likedPostIds,
-      pollData, pollVoted, handlePollVote,
-      login, logout, updateUserProfile, resetApp,
-      addCrop, deleteCrop, updateCropStatus, addLivestock, deleteLivestock, updateLivestockStatus, toggleTask, addTask, completeModule, 
-      refreshMarketPrices, refreshNews, refreshLocation,
-      addActivityLog, getLogsByRef, 
-      addListing, markListingSold, 
-      addPost, getPostReplies, addPostReply, likePost,
-      sendChatMessage, toggleFollowUser, dismissAlert
-    }}>
+    <FarmContext.Provider value={contextValue}>
       {children}
     </FarmContext.Provider>
   );

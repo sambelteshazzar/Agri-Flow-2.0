@@ -208,9 +208,25 @@ const CommunityHub: React.FC = () => {
     );
   }, [questions, qaSearchQuery]);
 
-  useEffect(() => { setLocalStories(contextStories); }, [contextStories]);
-  useEffect(() => { if (activeTab === 'GROUPS') setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100); }, [chatMessages, activeTab, activeChannel]);
-  useEffect(() => { if (expandedPostId) getPostReplies(expandedPostId).then(setActivePostReplies).catch(() => showToast("Failed to load comments", "error")); }, [expandedPostId, getPostReplies, showToast]);
+  const prevStoriesRef = useRef<Story[]>([]);
+  useEffect(() => {
+    if (contextStories !== prevStoriesRef.current) {
+      prevStoriesRef.current = contextStories;
+      setLocalStories(prev => prev.length === 0 ? contextStories : [...contextStories, ...prev.filter(ls => !contextStories.some(cs => cs.id === ls.id))]);
+    }
+  }, [contextStories]);
+
+  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (activeTab === 'GROUPS') {
+      scrollTimerRef.current = setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+    }
+    return () => { if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current); };
+  }, [chatMessages, activeTab, activeChannel]);
+
+  useEffect(() => {
+    if (expandedPostId) getPostReplies(expandedPostId).then(setActivePostReplies).catch(() => showToast("Failed to load comments", "error"));
+  }, [expandedPostId, getPostReplies, showToast]);
 
   useEffect(() => {
     if (viewingStory) {

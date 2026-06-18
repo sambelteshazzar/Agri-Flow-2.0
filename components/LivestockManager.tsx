@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useFarm } from '../contexts/FarmContext';
-import { Plus, Trash2, X, Beef, Tag, Activity, FileText, ClipboardList, Calendar, HeartPulse, Image as ImageIcon, Scan, AlertTriangle, Upload, Loader2, Stethoscope, Clipboard, Database } from 'lucide-react';
+import { Plus, Trash2, X, Beef, Tag, ClipboardList, Calendar, HeartPulse, Image as ImageIcon, Scan, Upload, Loader2, Stethoscope, Clipboard, Database } from 'lucide-react';
 import { Livestock, LogEntry } from '../types';
 import { analyzeCropImage, CountryContext } from '../services/geminiService';
 
@@ -282,7 +282,7 @@ const LivestockManager: React.FC = () => {
                     <p className="text-sm text-[var(--text-secondary)] italic">No records found.</p>
                   ) : (
                     animalLogs.map((log, idx) => (
-                       <div key={idx} className="border-l-2 border-[var(--border-card)] pl-3 pb-3">
+                       <div key={log.id} className="border-l-2 border-[var(--border-card)] pl-3 pb-3">
                           <div className="text-xs text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] font-semibold mb-1 flex items-center">
                              <Calendar className="w-3 h-3 mr-1" /> {new Date(log.date).toLocaleDateString()}
                              <span className="ml-2 px-1.5 py-0.5 bg-[var(--bg-content)] dark:bg-field-800 text-[var(--text-primary)] dark:text-[var(--text-primary)] rounded-sm">{log.type}</span>

@@ -80,6 +80,18 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name.trim()) {
+      showToast('Please enter your name.', 'error');
+      return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast('Please enter a valid email address.', 'error');
+      return;
+    }
+    if (!password || password.length < 6) {
+      showToast('Password must be at least 6 characters.', 'error');
+      return;
+    }
     if (password !== confirmPassword) {
       showToast('Passwords do not match.', 'error');
       return;
@@ -234,7 +246,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         id="signin-email"
                         type="email"
                         value={email}
-                        onChange={e => setEmail(e.target.value)}
+                        onChange={e => setEmail(e.target.value.trim())}
                         placeholder="you@farm.example.com"
                         required
                         autoComplete="email"
@@ -252,7 +264,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         id="signin-password"
                         type={showPassword ? 'text' : 'password'}
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={e => setPassword(e.target.value.trim())}
                         placeholder="Enter your password"
                         required
                         autoComplete="current-password"
@@ -354,7 +366,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         id="signup-email"
                         type="email"
                         value={email}
-                        onChange={e => setEmail(e.target.value)}
+                        onChange={e => setEmail(e.target.value.trim())}
                         placeholder="you@farm.example.com"
                         required
                         autoComplete="email"
@@ -372,7 +384,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         id="signup-password"
                         type={showPassword ? 'text' : 'password'}
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={e => setPassword(e.target.value.trim())}
                         placeholder="Create a password"
                         required
                         autoComplete="new-password"

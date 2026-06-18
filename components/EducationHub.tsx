@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useFarm } from '../contexts/FarmContext';
-import { GraduationCap, PlayCircle, Check, Clock, BookOpen, BarChart, User, Star, Search, Filter, ArrowLeft, Play, FileText, Lock, Award, CheckCircle, Pause } from 'lucide-react';
+import { GraduationCap, PlayCircle, Check, Clock, BookOpen, User, Star, Search, ArrowLeft, Play, FileText, Lock, Award, Pause } from 'lucide-react';
 
 const COURSE_CONTENT_MAP: Record<string, string> = {
   'Regenerative': 'h2P5z2Q3yJ0',
@@ -35,8 +35,9 @@ const EducationHub: React.FC = () => {
   };
 
   const handleStartCourse = (id: string) => {
+    const mod = learningModules.find(m => m.id === id);
     setActiveCourseId(id);
-    setCurrentLessonIdx(0);
+    setCurrentLessonIdx(mod?.completed ? (mod.lessonsCount - 1) : 0);
     setIsPlaying(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
