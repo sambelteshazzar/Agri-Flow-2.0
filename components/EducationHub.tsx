@@ -7,19 +7,24 @@ const COURSE_CONTENT_MAP: Record<string, string> = {
   'Tech': 'Q6sL-7sF_Gw',
   'Economics': '1s5o7s3y_wY',
   'Resilience': 'G9K7z9JcQj8',
-  'Default': 'dQw4w9WgXcQ'
+  'Default': '6S6PJ8W1gbM'
 };
 
 const EducationHub: React.FC = () => {
   const { learningModules, completeModule } = useFarm();
   const [filterCategory, setFilterCategory] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeCourseId, setActiveCourseId] = useState<string | null>(null);
   const [currentLessonIdx, setCurrentLessonIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const categories = ['All', 'Regenerative', 'Economics', 'Tech', 'Resilience'];
 
-  const filteredModules = learningModules.filter(m => filterCategory === 'All' || m.category === filterCategory);
+  const filteredModules = learningModules.filter(m => {
+    const matchesCategory = filterCategory === 'All' || m.category === filterCategory;
+    const matchesSearch = !searchQuery || m.title.toLowerCase().includes(searchQuery.toLowerCase()) || (m.description && m.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    return matchesCategory && matchesSearch;
+  });
 
   const activeCourse = useMemo(() => 
     learningModules.find(m => m.id === activeCourseId), 
@@ -269,7 +274,7 @@ const EducationHub: React.FC = () => {
          </div>
          <div className="relative w-full md:w-64">
             <Search className="absolute left-3 top-2.5 w-4 h-4 text-jade-400" />
-            <input type="text" placeholder="Search courses..." className="w-full pl-10 pr-4 py-2 bg-card-dynamic border border-primary-dynamic rounded-full text-sm font-medium focus:outline-none focus:border-jade-400 dark:focus:border-jade-500 text-primary-dynamic" />
+            <input type="text" placeholder="Search courses..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full pl-10 pr-4 py-2 bg-card-dynamic border border-primary-dynamic rounded-full text-sm font-medium focus:outline-none focus:border-jade-400 dark:focus:border-jade-500 text-primary-dynamic" />
          </div>
       </div>
 

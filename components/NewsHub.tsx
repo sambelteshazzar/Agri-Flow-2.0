@@ -1,7 +1,14 @@
 
 import React, { useEffect } from 'react';
 import { useFarm } from '../contexts/FarmContext';
-import { Newspaper, Loader2, ExternalLink, Clock, RefreshCw, Zap, TrendingUp, Leaf, Landmark, Signal } from 'lucide-react';
+import { Newspaper, Loader2, ExternalLink, Clock, RefreshCw, Zap, TrendingUp, Leaf, Landmark, Signal, Search } from 'lucide-react';
+
+const AG_NEWS_SOURCES: Record<string, string> = {
+  Market: 'https://www.reuters.com/business/agriculture/',
+  Tech: 'https://www.agweb.com/news/technology',
+  Climate: 'https://www.fao.org/climate-change/en/',
+  Policy: 'https://www.agri-pulse.com/',
+};
 
 const NewsHub: React.FC = () => {
   const { newsArticles, refreshNews, isLoadingNews, showToast } = useFarm();
@@ -12,10 +19,12 @@ const NewsHub: React.FC = () => {
     }
   }, [refreshNews, newsArticles.length]);
 
-  const handleNewsClick = (e: React.MouseEvent, url?: string) => {
+  const handleNewsClick = (e: React.MouseEvent, url?: string, category?: string) => {
     if (!url || url === '#' || url.trim() === '') {
       e.preventDefault();
-      showToast('Full article source is not available in demo mode.', 'info');
+      const fallback = category && AG_NEWS_SOURCES[category] ? AG_NEWS_SOURCES[category] : 'https://www.reuters.com/business/agriculture/';
+      window.open(fallback, '_blank', 'noopener,noreferrer');
+      showToast('Opening source feed — individual article not yet linked.', 'info');
     }
   };
 
@@ -123,7 +132,7 @@ const NewsHub: React.FC = () => {
                      
                      <a 
                        href={featuredArticle.url || '#'} 
-                       onClick={(e) => handleNewsClick(e, featuredArticle.url)}
+                        onClick={(e) => handleNewsClick(e, featuredArticle.url, featuredArticle.category)}
                        target="_blank" 
                        rel="noreferrer" 
                        className="ml-auto flex items-center gap-2 px-4 py-2 bg-sunburst-500 text-jade-900 rounded-lg hover:bg-sunburst-400 transition-all shadow-lg active:scale-95"
@@ -172,7 +181,7 @@ const NewsHub: React.FC = () => {
                      
                      <a 
                        href={article.url || '#'} 
-                       onClick={(e) => handleNewsClick(e, article.url)}
+                        onClick={(e) => handleNewsClick(e, article.url, article.category)}
                        target="_blank" 
                        rel="noreferrer" 
                        className="mt-3 block w-full text-center py-2.5 bg-terra-50 dark:bg-jade-800 hover:bg-terra-100 dark:hover:bg-jade-700 text-secondary-dynamic text-xs font-semibold rounded-lg border border-primary-dynamic transition-colors"

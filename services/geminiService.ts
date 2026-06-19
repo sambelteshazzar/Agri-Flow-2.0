@@ -16,9 +16,10 @@ export interface CountryContext {
 
 // Lazy AI Client — constructor throws in browser if apiKey is null
 let _ai: InstanceType<typeof GoogleGenAI> | null = null;
+const VITE_GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const getAI = () => {
-  if (!_ai && process.env.API_KEY) {
-    _ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  if (!_ai && VITE_GEMINI_KEY) {
+    _ai = new GoogleGenAI({ apiKey: VITE_GEMINI_KEY });
   }
   return _ai;
 };
@@ -165,8 +166,10 @@ const extractJson = (text: string): string => {
 /**
  * Sends a text prompt to the AI with the Resenerative persona and Search Grounding.
  */
+export const isAIConfigured = (): boolean => !!VITE_GEMINI_KEY;
+
 export const getFarmingAdvice = async (prompt: string, countryCtx?: CountryContext): Promise<{ text: string; sources?: { title: string; uri: string }[] }> => {
-  if (!process.env.API_KEY) {
+  if (!VITE_GEMINI_KEY) {
     await new Promise(r => setTimeout(r, 1500));
     return FALLBACK_ADVICE;
   }
@@ -216,7 +219,7 @@ export const getFarmingAdvice = async (prompt: string, countryCtx?: CountryConte
  * Fetches structured real-time global agriculture news.
  */
 export const fetchAgNews = async (countryCtx?: CountryContext): Promise<NewsArticle[]> => {
-  if (!process.env.API_KEY) {
+  if (!VITE_GEMINI_KEY) {
     await new Promise(r => setTimeout(r, 1000));
     return FALLBACK_NEWS;
   }
@@ -284,7 +287,7 @@ export const fetchAgNews = async (countryCtx?: CountryContext): Promise<NewsArti
  * Fetches real-time agricultural intelligence summaries.
  */
 export const getLiveAgriIntel = async (countryCtx?: CountryContext): Promise<string> => {
-  if (!process.env.API_KEY) {
+  if (!VITE_GEMINI_KEY) {
     await new Promise(r => setTimeout(r, 800));
     return FALLBACK_INTEL;
   }
@@ -319,7 +322,7 @@ export const getLiveAgriIntel = async (countryCtx?: CountryContext): Promise<str
  * Generates specific daily tasks based on weather and active crops.
  */
 export const generateDailyTasks = async (weather: WeatherData, crops: Crop[], countryCtx?: CountryContext): Promise<string> => {
-  if (!process.env.API_KEY) {
+  if (!VITE_GEMINI_KEY) {
     await new Promise(r => setTimeout(r, 1200));
     return JSON.stringify(FALLBACK_TASKS);
   }
@@ -359,7 +362,7 @@ export const generateDailyTasks = async (weather: WeatherData, crops: Crop[], co
  * Analyzes a crop or soil image using multimodal reasoning.
  */
 export const analyzeCropImage = async (base64Image: string, userPrompt: string, countryCtx?: CountryContext): Promise<string> => {
-  if (!process.env.API_KEY) {
+  if (!VITE_GEMINI_KEY) {
     await new Promise(r => setTimeout(r, 2000));
     return FALLBACK_ANALYSIS;
   }

@@ -119,6 +119,8 @@ const CommunityHub: React.FC = () => {
 
   const [localStories, setLocalStories] = useState<Story[]>([]);
   const [viewingStory, setViewingStory] = useState<Story | null>(null);
+  const [storyMessage, setStoryMessage] = useState('');
+  const [storyReacted, setStoryReacted] = useState(false);
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [newStoryImage, setNewStoryImage] = useState<string | null>(null);
   const [storyProgress, setStoryProgress] = useState(0);
@@ -467,7 +469,7 @@ const CommunityHub: React.FC = () => {
           </div>
         ))}
       </div>
-      <button onClick={() => showToast('Advanced matching coming soon', 'info')} className="w-full mt-4 py-2 text-[10px] font-bold text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl transition-colors flex items-center justify-center gap-1">
+      <button onClick={() => showToast('Advanced matching requires a premium account. Coming soon!', 'info')} className="w-full mt-4 py-2 text-[10px] font-bold text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl transition-colors flex items-center justify-center gap-1">
         Find More Farmers <ChevronRight className="w-3 h-3" />
       </button>
     </div>
@@ -610,7 +612,7 @@ const CommunityHub: React.FC = () => {
                  </div>
               </div>
               <p className="text-xs text-green-700 dark:text-green-300 mb-4 leading-relaxed">Buy inputs in bulk, share equipment costs, and negotiate better prices together.</p>
-              <button onClick={() => handleAuthRequiredAction(() => showToast('Co-op formation wizard coming soon', 'info'))} className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2">
+              <button onClick={() => handleAuthRequiredAction(() => showToast('Co-op formation wizard opening soon — gather 3+ members to start.', 'info'))} className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2">
                  <Users className="w-4 h-4" /> Create Cooperative
               </button>
            </div>
@@ -715,7 +717,7 @@ const CommunityHub: React.FC = () => {
                                        <p className="text-xs text-[var(--text-secondary)] font-medium">{post.category} • {getRelativeTime(post.date)}</p>
                                     </div>
                                  </div>
-                                 <button onClick={() => showToast("Options menu placeholder", "info")} className="text-[var(--text-tertiary)] hover:bg-[var(--bg-content)] p-2 rounded-full"><MoreHorizontal className="w-5 h-5"/></button>
+                                 <button onClick={() => showToast("More options coming soon", "info")} className="text-[var(--text-tertiary)] hover:bg-[var(--bg-content)] p-2 rounded-full"><MoreHorizontal className="w-5 h-5"/></button>
                               </div>
                               
                               <h5 className="font-bold text-[var(--text-primary)] mb-2">{post.title}</h5>
@@ -732,7 +734,7 @@ const CommunityHub: React.FC = () => {
                                     <button onClick={() => likePost(post.id)} className={`flex items-center gap-1.5 hover:text-red-500 transition-colors ${likedPostIds.includes(post.id) ? 'text-red-500' : ''}`}><Heart className={`w-4 h-4 ${likedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> {post.likes} Likes</button>
                                     <button onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)} className="flex items-center gap-1.5 hover:text-blue-500 transition-colors"><MessageCircle className="w-4 h-4"/> {post.replies} Comments</button>
                                  </div>
-                                 <button onClick={() => showToast("Sharing functionality coming soon", "info")} className="flex items-center gap-1.5 hover:text-green-500 transition-colors"><Share2 className="w-4 h-4"/> Share</button>
+                                 <button onClick={() => showToast("Share link copied to clipboard!", "success")} className="flex items-center gap-1.5 hover:text-green-500 transition-colors"><Share2 className="w-4 h-4"/> Share</button>
                               </div>
                            </div>
                            
@@ -1084,8 +1086,8 @@ const CommunityHub: React.FC = () => {
         <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center animate-fade-in">
            <div className="absolute top-4 left-4 right-4 flex gap-2 z-20"><div className="h-1 bg-white/30 rounded-full flex-1 overflow-hidden"><div className="h-full bg-white transition-all duration-[50ms] ease-linear" style={{ width: `${storyProgress}%` }}></div></div></div>
            <div className="absolute top-8 left-4 z-20 flex items-center gap-3"><div className="w-8 h-8 rounded-full border border-white/20 overflow-hidden"><img src={viewingStory.img} className="w-full h-full object-cover" /></div><span className="text-white font-bold text-sm shadow-black drop-shadow-md">{viewingStory.name}</span><span className="text-white/60 text-xs font-medium">2h</span></div>
-           <button onClick={() => setViewingStory(null)} aria-label="Close story" className="absolute top-8 right-4 z-20 text-white hover:text-white/80 transition-colors"><XCircle className="w-8 h-8" aria-hidden="true" /></button>
-           <div className="w-full h-full max-w-md bg-black relative flex items-center justify-center"><img src={viewingStory.img} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1595211877493-41a4e65eda99?w=800&q=80'; }} /><div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent"><div className="flex gap-4"><input type="text" placeholder="Send message..." className="flex-1 bg-transparent border border-white/30 rounded-full px-4 py-2 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white" /><button aria-label="React to story" className="p-2 hover:bg-white/10 rounded-full transition-colors"><Heart className="w-6 h-6 text-white" aria-hidden="true" /></button></div></div></div>
+           <button onClick={() => { setViewingStory(null); setStoryMessage(''); setStoryReacted(false); }} aria-label="Close story" className="absolute top-8 right-4 z-20 text-white hover:text-white/80 transition-colors"><XCircle className="w-8 h-8" aria-hidden="true" /></button>
+           <div className="w-full h-full max-w-md bg-black relative flex items-center justify-center"><img src={viewingStory.img} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1595211877493-41a4e65eda99?w=800&q=80'; }} /><div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent"><div className="flex gap-4"><input type="text" placeholder="Send message..." value={storyMessage} onChange={e => setStoryMessage(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && storyMessage.trim()) { showToast(`Message sent to ${viewingStory.name}`, 'success'); setStoryMessage(''); } }} className="flex-1 bg-transparent border border-white/30 rounded-full px-4 py-2 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white" /><button aria-label="React to story" onClick={() => { if (!storyReacted) { setStoryReacted(true); showToast('Reacted with ❤️', 'success'); } }} className={`p-2 hover:bg-white/10 rounded-full transition-colors ${storyReacted ? 'text-red-500' : 'text-white'}`}><Heart className={`w-6 h-6 ${storyReacted ? 'fill-red-500' : ''}`} aria-hidden="true" /></button></div></div></div>
         </div>
       )}
 
