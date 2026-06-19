@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutDashboard, Sprout, TrendingUp, BrainCircuit, Leaf, Beef, GraduationCap, Calculator, Users, HardHat, Globe, LogOut, Settings as SettingsIcon } from 'lucide-react';
+import { LayoutDashboard, Sprout, TrendingUp, BrainCircuit, Beef, GraduationCap, Calculator, Users, HardHat, Globe, LogOut, Settings as SettingsIcon } from 'lucide-react';
 import { NavigationTab } from '../types';
 
 interface SidebarProps {
@@ -69,9 +69,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
       >
         {/* Branding Header */}
         <div className="flex items-center px-5 h-[72px] border-b border-terra-200/50 dark:border-[#1E5A47]/50 shrink-0">
-          <div className="bg-jade-600 dark:bg-jade-500 rounded-xl p-2 mr-3 shadow-lg shadow-jade-600/20 dark:shadow-jade-500/10">
-            <Leaf className="w-5 h-5 text-white" />
-          </div>
+          <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-9 h-9 rounded-xl mr-3 shadow-lg shadow-jade-600/20 dark:shadow-jade-500/10" />
           <div>
             <h1 className="text-lg font-bold tracking-tight text-primary-dynamic font-heading">Agri<span className="text-jade-600 dark:text-jade-400">Flow</span></h1>
             <p className="text-[9px] text-secondary-dynamic font-medium -mt-0.5">Smart Farming</p>

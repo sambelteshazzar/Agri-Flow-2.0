@@ -176,7 +176,7 @@ const LivestockManager: React.FC = () => {
 
       {livestock.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-16 bg-[var(--bg-content)] dark:bg-jade-950 rounded-2xl border-2 border-dashed border-[var(--border-card)] text-center animate-fade-in-up relative overflow-hidden group">
-          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
+          <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
           <div className="relative z-10 max-w-md">
              <div className="w-24 h-24 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mb-6 shadow-sm mx-auto group-hover:scale-110 transition-transform duration-500">
                <Clipboard className="w-12 h-12 text-yellow-600 dark:text-yellow-400" />

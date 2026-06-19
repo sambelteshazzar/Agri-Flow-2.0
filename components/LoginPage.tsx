@@ -145,7 +145,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
         <div className="hidden md:flex w-[420px] shrink-0 relative overflow-hidden flex-col justify-between p-10 bg-jade-950">
           {/* Background image */}
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-30 animate-slow-zoom"
+            className="absolute inset-0 bg-cover bg-center opacity-50 animate-slow-zoom"
             style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1527847263472-aa5338d178b8?q=80&w=1200&auto=format&fit=crop")' }}
           />
           {/* Gradient overlays */}
@@ -159,9 +159,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
           {/* Top: Logo */}
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-11 h-11 bg-gradient-to-br from-jade-500 to-sunburst-500 rounded-xl flex items-center justify-center shadow-lg shadow-jade-500/30">
-                <Sprout className="w-6 h-6 text-white" />
-              </div>
+              <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-11 h-11 rounded-xl shadow-lg shadow-jade-500/30" />
               <div>
                 <span className="text-white text-lg font-heading font-bold tracking-tight">Agri<span className="text-jade-400">Flow</span></span>
               </div>
@@ -212,9 +210,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
 
           {/* Mobile logo (visible only on small screens) */}
           <div className="md:hidden flex items-center gap-2.5 px-8 pt-8 pb-2">
-            <div className="w-9 h-9 bg-gradient-to-br from-jade-500 to-sunburst-500 rounded-lg flex items-center justify-center shadow-md shadow-jade-500/20">
-              <Sprout className="w-5 h-5 text-white" />
-            </div>
+            <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-9 h-9 rounded-lg shadow-md shadow-jade-500/20" />
             <span className="text-[var(--text-primary)] text-base font-heading font-bold tracking-tight">Agri<span className="text-jade-500">Flow</span></span>
           </div>
 

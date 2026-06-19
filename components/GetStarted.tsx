@@ -47,7 +47,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       <div className="fixed inset-0 z-0 pointer-events-none">
         {/* Primary Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40 animate-slow-zoom"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 animate-slow-zoom"
           style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1527847263472-aa5338d178b8?q=80&w=2674&auto=format&fit=crop")' }}
         ></div>
         
@@ -68,11 +68,9 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       {/* --- NAVIGATION (Sticky) --- */}
       <nav className="sticky top-0 z-50 w-full p-6 flex justify-between items-center border-b border-white/5 bg-jade-950/80 backdrop-blur-md">
         <div className="flex items-center gap-3">
-           <div className="bg-green-600 p-2 rounded-lg shadow-lg shadow-green-500/20">
-             <Sprout className="w-6 h-6 text-white" />
-           </div>
+           <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-10 h-10 rounded-lg shadow-lg shadow-jade-500/20" />
            <div className="flex flex-col">
-             <span className="text-xl font-bold tracking-tight font-heading leading-none">Agri<span className="text-green-400">Flow</span></span>
+             <span className="text-xl font-bold tracking-tight font-heading leading-none">Agri<span className="text-jade-400">Flow</span></span>
            </div>
         </div>
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-jade-300">
@@ -329,7 +327,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       <div className="bg-jade-950 border-t border-jade-900 py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-jade-600 text-sm">
            <div className="flex items-center gap-3 mb-4 md:mb-0">
-             <div className="bg-jade-900 p-2 rounded border border-jade-800"><Sprout className="w-5 h-5 text-green-700" /></div>
+             <div className="bg-jade-900 p-2 rounded border border-jade-800"><Sprout className="w-5 h-5 text-jade-700" /></div>
               <span className="font-medium text-jade-500">AgriFlow &copy; 2026</span>
           </div>
           <div className="flex gap-8">
