@@ -327,9 +327,9 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       <div className="bg-jade-950 border-t border-jade-900 py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-jade-600 text-sm">
            <div className="flex items-center gap-3 mb-4 md:mb-0">
-             <div className="bg-jade-900 p-2 rounded border border-jade-800"><Sprout className="w-5 h-5 text-jade-700" /></div>
-              <span className="font-medium text-jade-500">AgriFlow &copy; 2026</span>
-          </div>
+              <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-8 h-8 rounded-lg" />
+               <span className="font-medium text-jade-500">AgriFlow &copy; 2026</span>
+           </div>
           <div className="flex gap-8">
             <button onClick={(e) => handlePlaceholderLink(e, 'Privacy')} className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0">Privacy</button>
             <button onClick={(e) => handlePlaceholderLink(e, 'Terms')} className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0">Terms</button>

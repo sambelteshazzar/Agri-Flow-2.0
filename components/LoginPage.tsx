@@ -66,10 +66,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+    if (!trimmedEmail || !trimmedPassword) {
+      showToast('Please enter both email and password.', 'error');
+      return;
+    }
     setIsLoading(true);
     try {
-      await onLogin({ email, password, remember });
+      await onLogin({ email: trimmedEmail, password: trimmedPassword, remember });
       onClose();
     } catch {
       showToast('Login failed. Please try again.', 'error');
@@ -242,7 +247,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         id="signin-email"
                         type="email"
                         value={email}
-                        onChange={e => setEmail(e.target.value.trim())}
+                        onChange={e => setEmail(e.target.value)}
                         placeholder="you@farm.example.com"
                         required
                         autoComplete="email"
@@ -260,7 +265,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         id="signin-password"
                         type={showPassword ? 'text' : 'password'}
                         value={password}
-                        onChange={e => setPassword(e.target.value.trim())}
+                        onChange={e => setPassword(e.target.value)}
                         placeholder="Enter your password"
                         required
                         autoComplete="current-password"
@@ -362,7 +367,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         id="signup-email"
                         type="email"
                         value={email}
-                        onChange={e => setEmail(e.target.value.trim())}
+                        onChange={e => setEmail(e.target.value)}
                         placeholder="you@farm.example.com"
                         required
                         autoComplete="email"
@@ -380,7 +385,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         id="signup-password"
                         type={showPassword ? 'text' : 'password'}
                         value={password}
-                        onChange={e => setPassword(e.target.value.trim())}
+                        onChange={e => setPassword(e.target.value)}
                         placeholder="Create a password"
                         required
                         autoComplete="new-password"
@@ -548,7 +553,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
           {/* Footer strip */}
           <div className="shrink-0 px-8 py-3.5 border-t border-[var(--border-card)] bg-[var(--bg-card-inner)]">
             <div className="flex items-center justify-between text-[11px] text-[var(--text-tertiary)] font-medium">
-              <span>&copy; 2026 AgriFlow</span>
+              <div className="flex items-center gap-1.5">
+                <img src="/logo-AgriFlow.png" alt="" className="w-3.5 h-3.5 rounded-sm" />
+                <span>&copy; 2026 AgriFlow</span>
+              </div>
               <div className="flex gap-4">
                 <button type="button" className="hover:text-[var(--text-secondary)] transition-colors">Privacy</button>
                 <button type="button" className="hover:text-[var(--text-secondary)] transition-colors">Terms</button>

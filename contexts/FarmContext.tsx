@@ -331,54 +331,67 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // --- Auth Logic ---
   const login = useCallback(async (data: OnboardingData) => {
-    await new Promise(resolve => setTimeout(resolve, 800));
-    const countryCfg = COUNTRY_REGISTRY[data.countryCode];
-    if (!countryCfg) return;
+    try {
+      await new Promise(resolve => setTimeout(resolve, 800));
+      const countryCfg = COUNTRY_REGISTRY[data.countryCode];
+      if (!countryCfg) {
+        showToast('Country not supported. Please select a valid country.', 'error');
+        return;
+      }
 
-    const newProfile: UserProfile = {
-      ...CURRENT_USER,
-      name: data.name,
-      farmName: data.farmName,
-      countryCode: countryCfg.code,
-      currencyCode: countryCfg.currencyCode,
-      currencySymbol: countryCfg.currencySymbol,
-      language: countryCfg.language,
-      region: countryCfg.region,
-      farmType: data.farmType,
-      areaUnit: data.areaUnit,
-      climateZone: countryCfg.climateZone,
-    };
-    setUserProfile(newProfile);
-    setIsSignedIn(true);
+      const newProfile: UserProfile = {
+        ...CURRENT_USER,
+        name: data.name,
+        farmName: data.farmName,
+        countryCode: countryCfg.code,
+        currencyCode: countryCfg.currencyCode,
+        currencySymbol: countryCfg.currencySymbol,
+        language: countryCfg.language,
+        region: countryCfg.region,
+        farmType: data.farmType,
+        areaUnit: data.areaUnit,
+        climateZone: countryCfg.climateZone,
+      };
+      setUserProfile(newProfile);
+      setIsSignedIn(true);
 
-    setCrops(countryCfg.defaultCrops);
-    setLivestock(countryCfg.defaultLivestock);
-    setMarketPrices(countryCfg.marketPrices);
-    setAlerts(countryCfg.alerts);
-    setLearningModules(countryCfg.learningModules);
-    setTasks(countryCfg.tasks);
-    setListings(countryCfg.marketplaceListings);
-    setPosts(countryCfg.forumPosts);
-    setChatMessages(countryCfg.chatMessages);
-    setTrends(countryCfg.trends);
-    setSuggestedUsers(countryCfg.suggestedUsers);
-    setStories(countryCfg.stories);
+      setCrops(countryCfg.defaultCrops);
+      setLivestock(countryCfg.defaultLivestock);
+      setMarketPrices(countryCfg.marketPrices);
+      setAlerts(countryCfg.alerts);
+      setLearningModules(countryCfg.learningModules);
+      setTasks(countryCfg.tasks);
+      setListings(countryCfg.marketplaceListings);
+      setPosts(countryCfg.forumPosts);
+      setChatMessages(countryCfg.chatMessages);
+      setTrends(countryCfg.trends);
+      setSuggestedUsers(countryCfg.suggestedUsers);
+      setStories(countryCfg.stories);
 
-    if (countryCfg.weatherDefaults) {
-      setWeather(prev => ({ ...prev, ...countryCfg.weatherDefaults }));
+      if (countryCfg.weatherDefaults) {
+        setWeather(prev => ({ ...prev, ...countryCfg.weatherDefaults }));
+      }
+
+      try {
+        await db.saveUserProfile(newProfile);
+        await CropService.replaceAll(countryCfg.defaultCrops);
+        await LivestockService.replaceAll(countryCfg.defaultLivestock);
+        await MarketService.replaceAll(countryCfg.marketPrices);
+        await CommunityService.replaceAllListings(countryCfg.marketplaceListings);
+        await CommunityService.replaceAllPosts(countryCfg.forumPosts);
+        await CommunityService.replaceAllChatMessages(countryCfg.chatMessages);
+        db.saveTasks(countryCfg.tasks);
+        db.saveModules(countryCfg.learningModules);
+      } catch (dbErr) {
+        console.warn('[FarmContext] Non-critical DB save failed during login:', dbErr);
+      }
+
+      showToast(`Welcome, ${newProfile.name}! Your ${countryCfg.name} dashboard is ready.`, 'success');
+    } catch (err) {
+      console.error('[FarmContext] Login error:', err);
+      showToast('Login failed. Please try again.', 'error');
+      throw err;
     }
-
-    await db.saveUserProfile(newProfile);
-    await CropService.replaceAll(countryCfg.defaultCrops);
-    await LivestockService.replaceAll(countryCfg.defaultLivestock);
-    await MarketService.replaceAll(countryCfg.marketPrices);
-    await CommunityService.replaceAllListings(countryCfg.marketplaceListings);
-    await CommunityService.replaceAllPosts(countryCfg.forumPosts);
-    await CommunityService.replaceAllChatMessages(countryCfg.chatMessages);
-    db.saveTasks(countryCfg.tasks);
-    db.saveModules(countryCfg.learningModules);
-
-    showToast(`Welcome, ${newProfile.name}! Your ${countryCfg.name} dashboard is ready.`, 'success');
   }, [showToast]);
 
   const logout = useCallback(() => {

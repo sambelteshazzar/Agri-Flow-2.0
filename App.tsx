@@ -150,26 +150,35 @@ const AppContent: React.FC = () => {
     setIsMobileOpen(false);
   };
 
-   const handleAuthSubmit = async (email: string, password: string, remember: boolean) => {
+   const handleAuthSubmit = async (data: { email: string; password: string; remember: boolean }) => {
+     const userName = data.email.split('@')[0] || data.email;
      const dummyData: OnboardingData = {
-       name: email.split('@')[0] || email,
-       farmName: `${email.split('@')[0]}'s Farm`,
+       name: userName,
+       farmName: `${userName}'s Farm`,
        countryCode: 'NG',
        farmType: 'mixed',
        farmSize: 1,
        areaUnit: 'ha',
      };
-     await login(dummyData);
-     setIsAuthModalOpen(false);
-     setHasStarted(true);
-     localStorage.setItem('agriflow_has_started', 'true');
+     try {
+       await login(dummyData);
+       setIsAuthModalOpen(false);
+       setHasStarted(true);
+       localStorage.setItem('agriflow_has_started', 'true');
+     } catch (err) {
+       console.error('[Auth] Login failed:', err);
+     }
    };
 
    const handleSignup = async (data: OnboardingData & { email: string; password: string }) => {
-     await login(data);
-     setIsAuthModalOpen(false);
-     setHasStarted(true);
-     localStorage.setItem('agriflow_has_started', 'true');
+     try {
+       await login(data);
+       setIsAuthModalOpen(false);
+       setHasStarted(true);
+       localStorage.setItem('agriflow_has_started', 'true');
+     } catch (err) {
+       console.error('[Auth] Signup failed:', err);
+     }
    };
 
     if (!hasStarted) {
@@ -386,6 +395,19 @@ const AppContent: React.FC = () => {
             {renderContent()}
           </div>
         </main>
+
+        {/* Footer Bar */}
+        <footer className="shrink-0 px-4 md:px-8 py-2.5 border-t border-terra-200/40 dark:border-[#1E5A47]/40 bg-content dark:bg-[#0A1A0F] flex items-center justify-between text-[10px] text-terra-400/70 dark:text-[#4D8A72]/70">
+          <div className="flex items-center gap-1.5">
+            <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-4 h-4 rounded-sm" />
+            <span className="font-semibold text-terra-500 dark:text-[#7BA896]">AgriFlow 2.0</span>
+            <span>· © 2026</span>
+          </div>
+          <div className="hidden sm:flex items-center gap-3">
+            <span>Built for farmers, by farmers</span>
+            <span className="text-jade-500 dark:text-jade-400">🌾</span>
+          </div>
+        </footer>
       </div>
 
       {/* MOBILE BOTTOM NAV */}
