@@ -262,8 +262,50 @@ export interface SuggestedUser {
 }
 
 export interface PollOption {
-  id: number;
-  text: string;
-  percent: number;
-  votes: number;
+   id: number;
+   text: string;
+   percent: number;
+   votes: number;
+}
+
+export interface LaborInput {
+  farmSizeHa: number;
+  mainCrop: string;
+  secondaryCrop: string;
+  livestockCount: number;
+  season: 'dry' | 'rainy';
+  mechanization: 'none' | 'partial' | 'full';
+  familyWorkers: number;
+  irrigationType: 'rainfed' | 'manual' | 'pump';
+}
+
+export interface LaborResult {
+  totalWorkers: number;
+  familyWorkers: number;
+  hiredWorkers: number;
+  peakWorkers: number;
+  monthlyBreakdown: { month: string; workers: number; activity: string }[];
+  costEstimate: { category: string; amount: number }[];
+  totalMonthlyCost: number;
+  recommendations: string[];
+}
+
+export interface FertilizerInput {
+  targetN: number;
+  fertType: number;
+  area: number;
+}
+
+export interface IrrigationInput {
+  cropFactor: number;
+  et0: number;
+  efficiency: number;
+  area: number;
+}
+
+export interface ResourceResult {
+  mode: 'FERTILIZER' | 'IRRIGATION';
+  fertilizerKg: number;
+  irrigationLitersPerDay: number;
+  savedAt: string;
 }

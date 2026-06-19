@@ -1,5 +1,5 @@
 
-import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile } from '../types';
+import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult } from '../types';
 import { INITIAL_CROPS, INITIAL_LIVESTOCK, INITIAL_TASKS, INITIAL_MODULES, MARKET_PRICES, INITIAL_LISTINGS, INITIAL_POSTS, INITIAL_CHAT_MESSAGES, CURRENT_USER } from '../constants';
 
 // --- DATABASE KEYS ---
@@ -17,7 +17,9 @@ export const DB_KEYS = {
   CHAT: 'agriflow_chat',
   FOLLOWED_USERS: 'agriflow_followed_users',
   LIKED_POSTS: 'agriflow_liked_posts',
-  USER_PROFILE: 'agriflow_user_profile'
+  USER_PROFILE: 'agriflow_user_profile',
+  LABOR_INPUT: 'agriflow_labor_input',
+  RESOURCE_RESULT: 'agriflow_resource_result'
 };
 
 // --- SIMULATED LATENCY ---
@@ -233,6 +235,22 @@ class PersistenceService {
 
   async saveUserProfile(profile: UserProfile): Promise<void> {
     this.setItem(DB_KEYS.USER_PROFILE, profile);
+  }
+
+  async getLaborInput(): Promise<LaborInput | null> {
+    return this.getItem<LaborInput | null>(DB_KEYS.LABOR_INPUT, null);
+  }
+
+  async saveLaborInput(input: LaborInput): Promise<void> {
+    this.setItem(DB_KEYS.LABOR_INPUT, input);
+  }
+
+  async getResourceResult(): Promise<ResourceResult | null> {
+    return this.getItem<ResourceResult | null>(DB_KEYS.RESOURCE_RESULT, null);
+  }
+
+  async saveResourceResult(result: ResourceResult): Promise<void> {
+    this.setItem(DB_KEYS.RESOURCE_RESULT, result);
   }
 }
 

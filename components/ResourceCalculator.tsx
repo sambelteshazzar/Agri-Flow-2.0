@@ -1,30 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calculator, Droplets, Sprout, RefreshCw } from 'lucide-react';
+import { useFarm } from '../contexts/FarmContext';
+import type { ResourceResult } from '../types';
 
 const ResourceCalculator: React.FC = () => {
-  const [mode, setMode] = useState<'FERTILIZER' | 'IRRIGATION'>('FERTILIZER');
+  const { resourceResult: savedResourceResult, saveResourceResult } = useFarm();
+
+  const [mode, setMode] = useState<'FERTILIZER' | 'IRRIGATION'>(savedResourceResult?.mode ?? 'FERTILIZER');
 
   const [targetN, setTargetN] = useState<number>(100);
   const [fertType, setFertType] = useState<number>(46);
   const [area, setArea] = useState<number>(1);
-  const [fertResult, setFertResult] = useState<number>(0);
+  const [fertResult, setFertResult] = useState<number>(savedResourceResult?.fertilizerKg ?? 0);
 
   const [cropFactor, setCropFactor] = useState<number>(1.2);
   const [et0, setEt0] = useState<number>(5);
   const [efficiency, setEfficiency] = useState<number>(0.75);
-  const [irrigationResult, setIrrigationResult] = useState<number>(0);
+  const [irrigationResult, setIrrigationResult] = useState<number>(savedResourceResult?.irrigationLitersPerDay ?? 0);
+
+  useEffect(() => {
+    if (savedResourceResult) {
+      setMode(savedResourceResult.mode);
+      setFertResult(savedResourceResult.fertilizerKg);
+      setIrrigationResult(savedResourceResult.irrigationLitersPerDay);
+    }
+  }, [savedResourceResult]);
 
   const calculateFertilizer = () => {
     const result = (targetN / (fertType / 100)) * area;
-    setFertResult(Math.round(result));
+    const rounded = Math.round(result);
+    setFertResult(rounded);
+    saveResourceResult({ mode: 'FERTILIZER', fertilizerKg: rounded, irrigationLitersPerDay: irrigationResult, savedAt: new Date().toISOString() });
   };
 
   const calculateIrrigation = () => {
     const areaM2 = area * 10000;
     const demandMm = et0 * cropFactor;
     const grossDemandMm = demandMm / efficiency;
-    const liters = grossDemandMm * areaM2;
-    setIrrigationResult(Math.round(liters));
+    const liters = Math.round(grossDemandMm * areaM2);
+    setIrrigationResult(liters);
+    saveResourceResult({ mode: 'IRRIGATION', fertilizerKg: fertResult, irrigationLitersPerDay: liters, savedAt: new Date().toISOString() });
   };
 
   const inputCls = "w-full p-3 bg-card-dynamic border border-primary-dynamic rounded font-bold text-primary-dynamic focus:outline-none focus:border-sunburst-500 dark:focus:border-sunburst-400";

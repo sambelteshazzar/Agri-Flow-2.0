@@ -1,30 +1,9 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Users, Sprout, Tractor, Sun, CloudRain, Calculator, Info, ChevronDown, ChevronUp, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import { COUNTRY_REGISTRY } from '../constants';
-
-interface LaborInput {
-  farmSizeHa: number;
-  mainCrop: string;
-  secondaryCrop: string;
-  livestockCount: number;
-  season: 'dry' | 'rainy';
-  mechanization: 'none' | 'partial' | 'full';
-  familyWorkers: number;
-  irrigationType: 'rainfed' | 'manual' | 'pump';
-}
-
-interface LaborResult {
-  totalWorkers: number;
-  familyWorkers: number;
-  hiredWorkers: number;
-  peakWorkers: number;
-  monthlyBreakdown: { month: string; workers: number; activity: string }[];
-  costEstimate: { category: string; amount: number }[];
-  totalMonthlyCost: number;
-  recommendations: string[];
-}
+import type { LaborInput, LaborResult } from '../types';
 
 const WEST_AFRICAN_CROPS: Record<string, { labelDaysPerHa: number; harvestDaysPerHa: number; weedDaysPerHa: number }> = {
   cassava: { labelDaysPerHa: 25, harvestDaysPerHa: 30, weedDaysPerHa: 12 },
@@ -151,13 +130,13 @@ const calculateLabor = (input: LaborInput, dailyWage: number, feedingCost: numbe
 };
 
 const FarmLaborPlanner: React.FC = () => {
-  const { userProfile } = useFarm();
+  const { userProfile, laborInput: savedLaborInput, saveLaborInput } = useFarm();
   const countryCfg = userProfile.countryCode ? COUNTRY_REGISTRY[userProfile.countryCode] : null;
   const dailyWage = countryCfg?.dailyWageLocal ?? 3500;
   const currencySymbol = userProfile.currencySymbol || '₦';
   const feedingCost = Math.round(dailyWage * 0.29);
 
-  const [input, setInput] = useState<LaborInput>({
+  const DEFAULT_INPUT: LaborInput = {
     farmSizeHa: 2,
     mainCrop: 'cassava',
     secondaryCrop: 'maize',
@@ -166,13 +145,22 @@ const FarmLaborPlanner: React.FC = () => {
     mechanization: 'none',
     familyWorkers: 2,
     irrigationType: 'rainfed',
-  });
-  const [showResults, setShowResults] = useState(false);
+  };
+
+  const [input, setInput] = useState<LaborInput>(savedLaborInput ?? DEFAULT_INPUT);
+  const [showResults, setShowResults] = useState(!!savedLaborInput);
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (savedLaborInput) setInput(savedLaborInput);
+  }, [savedLaborInput]);
 
   const result = useMemo(() => calculateLabor(input, dailyWage, feedingCost), [input, dailyWage, feedingCost]);
 
-  const handleCalculate = () => setShowResults(true);
+  const handleCalculate = () => {
+    setShowResults(true);
+    saveLaborInput(input);
+  };
 
   const updateInput = (key: keyof LaborInput, value: number | string) => {
     setInput(prev => ({ ...prev, [key]: value }));

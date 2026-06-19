@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef } from 'react';
-import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab } from '../types';
+import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab, LaborInput, ResourceResult } from '../types';
 import { CropService } from '../services/cropService';
 import { LivestockService } from '../services/livestockService';
 import { MarketService } from '../services/marketService';
@@ -87,7 +87,12 @@ interface FarmContextType {
   sendChatMessage: (message: Omit<CommunityChatMessage, 'id' | 'timestamp'>) => Promise<void>;
   toggleFollowUser: (userId: string) => Promise<void>;
   
-  dismissAlert: (id: string) => void;
+   dismissAlert: (id: string) => void;
+
+  laborInput: LaborInput | null;
+  resourceResult: ResourceResult | null;
+  saveLaborInput: (input: LaborInput) => Promise<void>;
+  saveResourceResult: (result: ResourceResult) => Promise<void>;
 }
 
 const FarmContext = createContext<FarmContextType | undefined>(undefined);
@@ -98,6 +103,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [alerts, setAlerts] = useState<SystemAlert[]>(INITIAL_ALERTS);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [laborInput, setLaborInput] = useState<LaborInput | null>(null);
+  const [resourceResult, setResourceResult] = useState<ResourceResult | null>(null);
   
   const VIEW_HASH: Record<NavigationTab, string> = {
     [NavigationTab.DASHBOARD]: 'dashboard',
@@ -203,8 +210,10 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           loadedSuggested, 
           loadedFollows, 
           loadedLikes,
-          loadedProfile
-        ] = await Promise.all([
+          loadedProfile,
+          loadedLaborInput,
+          loadedResourceResult
+         ] = await Promise.all([
           CropService.getAll(),
           LivestockService.getAll(),
           db.getTasks(),
@@ -218,7 +227,9 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           CommunityService.getSuggestedUsers(),
           CommunityService.getFollowedUserIds(),
           CommunityService.getLikedPostIds(),
-          db.getUserProfile()
+          db.getUserProfile(),
+          db.getLaborInput(),
+          db.getResourceResult()
         ]);
 
         setCrops(loadedCrops);
@@ -234,8 +245,9 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setSuggestedUsers(loadedSuggested);
         setFollowedUserIds(loadedFollows);
         setLikedPostIds(loadedLikes);
+        if (loadedLaborInput) setLaborInput(loadedLaborInput);
+        if (loadedResourceResult) setResourceResult(loadedResourceResult);
         
-        // If persisted profile name differs from Guest, assume logged in (for simple persistence)
         if (loadedProfile && loadedProfile.name !== GUEST_USER.name) {
            setUserProfile(loadedProfile);
            setIsSignedIn(true);
@@ -408,6 +420,16 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
     if (newProfile) await db.saveUserProfile(newProfile);
     showToast('Profile updated', 'success');
+  }, [showToast]);
+
+  const saveLaborInputAction = useCallback(async (input: LaborInput) => {
+    setLaborInput(input);
+    try { await db.saveLaborInput(input); } catch { showToast('Could not save labor data', 'warning'); }
+  }, [showToast]);
+
+  const saveResourceResultAction = useCallback(async (result: ResourceResult) => {
+    setResourceResult(result);
+    try { await db.saveResourceResult(result); } catch { showToast('Could not save resource data', 'warning'); }
   }, [showToast]);
 
   const resetApp = useCallback(() => {
@@ -701,7 +723,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
     addPost, getPostReplies, addPostReply, likePost,
-    sendChatMessage, toggleFollowUser, dismissAlert
+    sendChatMessage, toggleFollowUser, dismissAlert,
+    laborInput, resourceResult, saveLaborInput: saveLaborInputAction, saveResourceResult: saveResourceResultAction
   }), [
     userProfile, isSignedIn, alerts,
     theme, toggleTheme, currentView, navigate,
@@ -715,7 +738,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
     addPost, getPostReplies, addPostReply, likePost,
-    sendChatMessage, toggleFollowUser, dismissAlert
+    sendChatMessage, toggleFollowUser, dismissAlert,
+    laborInput, resourceResult, saveLaborInputAction, saveResourceResultAction
   ]);
 
   return (
