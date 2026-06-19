@@ -6,7 +6,7 @@ import { GoogleGenAI, LiveServerMessage, Modality, Type, FunctionDeclaration } f
 import { NavigationTab } from '../types';
 
 const VoiceAgent: React.FC = () => {
-  const { navigate, toggleTheme, addTask, showToast, userProfile, weather, marketPrices } = useFarm();
+  const { navigate, toggleTheme, setThemeMode, addTask, showToast, userProfile, weather, marketPrices } = useFarm();
   
   // State
   const [isActive, setIsActive] = useState(false);
@@ -54,7 +54,7 @@ const VoiceAgent: React.FC = () => {
     parameters: {
       type: Type.OBJECT,
       properties: {
-        mode: { type: Type.STRING, enum: ["light", "dark"], description: "The target theme mode." }
+        mode: { type: Type.STRING, enum: ["light", "dark", "high-contrast"], description: "The target theme mode." }
       },
       required: ["mode"]
     }
@@ -214,9 +214,12 @@ const VoiceAgent: React.FC = () => {
                     result = { output: `Navigated to ${dest}` };
                   } else if (fc.name === 'setTheme') {
                     const mode = (fc.args as any).mode;
-                    const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-                    if (mode && mode !== currentTheme) toggleTheme();
-                    result = { output: `Theme set to ${mode || 'toggled'}` };
+                    if (mode === 'light' || mode === 'dark' || mode === 'high-contrast') {
+                      setThemeMode(mode);
+                      result = { output: `Theme set to ${mode}` };
+                    } else {
+                      result = { output: `Unknown theme mode: ${mode}` };
+                    }
                   } else if (fc.name === 'createTask') {
                     const { text, priority } = fc.args as any;
                     addTask(`${text} ${priority === 'high' ? '(High Priority)' : ''}`);

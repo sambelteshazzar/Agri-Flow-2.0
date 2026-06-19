@@ -22,8 +22,9 @@ interface FarmContextType {
   navigate: (view: NavigationTab) => void;
 
   // Theme
-  theme: 'light' | 'dark';
+  theme: 'light' | 'dark' | 'high-contrast';
   toggleTheme: () => void;
+  setThemeMode: (mode: 'light' | 'dark' | 'high-contrast') => void;
 
   // Toasts
   toasts: ToastMessage[];
@@ -134,10 +135,10 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   });
 
   // Theme State
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+  const [theme, setTheme] = useState<'light' | 'dark' | 'high-contrast'>(() => {
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('agriflow_theme') as 'light' | 'dark';
-      if (savedTheme) {
+      const savedTheme = localStorage.getItem('agriflow_theme') as 'light' | 'dark' | 'high-contrast';
+      if (savedTheme && ['light', 'dark', 'high-contrast'].includes(savedTheme)) {
         return savedTheme;
       }
       if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -147,12 +148,13 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return 'light';
   });
 
-  // Apply Theme to DOM
   useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove('dark', 'high-contrast');
     if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+      root.classList.add('dark');
+    } else if (theme === 'high-contrast') {
+      root.classList.add('dark', 'high-contrast');
     }
     localStorage.setItem('agriflow_theme', theme);
   }, [theme]);
@@ -287,7 +289,15 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [currentView]);
 
   const toggleTheme = useCallback(() => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme(prev => {
+      if (prev === 'light') return 'dark';
+      if (prev === 'dark') return 'high-contrast';
+      return 'light';
+    });
+  }, []);
+
+  const setThemeMode = useCallback((mode: 'light' | 'dark' | 'high-contrast') => {
+    setTheme(mode);
   }, []);
 
   // Toast Logic
@@ -712,7 +722,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const contextValue = useMemo(() => ({
     userProfile, isSignedIn, alerts,
-    theme, toggleTheme, currentView, navigate,
+    theme, toggleTheme, setThemeMode, currentView, navigate,
     toasts, showToast, removeToast,
     crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
     stories, trends, suggestedUsers, followedUserIds, likedPostIds,
@@ -727,7 +737,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     laborInput, resourceResult, saveLaborInput: saveLaborInputAction, saveResourceResult: saveResourceResultAction
   }), [
     userProfile, isSignedIn, alerts,
-    theme, toggleTheme, currentView, navigate,
+    theme, toggleTheme, setThemeMode, currentView, navigate,
     toasts, showToast, removeToast,
     crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
     stories, trends, suggestedUsers, followedUserIds, likedPostIds,

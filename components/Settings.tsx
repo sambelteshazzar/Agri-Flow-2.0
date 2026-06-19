@@ -1,11 +1,11 @@
 
 import React, { useState } from 'react';
 import { useFarm } from '../contexts/FarmContext';
-import { Save, User, Download, Upload, AlertTriangle, Moon, Sun, Trash2, Shield, MapPin } from 'lucide-react';
+import { Save, User, Download, Upload, AlertTriangle, Moon, Sun, Trash2, Shield, MapPin, Eye } from 'lucide-react';
 import { DB_KEYS } from '../services/persistence';
 
 const Settings: React.FC = () => {
-  const { userProfile, updateUserProfile, theme, toggleTheme, resetApp, showToast } = useFarm();
+  const { userProfile, updateUserProfile, theme, setThemeMode, resetApp, showToast } = useFarm();
   
   const [formData, setFormData] = useState({
     name: userProfile.name,
@@ -153,23 +153,38 @@ const Settings: React.FC = () => {
         {/* PREFERENCES & DATA */}
         <div className="space-y-8">
            {/* Appearance */}
-           <div className="card-surface p-6">
-              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
-                 <Sun className="w-5 h-5 text-sunburst-500" /> Interface
-              </h3>
-              <div className="flex items-center justify-between p-4 bg-[var(--bg-content)] rounded-lg border border-[var(--border-card)]">
-                 <div>
-                    <span className="block font-bold text-[var(--text-primary)] text-sm">Theme Mode</span>
-                    <span className="text-xs text-[var(--text-tertiary)]">Toggle between light and dark interface</span>
-                 </div>
-                 <button 
-                   onClick={toggleTheme}
-                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${theme === 'dark' ? 'bg-jade-600' : 'bg-terra-300'}`}
-                 >
-                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${theme === 'dark' ? 'translate-x-6' : 'translate-x-1'}`} />
-                 </button>
-              </div>
-           </div>
+            <div className="card-surface p-6">
+               <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
+                  <Sun className="w-5 h-5 text-sunburst-500" /> Interface
+               </h3>
+               <div className="space-y-3">
+                  <div>
+                     <span className="block font-bold text-[var(--text-primary)] text-sm mb-2">Theme Mode</span>
+                     <span className="text-xs text-[var(--text-tertiary)] mb-3 block">Choose light, dark, or high-contrast for accessibility</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                     {([
+                       { mode: 'light' as const, label: 'Light', icon: Sun, desc: 'Daytime' },
+                       { mode: 'dark' as const, label: 'Dark', icon: Moon, desc: 'Nighttime' },
+                       { mode: 'high-contrast' as const, label: 'High Contrast', icon: Eye, desc: 'WCAG AAA' },
+                     ]).map(({ mode, label, icon: Icon, desc }) => (
+                       <button
+                         key={mode}
+                         onClick={() => setThemeMode(mode)}
+                         className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all ${
+                           theme === mode
+                             ? 'border-jade-600 dark:border-jade-400 bg-jade-50 dark:bg-jade-900/30'
+                             : 'border-[var(--border-card)] hover:border-terra-300 dark:hover:border-jade-700'
+                         }`}
+                       >
+                         <Icon className={`w-5 h-5 mb-1 ${theme === mode ? 'text-jade-600 dark:text-jade-400' : 'text-[var(--text-tertiary)]'}`} />
+                         <span className={`text-xs font-bold ${theme === mode ? 'text-jade-700 dark:text-jade-300' : 'text-[var(--text-secondary)]'}`}>{label}</span>
+                         <span className="text-[10px] text-[var(--text-tertiary)]">{desc}</span>
+                       </button>
+                     ))}
+                  </div>
+               </div>
+            </div>
 
            {/* Data Management */}
            <div className="card-surface p-6">
