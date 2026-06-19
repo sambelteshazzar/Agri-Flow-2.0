@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useFarm } from '../contexts/FarmContext';
 import {
   X, Loader2, Sprout, Mail, Lock, Eye, EyeOff, User,
-  ArrowRight, Tractor, Globe, Wheat, Check
+  ArrowRight, Tractor, Globe, Wheat, Check, MapPin, Phone
 } from 'lucide-react';
 import { COUNTRY_LIST } from '../constants';
 import type { OnboardingData } from './AuthModal';
@@ -37,6 +37,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
   const [selectedCountry, setSelectedCountry] = useState<{ code: string; name: string; flag: string } | null>(null);
   const [countrySearch, setCountrySearch] = useState('');
   const [farmType, setFarmType] = useState<string>('mixed');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [location, setLocation] = useState('');
 
   const filteredCountries = countrySearch
     ? COUNTRY_LIST.filter(c =>
@@ -57,6 +59,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
     setSelectedCountry(null);
     setCountrySearch('');
     setFarmType('mixed');
+    setPhoneNumber('');
+    setLocation('');
   }, []);
 
   const switchMode = useCallback((m: AuthMode) => {
@@ -114,6 +118,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
         farmType: farmType as OnboardingData['farmType'],
         farmSize: 1,
         areaUnit: 'ha',
+        phoneNumber: phoneNumber.trim(),
+        location: location.trim(),
         email,
         password,
       };
@@ -373,6 +379,40 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                         autoComplete="email"
                         className="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
                       />
+                    </div>
+                  </div>
+
+                  {/* Phone + Location */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="signup-phone" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Phone number</label>
+                      <div className="relative group">
+                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
+                        <input
+                          id="signup-phone"
+                          type="tel"
+                          value={phoneNumber}
+                          onChange={e => setPhoneNumber(e.target.value)}
+                          placeholder="+234 801 234 5678"
+                          autoComplete="tel"
+                          className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label htmlFor="signup-location" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Location <span className="font-normal text-[var(--text-tertiary)]">(city/region)</span></label>
+                      <div className="relative group">
+                        <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
+                        <input
+                          id="signup-location"
+                          type="text"
+                          value={location}
+                          onChange={e => setLocation(e.target.value)}
+                          placeholder="Kano, Kano State"
+                          autoComplete="address-level2"
+                          className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
+                        />
+                      </div>
                     </div>
                   </div>
 

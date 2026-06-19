@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { X, User, Loader2, Sprout, ChevronRight, Globe, MapPin, Tractor, Wheat, Beef, Fish, Flower2, Check, Search } from 'lucide-react';
+import { X, User, Loader2, Sprout, ChevronRight, Globe, MapPin, Tractor, Wheat, Beef, Fish, Flower2, Check, Search, Phone } from 'lucide-react';
 import { COUNTRY_LIST, COUNTRY_REGISTRY } from '../constants';
 import { CountryConfig, FarmType, AreaUnit, ClimateZone } from '../types';
 
@@ -11,6 +11,8 @@ export interface OnboardingData {
   farmType: FarmType;
   farmSize: number;
   areaUnit: AreaUnit;
+  phoneNumber: string;
+  location: string;
 }
 
 interface AuthModalProps {
@@ -43,6 +45,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
   const [farmType, setFarmType] = useState<FarmType>('mixed');
   const [farmSize, setFarmSize] = useState(5);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [location, setLocation] = useState('');
 
   const filteredCountries = useMemo(() => {
     const q = countrySearch.toLowerCase();
@@ -79,6 +83,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
       farmType,
       farmSize,
       areaUnit,
+      phoneNumber: phoneNumber.trim(),
+      location: location.trim(),
     });
     setIsAuthenticating(false);
   };
@@ -175,6 +181,36 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                     className={inputClasses}
                     placeholder="Greenfield Farm"
                   />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Phone number</label>
+                  <div className="relative group">
+                    <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors" />
+                    <input
+                      type="tel"
+                      value={phoneNumber}
+                      onChange={e => setPhoneNumber(e.target.value)}
+                      className={inputClasses}
+                      placeholder="+234 801 234 5678"
+                      autoComplete="tel"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Location <span className="text-[var(--text-tertiary)] font-normal">(city/region)</span></label>
+                  <div className="relative group">
+                    <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors" />
+                    <input
+                      type="text"
+                      value={location}
+                      onChange={e => setLocation(e.target.value)}
+                      className={inputClasses}
+                      placeholder="Kano, Kano State"
+                      autoComplete="address-level2"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -301,6 +337,24 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                   <span className="text-xs text-[var(--text-tertiary)] font-semibold">Farm size</span>
                   <span className="text-sm text-[var(--text-primary)] font-bold font-mono">{farmSize.toLocaleString()} {areaUnit}</span>
                 </div>
+                {phoneNumber && (
+                  <>
+                    <div className="organic-divider" />
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-[var(--text-tertiary)] font-semibold">Phone</span>
+                      <span className="text-sm text-[var(--text-primary)] font-bold">{phoneNumber}</span>
+                    </div>
+                  </>
+                )}
+                {location && (
+                  <>
+                    <div className="organic-divider" />
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-[var(--text-tertiary)] font-semibold">Location</span>
+                      <span className="text-sm text-[var(--text-primary)] font-bold">{location}</span>
+                    </div>
+                  </>
+                )}
               </div>
 
               {selectedCrops.length > 0 && (

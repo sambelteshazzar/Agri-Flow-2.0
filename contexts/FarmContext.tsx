@@ -373,6 +373,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         farmType: data.farmType,
         areaUnit: data.areaUnit,
         climateZone: countryCfg.climateZone,
+        phoneNumber: data.phoneNumber,
+        location: data.location,
       };
       setUserProfile(newProfile);
       setIsSignedIn(true);

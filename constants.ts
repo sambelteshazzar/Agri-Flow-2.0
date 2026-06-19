@@ -20,7 +20,9 @@ export const CURRENT_USER: UserProfile = {
   region: "West Africa",
   farmType: "mixed",
   areaUnit: "ha",
-  climateZone: "sahel"
+  climateZone: "sahel",
+  phoneNumber: "+234 801 234 5678",
+  location: "Kano, Kano State"
 };
 
 export const GUEST_USER: UserProfile = {
@@ -39,7 +41,9 @@ export const GUEST_USER: UserProfile = {
   region: "",
   farmType: "mixed",
   areaUnit: "ha",
-  climateZone: "temperate"
+  climateZone: "temperate",
+  phoneNumber: "",
+  location: ""
 };
 
 export const INITIAL_ALERTS: SystemAlert[] = [

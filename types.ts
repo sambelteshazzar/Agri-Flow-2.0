@@ -58,6 +58,8 @@ export interface UserProfile {
   farmType: FarmType;
   areaUnit: AreaUnit;
   climateZone: ClimateZone;
+  phoneNumber: string;
+  location: string;
 }
 
 export interface CountryConfig {
