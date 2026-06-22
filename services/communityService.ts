@@ -22,7 +22,7 @@ export class CommunityService {
     const current = await db.getListings(); 
     const newListing: MarketplaceListing = {
       ...listing,
-      id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`, // Robust ID
+      id: db.generateId('listing'),
       verified: false,
       status: 'ACTIVE',
       date: new Date().toISOString()
@@ -66,21 +66,21 @@ export class CommunityService {
     const current = await db.getPosts();
     const newPost: ForumPost = { 
       ...post, 
-      id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`, 
+      id: db.generateId('post'),
       replies: 0,
       likes: 0,
       date: new Date().toISOString()
     };
     const updated = [newPost, ...current];
     await db.savePosts(updated);
-    return this.getPosts(); // Return sorted
+    return this.getPosts();
   }
 
   static async addReply(postId: string, content: string, author: string): Promise<ForumReply[]> {
     if (!content.trim()) throw new Error("Reply cannot be empty");
 
     const newReply: ForumReply = {
-      id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      id: db.generateId('reply'),
       postId,
       author,
       content,
@@ -158,7 +158,7 @@ export class CommunityService {
     const current = await db.getChatMessages();
     const newMessage: CommunityChatMessage = {
       ...message,
-      id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      id: db.generateId('msg'),
       timestamp: new Date().toISOString()
     };
     const updated = [...current, newMessage];
@@ -168,15 +168,15 @@ export class CommunityService {
 
   // --- Social / Feed Features ---
   static async getStories(): Promise<Story[]> {
-    return Promise.resolve(INITIAL_STORIES);
+    return await db.getStories();
   }
 
   static async getTrends(): Promise<SocialTrend[]> {
-    return Promise.resolve(INITIAL_TRENDS);
+    return await db.getTrends();
   }
 
   static async getSuggestedUsers(): Promise<SuggestedUser[]> {
-    return Promise.resolve(INITIAL_SUGGESTED_USERS);
+    return await db.getSuggestedUsers();
   }
 
   static async getFollowedUserIds(): Promise<string[]> {

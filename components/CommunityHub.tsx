@@ -107,14 +107,14 @@ const CommunityHub: React.FC = () => {
   const { 
     userProfile, isSignedIn,
     listings, posts, chatMessages, stories: contextStories, trends, suggestedUsers, followedUserIds, likedPostIds,
-    addListing, addPost, getPostReplies, addPostReply, likePost,
+    addListing, markListingSold, addPost, getPostReplies, addPostReply, likePost,
     sendChatMessage, toggleFollowUser,
     showToast, weather, alerts, marketPrices,
     pollData, pollVoted, handlePollVote,
     navigate
   } = useFarm();
   
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(() => !localStorage.getItem('agriflow_community_intro_dismissed'));
   const [activeTab, setActiveTab] = useState<CommunityTab>('FEED');
 
   const [localStories, setLocalStories] = useState<Story[]>([]);
@@ -371,7 +371,7 @@ const CommunityHub: React.FC = () => {
         </div>
 
         <button 
-          onClick={() => setShowIntro(false)}
+          onClick={() => { setShowIntro(false); localStorage.setItem('agriflow_community_intro_dismissed', '1'); }}
           className="group relative px-10 py-4 bg-sunburst-50 text-jade-950 font-semibold rounded-full hover:bg-sunburst-100 transition-all shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(34,197,94,0.4)] flex items-center gap-3 mx-auto"
         >
           Enter Community
@@ -663,20 +663,26 @@ const CommunityHub: React.FC = () => {
                      <div className="px-1">{renderLocationAlerts()}</div>
                    )}
 
-                   {/* Stories Row */}
-                   <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar px-1">
-                      {localStories.map(story => (
-                        <div key={story.id} onClick={() => story.isUser ? setIsStoryModalOpen(true) : setViewingStory(story)} className="flex flex-col items-center gap-2 cursor-pointer group flex-shrink-0 min-w-[70px]">
-                           <div className={`w-16 h-16 rounded-full p-[3px] transition-transform duration-200 group-hover:scale-105 ${story.isUser ? 'border-2 border-dashed border-[var(--text-tertiary)] dark:border-[var(--text-tertiary)]' : (story.hasUpdate ? 'bg-gradient-to-tr from-yellow-400 to-red-500' : 'bg-[var(--bg-content)]')}`}>
-                              <div className="w-full h-full rounded-full border-2 border-white dark:border-[var(--bg-card)] overflow-hidden bg-[var(--bg-content)] relative">
-                                 {story.isUser && <div className="absolute inset-0 flex items-center justify-center bg-[var(--bg-content)]"><Plus className="w-6 h-6 text-[var(--text-tertiary)]"/></div>}
-                                 <img src={story.img} alt={story.name} className={`w-full h-full object-cover ${story.isUser ? 'opacity-50' : ''}`} onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(story.name)}&background=random`; }} />
-                              </div>
-                           </div>
-                           <span className="text-[10px] font-bold text-[var(--text-secondary)] truncate w-full text-center">{story.name}</span>
-                        </div>
-                      ))}
-                   </div>
+                    {/* Stories Row */}
+                    <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar px-1">
+                       {localStories.map(story => (
+                         <div key={story.id} onClick={() => story.isUser ? setIsStoryModalOpen(true) : setViewingStory(story)} className="flex flex-col items-center gap-2 cursor-pointer group flex-shrink-0 min-w-[70px]">
+                            <div className={`w-16 h-16 rounded-full p-[3px] transition-transform duration-200 group-hover:scale-105 ${story.isUser ? 'border-2 border-dashed border-[var(--text-tertiary)] dark:border-[var(--text-tertiary)]' : (story.hasUpdate ? 'bg-gradient-to-tr from-yellow-400 to-red-500' : 'bg-[var(--bg-content)]')}`}>
+                               <div className="w-full h-full rounded-full border-2 border-white dark:border-[var(--bg-card)] overflow-hidden bg-[var(--bg-content)] relative">
+                                  {story.isUser && <div className="absolute inset-0 flex items-center justify-center bg-[var(--bg-content)]"><Plus className="w-6 h-6 text-[var(--text-tertiary)]"/></div>}
+                                  <img src={story.img} alt={story.name} className={`w-full h-full object-cover ${story.isUser ? 'opacity-50' : ''}`} onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(story.name)}&background=random`; }} />
+                               </div>
+                            </div>
+                            <span className="text-[10px] font-bold text-[var(--text-secondary)] truncate w-full text-center">{story.name}</span>
+                         </div>
+                       ))}
+                    </div>
+
+                    {/* Feed Search */}
+                    <div className="relative px-1">
+                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)]" />
+                       <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search posts..." className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-card)] border border-[var(--border-card)] rounded-xl text-sm focus:outline-none focus:border-sunburst-500" />
+                    </div>
 
                    {/* Create Post Widget */}
                    <div className="card-surface p-5">
@@ -702,9 +708,11 @@ const CommunityHub: React.FC = () => {
                       {renderRightSidebarContent()}
                    </div>
 
-                   {/* Posts Feed */}
-                   <div className="space-y-6">
-                      {posts.map(post => (
+                    {/* Posts Feed */}
+                    <div className="space-y-6">
+                       {posts
+                         .filter(post => !searchQuery || post.title.toLowerCase().includes(searchQuery.toLowerCase()) || post.content.toLowerCase().includes(searchQuery.toLowerCase()) || post.author.toLowerCase().includes(searchQuery.toLowerCase()))
+                         .map(post => (
                         <div key={post.id} className="card-surface overflow-hidden hover:shadow-md transition-shadow">
                            <div className="p-5">
                               <div className="flex justify-between items-start mb-4">
@@ -734,7 +742,7 @@ const CommunityHub: React.FC = () => {
                                     <button onClick={() => likePost(post.id)} className={`flex items-center gap-1.5 hover:text-red-500 transition-colors ${likedPostIds.includes(post.id) ? 'text-red-500' : ''}`}><Heart className={`w-4 h-4 ${likedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> {post.likes} Likes</button>
                                     <button onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)} className="flex items-center gap-1.5 hover:text-blue-500 transition-colors"><MessageCircle className="w-4 h-4"/> {post.replies} Comments</button>
                                  </div>
-                                 <button onClick={() => showToast("Share link copied to clipboard!", "success")} className="flex items-center gap-1.5 hover:text-green-500 transition-colors"><Share2 className="w-4 h-4"/> Share</button>
+                                  <button onClick={() => { const text = `${post.title} - ${post.content.slice(0, 100)}`; navigator.clipboard?.writeText(text).then(() => showToast("Link copied to clipboard!", "success")).catch(() => showToast("Share link copied!", "success")); }} className="flex items-center gap-1.5 hover:text-green-500 transition-colors"><Share2 className="w-4 h-4"/> Share</button>
                               </div>
                            </div>
                            
@@ -792,7 +800,8 @@ const CommunityHub: React.FC = () => {
                          <div key={item.id} className="bg-[var(--bg-card)] rounded-2xl shadow-sm border border-[var(--border-card)] overflow-hidden hover:border-green-500 transition-all group flex flex-col">
                             <div className="h-48 bg-[var(--bg-content)] relative overflow-hidden">
                                <img src={item.image || 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=800&fit=crop'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={item.item} onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=800&fit=crop'; }} />
-                               <div className="absolute top-3 right-3"><span className={`px-3 py-1 rounded-lg text-[10px] font-semibold shadow-md ${item.type === 'SELL' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>{item.type}</span></div>
+                                <div className="absolute top-3 right-3"><span className={`px-3 py-1 rounded-lg text-[10px] font-semibold shadow-md ${item.status === 'SOLD' ? 'bg-[var(--text-tertiary)] text-white' : item.type === 'SELL' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>{item.status === 'SOLD' ? 'SOLD' : item.type}</span></div>
+                                {item.status === 'SOLD' && <div className="absolute inset-0 bg-black/40 flex items-center justify-center"><span className="text-white font-black text-xl tracking-wide rotate-[-15deg] border-2 border-white px-4 py-1">SOLD</span></div>}
                             </div>
                             <div className="p-5 flex-1 flex flex-col">
                                <div className="flex justify-between items-start mb-2">
@@ -800,10 +809,14 @@ const CommunityHub: React.FC = () => {
                                 </div>
                                <p className="text-2xl font-black text-[var(--text-primary)] mb-2 font-heading">{item.price}</p>
                                <div className="flex items-center text-xs text-[var(--text-secondary)] mb-4"><MapPin className="w-3 h-3 mr-1"/> {item.location}</div>
-                               <div className="mt-auto pt-4 border-t border-[var(--border-card)] flex justify-between items-center">
-                                  <span className="text-[10px] font-semibold text-[var(--text-tertiary)]">{getRelativeTime(item.date)}</span>
-                                  <button onClick={() => showToast(`Contact: ${item.contact}`, 'success')} className="text-xs font-semibold text-jade-600 dark:text-jade-400 hover:underline">Contact Seller</button>
-                               </div>
+                                <div className="mt-auto pt-4 border-t border-[var(--border-card)] flex justify-between items-center">
+                                   <span className="text-[10px] font-semibold text-[var(--text-tertiary)]">{item.status === 'SOLD' ? 'Sold' : getRelativeTime(item.date)}</span>
+                                   {item.status === 'SOLD' ? (<span className="text-xs font-semibold text-[var(--text-tertiary)] line-through">Sold</span>) : item.seller === userProfile.name ? (
+                                     <button onClick={() => handleAuthRequiredAction(() => markListingSold(item.id))} className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline">Mark Sold</button>
+                                   ) : (
+                                     <button onClick={() => showToast(`Contact: ${item.contact}`, 'success')} className="text-xs font-semibold text-jade-600 dark:text-jade-400 hover:underline">Contact Seller</button>
+                                   )}
+                                </div>
                             </div>
                          </div>
                       ))}
@@ -1016,7 +1029,7 @@ const CommunityHub: React.FC = () => {
                   return;
                 }
                 try {
-                  await addListing({ ...newListing, image: listingImage } as any); 
+                  await addListing({ ...newListing, seller: userProfile.name, image: listingImage } as any); 
                   setIsListingModalOpen(false); 
                   setNewListing({ type: 'SELL', item: '', price: '', location: '', contact: '' }); 
                   setListingImage(null); 

@@ -24,8 +24,24 @@ const getAI = () => {
   return _ai;
 };
 
-// --- SIMPLE IN-MEMORY CACHE ---
-const responseCache = new Map<string, any>();
+// --- SIMPLE IN-MEMORY CACHE WITH TTL ---
+const CACHE_TTL_MS = 1000 * 60 * 15; // 15 minutes
+interface CacheEntry<T = any> { data: T; timestamp: number; }
+const responseCache = new Map<string, CacheEntry>();
+
+function setCache(key: string, data: any): void {
+  responseCache.set(key, { data, timestamp: Date.now() });
+}
+
+function getCache(key: string): any | undefined {
+  const entry = responseCache.get(key);
+  if (!entry) return undefined;
+  if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
+    responseCache.delete(key);
+    return undefined;
+  }
+  return entry.data;
+}
 
 // --- FALLBACK DATA (SIMULATION LAYER) ---
 const FALLBACK_NEWS: NewsArticle[] = [
@@ -175,8 +191,9 @@ export const getFarmingAdvice = async (prompt: string, countryCtx?: CountryConte
   }
   
   const cacheKey = `ADVICE_${prompt.trim().toLowerCase()}_${countryCtx?.countryCode || 'default'}`;
-  if (responseCache.has(cacheKey)) {
-    return responseCache.get(cacheKey);
+  const cached = getCache(cacheKey);
+  if (cached) {
+    return cached;
   }
 
   try {
@@ -206,7 +223,7 @@ export const getFarmingAdvice = async (prompt: string, countryCtx?: CountryConte
       sources: sources.length > 0 ? sources : undefined
     };
 
-    responseCache.set(cacheKey, result);
+    setCache(cacheKey, result);
     return result;
 
   } catch (error) {
@@ -225,9 +242,9 @@ export const fetchAgNews = async (countryCtx?: CountryContext): Promise<NewsArti
   }
 
   const cacheKey = `GLOBAL_AG_NEWS_${countryCtx?.countryCode || 'default'}`;
-  const cached = responseCache.get(cacheKey);
-  if (cached && (Date.now() - cached.timestamp < 1000 * 60 * 15)) {
-    return cached.data;
+  const cached = getCache(cacheKey);
+  if (cached) {
+    return cached;
   }
 
   const region = countryCtx?.region || 'global';
@@ -274,7 +291,7 @@ export const fetchAgNews = async (countryCtx?: CountryContext): Promise<NewsArti
       id: `news-${Date.now()}-${i}`
     }));
 
-    responseCache.set(cacheKey, { timestamp: Date.now(), data: result });
+    setCache(cacheKey, result);
     return result;
 
   } catch (error) {
@@ -293,7 +310,8 @@ export const getLiveAgriIntel = async (countryCtx?: CountryContext): Promise<str
   }
 
   const cacheKey = `LIVE_INTEL_SUMMARY_${countryCtx?.countryCode || 'default'}`;
-  if (responseCache.has(cacheKey)) return responseCache.get(cacheKey);
+  const cached = getCache(cacheKey);
+  if (cached) return cached;
 
   const region = countryCtx ? `${COUNTRY_REGISTRY[countryCtx.countryCode]?.name || countryCtx.region}, ${countryCtx.region}` : 'global';
   const prompt = `What are the 3 most critical agricultural news headlines right now regarding climate events, pest outbreaks, or major commodity price shifts in ${region}? Be concise, 1 sentence per headline.`;
@@ -310,7 +328,7 @@ export const getLiveAgriIntel = async (countryCtx?: CountryContext): Promise<str
 
     const text = response.text || "Market intelligence systems offline.";
     const cleanText = cleanAIOutput(text);
-    responseCache.set(cacheKey, cleanText);
+    setCache(cacheKey, cleanText);
     return cleanText;
   } catch (error) {
     console.error("Intel Fetch Error (Falling back):", error);

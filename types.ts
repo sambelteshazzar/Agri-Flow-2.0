@@ -16,7 +16,7 @@ export enum NavigationTab {
 export interface ToastMessage {
   id: string;
   message: string;
-  type: 'success' | 'error' | 'info';
+  type: 'success' | 'error' | 'info' | 'warning';
 }
 
 export interface UserLocation {
@@ -196,6 +196,7 @@ export interface MarketplaceListing {
   price: string;
   location: string;
   contact: string;
+  seller?: string;
   verified: boolean;
   status: 'ACTIVE' | 'SOLD'; 
   date: string;

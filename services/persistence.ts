@@ -1,6 +1,6 @@
 
-import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult } from '../types';
-import { INITIAL_CROPS, INITIAL_LIVESTOCK, INITIAL_TASKS, INITIAL_MODULES, MARKET_PRICES, INITIAL_LISTINGS, INITIAL_POSTS, INITIAL_CHAT_MESSAGES, CURRENT_USER } from '../constants';
+import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult, Story, SocialTrend, SuggestedUser, SystemAlert } from '../types';
+import { INITIAL_CROPS, INITIAL_LIVESTOCK, INITIAL_TASKS, INITIAL_MODULES, MARKET_PRICES, INITIAL_LISTINGS, INITIAL_POSTS, INITIAL_CHAT_MESSAGES, CURRENT_USER, INITIAL_STORIES, INITIAL_TRENDS, INITIAL_SUGGESTED_USERS, INITIAL_ALERTS } from '../constants';
 
 // --- DATABASE KEYS ---
 export const DB_KEYS = {
@@ -19,7 +19,13 @@ export const DB_KEYS = {
   LIKED_POSTS: 'agriflow_liked_posts',
   USER_PROFILE: 'agriflow_user_profile',
   LABOR_INPUT: 'agriflow_labor_input',
-  RESOURCE_RESULT: 'agriflow_resource_result'
+  RESOURCE_RESULT: 'agriflow_resource_result',
+  STORIES: 'agriflow_stories',
+  TRENDS: 'agriflow_trends',
+  SUGGESTED_USERS: 'agriflow_suggested_users',
+  ALERTS: 'agriflow_alerts',
+  POLL_VOTED: 'agriflow_poll_voted',
+  QUESTIONS: 'agriflow_qa_questions'
 };
 
 // --- SIMULATED LATENCY ---
@@ -251,6 +257,60 @@ class PersistenceService {
 
   async saveResourceResult(result: ResourceResult): Promise<void> {
     this.setItem(DB_KEYS.RESOURCE_RESULT, result);
+  }
+
+  // 12. STORIES
+  async getStories(): Promise<Story[]> {
+    return this.getItem<Story[]>(DB_KEYS.STORIES, INITIAL_STORIES);
+  }
+
+  async saveStories(stories: Story[]): Promise<void> {
+    this.setItem(DB_KEYS.STORIES, stories);
+  }
+
+  // 13. TRENDS
+  async getTrends(): Promise<SocialTrend[]> {
+    return this.getItem<SocialTrend[]>(DB_KEYS.TRENDS, INITIAL_TRENDS);
+  }
+
+  async saveTrends(trends: SocialTrend[]): Promise<void> {
+    this.setItem(DB_KEYS.TRENDS, trends);
+  }
+
+  // 14. SUGGESTED USERS
+  async getSuggestedUsers(): Promise<SuggestedUser[]> {
+    return this.getItem<SuggestedUser[]>(DB_KEYS.SUGGESTED_USERS, INITIAL_SUGGESTED_USERS);
+  }
+
+  async saveSuggestedUsers(users: SuggestedUser[]): Promise<void> {
+    this.setItem(DB_KEYS.SUGGESTED_USERS, users);
+  }
+
+  // 15. ALERTS
+  async getAlerts(): Promise<SystemAlert[]> {
+    return this.getItem<SystemAlert[]>(DB_KEYS.ALERTS, INITIAL_ALERTS);
+  }
+
+  async saveAlerts(alerts: SystemAlert[]): Promise<void> {
+    this.setItem(DB_KEYS.ALERTS, alerts);
+  }
+
+  // 16. POLL VOTED
+  async getPollVoted(): Promise<number | null> {
+    return this.getItem<number | null>(DB_KEYS.POLL_VOTED, null);
+  }
+
+  async savePollVoted(voted: number | null): Promise<void> {
+    this.setItem(DB_KEYS.POLL_VOTED, voted);
+  }
+
+  // 17. Q&A QUESTIONS
+  async getQuestions(): Promise<any[]> {
+    return this.getItem<any[]>(DB_KEYS.QUESTIONS, []);
+  }
+
+  async saveQuestions(questions: any[]): Promise<void> {
+    this.setItem(DB_KEYS.QUESTIONS, questions);
   }
 }
 

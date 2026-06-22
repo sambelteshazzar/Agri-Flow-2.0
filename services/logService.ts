@@ -17,7 +17,7 @@ export class LogService {
     const currentLogs = await db.getLogs();
     const newLog: LogEntry = {
       ...logData,
-      id: Date.now().toString(),
+      id: db.generateId('log'),
     };
     const updatedLogs = [newLog, ...currentLogs];
     await db.saveLogs(updatedLogs);

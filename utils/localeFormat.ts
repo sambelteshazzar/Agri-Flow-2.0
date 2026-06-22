@@ -6,6 +6,7 @@ export function formatCurrency(amount: number, currencyCode: string, currencySym
       NGN: 'en-NG', GHS: 'en-GH', KES: 'en-KE', INR: 'en-IN',
       BRL: 'pt-BR', USD: 'en-US', ETB: 'am-ET', XOF: 'fr-SN',
       AUD: 'en-AU', EUR: 'de-DE', THB: 'th-TH', MXN: 'es-MX',
+      
     };
     const locale = localeMap[currencyCode] || 'en-US';
     return new Intl.NumberFormat(locale, {

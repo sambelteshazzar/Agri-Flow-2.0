@@ -102,7 +102,11 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // --- State ---
   const [userProfile, setUserProfile] = useState<UserProfile>(GUEST_USER);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [alerts, setAlerts] = useState<SystemAlert[]>(INITIAL_ALERTS);
+  const [alerts, setAlerts] = useState<SystemAlert[]>(() => {
+    const saved = localStorage.getItem(DB_KEYS.ALERTS);
+    if (saved) { try { return JSON.parse(saved); } catch { return INITIAL_ALERTS; } }
+    return INITIAL_ALERTS;
+  });
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [laborInput, setLaborInput] = useState<LaborInput | null>(null);
   const [resourceResult, setResourceResult] = useState<ResourceResult | null>(null);
@@ -183,7 +187,11 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     { id: 2, text: 'Increasing Irrigation', percent: 30, votes: 372 },
     { id: 3, text: 'Reducing Acreage', percent: 25, votes: 310 },
   ]);
-  const [pollVoted, setPollVoted] = useState<number | null>(null);
+  const [pollVoted, setPollVoted] = useState<number | null>(() => {
+    const saved = localStorage.getItem(DB_KEYS.POLL_VOTED);
+    if (saved) { try { return JSON.parse(saved); } catch { return null; } }
+    return null;
+  });
 
   // Location & Weather State
   const [userLocation, setUserLocation] = useState<UserLocation>({
@@ -347,6 +355,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }));
       });
       showToast('Vote submitted', 'success');
+      db.savePollVoted(optionId);
       return optionId;
     });
   }, [showToast]);
@@ -406,6 +415,10 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         await CommunityService.replaceAllChatMessages(countryCfg.chatMessages);
         db.saveTasks(countryCfg.tasks);
         db.saveModules(countryCfg.learningModules);
+        await db.saveAlerts(countryCfg.alerts);
+        await db.saveTrends(countryCfg.trends);
+        await db.saveSuggestedUsers(countryCfg.suggestedUsers);
+        await db.saveStories(countryCfg.stories);
       } catch (dbErr) {
         console.warn('[FarmContext] Non-critical DB save failed during login:', dbErr);
       }
@@ -419,8 +432,33 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [showToast]);
 
   const logout = useCallback(() => {
+    Object.values(DB_KEYS).forEach(key => localStorage.removeItem(key));
+    localStorage.removeItem('agriflow_theme');
     setUserProfile(GUEST_USER);
     setIsSignedIn(false);
+    setCrops([]);
+    setLivestock([]);
+    setTasks([]);
+    setLearningModules([]);
+    setMarketPrices([]);
+    setListings([]);
+    setPosts([]);
+    setChatMessages([]);
+    setStories([]);
+    setTrends([]);
+    setSuggestedUsers([]);
+    setFollowedUserIds([]);
+    setLikedPostIds([]);
+    setAlerts([]);
+    setNewsArticles([]);
+    setPollData([
+      { id: 1, text: 'Switching to Drought Seeds', percent: 45, votes: 558 },
+      { id: 2, text: 'Increasing Irrigation', percent: 30, votes: 372 },
+      { id: 3, text: 'Reducing Acreage', percent: 25, votes: 310 },
+    ]);
+    setPollVoted(null);
+    setLaborInput(null);
+    setResourceResult(null);
     showToast('Signed out successfully', 'info');
   }, [showToast]);
 
@@ -560,34 +598,53 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [showToast]);
 
   // --- Task Actions ---
+  const taskSaveRef = useRef(false);
+  const moduleSaveRef = useRef(false);
+
+  const flushTasks = useRef<NodeJS.Timeout | null>(null);
+  const flushModules = useRef<NodeJS.Timeout | null>(null);
+
   const toggleTask = useCallback((id: string) => {
     let snap: Task[] | null = null;
     setTasks(prevTasks => {
       snap = prevTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
       return snap;
     });
-    if (snap) db.saveTasks(snap);
+    if (snap && !taskSaveRef.current) {
+      taskSaveRef.current = true;
+      if (flushTasks.current) clearTimeout(flushTasks.current);
+      flushTasks.current = setTimeout(() => {
+        setTasks(current => { db.saveTasks(current); return current; });
+        taskSaveRef.current = false;
+      }, 100);
+    }
   }, []);
 
   const addTask = useCallback((text: string) => {
-    let snap: Task[] | null = null;
+    const newId = db.generateId('task');
     setTasks(prevTasks => {
-      const newTask: Task = { id: Date.now().toString(), text, completed: false, priority: 'normal' };
-      snap = [newTask, ...prevTasks];
-      return snap;
+      const newTask: Task = { id: newId, text, completed: false, priority: 'normal' };
+      const updated = [newTask, ...prevTasks];
+      db.saveTasks(updated);
+      return updated;
     });
-    if (snap) db.saveTasks(snap);
     showToast('New task added', 'success');
   }, [showToast]);
 
   // --- Education Actions ---
   const completeModule = useCallback((id: string) => {
-    let snap: LearningModule[] | null = null;
     setLearningModules(prevModules => {
-      snap = prevModules.map(m => m.id === id ? { ...m, completed: true } : m);
-      return snap;
+      const updated = prevModules.map(m => m.id === id ? { ...m, completed: true } : m);
+      if (!moduleSaveRef.current) {
+        moduleSaveRef.current = true;
+        if (flushModules.current) clearTimeout(flushModules.current);
+        flushModules.current = setTimeout(() => {
+          setLearningModules(current => { db.saveModules(current); return current; });
+          moduleSaveRef.current = false;
+        }, 100);
+      }
+      return updated;
     });
-    if (snap) db.saveModules(snap);
     showToast('Course completed! Certificate saved.', 'success');
   }, [showToast]);
 
@@ -719,7 +776,11 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [showToast]);
 
   const dismissAlert = useCallback((id: string) => {
-    setAlerts(prev => prev.filter(a => a.id !== id));
+    setAlerts(prev => {
+      const updated = prev.filter(a => a.id !== id);
+      db.saveAlerts(updated);
+      return updated;
+    });
   }, []);
 
   const contextValue = useMemo(() => ({
