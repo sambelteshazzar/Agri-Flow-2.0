@@ -254,7 +254,7 @@ const EducationHub: React.FC = () => {
             <p className="text-jade-300 text-lg mb-8 font-medium leading-relaxed max-w-lg">
                Join over 10,000 farmers enhancing soil health and profitability. Led by world-class agronomists.
             </p>
-            <button className="bg-white text-jade-900 px-8 py-3 rounded-full font-semibold hover:bg-sunburst-100 transition-colors shadow-lg flex items-center gap-2">
+             <button onClick={() => document.getElementById('course-catalog')?.scrollIntoView({ behavior: 'smooth' })} className="bg-white text-jade-900 px-8 py-3 rounded-full font-semibold hover:bg-sunburst-100 transition-colors shadow-lg flex items-center gap-2">
                Explore Courses <BookOpen className="w-4 h-4" />
             </button>
          </div>
@@ -278,7 +278,7 @@ const EducationHub: React.FC = () => {
          </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+       <div id="course-catalog" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
          {filteredModules.map(module => (
             <div key={module.id} className="card-surface rounded-2xl overflow-hidden flex flex-col group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer" onClick={() => handleStartCourse(module.id)}>
                <div className="relative h-48 overflow-hidden">

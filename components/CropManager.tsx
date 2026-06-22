@@ -208,7 +208,21 @@ const CropManager: React.FC = () => {
   };
 
   const loadSampleData = async () => {
-    showToast("Your country-specific crop data is already loaded from your onboarding profile.", "info");
+    for (const t of CROP_TEMPLATES) {
+      await addCrop({
+        name: t.name,
+        variety: t.variety,
+        plantingDate: t.plantingDate,
+        harvestDate: t.harvestDate,
+        status: t.status,
+        area: t.area,
+        imageUrl: t.imageUrl,
+        soilHealth: t.soilHealth,
+        waterEfficiency: t.waterEfficiency,
+        biodiversityScore: t.biodiversityScore,
+      });
+    }
+    showToast('Sample crop data loaded', 'success');
   };
 
   const applyTemplate = (template: typeof CROP_TEMPLATES[0]) => {

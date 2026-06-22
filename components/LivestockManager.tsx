@@ -72,7 +72,15 @@ const LivestockManager: React.FC = () => {
   };
 
   const loadSampleData = async () => {
-    showToast("Your country-specific livestock data is already loaded from your onboarding profile.", "info");
+    const samples: Omit<Livestock, 'id'>[] = [
+      { name: 'Dairy Herd #1', species: 'Cattle', count: 15, status: 'Healthy', grazingType: 'Rotational', notes: 'Sample herd for demonstration', imageUrl: getLivestockImage('Cattle') },
+      { name: 'Free-Range Flock', species: 'Chicken', count: 120, status: 'Healthy', grazingType: 'Free Range', notes: 'Sample flock for demonstration', imageUrl: getLivestockImage('Chicken') },
+      { name: 'West African Dwarf Goats', species: 'Goat', count: 25, status: 'Healthy', grazingType: 'Free Range', notes: 'Sample herd for demonstration', imageUrl: getLivestockImage('Goat') },
+    ];
+    for (const s of samples) {
+      await addLivestock(s);
+    }
+    showToast('Sample livestock data loaded', 'success');
   };
 
   const handleLogSubmit = async (e: React.FormEvent) => {

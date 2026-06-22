@@ -76,6 +76,18 @@ export class CommunityService {
     return this.getPosts();
   }
 
+  static async deletePost(id: string): Promise<ForumPost[]> {
+    const current = await db.getPosts();
+    const updated = current.filter(p => p.id !== id);
+    await db.savePosts(updated);
+    const replies = await db.getReplies(id);
+    if (replies.length > 0) {
+      const allReplies = await db.getAllReplies();
+      await db.saveReplies(allReplies.filter(r => r.postId !== id));
+    }
+    return this.getPosts();
+  }
+
   static async addReply(postId: string, content: string, author: string): Promise<ForumReply[]> {
     if (!content.trim()) throw new Error("Reply cannot be empty");
 

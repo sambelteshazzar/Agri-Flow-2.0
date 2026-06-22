@@ -45,10 +45,20 @@ const FAVICON_EMOJIS: Record<string, string> = {
 };
 
 const AppContent: React.FC = () => {
-  const { userProfile, alerts, isSignedIn, login, logout, toasts, removeToast, currentView, navigate } = useFarm();
+  const { userProfile, alerts, isSignedIn, login, logout, toasts, removeToast, currentView, navigate, dismissAlert, dismissAllAlerts } = useFarm();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [hasStarted, setHasStarted] = useState(() => localStorage.getItem('agriflow_has_started') === 'true');
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  useEffect(() => {
+    const goOnline = () => setIsOnline(true);
+    const goOffline = () => setIsOnline(false);
+    window.addEventListener('online', goOnline);
+    window.addEventListener('offline', goOffline);
+    return () => {
+      window.removeEventListener('online', goOnline);
+      window.removeEventListener('offline', goOffline);
+    };
+  }, []);
   const [showNotifications, setShowNotifications] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
@@ -294,16 +304,12 @@ const AppContent: React.FC = () => {
                 </kbd>
               </button>
 
-              <button
-                onClick={() => setIsOnline(!isOnline)}
-                className={`flex items-center px-3 py-2 rounded-xl text-[11px] font-semibold transition-all border ${isOnline ? 'bg-jade-50 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400 border-jade-200 dark:border-jade-800' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800'}`}
+              <div
+                className={`flex items-center px-3 py-2 rounded-xl text-[11px] font-semibold border ${isOnline ? 'bg-jade-50 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400 border-jade-200 dark:border-jade-800' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800'}`}
               >
                 {isOnline ? <Wifi className="w-3 h-3 mr-1.5" /> : <WifiOff className="w-3 h-3 mr-1.5" />}
                 {isOnline ? 'Online' : 'Offline'}
-              </button>
-              <button className="flex items-center px-3 py-2 rounded-xl text-[11px] font-semibold bg-terra-50 dark:bg-[#163D2F] text-terra-600 dark:text-[#7BA896] border border-terra-200 dark:border-[#1E5A47] hover:bg-terra-100 dark:hover:bg-[#1E3D2A] transition-colors">
-                <Globe className="w-3 h-3 mr-1.5" /> EN
-              </button>
+              </div>
 
               {/* Notifications Dropdown */}
               <div className="relative">
@@ -325,7 +331,7 @@ const AppContent: React.FC = () => {
                     </div>
                     <div className="max-h-96 overflow-y-auto">
                       {alerts.length > 0 ? alerts.map(alert => (
-                        <div key={alert.id} className="p-4 border-b border-terra-100 dark:border-[#1E5A47] hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors cursor-pointer group">
+                        <div key={alert.id} onClick={() => dismissAlert(alert.id)} className="p-4 border-b border-terra-100 dark:border-[#1E5A47] hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors cursor-pointer group">
                           <div className="flex items-start gap-3">
                             <div className="bg-red-100 dark:bg-red-900/30 p-1.5 rounded-full text-red-600 dark:text-red-400 mt-0.5"><AlertTriangle className="w-4 h-4" /></div>
                             <div>
@@ -340,7 +346,7 @@ const AppContent: React.FC = () => {
                       )}
                     </div>
                     <div className="bg-terra-50 dark:bg-[#163D2F] p-2 border-t border-terra-200 dark:border-[#1E5A47] text-center">
-                      <button className="text-[10px] font-semibold text-terra-500 dark:text-[#7BA896] hover:text-terra-800 dark:hover:text-[#E8F0EA]">Mark all as read</button>
+                       <button onClick={() => { dismissAllAlerts(); setShowNotifications(false); }} className="text-[10px] font-semibold text-terra-500 dark:text-[#7BA896] hover:text-terra-800 dark:hover:text-[#E8F0EA]">Mark all as read</button>
                     </div>
                   </div>
                 )}

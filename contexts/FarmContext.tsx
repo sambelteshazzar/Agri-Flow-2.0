@@ -73,6 +73,7 @@ interface FarmContextType {
   refreshMarketPrices: () => Promise<void>;
   refreshNews: () => Promise<void>;
   refreshLocation: () => void;
+  dismissAllAlerts: () => void;
   
   // Logs
   addActivityLog: (log: Omit<LogEntry, 'id'>) => Promise<void>;
@@ -82,6 +83,7 @@ interface FarmContextType {
   addListing: (listing: Omit<MarketplaceListing, 'id' | 'verified' | 'status' | 'date'>) => Promise<void>;
   markListingSold: (id: string) => Promise<void>;
   addPost: (post: Omit<ForumPost, 'id' | 'replies' | 'likes' | 'date'>) => Promise<void>;
+  deletePost: (id: string) => Promise<void>;
   getPostReplies: (postId: string) => Promise<ForumReply[]>;
   addPostReply: (postId: string, content: string) => Promise<ForumReply[]>;
   likePost: (postId: string) => Promise<void>;
@@ -732,6 +734,17 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [showToast]);
 
+  const deletePost = useCallback(async (id: string) => {
+    try {
+      const updated = await CommunityService.deletePost(id);
+      setPosts(updated);
+      showToast('Post deleted', 'info');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to delete post', 'error');
+    }
+  }, [showToast]);
+
   const getPostReplies = useCallback(async (postId: string) => {
     return await CommunityService.getPostReplies(postId);
   }, []);
@@ -783,6 +796,11 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
   }, []);
 
+  const dismissAllAlerts = useCallback(() => {
+    setAlerts([]);
+    db.saveAlerts([]);
+  }, []);
+
   const contextValue = useMemo(() => ({
     userProfile, isSignedIn, alerts,
     theme, toggleTheme, setThemeMode, currentView, navigate,
@@ -795,8 +813,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
-    addPost, getPostReplies, addPostReply, likePost,
-    sendChatMessage, toggleFollowUser, dismissAlert,
+    addPost, deletePost, getPostReplies, addPostReply, likePost,
+    sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
     laborInput, resourceResult, saveLaborInput: saveLaborInputAction, saveResourceResult: saveResourceResultAction
   }), [
     userProfile, isSignedIn, alerts,
@@ -810,8 +828,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
-    addPost, getPostReplies, addPostReply, likePost,
-    sendChatMessage, toggleFollowUser, dismissAlert,
+    addPost, deletePost, getPostReplies, addPostReply, likePost,
+    sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
     laborInput, resourceResult, saveLaborInputAction, saveResourceResultAction
   ]);
 

@@ -33,7 +33,13 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
 
   const handlePlaceholderLink = (e: React.MouseEvent, name: string) => {
     e.preventDefault();
-    showToast(`${name} page is not available in this demo environment.`, 'info');
+    const urls: Record<string, string> = {
+      'Privacy': 'agriflow.ai/privacy',
+      'Terms': 'agriflow.ai/terms',
+      'API Docs': 'agriflow.ai/docs',
+      'Support': 'agriflow.ai/support',
+    };
+    showToast(`${name} available at ${urls[name] || 'agriflow.ai'}`, 'info');
   };
 
   return (

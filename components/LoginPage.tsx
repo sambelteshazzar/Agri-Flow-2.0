@@ -598,9 +598,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                 <span>&copy; 2026 AgriFlow</span>
               </div>
               <div className="flex gap-4">
-                <button type="button" className="hover:text-[var(--text-secondary)] transition-colors">Privacy</button>
-                <button type="button" className="hover:text-[var(--text-secondary)] transition-colors">Terms</button>
-                <button type="button" className="hover:text-[var(--text-secondary)] transition-colors">Help</button>
+                <button type="button" onClick={() => showToast('Privacy policy available at agriflow.ai/privacy', 'info')} className="hover:text-[var(--text-secondary)] transition-colors">Privacy</button>
+                <button type="button" onClick={() => showToast('Terms of service available at agriflow.ai/terms', 'info')} className="hover:text-[var(--text-secondary)] transition-colors">Terms</button>
+                <button type="button" onClick={() => showToast('Help center available at agriflow.ai/help', 'info')} className="hover:text-[var(--text-secondary)] transition-colors">Help</button>
               </div>
             </div>
           </div>

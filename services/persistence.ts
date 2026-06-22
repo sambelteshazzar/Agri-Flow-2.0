@@ -199,6 +199,14 @@ class PersistenceService {
     this.setItem(DB_KEYS.REPLIES, [...allReplies, reply]);
   }
 
+  async getAllReplies(): Promise<ForumReply[]> {
+    return this.getItem<ForumReply[]>(DB_KEYS.REPLIES, []);
+  }
+
+  async saveReplies(replies: ForumReply[]): Promise<void> {
+    this.setItem(DB_KEYS.REPLIES, replies);
+  }
+
   // 8. SOCIAL INTERACTIONS
   async getLikedPostIds(): Promise<string[]> {
     return this.getItem<string[]>(DB_KEYS.LIKED_POSTS, []);

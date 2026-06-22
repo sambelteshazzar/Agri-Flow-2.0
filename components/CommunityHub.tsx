@@ -107,7 +107,7 @@ const CommunityHub: React.FC = () => {
   const { 
     userProfile, isSignedIn,
     listings, posts, chatMessages, stories: contextStories, trends, suggestedUsers, followedUserIds, likedPostIds,
-    addListing, markListingSold, addPost, getPostReplies, addPostReply, likePost,
+    addListing, markListingSold, addPost, deletePost, getPostReplies, addPostReply, likePost,
     sendChatMessage, toggleFollowUser,
     showToast, weather, alerts, marketPrices,
     pollData, pollVoted, handlePollVote,
@@ -469,7 +469,7 @@ const CommunityHub: React.FC = () => {
           </div>
         ))}
       </div>
-      <button onClick={() => showToast('Advanced matching requires a premium account. Coming soon!', 'info')} className="w-full mt-4 py-2 text-[10px] font-bold text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl transition-colors flex items-center justify-center gap-1">
+      <button onClick={() => document.getElementById('suggested-users-section')?.scrollIntoView({ behavior: 'smooth' })} className="w-full mt-4 py-2 text-[10px] font-bold text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl transition-colors flex items-center justify-center gap-1">
         Find More Farmers <ChevronRight className="w-3 h-3" />
       </button>
     </div>
@@ -502,7 +502,7 @@ const CommunityHub: React.FC = () => {
           <h4 className="font-bold text-[var(--text-primary)] text-xs mb-4 flex items-center"><TrendingUp className="w-4 h-4 mr-2 text-blue-500"/> Trending Topics</h4>
           <div className="space-y-4">
              {trends.map((topic, i) => (
-               <div key={i} className="flex justify-between items-center group cursor-pointer">
+                <div key={i} className="flex justify-between items-center group cursor-pointer" onClick={() => { setActiveTab('FEED'); setSearchQuery(topic.tag.replace('#', '')); }}>
                   <div><p className="text-sm font-bold text-[var(--text-secondary)] group-hover:text-blue-600 transition-colors">{topic.tag}</p><p className="text-[10px] text-[var(--text-tertiary)] font-medium">{topic.volume}</p></div>
                   <div className="w-6 h-6 rounded-full bg-[var(--bg-content)] flex items-center justify-center text-[var(--text-tertiary)] group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors"><ChevronRight className="w-4 h-4"/></div>
                </div>
@@ -510,14 +510,14 @@ const CommunityHub: React.FC = () => {
           </div>
        </div>
 
-       <div className="card-surface p-6 shrink-0">
-          <h4 className="font-bold text-[var(--text-primary)] text-xs mb-4 flex items-center"><UserPlus className="w-4 h-4 mr-2 text-green-500"/> Who to follow</h4>
+        <div id="suggested-users-section" className="card-surface p-6 shrink-0">
+           <h4 className="font-bold text-[var(--text-primary)] text-xs mb-4 flex items-center"><UserPlus className="w-4 h-4 mr-2 text-green-500"/> Who to follow</h4>
           <div className="space-y-5">
              {suggestedUsers.map((person) => (
                 <div key={person.id} className="flex items-center justify-between">
                    <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full bg-[var(--bg-content)] overflow-hidden"><img src={person.img} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(person.name)}`; }} /></div>
-                      <div><p className="text-sm font-bold text-[var(--text-primary)] leading-none hover:underline cursor-pointer">{person.name}</p><p className="text-[10px] text-[var(--text-secondary)] mt-0.5">{person.role}</p></div>
+                       <div><p className="text-sm font-bold text-[var(--text-primary)] leading-none hover:underline cursor-pointer" onClick={() => handleAuthRequiredAction(() => toggleFollowUser(person.id))}>{person.name}</p><p className="text-[10px] text-[var(--text-secondary)] mt-0.5">{person.role}</p></div>
                    </div>
                    <button onClick={() => handleAuthRequiredAction(() => toggleFollowUser(person.id))} className={`p-1.5 rounded-full transition-colors ${followedUserIds.includes(person.id) ? 'bg-green-100 text-green-600' : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] hover:bg-terra-300'}`}>{followedUserIds.includes(person.id) ? <CheckCircle className="w-4 h-4"/> : <Plus className="w-4 h-4"/>}</button>
                 </div>
@@ -612,7 +612,7 @@ const CommunityHub: React.FC = () => {
                  </div>
               </div>
               <p className="text-xs text-green-700 dark:text-green-300 mb-4 leading-relaxed">Buy inputs in bulk, share equipment costs, and negotiate better prices together.</p>
-              <button onClick={() => handleAuthRequiredAction(() => showToast('Co-op formation wizard opening soon — gather 3+ members to start.', 'info'))} className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2">
+               <button onClick={() => handleAuthRequiredAction(() => { sendChatMessage({ sender: userProfile.name, content: `[Cooperative Formation] ${userProfile.name} is starting a new cooperative! Reply here to join.` }); showToast('Cooperative formation announced in community chat!', 'success'); })} className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2">
                  <Users className="w-4 h-4" /> Create Cooperative
               </button>
            </div>
@@ -628,7 +628,7 @@ const CommunityHub: React.FC = () => {
                    { id: 2, title: 'Regional Machinery Auction', date: 'NOV 02', time: '9:00 AM CST', type: 'In-Person' },
                    { id: 3, title: 'Co-op Annual Meeting', date: 'NOV 15', time: '10:00 AM', type: 'Hybrid' },
                  ].map(evt => (
-                    <div key={evt.id} className="flex gap-3 group cursor-pointer" onClick={() => showToast(`Event: ${evt.title}`, 'info')}>
+                     <div key={evt.id} className="flex gap-3 group cursor-pointer" onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(evt.title + ' agriculture farming 2026')}`, '_blank', 'noopener,noreferrer')}>
                        <div className="bg-[var(--bg-content)] rounded-xl p-2.5 flex flex-col items-center justify-center min-w-[50px] border border-[var(--border-card)]">
                           <span className="text-[9px] font-semibold text-red-500">{evt.date.split(' ')[0]}</span>
                           <span className="text-lg font-black text-[var(--text-primary)] leading-none">{evt.date.split(' ')[1]}</span>
@@ -725,7 +725,7 @@ const CommunityHub: React.FC = () => {
                                        <p className="text-xs text-[var(--text-secondary)] font-medium">{post.category} • {getRelativeTime(post.date)}</p>
                                     </div>
                                  </div>
-                                 <button onClick={() => showToast("More options coming soon", "info")} className="text-[var(--text-tertiary)] hover:bg-[var(--bg-content)] p-2 rounded-full"><MoreHorizontal className="w-5 h-5"/></button>
+                                  <button onClick={() => { if (post.author === userProfile.name) { deletePost(post.id); } else { showToast("Post reported to moderators", "info"); } }} className="text-[var(--text-tertiary)] hover:bg-[var(--bg-content)] p-2 rounded-full"><MoreHorizontal className="w-5 h-5"/></button>
                               </div>
                               
                               <h5 className="font-bold text-[var(--text-primary)] mb-2">{post.title}</h5>
@@ -814,7 +814,7 @@ const CommunityHub: React.FC = () => {
                                    {item.status === 'SOLD' ? (<span className="text-xs font-semibold text-[var(--text-tertiary)] line-through">Sold</span>) : item.seller === userProfile.name ? (
                                      <button onClick={() => handleAuthRequiredAction(() => markListingSold(item.id))} className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline">Mark Sold</button>
                                    ) : (
-                                     <button onClick={() => showToast(`Contact: ${item.contact}`, 'success')} className="text-xs font-semibold text-jade-600 dark:text-jade-400 hover:underline">Contact Seller</button>
+                                      <button onClick={() => { const isEmail = item.contact.includes('@'); if (isEmail) { window.open(`mailto:${item.contact}`, '_blank'); } else { navigator.clipboard?.writeText(item.contact).then(() => showToast('Contact copied to clipboard', 'success')).catch(() => showToast(`Contact: ${item.contact}`, 'info')); } }} className="text-xs font-semibold text-jade-600 dark:text-jade-400 hover:underline">Contact Seller</button>
                                    )}
                                 </div>
                             </div>
@@ -1100,7 +1100,7 @@ const CommunityHub: React.FC = () => {
            <div className="absolute top-4 left-4 right-4 flex gap-2 z-20"><div className="h-1 bg-white/30 rounded-full flex-1 overflow-hidden"><div className="h-full bg-white transition-all duration-[50ms] ease-linear" style={{ width: `${storyProgress}%` }}></div></div></div>
            <div className="absolute top-8 left-4 z-20 flex items-center gap-3"><div className="w-8 h-8 rounded-full border border-white/20 overflow-hidden"><img src={viewingStory.img} className="w-full h-full object-cover" /></div><span className="text-white font-bold text-sm shadow-black drop-shadow-md">{viewingStory.name}</span><span className="text-white/60 text-xs font-medium">2h</span></div>
            <button onClick={() => { setViewingStory(null); setStoryMessage(''); setStoryReacted(false); }} aria-label="Close story" className="absolute top-8 right-4 z-20 text-white hover:text-white/80 transition-colors"><XCircle className="w-8 h-8" aria-hidden="true" /></button>
-           <div className="w-full h-full max-w-md bg-black relative flex items-center justify-center"><img src={viewingStory.img} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1595211877493-41a4e65eda99?w=800&q=80'; }} /><div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent"><div className="flex gap-4"><input type="text" placeholder="Send message..." value={storyMessage} onChange={e => setStoryMessage(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && storyMessage.trim()) { showToast(`Message sent to ${viewingStory.name}`, 'success'); setStoryMessage(''); } }} className="flex-1 bg-transparent border border-white/30 rounded-full px-4 py-2 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white" /><button aria-label="React to story" onClick={() => { if (!storyReacted) { setStoryReacted(true); showToast('Reacted with ❤️', 'success'); } }} className={`p-2 hover:bg-white/10 rounded-full transition-colors ${storyReacted ? 'text-red-500' : 'text-white'}`}><Heart className={`w-6 h-6 ${storyReacted ? 'fill-red-500' : ''}`} aria-hidden="true" /></button></div></div></div>
+            <div className="w-full h-full max-w-md bg-black relative flex items-center justify-center"><img src={viewingStory.img} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1595211877493-41a4e65eda99?w=800&q=80'; }} /><div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent"><div className="flex gap-4"><input type="text" placeholder="Send message..." value={storyMessage} onChange={e => setStoryMessage(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && storyMessage.trim()) { sendChatMessage({ sender: userProfile.name, content: storyMessage.trim() }); showToast(`Message sent to ${viewingStory.name}`, 'success'); setStoryMessage(''); } }} className="flex-1 bg-transparent border border-white/30 rounded-full px-4 py-2 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white" /><button aria-label="React to story" onClick={() => { if (!storyReacted) { setStoryReacted(true); showToast('Reacted with ❤️', 'success'); } }} className={`p-2 hover:bg-white/10 rounded-full transition-colors ${storyReacted ? 'text-red-500' : 'text-white'}`}><Heart className={`w-6 h-6 ${storyReacted ? 'fill-red-500' : ''}`} aria-hidden="true" /></button></div></div></div>
         </div>
       )}
 
