@@ -112,7 +112,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
         </nav>
 
         {/* Footer Actions */}
-        <div className="p-3 border-t border-terra-200/50 dark:border-[#1E5A47]/50 shrink-0">
+        <div className="p-3 border-t border-terra-200/50 dark:border-jade-800/50 shrink-0">
            <button 
              onClick={() => handleNavClick(NavigationTab.SETTINGS)}
              className={`w-full flex items-center px-3 py-2.5 rounded-xl text-sm font-medium mb-1 transition-colors ${activeTab === NavigationTab.SETTINGS ? 'bg-jade-50 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400' : 'text-secondary-dynamic hover:bg-terra-100/60 dark:hover:bg-[#163D2F]/60'}`}
