@@ -369,7 +369,7 @@ const Dashboard: React.FC = () => {
              </button>
           </div>
 
-          <div className="bg-terra-50/60 dark:bg-[#163D2F]/40 px-5 py-2.5 border-b border-terra-100/60 dark:border-[#1E5A47]/40 text-xs font-semibold text-secondary-dynamic flex justify-between">
+          <div className="bg-terra-50/60 dark:bg-jade-900/20 px-5 py-2.5 border-b border-terra-100/60 dark:border-jade-800/40 text-xs font-semibold text-secondary-dynamic flex justify-between">
             <span>{pendingTasks} remaining</span>
             <span>{completedToday} completed</span>
           </div>
