@@ -383,10 +383,10 @@ const Dashboard: React.FC = () => {
                  tabIndex={0}
                  onClick={() => toggleTask(task.id)}
                  onKeyDown={(e) => handleTaskKeyDown(e, task.id)}
-                 className={`
-                   flex items-center p-5 cursor-pointer border-b border-terra-100/40 dark:border-[#1E5A47]/30 last:border-0 hover:bg-terra-50/40 dark:hover:bg-[#163D2F]/20 transition-colors
-                   ${task.completed ? 'opacity-50' : ''}
-                 `}
+                  className={`
+                    flex items-center p-5 cursor-pointer border-b border-terra-100/40 dark:border-jade-800/30 last:border-0 hover:bg-terra-50/40 dark:hover:bg-jade-900/15 transition-colors
+                    ${task.completed ? 'opacity-50' : ''}
+                  `}
                >
                 <div className={`mr-3 ${task.completed ? 'text-terra-300 dark:text-[#1E5A47]' : 'text-jade-600 dark:text-jade-500'}`}>
                   {task.completed ? <CheckSquare className="w-[18px] h-[18px]" /> : <Square className="w-[18px] h-[18px]" />}
