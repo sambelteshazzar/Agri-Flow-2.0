@@ -80,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5 custom-scrollbar">
           {navGroups.map(group => (
             <div key={group.label}>
-              <p className="px-3 mb-1.5 text-[10px] font-semibold text-terra-400 dark:text-[#7BA896] tracking-wide">{group.label}</p>
+              <p className="px-3 mb-1.5 text-[10px] font-semibold text-terra-400 dark:text-jade-400 tracking-wide">{group.label}</p>
               <div className="space-y-0.5">
                 {group.items.map((item) => {
                   const isActive = activeTab === item.id;
@@ -92,7 +92,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
                         w-full flex items-center px-3 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium relative
                         ${isActive 
                           ? 'bg-jade-50 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400 shadow-sm' 
-                          : 'text-secondary-dynamic hover:bg-terra-100/60 dark:hover:bg-[#163D2F]/60 hover:text-primary-dynamic'
+                          : 'text-secondary-dynamic hover:bg-terra-100/60 dark:hover:bg-jade-900/30 hover:text-primary-dynamic'
                         }
                       `}
                     >
@@ -100,7 +100,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-jade-500 rounded-r-full" />
                       )}
                       <item.icon 
-                        className={`w-[18px] h-[18px] mr-3 ${isActive ? 'text-jade-600 dark:text-jade-400' : 'text-terra-400 dark:text-[#4D8A72]'}`} 
+                        className={`w-[18px] h-[18px] mr-3 ${isActive ? 'text-jade-600 dark:text-jade-400' : 'text-terra-400 dark:text-jade-500'}`} 
                       />
                       <span>{item.label}</span>
                     </button>
