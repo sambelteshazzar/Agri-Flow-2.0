@@ -115,9 +115,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
         <div className="p-3 border-t border-terra-200/50 dark:border-jade-800/50 shrink-0">
            <button 
              onClick={() => handleNavClick(NavigationTab.SETTINGS)}
-             className={`w-full flex items-center px-3 py-2.5 rounded-xl text-sm font-medium mb-1 transition-colors ${activeTab === NavigationTab.SETTINGS ? 'bg-jade-50 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400' : 'text-secondary-dynamic hover:bg-terra-100/60 dark:hover:bg-[#163D2F]/60'}`}
+              className={`w-full flex items-center px-3 py-2.5 rounded-xl text-sm font-medium mb-1 transition-colors ${activeTab === NavigationTab.SETTINGS ? 'bg-jade-50 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400' : 'text-secondary-dynamic hover:bg-terra-100/60 dark:hover:bg-jade-900/30'}`}
           >
-            <SettingsIcon className="w-[18px] h-[18px] mr-3 text-terra-400 dark:text-[#4D8A72]" />
+            <SettingsIcon className="w-[18px] h-[18px] mr-3 text-terra-400 dark:text-jade-500" />
             Settings
           </button>
            <button 
