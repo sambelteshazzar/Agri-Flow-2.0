@@ -320,7 +320,7 @@ const Dashboard: React.FC = () => {
             </div>
             {alerts.length > 0 && <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs font-bold px-2.5 py-1 rounded-full">{alerts.length}</span>}
           </div>
-          <div className="divide-y divide-terra-100/60 dark:divide-[#1E5A47]/40">
+          <div className="divide-y divide-terra-100/60 dark:divide-jade-800/40">
             {alerts.length === 0 ? (
               <div className="p-8 text-center text-secondary-dynamic">
                 <div className="w-12 h-12 bg-jade-50 dark:bg-jade-900/20 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
