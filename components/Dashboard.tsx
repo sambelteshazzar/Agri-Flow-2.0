@@ -405,7 +405,7 @@ const Dashboard: React.FC = () => {
             ))}
             {tasks.length === 0 && (
               <div className="p-8 text-center">
-                <div className="w-12 h-12 bg-terra-100 dark:bg-[#163D2F] rounded-2xl flex items-center justify-center mx-auto mb-3 text-terra-400 dark:text-[#4D8A72] shadow-sm">
+                <div className="w-12 h-12 bg-terra-100 dark:bg-jade-900/30 rounded-2xl flex items-center justify-center mx-auto mb-3 text-terra-400 dark:text-jade-400 shadow-sm">
                   <Calendar className="w-6 h-6"/>
                 </div>
                 <p className="text-secondary-dynamic font-medium text-sm">No tasks scheduled</p>
