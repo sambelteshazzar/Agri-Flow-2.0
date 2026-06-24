@@ -157,9 +157,9 @@ const Dashboard: React.FC = () => {
                   {userLocation.error ? 'Location unavailable' : 'Locating...'}
                </span>
              )}
-             <span className="text-terra-300 dark:text-[#1E5A47]">·</span>
-             <span className="text-secondary-dynamic text-xs font-medium">Season 2026</span>
-             <span className="text-terra-300 dark:text-[#1E5A47]">·</span>
+              <span className="text-terra-300 dark:text-jade-700">·</span>
+              <span className="text-secondary-dynamic text-xs font-medium">Season 2026</span>
+              <span className="text-terra-300 dark:text-jade-700">·</span>
              <span className="text-secondary-dynamic text-xs font-medium">{weather.locationName}</span>
           </div>
         </div>
