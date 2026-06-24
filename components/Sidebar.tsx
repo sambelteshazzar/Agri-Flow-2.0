@@ -62,13 +62,13 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
         className={`
           fixed top-0 left-0 z-[70] h-full w-[260px] bg-sidebar-dynamic text-primary-dynamic
           shadow-2xl md:shadow-none transform transition-transform duration-300 ease-in-out
-          border-r border-terra-200/50 dark:border-[#1E5A47]/50
+          border-r border-terra-200/50 dark:border-jade-800/50
           md:translate-x-0 md:static md:h-screen flex flex-col
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
         {/* Branding Header */}
-        <div className="flex items-center px-5 h-[72px] border-b border-terra-200/50 dark:border-[#1E5A47]/50 shrink-0">
+        <div className="flex items-center px-5 h-[72px] border-b border-terra-200/50 dark:border-jade-800/50 shrink-0">
           <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-9 h-9 rounded-xl mr-3 shadow-lg shadow-jade-600/20 dark:shadow-jade-500/10" />
           <div>
             <h1 className="text-lg font-bold tracking-tight text-primary-dynamic font-heading">Agri<span className="text-jade-600 dark:text-jade-400">Flow</span></h1>
