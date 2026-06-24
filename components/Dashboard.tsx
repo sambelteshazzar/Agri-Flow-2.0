@@ -392,7 +392,7 @@ const Dashboard: React.FC = () => {
                   {task.completed ? <CheckSquare className="w-[18px] h-[18px]" /> : <Square className="w-[18px] h-[18px]" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium truncate ${task.completed ? 'line-through text-terra-400 dark:text-[#4D8A72]' : 'text-primary-dynamic'}`}>
+                  <p className={`text-sm font-medium truncate ${task.completed ? 'line-through text-terra-400 dark:text-jade-500' : 'text-primary-dynamic'}`}>
                     {task.text}
                   </p>
                   {task.priority === 'high' && !task.completed && (
