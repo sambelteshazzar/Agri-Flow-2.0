@@ -338,7 +338,7 @@ const Dashboard: React.FC = () => {
                       alert.category === 'FINANCIAL' ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
                       alert.category === 'WEATHER' ? 'bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300' :
                       alert.category === 'LAND' ? 'bg-jade-50 text-jade-700 dark:bg-jade-900/30 dark:text-jade-300' :
-                      'bg-terra-50 text-terra-700 dark:bg-[#163D2F] dark:text-[#7BA896]'
+                      'bg-terra-50 text-terra-700 dark:bg-jade-900/30 dark:text-jade-300'
                     }`}>
                       {alert.category}
                     </span>
