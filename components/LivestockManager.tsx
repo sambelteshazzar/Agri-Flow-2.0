@@ -157,7 +157,7 @@ const LivestockManager: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Healthy': return 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800';
+      case 'Healthy': return 'bg-jade-100 text-jade-800 border-jade-300 dark:bg-jade-900/30 dark:text-jade-300 dark:border-jade-800';
       case 'Sick': return 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800';
       case 'Quarantined': return 'bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800';
       case 'Lactating': return 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800';
@@ -186,15 +186,15 @@ const LivestockManager: React.FC = () => {
         <div className="flex flex-col items-center justify-center p-16 bg-[var(--bg-content)] dark:bg-jade-950 rounded-2xl border-2 border-dashed border-[var(--border-card)] text-center animate-fade-in-up relative overflow-hidden group">
           <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
           <div className="relative z-10 max-w-md">
-             <div className="w-24 h-24 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mb-6 shadow-sm mx-auto group-hover:scale-110 transition-transform duration-500">
-               <Clipboard className="w-12 h-12 text-yellow-600 dark:text-yellow-400" />
+             <div className="w-24 h-24 bg-sunburst-100 dark:bg-sunburst-900/30 rounded-full flex items-center justify-center mb-6 shadow-sm mx-auto group-hover:scale-110 transition-transform duration-500">
+               <Clipboard className="w-12 h-12 text-sunburst-600 dark:text-sunburst-400" />
              </div>
              <h3 className="text-2xl font-black text-[var(--text-primary)] mb-3 font-heading">Barn is Empty</h3>
              <p className="text-[var(--text-secondary)] mb-8 text-sm font-medium leading-relaxed">
                Begin monitoring your herd health, grazing patterns, and veterinary logs by adding your first livestock unit to the system.
              </p>
              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button onClick={() => setIsModalOpen(true)} className="px-8 py-3 bg-yellow-500 text-jade-950 font-semibold rounded-lg hover:bg-yellow-400 transition-all shadow-lg active:scale-95 text-xs flex items-center justify-center gap-2">
+                <button onClick={() => setIsModalOpen(true)} className="px-8 py-3 bg-sunburst-500 text-jade-950 font-semibold rounded-lg hover:bg-sunburst-400 transition-all shadow-lg active:scale-95 text-xs flex items-center justify-center gap-2">
                  <Plus className="w-4 h-4" /> Register Herd
                </button>
                 <button onClick={loadSampleData} className="px-8 py-3 bg-[var(--bg-card)] dark:bg-jade-800 text-[var(--text-primary)] dark:text-[var(--text-primary)] border border-[var(--border-card)] dark:border-jade-600 font-semibold rounded-lg hover:bg-[var(--bg-content)] dark:hover:bg-jade-700 transition-all shadow-sm active:scale-95 text-xs flex items-center justify-center gap-2">
@@ -206,11 +206,11 @@ const LivestockManager: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {livestock.map((animal) => (
-            <div key={animal.id} className="bg-[var(--bg-card)] dark:bg-jade-950 rounded border border-[var(--border-card)] border-l-8 border-l-yellow-500 shadow-md hover:shadow-lg transition-all group relative">
+            <div key={animal.id} className="bg-[var(--bg-card)] dark:bg-jade-950 rounded border border-[var(--border-card)] border-l-8 border-l-sunburst-500 shadow-md hover:shadow-lg transition-all group relative">
               <div className="p-5">
                 <div className="flex justify-between items-start mb-4">
                    <div className="flex items-center">
-                       <div className="bg-yellow-500 text-jade-950 p-2 rounded-sm mr-3 font-bold shadow-sm"><Tag className="w-5 h-5" /></div>
+                       <div className="bg-sunburst-500 text-jade-950 p-2 rounded-sm mr-3 font-bold shadow-sm"><Tag className="w-5 h-5" /></div>
                       <div>
                          <h3 className="text-xl font-bold text-[var(--text-primary)]">{animal.name}</h3>
                           <p className="text-xs font-semibold text-[var(--text-primary)] dark:text-[var(--text-tertiary)]">{animal.species}</p>
@@ -261,9 +261,9 @@ const LivestockManager: React.FC = () => {
       {isRecordsModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
           <div className="bg-[var(--bg-card)] dark:bg-jade-950 w-full max-w-lg shadow-2xl rounded-md border border-jade-600 max-h-[85vh] flex flex-col">
-            <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-yellow-500 shrink-0">
+            <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-sunburst-500 shrink-0">
               <h3 className="text-xl font-bold text-white font-semibold flex items-center">
-                 <ClipboardList className="w-5 h-5 mr-2 text-yellow-500" /> Herd Records
+                 <ClipboardList className="w-5 h-5 mr-2 text-sunburst-500" /> Herd Records
               </h3>
               <button onClick={() => setIsRecordsModalOpen(false)} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
             </div>
@@ -309,8 +309,8 @@ const LivestockManager: React.FC = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
           <div className="bg-[var(--bg-card)] dark:bg-jade-950 w-full max-w-lg shadow-2xl rounded-md border border-jade-600 max-h-[90vh] overflow-y-auto">
-             <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-yellow-500 sticky top-0 z-10">
-                <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Beef className="w-5 h-5 mr-2 text-yellow-500" /> New Herd Entry</h3>
+             <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-sunburst-500 sticky top-0 z-10">
+                <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Beef className="w-5 h-5 mr-2 text-sunburst-500" /> New Herd Entry</h3>
                 <button onClick={() => setIsModalOpen(false)} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
              </div>
              <div className="p-6">
@@ -365,7 +365,7 @@ const LivestockManager: React.FC = () => {
                       />
                    </div>
 
-                    <button type="submit" className="w-full bg-yellow-500 text-jade-950 py-4 font-semibold hover:bg-yellow-400 rounded-sm shadow-md">Confirm Entry</button>
+                    <button type="submit" className="w-full bg-sunburst-500 text-jade-950 py-4 font-semibold hover:bg-sunburst-400 rounded-sm shadow-md">Confirm Entry</button>
                 </form>
              </div>
           </div>
