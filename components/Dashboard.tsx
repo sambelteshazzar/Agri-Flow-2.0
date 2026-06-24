@@ -388,7 +388,7 @@ const Dashboard: React.FC = () => {
                     ${task.completed ? 'opacity-50' : ''}
                   `}
                >
-                <div className={`mr-3 ${task.completed ? 'text-terra-300 dark:text-[#1E5A47]' : 'text-jade-600 dark:text-jade-500'}`}>
+                 <div className={`mr-3 ${task.completed ? 'text-terra-300 dark:text-jade-800' : 'text-jade-600 dark:text-jade-500'}`}>
                   {task.completed ? <CheckSquare className="w-[18px] h-[18px]" /> : <Square className="w-[18px] h-[18px]" />}
                 </div>
                 <div className="flex-1 min-w-0">
