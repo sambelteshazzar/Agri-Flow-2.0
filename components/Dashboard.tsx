@@ -152,7 +152,7 @@ const Dashboard: React.FC = () => {
                   {userLocation.latitude.toFixed(4)}, {userLocation.longitude.toFixed(4)}
                </span>
              ) : (
-               <span className="inline-flex items-center text-terra-400 dark:text-[#4D8A72] bg-terra-50 dark:bg-[#12261A] px-2.5 py-1 rounded-lg text-xs font-medium border border-terra-200 dark:border-[#1E5A47]">
+                <span className="inline-flex items-center text-terra-400 dark:text-jade-400 bg-terra-50 dark:bg-jade-900/20 px-2.5 py-1 rounded-lg text-xs font-medium border border-terra-200 dark:border-jade-800">
                   <MapPinOff className="w-3.5 h-3.5 mr-1.5" />
                   {userLocation.error ? 'Location unavailable' : 'Locating...'}
                </span>
