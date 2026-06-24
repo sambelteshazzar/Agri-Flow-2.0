@@ -428,7 +428,7 @@ const Dashboard: React.FC = () => {
             </div>
             <span className="text-xs font-medium text-secondary-dynamic">{crops.length} total</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-terra-100/60 dark:divide-[#1E5A47]/40">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-terra-100/60 dark:divide-jade-800/40">
             {crops.map(crop => {
               const statusStyles: Record<string, string> = {
                 'Healthy': 'bg-jade-50 dark:bg-jade-900/20 text-jade-700 dark:text-jade-300 border-jade-200 dark:border-jade-800',
