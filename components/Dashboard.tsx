@@ -298,7 +298,7 @@ const Dashboard: React.FC = () => {
           {liveIntel ? (
             liveIntel.split('\n').map((line, i) => <p key={i} className="mb-2.5 last:mb-0 border-l-2 border-jade-500 dark:border-jade-400 pl-3.5">{line}</p>)
           ) : (
-            <div className="flex items-center gap-2 text-terra-400 dark:text-[#4D8A72] italic">
+            <div className="flex items-center gap-2 text-terra-400 dark:text-jade-400 italic">
               <Loader2 className="w-3.5 h-3.5 animate-spin"/>
               <span>Loading market update...</span>
             </div>
