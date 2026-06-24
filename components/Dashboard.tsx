@@ -331,7 +331,7 @@ const Dashboard: React.FC = () => {
               </div>
             ) : (
               alerts.map((alert) => (
-                <div key={alert.id} className="p-4 hover:bg-terra-50/50 dark:hover:bg-[#163D2F]/30 transition-colors">
+                <div key={alert.id} className="p-4 hover:bg-terra-50/50 dark:hover:bg-jade-900/20 transition-colors">
                   <div className="flex justify-between items-start mb-1">
                     <h4 className="font-semibold text-primary-dynamic text-sm">{alert.title}</h4>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg shrink-0 ml-2 ${
