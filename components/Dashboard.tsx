@@ -292,7 +292,7 @@ const Dashboard: React.FC = () => {
             <Globe className="w-5 h-5" />
           </div>
           <h3 className="text-base font-bold text-primary-dynamic font-heading">Market Intelligence</h3>
-          {isLoadingIntel && <Loader2 className="w-4 h-4 text-terra-400 dark:text-[#4D8A72] animate-spin ml-3" />}
+          {isLoadingIntel && <Loader2 className="w-4 h-4 text-terra-400 dark:text-jade-400 animate-spin ml-3" />}
         </div>
         <div className="text-secondary-dynamic text-sm leading-relaxed relative z-10">
           {liveIntel ? (
