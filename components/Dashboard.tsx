@@ -147,7 +147,7 @@ const Dashboard: React.FC = () => {
          <div>
           <div className="flex items-center mt-2 gap-3 flex-wrap">
              {userLocation.latitude && userLocation.longitude ? (
-               <span className="inline-flex items-center text-secondary-dynamic bg-terra-100/60 dark:bg-[#163D2F] px-2.5 py-1 rounded-lg text-xs font-medium border border-terra-200/60 dark:border-[#1E5A47]/60">
+               <span className="inline-flex items-center text-secondary-dynamic bg-terra-100/60 dark:bg-jade-900/30 px-2.5 py-1 rounded-lg text-xs font-medium border border-terra-200/60 dark:border-jade-800/60">
                   <MapPin className="w-3.5 h-3.5 mr-1.5 text-jade-600 dark:text-jade-400" />
                   {userLocation.latitude.toFixed(4)}, {userLocation.longitude.toFixed(4)}
                </span>
