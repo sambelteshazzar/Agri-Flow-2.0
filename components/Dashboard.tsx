@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
     switch(risk) {
       case 'Low': return 'text-jade-600 dark:text-jade-400';
       case 'Moderate': return 'text-sunburst-600 dark:text-sunburst-400';
-      case 'High': return 'text-orange-600 dark:text-orange-400';
+      case 'High': return 'text-sunburst-600 dark:text-sunburst-400';
       case 'Severe': return 'text-red-600 dark:text-red-400 animate-pulse';
       default: return 'text-terra-500';
     }
