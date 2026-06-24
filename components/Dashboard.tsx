@@ -438,7 +438,7 @@ const Dashboard: React.FC = () => {
               };
               const style = statusStyles[crop.status] || statusStyles['Healthy'];
               return (
-                <div key={crop.id} className="p-4 flex items-center gap-3 hover:bg-terra-50/30 dark:hover:bg-[#163D2F]/15 transition-colors">
+                <div key={crop.id} className="p-4 flex items-center gap-3 hover:bg-terra-50/30 dark:hover:bg-jade-900/15 transition-colors">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${style} border shrink-0 shadow-sm`}>
                     {crop.name.charAt(0)}
                   </div>
