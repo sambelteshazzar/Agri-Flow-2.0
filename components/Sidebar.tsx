@@ -127,7 +127,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
             <LogOut className="w-[18px] h-[18px] mr-3" />
             Log Out
           </button>
-           <p className="text-center text-[9px] text-terra-400/60 dark:text-[#4D8A72]/60 mt-3">
+            <p className="text-center text-[9px] text-terra-400/60 dark:text-jade-500/60 mt-3">
              <img src="/logo-AgriFlow.png" alt="" className="w-4 h-4 inline-block rounded-sm mr-1 align-middle" />
              © 2026 AgriFlow Inc.
            </p>
