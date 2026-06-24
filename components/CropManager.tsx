@@ -252,9 +252,9 @@ const CropManager: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Healthy': return 'bg-green-600';
-      case 'Needs Attention': return 'bg-yellow-500';
-      case 'Critical': return 'bg-red-600';
+      case 'Healthy': return 'bg-jade-600';
+      case 'Needs Attention': return 'bg-sunburst-500';
+      case 'Critical': return 'bg-terra-600';
       case 'Harvest Ready': return 'bg-blue-600';
       default: return 'bg-terra-300';
     }
@@ -262,8 +262,8 @@ const CropManager: React.FC = () => {
 
   const getWaterEfficiencyColor = (efficiency: string) => {
     switch (efficiency) {
-      case 'High': return 'bg-green-100 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300';
-      case 'Moderate': return 'bg-jade-100 border-jade-200 text-jade-800 dark:bg-jade-900/30 dark:border-jade-800 dark:text-jade-300';
+      case 'High': return 'bg-jade-100 border-jade-200 text-jade-800 dark:bg-jade-900/30 dark:border-jade-800 dark:text-jade-300';
+      case 'Moderate': return 'bg-sunburst-100 border-sunburst-200 text-sunburst-800 dark:bg-sunburst-900/30 dark:border-sunburst-800 dark:text-sunburst-300';
       case 'Low': return 'bg-red-100 border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300';
       default: return 'bg-[var(--bg-content)] border-[var(--border-card)] text-[var(--text-primary)] dark:bg-jade-900/30 dark:border-jade-800 dark:text-jade-300';
     }
@@ -347,7 +347,7 @@ const CropManager: React.FC = () => {
       {/* -- SMART SUGGESTION MODAL -- */}
       {suggestion && (
         <div className="fixed bottom-6 right-6 z-[60] max-w-sm w-full animate-fade-in-up">
-          <div className="bg-jade-950 border-l-4 border-yellow-500 rounded-r-lg shadow-2xl p-4 text-white relative">
+          <div className="bg-terra-900 dark:bg-jade-950 border-l-4 border-sunburst-500 rounded-r-lg shadow-2xl p-4 text-white relative">
             <button 
               onClick={dismissSuggestion}
               aria-label="Dismiss suggestion"
@@ -357,20 +357,20 @@ const CropManager: React.FC = () => {
             </button>
             
             <div className="flex items-start gap-3">
-              <div className="bg-yellow-500/20 p-2 rounded-full">
-                <Lightbulb className="w-5 h-5 text-yellow-500 animate-pulse" />
+              <div className="bg-sunburst-500/20 p-2 rounded-full">
+                <Lightbulb className="w-5 h-5 text-sunburst-500 animate-pulse" />
               </div>
               <div>
-                <h4 className="font-semibold text-sm text-yellow-500 mb-1">Smart Insight</h4>
+                <h4 className="font-semibold text-sm text-sunburst-500 mb-1">Smart Insight</h4>
                 <p className="text-sm font-medium mb-2">
-                  Your crop looks like it needs an update — <span className="font-bold text-white">{suggestion.cropName}</span> status should be updated to <span className="font-bold text-yellow-400">{suggestion.suggestedStatus}</span>.
+                  Your crop looks like it needs an update — <span className="font-bold text-white">{suggestion.cropName}</span> status should be updated to <span className="font-bold text-sunburst-400">{suggestion.suggestedStatus}</span>.
                 </p>
                 <p className="text-xs text-[var(--text-tertiary)] italic mb-3">"{suggestion.reason}"</p>
                 
                 <div className="flex gap-2">
                   <button 
                     onClick={confirmSuggestion}
-                    className="bg-yellow-500 hover:bg-yellow-400 text-jade-950 px-3 py-1.5 rounded text-xs font-semibold flex items-center"
+                    className="bg-sunburst-500 hover:bg-sunburst-400 text-jade-950 px-3 py-1.5 rounded text-xs font-semibold flex items-center"
                   >
                     <Check className="w-3 h-3 mr-1" /> Update Status
                   </button>
