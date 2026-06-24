@@ -59,7 +59,7 @@ const Dashboard: React.FC = () => {
       case 'Moderate': return 'bg-sunburst-50 dark:bg-sunburst-900/20 border-sunburst-200 dark:border-sunburst-800';
       case 'High': return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800';
       case 'Severe': return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
-      default: return 'bg-terra-50 dark:bg-[#163D2F] border-terra-200 dark:border-[#1E5A47]';
+      default: return 'bg-terra-50 dark:bg-jade-900/20 border-terra-200 dark:border-jade-800';
     }
   };
 
