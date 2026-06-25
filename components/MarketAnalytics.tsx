@@ -19,13 +19,13 @@ const MarketAnalytics: React.FC = () => {
   }, [marketPrices, selectedCrop]);
 
   const isDark = theme === 'dark';
-  const axisColor = isDark ? '#8FAF7E' : '#5C7A52';
-  const gridColor = isDark ? '#1E5A47' : '#E8DDD0';
-  const tooltipBg = isDark ? '#12261A' : '#FFFFFF';
-  const tooltipText = isDark ? '#E8DDD0' : '#3D2B1F';
-  const tooltipBorder = isDark ? '#1E5A47' : '#E8DDD0';
-  const chartAccent = isDark ? '#8AAF6E' : '#5C7A52';
-  const chartAccentFaded = isDark ? '#8AAF6E' : '#6B8F5B';
+  const axisColor = isDark ? '#7BA896' : '#3E735D';
+  const gridColor = isDark ? '#1E5A47' : '#C8DFD3';
+  const tooltipBg = isDark ? '#072118' : '#FFFFFF';
+  const tooltipText = isDark ? '#E8F5EE' : '#0A2E23';
+  const tooltipBorder = isDark ? '#1E5A47' : '#C8F4E0';
+  const chartAccent = isDark ? '#38D19E' : '#069669';
+  const chartAccentFaded = isDark ? '#14B882' : '#057855';
 
   useEffect(() => {
     if (!selectedCrop) return;
@@ -230,7 +230,7 @@ const MarketAnalytics: React.FC = () => {
                     <Line 
                       type="monotone" 
                       dataKey="ma" 
-                      stroke="#D4A017" 
+                       stroke="#CC9A00"
                       strokeWidth={2} 
                       strokeDasharray="5 5" 
                       dot={false}
@@ -350,23 +350,23 @@ const MarketAnalytics: React.FC = () => {
                 }}
               />
               <Legend verticalAlign="top" height={36} content={() => null} />
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                name="Revenue"
-                stroke="#5C7A52" 
-                strokeWidth={3}
-                fillOpacity={0.1} 
-                fill="#5C7A52" 
-              />
-              <Line 
-                type="monotone" 
-                dataKey="cost" 
-                name="Input Costs"
-                stroke="#D4A017" 
-                strokeWidth={3}
-                dot={{ r: 4, strokeWidth: 0, fill: '#D4A017' }}
-              />
+               <Area 
+                 type="monotone" 
+                 dataKey="value" 
+                 name="Revenue"
+                 stroke="#069669" 
+                 strokeWidth={3}
+                 fillOpacity={0.1} 
+                 fill="#069669" 
+               />
+               <Line 
+                 type="monotone" 
+                 dataKey="cost" 
+                 name="Input Costs"
+                 stroke="#CC9A00" 
+                 strokeWidth={3}
+                 dot={{ r: 4, strokeWidth: 0, fill: '#CC9A00' }}
+               />
             </ComposedChart>
           </ResponsiveContainer>
         </div>

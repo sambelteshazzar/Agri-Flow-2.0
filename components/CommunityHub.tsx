@@ -333,7 +333,7 @@ const CommunityHub: React.FC = () => {
             onError={() => setIntroBgError(true)}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-green-900/40 via-jade-900 to-jade-950"></div>
+          <div className="w-full h-full bg-gradient-to-br from-jade-800/40 via-jade-900 to-jade-950"></div>
         )}
       </div>
       
@@ -341,12 +341,12 @@ const CommunityHub: React.FC = () => {
       
       <div className="relative z-10 max-w-3xl animate-fade-in-up">
         <div className="flex justify-center mb-6">
-           <div className="bg-green-500/20 p-4 rounded-full backdrop-blur-md border border-green-500/30">
-              <Globe className="w-12 h-12 text-green-400" />
+           <div className="bg-jade-500/20 p-4 rounded-full backdrop-blur-md border border-jade-500/30">
+               <Globe className="w-12 h-12 text-jade-400" />
            </div>
         </div>
         <h1 className="text-6xl md:text-8xl font-black text-white mb-6 font-heading">
-          Agri-<span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-yellow-400">Connect</span>
+           Agri-<span className="text-transparent bg-clip-text bg-gradient-to-r from-jade-400 to-sunburst-400">Connect</span>
         </h1>
         <p className="text-lg md:text-xl text-jade-300 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
           Connect with thousands of growers, trade equipment in the marketplace, and share real-time insights to build a more resilient future.
@@ -354,7 +354,7 @@ const CommunityHub: React.FC = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 text-left">
            <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10">
-              <ShoppingBag className="w-8 h-8 text-yellow-400 mb-4" />
+               <ShoppingBag className="w-8 h-8 text-sunburst-400 mb-4" />
               <h3 className="text-white font-bold text-lg mb-2">Marketplace</h3>
               <p className="text-jade-400 text-sm">Buy, sell, and trade equipment and harvest directly.</p>
            </div>
@@ -364,7 +364,7 @@ const CommunityHub: React.FC = () => {
               <p className="text-jade-400 text-sm">Ask questions, get expert answers, and share your knowledge.</p>
            </div>
            <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10">
-              <Zap className="w-8 h-8 text-green-400 mb-4" />
+               <Zap className="w-8 h-8 text-jade-400 mb-4" />
               <h3 className="text-white font-bold text-lg mb-2">Live Intel</h3>
               <p className="text-jade-400 text-sm">Real-time alerts on prices, pests, and weather.</p>
            </div>
@@ -394,13 +394,13 @@ const CommunityHub: React.FC = () => {
         </div>
       ))}
       {locationAlerts.prices.map(p => (
-        <div key={p.id} className={`border rounded-2xl p-4 flex items-start gap-3 ${p.severity === 'high' ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800' : 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800'}`}>
-          <DollarSign className={`w-5 h-5 shrink-0 mt-0.5 ${p.severity === 'high' ? 'text-red-500' : 'text-green-500'}`} />
+        <div key={p.id} className={`border rounded-2xl p-4 flex items-start gap-3 ${p.severity === 'high' ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800' : 'bg-jade-50 dark:bg-jade-950/20 border-jade-200 dark:border-jade-800'}`}>
+          <DollarSign className={`w-5 h-5 shrink-0 mt-0.5 ${p.severity === 'high' ? 'text-red-500' : 'text-jade-500'}`} />
           <div className="flex-1 min-w-0">
-            <p className={`text-sm font-bold ${p.severity === 'high' ? 'text-red-900 dark:text-red-200' : 'text-green-900 dark:text-green-200'}`}>{p.title}</p>
-            <p className={`text-xs mt-0.5 ${p.severity === 'high' ? 'text-red-700 dark:text-red-300' : 'text-green-700 dark:text-green-300'}`}>{p.message}</p>
+            <p className={`text-sm font-bold ${p.severity === 'high' ? 'text-red-900 dark:text-red-200' : 'text-jade-900 dark:text-jade-200'}`}>{p.title}</p>
+            <p className={`text-xs mt-0.5 ${p.severity === 'high' ? 'text-red-700 dark:text-red-300' : 'text-jade-700 dark:text-jade-300'}`}>{p.message}</p>
           </div>
-          <TrendingUp className={`w-4 h-4 shrink-0 ${p.severity === 'high' ? 'text-red-400' : 'text-green-400'}`} />
+          <TrendingUp className={`w-4 h-4 shrink-0 ${p.severity === 'high' ? 'text-red-400' : 'text-jade-400'}`} />
         </div>
       ))}
     </div>
@@ -418,7 +418,7 @@ const CommunityHub: React.FC = () => {
           return (
             <div key={ch.id} className="group">
               <div className="flex items-start gap-3 mb-2">
-                <div className={`p-2 rounded-xl shrink-0 ${isJoined ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-[var(--bg-content)] text-[var(--text-secondary)]'}`}>
+                <div className={`p-2 rounded-xl shrink-0 ${isJoined ? 'bg-jade-100 text-jade-600 dark:bg-jade-900/30 dark:text-jade-400' : 'bg-[var(--bg-content)] text-[var(--text-secondary)]'}`}>
                   <Icon className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -428,16 +428,16 @@ const CommunityHub: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 ml-9">
                 <div className="flex-1 bg-[var(--bg-content)] rounded-full h-1.5 overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-green-400 to-green-500 rounded-full transition-all duration-500" style={{ width: `${isJoined ? Math.min(ch.progress + 15, 100) : 0}%` }} />
+                  <div className="h-full bg-gradient-to-r from-jade-400 to-jade-500 rounded-full transition-all duration-500" style={{ width: `${isJoined ? Math.min(ch.progress + 15, 100) : 0}%` }} />
                 </div>
                 <span className="text-[10px] text-[var(--text-tertiary)] font-semibold shrink-0">{isJoined ? `${Math.min(ch.progress + 15, 100)}%` : `${ch.participants} in`}</span>
               </div>
               <div className="flex items-center gap-2 ml-9 mt-1.5">
-                <span className="text-[9px] text-[var(--text-tertiary)] font-medium flex items-center gap-0.5"><Star className="w-3 h-3 text-yellow-500" /> {ch.xp} XP</span>
+                <span className="text-[9px] text-[var(--text-tertiary)] font-medium flex items-center gap-0.5"><Star className="w-3 h-3 text-sunburst-500" /> {ch.xp} XP</span>
                 <span className="text-[9px] text-[var(--text-tertiary)]">•</span>
                 <span className="text-[9px] text-[var(--text-tertiary)] font-medium">{ch.daysLeft}d left</span>
                 {!isJoined && (
-                  <button onClick={() => handleAuthRequiredAction(() => handleJoinChallenge(ch.id))} className="ml-auto text-[10px] font-bold text-green-600 dark:text-green-400 hover:underline">Join</button>
+                  <button onClick={() => handleAuthRequiredAction(() => handleJoinChallenge(ch.id))} className="ml-auto text-[10px] font-bold text-jade-600 dark:text-jade-400 hover:underline">Join</button>
                 )}
               </div>
             </div>
@@ -463,13 +463,13 @@ const CommunityHub: React.FC = () => {
               <p className="text-[10px] text-[var(--text-secondary)] truncate">{fm.location}</p>
             </div>
             <div className="flex flex-col items-end shrink-0">
-              <span className="text-[10px] font-bold text-green-600 dark:text-green-400">{fm.match}%</span>
+              <span className="text-[10px] font-bold text-jade-600 dark:text-jade-400">{fm.match}%</span>
               <span className="text-[9px] text-[var(--text-tertiary)]">match</span>
             </div>
           </div>
         ))}
       </div>
-      <button onClick={() => document.getElementById('suggested-users-section')?.scrollIntoView({ behavior: 'smooth' })} className="w-full mt-4 py-2 text-[10px] font-bold text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl transition-colors flex items-center justify-center gap-1">
+      <button onClick={() => document.getElementById('suggested-users-section')?.scrollIntoView({ behavior: 'smooth' })} className="w-full mt-4 py-2 text-[10px] font-bold text-jade-600 dark:text-jade-400 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded-xl transition-colors flex items-center justify-center gap-1">
         Find More Farmers <ChevronRight className="w-3 h-3" />
       </button>
     </div>
@@ -479,13 +479,13 @@ const CommunityHub: React.FC = () => {
     <div className="flex flex-col gap-6">
        <div className="bg-jade-950 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden shrink-0">
           <div className="relative z-10">
-             <div className="flex items-center justify-between mb-4"><h4 className="font-bold text-xs flex items-center gap-2"><BarChart2 className="w-4 h-4 text-yellow-400"/> Community Poll</h4></div>
+             <div className="flex items-center justify-between mb-4"><h4 className="font-bold text-xs flex items-center gap-2"><BarChart2 className="w-4 h-4 text-sunburst-400"/> Community Poll</h4></div>
              <p className="text-sm font-bold mb-4 leading-snug">What's your main strategy for the 2026 dry season?</p>
              <div className="space-y-2">
                 {pollData.map((opt) => (
                    <button key={opt.id} onClick={() => handlePollVote(opt.id)} disabled={pollVoted !== null} className="w-full relative h-10 rounded-lg overflow-hidden group border border-white/10">
                       <div className={`absolute inset-0 bg-white/5 transition-colors ${pollVoted === opt.id ? 'bg-white/10' : ''}`}></div>
-                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 to-yellow-600 transition-all duration-1000 ease-out opacity-80" style={{ width: pollVoted ? `${opt.percent}%` : '0%' }}></div>
+                                             <div className="absolute inset-0 bg-gradient-to-r from-sunburst-500 to-sunburst-600 transition-all duration-1000 ease-out opacity-80" style={{ width: pollVoted ? `${opt.percent}%` : '0%' }}></div>
                       <div className="absolute inset-0 flex items-center justify-between px-3"><span className="text-xs font-medium relative z-10 text-white shadow-black drop-shadow-sm">{opt.text}</span>{pollVoted && <span className="text-xs font-bold text-white shadow-black drop-shadow-md animate-fade-in">{opt.percent}%</span>}</div>
                    </button>
                 ))}
@@ -511,7 +511,7 @@ const CommunityHub: React.FC = () => {
        </div>
 
         <div id="suggested-users-section" className="card-surface p-6 shrink-0">
-           <h4 className="font-bold text-[var(--text-primary)] text-xs mb-4 flex items-center"><UserPlus className="w-4 h-4 mr-2 text-green-500"/> Who to follow</h4>
+           <h4 className="font-bold text-[var(--text-primary)] text-xs mb-4 flex items-center"><UserPlus className="w-4 h-4 mr-2 text-jade-500"/> Who to follow</h4>
           <div className="space-y-5">
              {suggestedUsers.map((person) => (
                 <div key={person.id} className="flex items-center justify-between">
@@ -519,7 +519,7 @@ const CommunityHub: React.FC = () => {
                       <div className="w-9 h-9 rounded-full bg-[var(--bg-content)] overflow-hidden"><img src={person.img} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(person.name)}`; }} /></div>
                        <div><p className="text-sm font-bold text-[var(--text-primary)] leading-none hover:underline cursor-pointer" onClick={() => handleAuthRequiredAction(() => toggleFollowUser(person.id))}>{person.name}</p><p className="text-[10px] text-[var(--text-secondary)] mt-0.5">{person.role}</p></div>
                    </div>
-                   <button onClick={() => handleAuthRequiredAction(() => toggleFollowUser(person.id))} className={`p-1.5 rounded-full transition-colors ${followedUserIds.includes(person.id) ? 'bg-green-100 text-green-600' : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] hover:bg-terra-300'}`}>{followedUserIds.includes(person.id) ? <CheckCircle className="w-4 h-4"/> : <Plus className="w-4 h-4"/>}</button>
+                   <button onClick={() => handleAuthRequiredAction(() => toggleFollowUser(person.id))} className={`p-1.5 rounded-full transition-colors ${followedUserIds.includes(person.id) ? 'bg-jade-100 text-jade-600' : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] hover:bg-terra-300'}`}>{followedUserIds.includes(person.id) ? <CheckCircle className="w-4 h-4"/> : <Plus className="w-4 h-4"/>}</button>
                 </div>
              ))}
           </div>
@@ -601,18 +601,18 @@ const CommunityHub: React.FC = () => {
            </div>
 
            {/* Start a Co-op Card */}
-           <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/20 rounded-3xl shadow-sm border border-green-200 dark:border-green-800/40 p-6">
-              <div className="flex items-center gap-3 mb-3">
-                 <div className="bg-green-100 dark:bg-green-900/40 p-2.5 rounded-xl">
-                    <Handshake className="w-5 h-5 text-green-600 dark:text-green-400" />
-                 </div>
-                 <div>
-                    <h4 className="font-bold text-green-900 dark:text-green-200 text-sm">Start a Co-op</h4>
-                    <p className="text-[10px] text-green-600 dark:text-green-400 font-medium">Pool resources with nearby farmers</p>
-                 </div>
-              </div>
-              <p className="text-xs text-green-700 dark:text-green-300 mb-4 leading-relaxed">Buy inputs in bulk, share equipment costs, and negotiate better prices together.</p>
-               <button onClick={() => handleAuthRequiredAction(() => { sendChatMessage({ sender: userProfile.name, content: `[Cooperative Formation] ${userProfile.name} is starting a new cooperative! Reply here to join.` }); showToast('Cooperative formation announced in community chat!', 'success'); })} className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2">
+           <div className="bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-950/30 dark:to-jade-900/20 rounded-3xl shadow-sm border border-jade-200 dark:border-jade-800/40 p-6">
+               <div className="flex items-center gap-3 mb-3">
+                  <div className="bg-jade-100 dark:bg-jade-900/40 p-2.5 rounded-xl">
+                     <Handshake className="w-5 h-5 text-jade-600 dark:text-jade-400" />
+                  </div>
+                  <div>
+                     <h4 className="font-bold text-jade-900 dark:text-jade-200 text-sm">Start a Co-op</h4>
+                     <p className="text-[10px] text-jade-600 dark:text-jade-400 font-medium">Pool resources with nearby farmers</p>
+                  </div>
+               </div>
+               <p className="text-xs text-jade-700 dark:text-jade-300 mb-4 leading-relaxed">Buy inputs in bulk, share equipment costs, and negotiate better prices together.</p>
+                <button onClick={() => handleAuthRequiredAction(() => { sendChatMessage({ sender: userProfile.name, content: `[Cooperative Formation] ${userProfile.name} is starting a new cooperative! Reply here to join.` }); showToast('Cooperative formation announced in community chat!', 'success'); })} className="w-full py-2.5 bg-jade-600 hover:bg-jade-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2">
                  <Users className="w-4 h-4" /> Create Cooperative
               </button>
            </div>
@@ -667,7 +667,7 @@ const CommunityHub: React.FC = () => {
                     <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar px-1">
                        {localStories.map(story => (
                          <div key={story.id} onClick={() => story.isUser ? setIsStoryModalOpen(true) : setViewingStory(story)} className="flex flex-col items-center gap-2 cursor-pointer group flex-shrink-0 min-w-[70px]">
-                            <div className={`w-16 h-16 rounded-full p-[3px] transition-transform duration-200 group-hover:scale-105 ${story.isUser ? 'border-2 border-dashed border-[var(--text-tertiary)] dark:border-[var(--text-tertiary)]' : (story.hasUpdate ? 'bg-gradient-to-tr from-yellow-400 to-red-500' : 'bg-[var(--bg-content)]')}`}>
+                            <div className={`w-16 h-16 rounded-full p-[3px] transition-transform duration-200 group-hover:scale-105 ${story.isUser ? 'border-2 border-dashed border-[var(--text-tertiary)] dark:border-[var(--text-tertiary)]' : (story.hasUpdate ? 'bg-gradient-to-tr from-sunburst-400 to-red-500' : 'bg-[var(--bg-content)]')}`}>
                                <div className="w-full h-full rounded-full border-2 border-white dark:border-[var(--bg-card)] overflow-hidden bg-[var(--bg-content)] relative">
                                   {story.isUser && <div className="absolute inset-0 flex items-center justify-center bg-[var(--bg-content)]"><Plus className="w-6 h-6 text-[var(--text-tertiary)]"/></div>}
                                   <img src={story.img} alt={story.name} className={`w-full h-full object-cover ${story.isUser ? 'opacity-50' : ''}`} onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(story.name)}&background=random`; }} />
@@ -696,7 +696,7 @@ const CommunityHub: React.FC = () => {
                       </div>
                       <div className="flex justify-between items-center pt-2">
                          <div className="flex gap-2">
-                            <button onClick={() => setIsPostModalOpen(true)} className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-[var(--bg-content)] text-[var(--text-secondary)] text-xs font-semibold transition-colors"><ImageIcon className="w-4 h-4 text-green-500"/> Photo</button>
+                             <button onClick={() => setIsPostModalOpen(true)} className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-[var(--bg-content)] text-[var(--text-secondary)] text-xs font-semibold transition-colors"><ImageIcon className="w-4 h-4 text-jade-500"/> Photo</button>
                             <button onClick={() => setIsPostModalOpen(true)} className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-[var(--bg-content)] text-[var(--text-secondary)] text-xs font-semibold transition-colors"><Camera className="w-4 h-4 text-blue-500"/> Video</button>
                          </div>
                          <button onClick={() => setIsPostModalOpen(true)} className="bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 px-5 py-2 rounded-xl font-semibold text-xs shadow-lg active:scale-[0.98] transition-all">Post</button>
@@ -742,7 +742,7 @@ const CommunityHub: React.FC = () => {
                                     <button onClick={() => likePost(post.id)} className={`flex items-center gap-1.5 hover:text-red-500 transition-colors ${likedPostIds.includes(post.id) ? 'text-red-500' : ''}`}><Heart className={`w-4 h-4 ${likedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> {post.likes} Likes</button>
                                     <button onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)} className="flex items-center gap-1.5 hover:text-blue-500 transition-colors"><MessageCircle className="w-4 h-4"/> {post.replies} Comments</button>
                                  </div>
-                                  <button onClick={() => { const text = `${post.title} - ${post.content.slice(0, 100)}`; navigator.clipboard?.writeText(text).then(() => showToast("Link copied to clipboard!", "success")).catch(() => showToast("Share link copied!", "success")); }} className="flex items-center gap-1.5 hover:text-green-500 transition-colors"><Share2 className="w-4 h-4"/> Share</button>
+                                   <button onClick={() => { const text = `${post.title} - ${post.content.slice(0, 100)}`; navigator.clipboard?.writeText(text).then(() => showToast("Link copied to clipboard!", "success")).catch(() => showToast("Share link copied!", "success")); }} className="flex items-center gap-1.5 hover:text-jade-500 transition-colors"><Share2 className="w-4 h-4"/> Share</button>
                               </div>
                            </div>
                            
@@ -792,15 +792,15 @@ const CommunityHub: React.FC = () => {
                          <h3 className="text-2xl font-semibold text-[var(--text-primary)] font-heading">Marketplace</h3>
                          <p className="text-[var(--text-secondary)] text-xs font-semibold mt-1">Buy, Sell & Trade Equipment</p>
                       </div>
-                      <button onClick={() => handleAuthRequiredAction(() => setIsListingModalOpen(true))} className="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-semibold text-xs shadow-lg flex items-center gap-2 transition-transform active:scale-95"><Plus className="w-4 h-4"/> New Listing</button>
+                       <button onClick={() => handleAuthRequiredAction(() => setIsListingModalOpen(true))} className="bg-jade-600 hover:bg-jade-700 text-white px-5 py-2.5 rounded-xl font-semibold text-xs shadow-lg flex items-center gap-2 transition-transform active:scale-95"><Plus className="w-4 h-4"/> New Listing</button>
                    </div>
                    
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {listings.map(item => (
-                         <div key={item.id} className="bg-[var(--bg-card)] rounded-2xl shadow-sm border border-[var(--border-card)] overflow-hidden hover:border-green-500 transition-all group flex flex-col">
+                          <div key={item.id} className="bg-[var(--bg-card)] rounded-2xl shadow-sm border border-[var(--border-card)] overflow-hidden hover:border-jade-500 transition-all group flex flex-col">
                             <div className="h-48 bg-[var(--bg-content)] relative overflow-hidden">
                                <img src={item.image || 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=800&fit=crop'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={item.item} onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=800&fit=crop'; }} />
-                                <div className="absolute top-3 right-3"><span className={`px-3 py-1 rounded-lg text-[10px] font-semibold shadow-md ${item.status === 'SOLD' ? 'bg-[var(--text-tertiary)] text-white' : item.type === 'SELL' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>{item.status === 'SOLD' ? 'SOLD' : item.type}</span></div>
+                                <div className="absolute top-3 right-3"><span className={`px-3 py-1 rounded-lg text-[10px] font-semibold shadow-md ${item.status === 'SOLD' ? 'bg-[var(--text-tertiary)] text-white' : item.type === 'SELL' ? 'bg-jade-500 text-white' : 'bg-blue-500 text-white'}`}>{item.status === 'SOLD' ? 'SOLD' : item.type}</span></div>
                                 {item.status === 'SOLD' && <div className="absolute inset-0 bg-black/40 flex items-center justify-center"><span className="text-white font-black text-xl tracking-wide rotate-[-15deg] border-2 border-white px-4 py-1">SOLD</span></div>}
                             </div>
                             <div className="p-5 flex-1 flex flex-col">
@@ -839,7 +839,7 @@ const CommunityHub: React.FC = () => {
                        <div className="flex-1 flex flex-col bg-[var(--bg-content)]/50">
                           <div className="p-4 border-b border-[var(--border-card)] bg-[var(--bg-card)] flex justify-between items-center shadow-sm z-10">
                              <h3 className="font-bold text-[var(--text-primary)] flex items-center gap-2"><Hash className="w-4 h-4 text-[var(--text-tertiary)]"/> {CHANNELS.find(c => c.id === activeChannel)?.name}</h3>
-                             <span className="text-xs text-green-500 font-bold flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Live</span>
+                              <span className="text-xs text-jade-500 font-bold flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-jade-500 animate-pulse"></span> Live</span>
                           </div>
                           <div className="flex-1 overflow-y-auto p-4 space-y-4">
                              {chatMessages.filter(m => m.channelId === activeChannel).map(msg => (
@@ -881,9 +881,9 @@ const CommunityHub: React.FC = () => {
 
                    {/* Quick stat badges */}
                    <div className="flex gap-3 px-1 overflow-x-auto no-scrollbar">
-                      <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-xl px-4 py-2 flex items-center gap-2 shrink-0">
-                         <CheckCircle className="w-4 h-4 text-green-600" />
-                         <span className="text-xs font-bold text-green-800 dark:text-green-200">{questions.filter(q => q.solved).length} Solved</span>
+                       <div className="bg-jade-50 dark:bg-jade-950/20 border border-jade-200 dark:border-jade-800 rounded-xl px-4 py-2 flex items-center gap-2 shrink-0">
+                          <CheckCircle className="w-4 h-4 text-jade-600" />
+                          <span className="text-xs font-bold text-jade-800 dark:text-jade-200">{questions.filter(q => q.solved).length} Solved</span>
                       </div>
                       <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-2 flex items-center gap-2 shrink-0">
                          <HelpCircle className="w-4 h-4 text-amber-600" />
@@ -903,8 +903,8 @@ const CommunityHub: React.FC = () => {
                               <div className="flex items-start gap-4">
                                  {/* Vote column */}
                                  <div className="flex flex-col items-center gap-1 shrink-0 pt-0.5">
-                                    <button onClick={() => handleLikeQuestion(q.id)} aria-label="Upvote question" className="p-1 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors">
-                                       <ThumbsUp className={`w-5 h-5 ${q.likes > 0 ? 'text-green-500' : 'text-[var(--text-tertiary)]'}`} />
+                                     <button onClick={() => handleLikeQuestion(q.id)} aria-label="Upvote question" className="p-1 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded-lg transition-colors">
+                                        <ThumbsUp className={`w-5 h-5 ${q.likes > 0 ? 'text-jade-500' : 'text-[var(--text-tertiary)]'}`} />
                                     </button>
                                     <span className="text-sm font-bold text-[var(--text-secondary)]">{q.likes}</span>
                                  </div>
@@ -912,7 +912,7 @@ const CommunityHub: React.FC = () => {
                                  {/* Content */}
                                  <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                                       {q.solved && <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-md text-[10px] font-bold"><CheckCircle className="w-3 h-3" /> Solved</span>}
+                                       {q.solved && <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-300 rounded-md text-[10px] font-bold"><CheckCircle className="w-3 h-3" /> Solved</span>}
                                        <span className="px-2 py-0.5 bg-[var(--bg-content)] text-[var(--text-secondary)] rounded-md text-[10px] font-semibold">{q.category}</span>
                                     </div>
                                     <h4 className="font-bold text-[var(--text-primary)] text-[15px] leading-snug mb-1 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors" onClick={() => setExpandedQuestionId(expandedQuestionId === q.id ? null : q.id)}>{q.title}</h4>
@@ -933,7 +933,7 @@ const CommunityHub: React.FC = () => {
                              <div className="bg-[var(--bg-content)] border-t border-[var(--border-card)] p-5 space-y-4">
                                 {q.answers.length > 0 && <h5 className="text-xs font-bold text-[var(--text-secondary)] flex items-center gap-2"><MessageCircle className="w-4 h-4" /> {q.answers.length} Answer{q.answers.length !== 1 ? 's' : ''}</h5>}
                                 {q.answers.map(a => (
-                                  <div key={a.id} className={`flex gap-3 p-4 rounded-xl ${a.accepted ? 'bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800' : 'bg-[var(--bg-card)] border border-[var(--border-card)]'}`}>
+                                  <div key={a.id} className={`flex gap-3 p-4 rounded-xl ${a.accepted ? 'bg-jade-50 dark:bg-jade-950/20 border border-jade-200 dark:border-jade-800' : 'bg-[var(--bg-card)] border border-[var(--border-card)]'}`}>
                                      <div className="w-8 h-8 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0">
                                         <img src={a.authorAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(a.author)}&background=random`} className="w-full h-full object-cover" alt={a.author} />
                                      </div>
@@ -941,14 +941,14 @@ const CommunityHub: React.FC = () => {
                                         <div className="flex items-center gap-2 mb-1 flex-wrap">
                                            <span className="text-xs font-bold text-[var(--text-primary)]">{a.author}</span>
                                            {a.isExpert && <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded text-[9px] font-bold"><Shield className="w-3 h-3" /> Expert</span>}
-                                           {a.accepted && <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded text-[9px] font-bold"><CheckCircle className="w-3 h-3" /> Accepted</span>}
+                                           {a.accepted && <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-300 rounded text-[9px] font-bold"><CheckCircle className="w-3 h-3" /> Accepted</span>}
                                            <span className="text-[10px] text-[var(--text-tertiary)] ml-auto">{getRelativeTime(a.date)}</span>
                                         </div>
                                         <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{a.content}</p>
                                         <div className="flex items-center gap-4 mt-2">
-                                           <button className="flex items-center gap-1 text-[10px] text-[var(--text-tertiary)] hover:text-green-600 font-semibold transition-colors"><ThumbsUp className="w-3 h-3" /> {a.likes}</button>
+                                            <button className="flex items-center gap-1 text-[10px] text-[var(--text-tertiary)] hover:text-jade-600 font-semibold transition-colors"><ThumbsUp className="w-3 h-3" /> {a.likes}</button>
                                            {!q.solved && isSignedIn && q.author === userProfile.name && !a.accepted && (
-                                             <button onClick={() => handleAcceptAnswer(q.id, a.id)} className="flex items-center gap-1 text-[10px] text-green-600 dark:text-green-400 hover:underline font-bold"><CheckCircle className="w-3 h-3" /> Accept</button>
+                                              <button onClick={() => handleAcceptAnswer(q.id, a.id)} className="flex items-center gap-1 text-[10px] text-jade-600 dark:text-jade-400 hover:underline font-bold"><CheckCircle className="w-3 h-3" /> Accept</button>
                                            )}
                                         </div>
                                      </div>
@@ -1006,7 +1006,7 @@ const CommunityHub: React.FC = () => {
                </div>
                <div className="px-6 py-4 bg-[var(--bg-content)] border-t border-[var(--border-card)] flex justify-between items-center">
                   <div className="flex gap-2">
-                     <button type="button" onClick={() => postFileRef.current?.click()} aria-label="Attach image" className="p-2 hover:bg-green-100 text-[var(--text-secondary)] hover:text-green-600 rounded-full transition-colors"><ImageIcon className="w-5 h-5" aria-hidden="true"/></button>
+                      <button type="button" onClick={() => postFileRef.current?.click()} aria-label="Attach image" className="p-2 hover:bg-jade-100 text-[var(--text-secondary)] hover:text-jade-600 rounded-full transition-colors"><ImageIcon className="w-5 h-5" aria-hidden="true"/></button>
                      <input type="file" ref={postFileRef} accept="image/*" onChange={(e) => handleFileRead(e.target.files?.[0], (res) => setPostImage(res))} className="hidden" />
                   </div>
                   <button type="submit" disabled={!newPost.content} className="bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 px-6 py-2 rounded-full font-semibold text-xs hover:opacity-90 disabled:opacity-50 transition-all shadow-md active:scale-[0.98]">Post Update</button>
@@ -1038,10 +1038,10 @@ const CommunityHub: React.FC = () => {
                 }
              }} className="space-y-4">
                <div className="grid grid-cols-2 gap-4 p-1 bg-[var(--bg-content)] rounded-xl">
-                  <button type="button" onClick={() => setNewListing({...newListing, type: 'SELL'})} className={`py-3 font-bold text-xs rounded-lg transition-all ${newListing.type === 'SELL' ? 'bg-[var(--bg-card)] text-green-700 dark:text-green-400 shadow-sm' : 'text-[var(--text-secondary)]'}`}>SELL ITEM</button>
+                   <button type="button" onClick={() => setNewListing({...newListing, type: 'SELL'})} className={`py-3 font-bold text-xs rounded-lg transition-all ${newListing.type === 'SELL' ? 'bg-[var(--bg-card)] text-jade-700 dark:text-jade-400 shadow-sm' : 'text-[var(--text-secondary)]'}`}>SELL ITEM</button>
                   <button type="button" onClick={() => setNewListing({...newListing, type: 'BUY'})} className={`py-3 font-bold text-xs rounded-lg transition-all ${newListing.type === 'BUY' ? 'bg-[var(--bg-card)] text-blue-700 dark:text-blue-400 shadow-sm' : 'text-[var(--text-secondary)]'}`}>REQUEST ITEM</button>
                </div>
-               <div onClick={() => listingFileRef.current?.click()} className={`w-full h-32 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors relative overflow-hidden ${listingImage ? 'border-green-500' : 'border-[var(--border-card)] hover:border-[var(--text-tertiary)] hover:bg-[var(--bg-content)]'}`}><input type="file" ref={listingFileRef} accept="image/*" onChange={(e) => handleFileRead(e.target.files?.[0], (res) => setListingImage(res))} className="hidden" />{listingImage ? <img src={listingImage} alt="Preview" className="w-full h-full object-cover" /> : <><ImageIcon className="w-8 h-8 text-[var(--text-tertiary)] mb-2" /><span className="text-xs font-semibold text-[var(--text-secondary)]">Upload Item Photo</span></>}</div>
+               <div onClick={() => listingFileRef.current?.click()} className={`w-full h-32 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors relative overflow-hidden ${listingImage ? 'border-jade-500' : 'border-[var(--border-card)] hover:border-[var(--text-tertiary)] hover:bg-[var(--bg-content)]'}`}><input type="file" ref={listingFileRef} accept="image/*" onChange={(e) => handleFileRead(e.target.files?.[0], (res) => setListingImage(res))} className="hidden" />{listingImage ? <img src={listingImage} alt="Preview" className="w-full h-full object-cover" /> : <><ImageIcon className="w-8 h-8 text-[var(--text-tertiary)] mb-2" /><span className="text-xs font-semibold text-[var(--text-secondary)]">Upload Item Photo</span></>}</div>
                <div className="space-y-4">
                   <input placeholder="Item Name" value={newListing.item} onChange={e => setNewListing({...newListing, item: e.target.value})} className="w-full p-3 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl font-bold outline-none text-[var(--text-primary)] text-sm" required />
                   <div className="grid grid-cols-2 gap-4">
