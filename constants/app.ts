@@ -1,0 +1,55 @@
+import { UserProfile, ChartDataPoint } from '../types';
+
+export const APP_NAME = "AgriFlow";
+
+export const CURRENT_USER: UserProfile = {
+  name: "Adebayo Okonkwo",
+  role: "Farm Manager",
+  farmName: "Green Sahel Farms",
+  avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80",
+  bio: "Managing 200 hectares of maize, rice and cassava in Kano State, Nigeria. Focused on climate-smart agriculture and precision irrigation.",
+  followers: 1890,
+  following: 120,
+  posts: 256,
+  countryCode: "NG",
+  currencyCode: "NGN",
+  currencySymbol: "₦",
+  language: "en",
+  region: "West Africa",
+  farmType: "mixed",
+  areaUnit: "ha",
+  climateZone: "sahel",
+  phoneNumber: "+234 801 234 5678",
+  location: "Kano, Kano State"
+};
+
+export const GUEST_USER: UserProfile = {
+  name: "Guest Farmer",
+  role: "Visitor",
+  farmName: "Demo Farm",
+  avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80",
+  bio: "Exploring the AgriFlow platform. Sign in to access your farm dashboard and market prices.",
+  followers: 0,
+  following: 0,
+  posts: 0,
+  countryCode: "",
+  currencyCode: "USD",
+  currencySymbol: "$",
+  language: "en",
+  region: "",
+  farmType: "mixed",
+  areaUnit: "ha",
+  climateZone: "temperate",
+  phoneNumber: "",
+  location: ""
+};
+
+export const YIELD_DATA: ChartDataPoint[] = [
+  { name: '2020', value: 1520, cost: 685 },
+  { name: '2021', value: 1610, cost: 780 },
+  { name: '2022', value: 1580, cost: 920 },
+  { name: '2023', value: 1654, cost: 1050 },
+  { name: '2024', value: 1654, cost: 1180 },
+  { name: '2025 (Est)', value: 1620, cost: 1200 },
+  { name: '2026 (Fcast)', value: 1580, cost: 1280 },
+];
