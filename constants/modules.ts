@@ -1,0 +1,64 @@
+import { LearningModule } from '../types';
+
+export const INITIAL_MODULES: LearningModule[] = [
+  {
+    id: '1',
+    title: 'Climate-Smart Sahel Farming',
+    instructor: 'Dr. Amina Bello (IITA)',
+    thumbnail: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=800&fit=crop',
+    lessonsCount: 12,
+    category: 'Resilience',
+    difficulty: 'Advanced',
+    duration: '4h 15m',
+    completed: false,
+    description: 'Drought-tolerant varieties, conservation agriculture, and Zai pit techniques for the Sahel. Improve soil organic matter and water retention on sandy soils.'
+  },
+  {
+    id: '2',
+    title: 'Farm Finance in Volatile Markets',
+    instructor: 'Chukwuma Eze (CBN Agric)',
+    thumbnail: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800',
+    lessonsCount: 8,
+    category: 'Economics',
+    difficulty: 'Intermediate',
+    duration: '2h 30m',
+    completed: true,
+    description: 'Navigating Naira volatility, input cost spikes, and cooperative bulk purchasing. Accessing NIRSAL credit and BOA loan windows for 2026 season.'
+  },
+  {
+    id: '3',
+    title: 'Precision Irrigation for Drylands',
+    instructor: 'Prof. Issa Garba (ABU Zaria)',
+    thumbnail: 'https://images.unsplash.com/photo-1563309461-a319263584d7?q=80&w=800',
+    lessonsCount: 15,
+    category: 'Tech',
+    difficulty: 'Advanced',
+    duration: '5h 00m',
+    completed: false,
+    description: 'Solar-powered drip irrigation, treadle pumps, and smart soil moisture sensors. Optimizing water usage under Sahel dry spell conditions.'
+  },
+  {
+    id: '4',
+    title: 'Drone Scouting for Crop Health',
+    instructor: 'Tech Lead Aisha (AgriMach NG)',
+    thumbnail: 'https://images.unsplash.com/photo-1508614589041-895b8c9d7ef5?q=80&w=800',
+    lessonsCount: 6,
+    category: 'Tech',
+    difficulty: 'Beginner',
+    duration: '1h 45m',
+    completed: false,
+    description: 'Deploy NDVI drones to detect Fall Armyworm and Striga stress early. Practical training for smallholder and medium-scale farms.'
+  },
+  {
+    id: '5',
+    title: 'Integrated Pest & Disease Management',
+    instructor: 'Dr. Sunday Eze (IAR Samaru)',
+    thumbnail: 'https://images.unsplash.com/photo-1585652684742-c24c64db7071?q=80&w=800',
+    lessonsCount: 10,
+    category: 'Resilience',
+    difficulty: 'Intermediate',
+    duration: '3h 20m',
+    completed: false,
+    description: 'Push-pull technology for FAW control, Striga management, pheromone traps, and cowpea intercropping. Reducing pesticide dependence across West Africa.'
+  }
+];
