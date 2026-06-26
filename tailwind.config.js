@@ -1,0 +1,117 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: 'class',
+  content: [
+    './index.html',
+    './index.tsx',
+    './App.tsx',
+    './types.ts',
+    './constants.ts',
+    './components/**/*.{ts,tsx}',
+    './contexts/**/*.{ts,tsx}',
+    './services/**/*.{ts,tsx}',
+    './utils/**/*.{ts,tsx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        slate: {
+          850: '#1e293b',
+          950: '#020617',
+        },
+        terra: {
+          50: '#F4F9F6',
+          100: '#E4F0EA',
+          200: '#C8DFD3',
+          300: '#A0C4B2',
+          400: '#74A78E',
+          500: '#548D73',
+          600: '#3E735D',
+          700: '#305A49',
+          800: '#264839',
+          900: '#1A3428',
+        },
+        sunburst: {
+          50: '#FFFCEB',
+          100: '#FFF7C2',
+          200: '#FFEE85',
+          300: '#FFE048',
+          400: '#FFCC11',
+          500: '#F5B800',
+          600: '#CC9A00',
+          700: '#997300',
+          800: '#7A5C00',
+          900: '#5C4500',
+        },
+        jade: {
+          50: '#EFFCF6',
+          100: '#D1F9E8',
+          200: '#A6F0D4',
+          300: '#6CE4BA',
+          400: '#38D19E',
+          500: '#14B882',
+          600: '#069669',
+          700: '#057855',
+          800: '#075E45',
+          900: '#084D3A',
+          950: '#032B21',
+        },
+      },
+      animation: {
+        'slow-pan': 'pan 60s linear infinite alternate',
+        'slow-zoom': 'zoom 20s ease-in-out infinite alternate',
+        'stagger-1': 'fade-in-up 0.5s ease-out 0.05s forwards',
+        'stagger-2': 'fade-in-up 0.5s ease-out 0.1s forwards',
+        'stagger-3': 'fade-in-up 0.5s ease-out 0.15s forwards',
+        'stagger-4': 'fade-in-up 0.5s ease-out 0.2s forwards',
+        'stagger-5': 'fade-in-up 0.5s ease-out 0.25s forwards',
+        'stagger-6': 'fade-in-up 0.5s ease-out 0.3s forwards',
+        float: 'float 6s ease-in-out infinite',
+        'glow-pulse': 'glow-pulse 3s ease-in-out infinite',
+        'fade-in': 'fade-in 0.3s ease-out forwards',
+        'fade-in-up': 'fade-in-up 0.4s ease-out forwards',
+        'page-enter': 'page-enter 0.3s ease-out forwards',
+        shimmer: 'shimmer 1.5s ease-in-out infinite',
+      },
+      keyframes: {
+        pan: {
+          '0%': { transform: 'scale(1.1) translate(0%, 0%)' },
+          '100%': { transform: 'scale(1.2) translate(-3%, -3%)' },
+        },
+        zoom: {
+          '0%': { transform: 'scale(1.0)' },
+          '100%': { transform: 'scale(1.1)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        'glow-pulse': {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.8' },
+        },
+        'fade-in': {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        'fade-in-up': {
+          from: { opacity: '0', transform: 'translateY(12px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        'page-enter': {
+          from: { opacity: '0', transform: 'translateY(6px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+      },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.25rem',
+      },
+    },
+  },
+  plugins: [],
+};
