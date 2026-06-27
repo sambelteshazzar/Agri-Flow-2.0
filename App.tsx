@@ -21,6 +21,7 @@ const SettingsPage = lazy(() => import('./components/Settings'));
 const VoiceAgent = lazy(() => import('./components/VoiceAgent'));
 
 import { NavigationTab } from './types';
+import { RouteErrorBoundary } from './components/RouteErrorBoundary';
 import type { OnboardingData } from './components/AuthModal';
 import { FarmProvider, useFarm } from './contexts/FarmContext';
 
@@ -130,22 +131,23 @@ const AppContent: React.FC = () => {
      };
 
   const renderContent = () => {
+    const goHome = () => navigate(NavigationTab.DASHBOARD);
     return (
       <Suspense fallback={<LazyLoader />}>
         {(() => {
           switch (currentView) {
-            case NavigationTab.DASHBOARD: return <Dashboard />;
-            case NavigationTab.CROPS: return <CropManager />;
-            case NavigationTab.LIVESTOCK: return <LivestockManager />;
-            case NavigationTab.CALCULATOR: return <ResourceCalculator />;
-            case NavigationTab.COMMUNITY: return <CommunityHub />;
-            case NavigationTab.EDUCATION: return <EducationHub />;
-            case NavigationTab.MARKET: return <MarketAnalytics />;
-            case NavigationTab.NEWS: return <NewsHub />;
-            case NavigationTab.AI_ADVISOR: return <AIAdvisor />;
-            case NavigationTab.LABOR: return <FarmLaborPlanner />;
-            case NavigationTab.SETTINGS: return <SettingsPage />;
-            default: return <Dashboard />;
+            case NavigationTab.DASHBOARD: return <RouteErrorBoundary routeName="Dashboard" onNavigateHome={goHome}><Dashboard /></RouteErrorBoundary>;
+            case NavigationTab.CROPS: return <RouteErrorBoundary routeName="Crop Manager" onNavigateHome={goHome}><CropManager /></RouteErrorBoundary>;
+            case NavigationTab.LIVESTOCK: return <RouteErrorBoundary routeName="Livestock" onNavigateHome={goHome}><LivestockManager /></RouteErrorBoundary>;
+            case NavigationTab.CALCULATOR: return <RouteErrorBoundary routeName="Calculators" onNavigateHome={goHome}><ResourceCalculator /></RouteErrorBoundary>;
+            case NavigationTab.COMMUNITY: return <RouteErrorBoundary routeName="Community" onNavigateHome={goHome}><CommunityHub /></RouteErrorBoundary>;
+            case NavigationTab.EDUCATION: return <RouteErrorBoundary routeName="Education" onNavigateHome={goHome}><EducationHub /></RouteErrorBoundary>;
+            case NavigationTab.MARKET: return <RouteErrorBoundary routeName="Market Analytics" onNavigateHome={goHome}><MarketAnalytics /></RouteErrorBoundary>;
+            case NavigationTab.NEWS: return <RouteErrorBoundary routeName="News Hub" onNavigateHome={goHome}><NewsHub /></RouteErrorBoundary>;
+            case NavigationTab.AI_ADVISOR: return <RouteErrorBoundary routeName="AI Advisor" onNavigateHome={goHome}><AIAdvisor /></RouteErrorBoundary>;
+            case NavigationTab.LABOR: return <RouteErrorBoundary routeName="Labor Planner" onNavigateHome={goHome}><FarmLaborPlanner /></RouteErrorBoundary>;
+            case NavigationTab.SETTINGS: return <RouteErrorBoundary routeName="Settings" onNavigateHome={goHome}><SettingsPage /></RouteErrorBoundary>;
+            default: return <RouteErrorBoundary routeName="Dashboard" onNavigateHome={goHome}><Dashboard /></RouteErrorBoundary>;
           }
         })()}
       </Suspense>
