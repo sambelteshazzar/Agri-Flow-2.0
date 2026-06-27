@@ -1,10 +1,10 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Camera, Send, Loader2, Sparkles, Info, BrainCircuit, ExternalLink, Globe, X, Phone, Mic, MicOff, Activity } from 'lucide-react';
-import { getFarmingAdvice, analyzeCropImage, CountryContext } from '../services/geminiService';
+import { getFarmingAdvice, analyzeCropImage, CountryContext, isAIConfigured, getLiveAIClient } from '../services/geminiService';
 import { ChatMessage } from '../types';
 import { useFarm } from '../contexts/FarmContext';
-import { GoogleGenAI, LiveServerMessage, Modality } from "@google/genai";
+import { LiveServerMessage, Modality } from "@google/genai";
 
 const AIAdvisor: React.FC = () => {
   const { showToast, userProfile } = useFarm();
@@ -90,14 +90,14 @@ const AIAdvisor: React.FC = () => {
   };
 
   const startCall = async () => {
-    if (!process.env.API_KEY) {
+    if (!isAIConfigured()) {
       showToast("API Key missing", "error");
       return;
     }
 
     setIsConnectingCall(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = getLiveAIClient();
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContextClass({ sampleRate: 16000 });
       await ctx.resume();

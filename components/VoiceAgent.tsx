@@ -2,7 +2,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, X, Activity, Zap, Command, MicOff } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
-import { GoogleGenAI, LiveServerMessage, Modality, Type, FunctionDeclaration } from "@google/genai";
+import { isAIConfigured, getLiveAIClient } from '../services/geminiService';
+import { LiveServerMessage, Modality, Type, FunctionDeclaration } from "@google/genai";
 import { NavigationTab } from '../types';
 
 const VoiceAgent: React.FC = () => {
@@ -125,14 +126,14 @@ const VoiceAgent: React.FC = () => {
 
   // --- SESSION MANAGEMENT ---
   const connect = async () => {
-    if (!process.env.API_KEY) {
+    if (!isAIConfigured()) {
       showToast("API Key missing", "error");
       return;
     }
 
     setIsConnecting(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = getLiveAIClient();
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContextClass({ sampleRate: 16000 }); // Try 16k, but browser might override
       await ctx.resume(); // Ensure context is running
