@@ -1,6 +1,5 @@
 
 import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult, Story, SocialTrend, SuggestedUser, SystemAlert } from '../types';
-import { INITIAL_CROPS, INITIAL_LIVESTOCK, INITIAL_TASKS, INITIAL_MODULES, MARKET_PRICES, INITIAL_LISTINGS, INITIAL_POSTS, INITIAL_CHAT_MESSAGES, CURRENT_USER, INITIAL_STORIES, INITIAL_TRENDS, INITIAL_SUGGESTED_USERS, INITIAL_ALERTS } from '../constants';
 
 // --- DATABASE KEYS ---
 export const DB_KEYS = {
@@ -71,7 +70,7 @@ class PersistenceService {
   // 1. CROPS
   async getCrops(): Promise<Crop[]> {
     await simulateNetworkDelay();
-    const raw = this.getItem<any[]>(DB_KEYS.CROPS, INITIAL_CROPS);
+    const raw = this.getItem<any[]>(DB_KEYS.CROPS, []);
     return raw.map(crop => ({
       ...crop,
       soilHealth: crop.soilHealth || 'Unknown',
@@ -93,7 +92,7 @@ class PersistenceService {
   // 2. LIVESTOCK
   async getLivestock(): Promise<Livestock[]> {
     await simulateNetworkDelay();
-    const raw = this.getItem<any[]>(DB_KEYS.LIVESTOCK, INITIAL_LIVESTOCK);
+    const raw = this.getItem<any[]>(DB_KEYS.LIVESTOCK, []);
     return raw.map(animal => ({
       ...animal,
       grazingType: animal.grazingType || 'Rotational',
@@ -111,7 +110,7 @@ class PersistenceService {
 
   // 3. TASKS
   async getTasks(): Promise<Task[]> {
-    return this.getItem<Task[]>(DB_KEYS.TASKS, INITIAL_TASKS).map(t => ({
+    return this.getItem<Task[]>(DB_KEYS.TASKS, []).map(t => ({
       ...t,
       priority: t.priority || 'normal'
     }));
@@ -123,7 +122,7 @@ class PersistenceService {
 
   // 4. EDUCATION
   async getModules(): Promise<LearningModule[]> {
-    const modules = this.getItem<LearningModule[]>(DB_KEYS.LEARNING, INITIAL_MODULES);
+    const modules = this.getItem<LearningModule[]>(DB_KEYS.LEARNING, []);
     return modules.map(m => ({
       ...m,
       instructor: m.instructor || 'AgriFlow Expert',
@@ -139,7 +138,7 @@ class PersistenceService {
 
   // 5. MARKET DATA & TRENDS
   async getMarketPrices(): Promise<MarketPrice[]> {
-    return this.getItem<MarketPrice[]>(DB_KEYS.MARKET, MARKET_PRICES);
+    return this.getItem<MarketPrice[]>(DB_KEYS.MARKET, []);
   }
 
   async saveMarketPrices(prices: MarketPrice[]): Promise<void> {
@@ -157,7 +156,7 @@ class PersistenceService {
   // 6. MARKETPLACE LISTINGS
   async getListings(): Promise<MarketplaceListing[]> {
     await simulateNetworkDelay();
-    const raw = this.getItem<any[]>(DB_KEYS.LISTINGS, INITIAL_LISTINGS);
+    const raw = this.getItem<any[]>(DB_KEYS.LISTINGS, []);
     return raw.map(l => ({
       ...l,
       status: l.status || 'ACTIVE',
@@ -173,7 +172,7 @@ class PersistenceService {
   // 7. FORUM POSTS
   async getPosts(): Promise<ForumPost[]> {
     await simulateNetworkDelay();
-    const raw = this.getItem<any[]>(DB_KEYS.POSTS, INITIAL_POSTS);
+    const raw = this.getItem<any[]>(DB_KEYS.POSTS, []);
     return raw.map(p => ({
       ...p,
       content: p.content || '',
@@ -235,7 +234,7 @@ class PersistenceService {
 
   // 10. CHAT
   async getChatMessages(): Promise<CommunityChatMessage[]> {
-    return this.getItem<CommunityChatMessage[]>(DB_KEYS.CHAT, INITIAL_CHAT_MESSAGES);
+    return this.getItem<CommunityChatMessage[]>(DB_KEYS.CHAT, []);
   }
 
   async saveChatMessages(messages: CommunityChatMessage[]): Promise<void> {

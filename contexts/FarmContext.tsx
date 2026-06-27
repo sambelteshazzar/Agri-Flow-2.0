@@ -57,6 +57,7 @@ interface FarmContextType {
 
   // Auth Methods
   login: (data: OnboardingData) => Promise<void>;
+  signIn: () => Promise<void>;
   logout: () => void;
   updateUserProfile: (profile: Partial<UserProfile>) => Promise<void>;
   resetApp: () => void;
@@ -429,6 +430,25 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (err) {
       console.error('[FarmContext] Login error:', err);
       showToast('Login failed. Please try again.', 'error');
+      throw err;
+    }
+  }, [showToast]);
+
+  const signIn = useCallback(async () => {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const savedProfile = await db.getUserProfile();
+      if (savedProfile && savedProfile.name !== GUEST_USER.name) {
+        setUserProfile(savedProfile);
+        setIsSignedIn(true);
+        showToast(`Welcome back, ${savedProfile.name}!`, 'success');
+      } else {
+        setIsSignedIn(true);
+        showToast('Signed in. Set up your farm to get started.', 'info');
+      }
+    } catch (err) {
+      console.error('[FarmContext] signIn error:', err);
+      showToast('Sign in failed. Please try again.', 'error');
       throw err;
     }
   }, [showToast]);
@@ -808,7 +828,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
     stories, trends, suggestedUsers, followedUserIds, likedPostIds,
     pollData, pollVoted, handlePollVote,
-    login, logout, updateUserProfile, resetApp,
+    login, signIn, logout, updateUserProfile, resetApp,
     addCrop, deleteCrop, updateCropStatus, addLivestock, deleteLivestock, updateLivestockStatus, toggleTask, addTask, completeModule, 
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
@@ -823,7 +843,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
     stories, trends, suggestedUsers, followedUserIds, likedPostIds,
     pollData, pollVoted, handlePollVote,
-    login, logout, updateUserProfile, resetApp,
+    login, signIn, logout, updateUserProfile, resetApp,
     addCrop, deleteCrop, updateCropStatus, addLivestock, deleteLivestock, updateLivestockStatus, toggleTask, addTask, completeModule, 
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 

@@ -46,7 +46,7 @@ const FAVICON_EMOJIS: Record<string, string> = {
 };
 
 const AppContent: React.FC = () => {
-  const { userProfile, alerts, isSignedIn, login, logout, toasts, removeToast, currentView, navigate, dismissAlert, dismissAllAlerts } = useFarm();
+  const { userProfile, alerts, isSignedIn, login, signIn, logout, toasts, removeToast, currentView, navigate, dismissAlert, dismissAllAlerts } = useFarm();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [hasStarted, setHasStarted] = useState(() => localStorage.getItem('agriflow_has_started') === 'true');
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -163,19 +163,8 @@ const AppContent: React.FC = () => {
   };
 
    const handleAuthSubmit = async (data: { email: string; password: string; remember: boolean }) => {
-     const userName = data.email.split('@')[0] || data.email;
-      const dummyData: OnboardingData = {
-        name: userName,
-        farmName: `${userName}'s Farm`,
-        countryCode: 'NG',
-        farmType: 'mixed',
-        farmSize: 1,
-        areaUnit: 'ha',
-        phoneNumber: '',
-        location: '',
-      };
      try {
-       await login(dummyData);
+       await signIn();
        setIsAuthModalOpen(false);
        setHasStarted(true);
        localStorage.setItem('agriflow_has_started', 'true');
