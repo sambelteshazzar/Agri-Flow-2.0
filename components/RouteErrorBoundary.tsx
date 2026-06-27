@@ -13,23 +13,23 @@ interface RouteErrorBoundaryState {
 }
 
 export class RouteErrorBoundary extends Component<RouteErrorBoundaryProps, RouteErrorBoundaryState> {
-  constructor(props: RouteErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false, error: null };
-    this.handleRetry = this.handleRetry.bind(this);
-  }
+  declare props: RouteErrorBoundaryProps;
+  public state: RouteErrorBoundaryState = {
+    hasError: false,
+    error: null
+  };
 
   static getDerivedStateFromError(error: Error): RouteErrorBoundaryState {
     return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error(`[RouteErrorBoundary]`, error, errorInfo);
+    console.error(`[RouteErrorBoundary:${error.name}]`, error, errorInfo);
   }
 
-  handleRetry() {
-    this.setState({ hasError: false, error: null });
-  }
+  handleRetry = () => {
+    (this as any).setState({ hasError: false, error: null });
+  };
 
   render() {
     if (this.state.hasError) {
