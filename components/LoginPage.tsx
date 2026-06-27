@@ -1,11 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import { useFarm } from '../contexts/FarmContext';
-import {
-  X, Loader2, Sprout, Mail, Lock, Eye, EyeOff, User,
-  ArrowRight, Tractor, Globe, Wheat, Check, MapPin, Phone
-} from 'lucide-react';
-import { COUNTRY_LIST } from '../constants';
+import { X, Wheat, Globe, Sprout } from 'lucide-react';
 import type { OnboardingData } from './AuthModal';
+import { SignInForm } from './auth/SignInForm';
+import { SignUpForm } from './auth/SignUpForm';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -15,12 +13,6 @@ interface LoginPageProps {
   onLogin: (data: { email: string; password: string; remember: boolean }) => Promise<void>;
   onSignup?: (data: OnboardingData & { email: string; password: string }) => Promise<void>;
 }
-
-const FARM_TYPES = [
-  { value: 'crop', label: 'Crops', icon: Wheat, desc: 'Grains, vegetables, cash crops' },
-  { value: 'livestock', label: 'Livestock', icon: Tractor, desc: 'Cattle, goats, poultry' },
-  { value: 'mixed', label: 'Mixed', icon: Sprout, desc: 'Both crops & livestock' },
-] as const;
 
 export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, onSignup }) => {
   const { showToast } = useFarm();
@@ -39,13 +31,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
   const [farmType, setFarmType] = useState<string>('mixed');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [location, setLocation] = useState('');
-
-  const filteredCountries = countrySearch
-    ? COUNTRY_LIST.filter(c =>
-        c.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
-        c.code.toLowerCase().includes(countrySearch.toLowerCase())
-      )
-    : COUNTRY_LIST;
 
   const resetForm = useCallback(() => {
     setEmail('');
@@ -143,31 +128,24 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
       aria-modal="true"
       aria-label={mode === 'signin' ? 'Sign in to AgriFlow' : 'Create your AgriFlow account'}
     >
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-jade-950/90 backdrop-blur-xl"
         onClick={onClose}
       />
 
-      {/* Main Container */}
       <div className="relative z-10 w-full max-w-[960px] mx-4 my-4 flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-jade-800/60 animate-fade-in-up max-h-[92vh]">
 
-        {/* ── LEFT PANEL (Branding) ── */}
         <div className="hidden md:flex w-[420px] shrink-0 relative overflow-hidden flex-col justify-between p-10 bg-jade-950">
-          {/* Background image */}
           <div
             className="absolute inset-0 bg-cover bg-center opacity-50 animate-slow-zoom"
             style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1527847263472-aa5338d178b8?q=80&w=1200&auto=format&fit=crop")' }}
           />
-          {/* Gradient overlays */}
           <div className="absolute inset-0 bg-gradient-to-t from-jade-950 via-jade-950/80 to-jade-950/40" />
           <div className="absolute inset-0 bg-gradient-to-r from-jade-950/60 to-transparent" />
 
-          {/* Glow accent */}
           <div className="absolute -top-20 -right-20 w-80 h-80 bg-jade-500/10 rounded-full blur-3xl" />
           <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-sunburst-500/8 rounded-full blur-3xl" />
 
-          {/* Top: Logo */}
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-8">
               <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-11 h-11 rounded-xl shadow-lg shadow-jade-500/30" />
@@ -184,7 +162,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
             </p>
           </div>
 
-          {/* Bottom: Features */}
           <div className="relative z-10 space-y-5">
             <div className="space-y-4">
               {[
@@ -207,10 +184,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
           </div>
         </div>
 
-        {/* ── RIGHT PANEL (Form) ── */}
         <div className="flex-1 bg-[var(--bg-card)] flex flex-col overflow-hidden">
 
-          {/* Close button */}
           <button
             onClick={onClose}
             className="absolute top-4 right-4 md:top-5 md:right-5 z-20 w-10 h-10 flex items-center justify-center rounded-xl bg-jade-950/10 dark:bg-jade-950/40 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-jade-950/15 dark:hover:bg-jade-950/50 transition-all border border-transparent hover:border-[var(--border-card)]"
@@ -219,17 +194,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
             <X className="w-5 h-5" />
           </button>
 
-          {/* Mobile logo (visible only on small screens) */}
           <div className="md:hidden flex items-center gap-2.5 px-8 pt-8 pb-2">
             <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-9 h-9 rounded-lg shadow-md shadow-jade-500/20" />
             <span className="text-[var(--text-primary)] text-base font-heading font-bold tracking-tight">Agri<span className="text-jade-500">Flow</span></span>
           </div>
 
-          {/* Scrollable Form Area */}
           <div className="flex-1 overflow-y-auto custom-scrollbar px-8 py-8 md:py-10">
             <div className="max-w-[380px] mx-auto w-full">
 
-              {/* Header */}
               <div className="mb-8">
                 <h2 className="text-2xl md:text-[28px] font-heading font-bold text-[var(--text-primary)] leading-tight">
                   {mode === 'signin' ? 'Welcome back' : 'Create your account'}
@@ -241,339 +213,52 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
                 </p>
               </div>
 
-              {/* ─── SIGN IN FORM ─── */}
               {mode === 'signin' && (
-                <form onSubmit={handleSignIn} className="space-y-5">
-                  {/* Email */}
-                  <div>
-                    <label htmlFor="signin-email" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Email address</label>
-                    <div className="relative group">
-                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
-                      <input
-                        id="signin-email"
-                        type="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        placeholder="you@farm.example.com"
-                        required
-                        autoComplete="email"
-                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Password */}
-                  <div>
-                    <label htmlFor="signin-password" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Password</label>
-                    <div className="relative group">
-                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
-                      <input
-                        id="signin-password"
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        placeholder="Enter your password"
-                        required
-                        autoComplete="current-password"
-                        className="w-full pl-11 pr-12 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors p-0.5"
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      >
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Remember + Forgot */}
-                  <div className="flex items-center justify-between">
-                    <label className="flex items-center gap-2.5 cursor-pointer group">
-                      <div className="relative">
-                        <input
-                          type="checkbox"
-                          checked={remember}
-                          onChange={e => setRemember(e.target.checked)}
-                          className="peer sr-only"
-                        />
-                        <div className="w-[18px] h-[18px] rounded-md border-2 border-[var(--border-card)] bg-[var(--bg-content)] peer-checked:bg-jade-600 peer-checked:border-jade-600 transition-all flex items-center justify-center group-hover:border-jade-400">
-                          {remember && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
-                        </div>
-                      </div>
-                      <span className="text-[var(--text-secondary)] text-[13px] font-medium">Remember this device</span>
-                    </label>
-                    <button type="button" className="text-jade-600 dark:text-jade-400 text-[13px] font-semibold hover:underline">
-                      Forgot password?
-                    </button>
-                  </div>
-
-                  {/* Sign In Button */}
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full bg-jade-800 dark:bg-sunburst-500 hover:bg-jade-700 dark:hover:bg-sunburst-400 text-white dark:text-jade-950 py-3.5 font-bold text-sm rounded-xl transition-all shadow-lg shadow-jade-500/15 dark:shadow-sunburst-500/20 hover:shadow-jade-500/25 dark:hover:shadow-sunburst-500/30 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                    ) : (
-                      <>
-                        <span>Sign In</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                </form>
+                <SignInForm
+                  email={email}
+                  setEmail={setEmail}
+                  password={password}
+                  setPassword={setPassword}
+                  showPassword={showPassword}
+                  setShowPassword={setShowPassword}
+                  remember={remember}
+                  setRemember={setRemember}
+                  isLoading={isLoading}
+                  onSubmit={handleSignIn}
+                />
               )}
 
-              {/* ─── SIGN UP FORM ─── */}
               {mode === 'signup' && (
-                <form onSubmit={handleSignUp} className="space-y-5">
-                  {/* Name + Farm Name */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label htmlFor="signup-name" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Full name</label>
-                      <div className="relative group">
-                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
-                        <input
-                          id="signup-name"
-                          type="text"
-                          value={name}
-                          onChange={e => setName(e.target.value)}
-                          placeholder="Adewale Okonkwo"
-                          required
-                          autoComplete="name"
-                          className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label htmlFor="signup-farm" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Farm name <span className="font-normal text-[var(--text-tertiary)]">(opt.)</span></label>
-                      <div className="relative group">
-                        <Tractor className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
-                        <input
-                          id="signup-farm"
-                          type="text"
-                          value={farmName}
-                          onChange={e => setFarmName(e.target.value)}
-                          placeholder="Greenfield Farm"
-                          className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Email */}
-                  <div>
-                    <label htmlFor="signup-email" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Email address</label>
-                    <div className="relative group">
-                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
-                      <input
-                        id="signup-email"
-                        type="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        placeholder="you@farm.example.com"
-                        required
-                        autoComplete="email"
-                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Phone + Location */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label htmlFor="signup-phone" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Phone number</label>
-                      <div className="relative group">
-                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
-                        <input
-                          id="signup-phone"
-                          type="tel"
-                          value={phoneNumber}
-                          onChange={e => setPhoneNumber(e.target.value)}
-                          placeholder="+234 801 234 5678"
-                          autoComplete="tel"
-                          className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label htmlFor="signup-location" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Location <span className="font-normal text-[var(--text-tertiary)]">(city/region)</span></label>
-                      <div className="relative group">
-                        <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
-                        <input
-                          id="signup-location"
-                          type="text"
-                          value={location}
-                          onChange={e => setLocation(e.target.value)}
-                          placeholder="Kano, Kano State"
-                          autoComplete="address-level2"
-                          className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Password */}
-                  <div>
-                    <label htmlFor="signup-password" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Password</label>
-                    <div className="relative group">
-                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
-                      <input
-                        id="signup-password"
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        placeholder="Create a password"
-                        required
-                        autoComplete="new-password"
-                        minLength={6}
-                        className="w-full pl-11 pr-12 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors p-0.5"
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      >
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div>
-                    <label htmlFor="signup-confirm" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Confirm password</label>
-                    <div className="relative group">
-                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
-                      <input
-                        id="signup-confirm"
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        value={confirmPassword}
-                        onChange={e => setConfirmPassword(e.target.value)}
-                        placeholder="Re-enter your password"
-                        required
-                        autoComplete="new-password"
-                        minLength={6}
-                        className="w-full pl-11 pr-12 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors p-0.5"
-                        aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-                      >
-                        {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
-                    </div>
-                    {confirmPassword && password !== confirmPassword && (
-                      <p className="mt-1.5 text-xs text-red-500 font-medium">Passwords do not match</p>
-                    )}
-                  </div>
-
-                  {/* Country Selector */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Country</label>
-                    <div className="relative group">
-                      <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
-                      <input
-                        type="text"
-                        value={selectedCountry ? `${selectedCountry.flag} ${selectedCountry.name}` : countrySearch}
-                        onChange={e => {
-                          setSelectedCountry(null);
-                          setCountrySearch(e.target.value);
-                        }}
-                        onFocus={() => {
-                          if (selectedCountry) {
-                            setSelectedCountry(null);
-                            setCountrySearch('');
-                          }
-                        }}
-                        placeholder="Search your country..."
-                        required={!selectedCountry}
-                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
-                      />
-                    </div>
-                    {/* Country dropdown */}
-                    {countrySearch && !selectedCountry && (
-                      <div className="mt-1.5 max-h-44 overflow-y-auto rounded-xl border-2 border-[var(--border-card)] bg-[var(--bg-card)] shadow-xl custom-scrollbar">
-                        {filteredCountries.length > 0 ? filteredCountries.map(c => (
-                          <button
-                            key={c.code}
-                            type="button"
-                            onClick={() => {
-                              setSelectedCountry({ code: c.code, name: c.name, flag: c.flag });
-                              setCountrySearch('');
-                            }}
-                            className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-jade-50 dark:hover:bg-jade-900/20 transition-colors"
-                          >
-                            <span className="text-lg leading-none">{c.flag}</span>
-                            <span className="text-sm font-medium text-[var(--text-primary)]">{c.name}</span>
-                          </button>
-                        )) : (
-                          <div className="px-4 py-3 text-xs text-[var(--text-tertiary)] text-center">No countries found</div>
-                        )}
-                      </div>
-                    )}
-                    {selectedCountry && (
-                      <div className="mt-1.5 flex items-center gap-2 px-3 py-2 bg-jade-50 dark:bg-jade-900/20 rounded-lg border border-jade-200 dark:border-jade-800">
-                        <span className="text-base">{selectedCountry.flag}</span>
-                        <span className="text-xs font-semibold text-jade-700 dark:text-jade-400">{selectedCountry.name}</span>
-                        <button
-                          type="button"
-                          onClick={() => { setSelectedCountry(null); setCountrySearch(''); }}
-                          className="ml-auto text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Farm Type */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Farm type</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {FARM_TYPES.map(({ value, label, icon: Icon, desc }) => (
-                        <button
-                          key={value}
-                          type="button"
-                          onClick={() => setFarmType(value)}
-                          className={`flex flex-col items-center gap-1 py-3 px-2 rounded-xl border-2 transition-all text-center ${
-                            farmType === value
-                              ? 'border-jade-500 bg-jade-50 dark:bg-jade-900/20 shadow-md shadow-jade-500/10'
-                              : 'border-[var(--border-card)] bg-[var(--bg-content)] hover:border-jade-300 dark:hover:border-jade-700'
-                          }`}
-                        >
-                          <Icon className={`w-5 h-5 ${farmType === value ? 'text-jade-500' : 'text-[var(--text-tertiary)]'}`} />
-                          <span className={`text-[11px] font-bold leading-tight ${farmType === value ? 'text-jade-700 dark:text-jade-400' : 'text-[var(--text-primary)]'}`}>{label}</span>
-                          <span className="text-[9px] text-[var(--text-tertiary)] leading-tight hidden sm:block">{desc}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Sign Up Button */}
-                  <button
-                    type="submit"
-                    disabled={isLoading || !selectedCountry || password !== confirmPassword || confirmPassword.length < 6}
-                    className="w-full bg-jade-800 dark:bg-sunburst-500 hover:bg-jade-700 dark:hover:bg-sunburst-400 text-white dark:text-jade-950 py-3.5 font-bold text-sm rounded-xl transition-all shadow-lg shadow-jade-500/15 dark:shadow-sunburst-500/20 hover:shadow-jade-500/25 dark:hover:shadow-sunburst-500/30 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                    ) : (
-                      <>
-                        <span>Create Account</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                </form>
+                <SignUpForm
+                  name={name}
+                  setName={setName}
+                  farmName={farmName}
+                  setFarmName={setFarmName}
+                  email={email}
+                  setEmail={setEmail}
+                  phoneNumber={phoneNumber}
+                  setPhoneNumber={setPhoneNumber}
+                  location={location}
+                  setLocation={setLocation}
+                  password={password}
+                  setPassword={setPassword}
+                  confirmPassword={confirmPassword}
+                  setConfirmPassword={setConfirmPassword}
+                  showPassword={showPassword}
+                  setShowPassword={setShowPassword}
+                  showConfirmPassword={showConfirmPassword}
+                  setShowConfirmPassword={setShowConfirmPassword}
+                  selectedCountry={selectedCountry}
+                  countrySearch={countrySearch}
+                  onCountrySelect={setSelectedCountry}
+                  onCountrySearchChange={setCountrySearch}
+                  farmType={farmType}
+                  setFarmType={setFarmType}
+                  isLoading={isLoading}
+                  onSubmit={handleSignUp}
+                />
               )}
 
-              {/* Mode Switcher */}
               <div className="mt-6 pt-5 border-t border-[var(--border-card)]">
                 <p className="text-center text-[13px] text-[var(--text-secondary)] font-medium">
                   {mode === 'signin' ? "Don't have an account?" : 'Already have an account?'}{' '}
@@ -590,7 +275,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
             </div>
           </div>
 
-          {/* Footer strip */}
           <div className="shrink-0 px-8 py-3.5 border-t border-[var(--border-card)] bg-[var(--bg-card-inner)]">
             <div className="flex items-center justify-between text-[11px] text-[var(--text-tertiary)] font-medium">
               <div className="flex items-center gap-1.5">
