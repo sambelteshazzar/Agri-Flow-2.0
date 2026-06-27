@@ -1,8 +1,8 @@
 import type { AIProvider, CountryContext, FarmingAdviceResult } from './AIProvider';
-import { WeatherData, Crop, NewsArticle } from '../types';
+import { WeatherData, Crop, NewsArticle } from '../../types';
 
 import { GoogleGenAI, GenerateContentResponse, Type } from '@google/genai';
-import { COUNTRY_REGISTRY } from '../constants';
+import { COUNTRY_REGISTRY } from '../../constants';
 
 const VITE_GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 

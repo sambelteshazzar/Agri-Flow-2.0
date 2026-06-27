@@ -1,4 +1,4 @@
-import { WeatherData, Crop, NewsArticle, ClimateZone } from '../types';
+import { WeatherData, Crop, NewsArticle, ClimateZone } from '../../types';
 
 export interface CountryContext {
   countryCode: string;

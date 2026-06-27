@@ -1,8 +1,8 @@
 import { WeatherData, Crop, NewsArticle } from '../types';
 import { getAIProvider } from './ai';
-import type { CountryContext, FarmingAdviceResult } from './AIProvider';
+import type { CountryContext, FarmingAdviceResult } from './ai/AIProvider';
 
-export type { CountryContext } from './AIProvider';
+export type { CountryContext } from './ai/AIProvider';
 
 export const isAIConfigured = (): boolean => getAIProvider().isConfigured();
 
