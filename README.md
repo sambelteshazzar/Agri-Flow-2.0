@@ -110,6 +110,9 @@ npm run preview
 
 [https://github.com/sambelteshazzar/Agri-Flow-2.0](https://github.com/sambelteshazzar/Agri-Flow-2.0)
 
+##TEAM
+ATU DIPLOMA IN IT GROUP 8 MEMBERS(BERNICE, DONALD, CONFIDENCE, DANIEL, RICHMOND)
+
 ## License
 
 All rights reserved.

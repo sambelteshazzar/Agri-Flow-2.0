@@ -264,3 +264,4 @@ App-wide footer below main content.
 2. **First swap:** soil → terra, harvest → sunburst, field → crimson
 3. **Crimson rejected:** Red/crimson not professional enough for agricultural platform
 4. **Final:** jade (teal-green `#057855`) chosen as primary accent; terra reharmonized from warm brown to sage-green to complement jade; sunburst (warm gold `#F5B800`) retained unchanged.
+	modified:   components/CommunityHub.tsx
