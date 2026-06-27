@@ -13,8 +13,6 @@ interface RouteErrorBoundaryState {
 }
 
 export class RouteErrorBoundary extends Component<RouteErrorBoundaryProps, RouteErrorBoundaryState> {
-  declare props: RouteErrorBoundaryProps;
-
   constructor(props: RouteErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -26,7 +24,7 @@ export class RouteErrorBoundary extends Component<RouteErrorBoundaryProps, Route
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error(`[RouteErrorBoundary:${(error as any)?.routeName || 'unknown'}]`, error, errorInfo);
+    console.error(`[RouteErrorBoundary]`, error, errorInfo);
   }
 
   handleRetry() {
