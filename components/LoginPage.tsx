@@ -137,14 +137,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
 
         <div className="hidden md:flex w-[420px] shrink-0 relative overflow-hidden flex-col justify-between p-10 bg-jade-950">
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-50 animate-slow-zoom"
+            className="absolute inset-0 bg-cover bg-center opacity-75 animate-slow-zoom"
             style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1527847263472-aa5338d178b8?q=80&w=1200&auto=format&fit=crop")' }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-jade-950 via-jade-950/80 to-jade-950/40" />
-          <div className="absolute inset-0 bg-gradient-to-r from-jade-950/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-jade-950 via-jade-950/50 to-jade-950/20" />
 
-          <div className="absolute -top-20 -right-20 w-80 h-80 bg-jade-500/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-sunburst-500/8 rounded-full blur-3xl" />
+          <div className="absolute -top-20 -right-20 w-80 h-80 bg-jade-500/15 rounded-full blur-3xl" />
+          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-sunburst-500/12 rounded-full blur-3xl" />
 
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-8">

@@ -10,7 +10,7 @@ interface CropSuggestionProps {
 
 const CropSuggestion: React.FC<CropSuggestionProps> = ({ suggestion, onConfirm, onDismiss }) => {
   return (
-    <div className="fixed bottom-6 right-6 z-[60] max-w-sm w-full animate-fade-in-up">
+    <div className="fixed bottom-6 right-6 z-[55] max-w-sm w-full animate-fade-in-up">
       <div className="bg-terra-900 dark:bg-jade-950 border-l-4 border-sunburst-500 rounded-r-lg shadow-2xl p-4 text-white relative">
         <button
           onClick={onDismiss}
