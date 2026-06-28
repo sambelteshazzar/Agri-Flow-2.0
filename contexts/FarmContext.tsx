@@ -49,6 +49,7 @@ interface FarmContextType {
   suggestedUsers: SuggestedUser[];
   followedUserIds: string[];
   likedPostIds: string[];
+  bookmarkedPostIds: string[];
   
   // Poll Data
   pollData: PollOption[];
@@ -88,6 +89,7 @@ interface FarmContextType {
   getPostReplies: (postId: string) => Promise<ForumReply[]>;
   addPostReply: (postId: string, content: string) => Promise<ForumReply[]>;
   likePost: (postId: string) => Promise<void>;
+  toggleBookmark: (postId: string) => Promise<void>;
   sendChatMessage: (message: Omit<CommunityChatMessage, 'id' | 'timestamp'>) => Promise<void>;
   toggleFollowUser: (userId: string) => Promise<void>;
   
@@ -183,6 +185,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [followedUserIds, setFollowedUserIds] = useState<string[]>([]);
   const [likedPostIds, setLikedPostIds] = useState<string[]>([]);
+  const [bookmarkedPostIds, setBookmarkedPostIds] = useState<string[]>([]);
 
   // Poll State (Persisted in session)
   const [pollData, setPollData] = useState<PollOption[]>([
@@ -223,6 +226,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           loadedSuggested, 
           loadedFollows, 
           loadedLikes,
+          loadedBookmarks,
           loadedProfile,
           loadedLaborInput,
           loadedResourceResult
@@ -240,6 +244,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           CommunityService.getSuggestedUsers(),
           CommunityService.getFollowedUserIds(),
           CommunityService.getLikedPostIds(),
+          CommunityService.getBookmarkedPostIds(),
           db.getUserProfile(),
           db.getLaborInput(),
           db.getResourceResult()
@@ -258,6 +263,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setSuggestedUsers(loadedSuggested);
         setFollowedUserIds(loadedFollows);
         setLikedPostIds(loadedLikes);
+        setBookmarkedPostIds(loadedBookmarks);
         if (loadedLaborInput) setLaborInput(loadedLaborInput);
         if (loadedResourceResult) setResourceResult(loadedResourceResult);
         
@@ -787,6 +793,15 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
+  const toggleBookmark = useCallback(async (postId: string) => {
+    try {
+      const updated = await CommunityService.toggleBookmark(postId);
+      setBookmarkedPostIds(updated);
+    } catch (e) {
+      console.error("Failed to toggle bookmark", e);
+    }
+  }, []);
+
   const sendChatMessage = useCallback(async (message: Omit<CommunityChatMessage, 'id' | 'timestamp'>) => {
     try {
       const updated = await CommunityService.sendMessage(message);
@@ -826,14 +841,14 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     theme, toggleTheme, setThemeMode, currentView, navigate,
     toasts, showToast, removeToast,
     crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
-    stories, trends, suggestedUsers, followedUserIds, likedPostIds,
+    stories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
     pollData, pollVoted, handlePollVote,
     login, signIn, logout, updateUserProfile, resetApp,
     addCrop, deleteCrop, updateCropStatus, addLivestock, deleteLivestock, updateLivestockStatus, toggleTask, addTask, completeModule, 
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
-    addPost, deletePost, getPostReplies, addPostReply, likePost,
+    addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
     laborInput, resourceResult, saveLaborInput: saveLaborInputAction, saveResourceResult: saveResourceResultAction
   }), [
@@ -841,14 +856,14 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     theme, toggleTheme, setThemeMode, currentView, navigate,
     toasts, showToast, removeToast,
     crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
-    stories, trends, suggestedUsers, followedUserIds, likedPostIds,
+    stories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
     pollData, pollVoted, handlePollVote,
     login, signIn, logout, updateUserProfile, resetApp,
     addCrop, deleteCrop, updateCropStatus, addLivestock, deleteLivestock, updateLivestockStatus, toggleTask, addTask, completeModule, 
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
-    addPost, deletePost, getPostReplies, addPostReply, likePost,
+    addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
     laborInput, resourceResult, saveLaborInputAction, saveResourceResultAction
   ]);

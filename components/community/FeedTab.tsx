@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Search, Plus, Image as ImageIcon, Camera, Heart, MessageCircle, Share2,
-  Send, MoreHorizontal, Award, Shield, Cloud, Bell, DollarSign, TrendingUp
+  Send, MoreHorizontal, Award, Shield, Cloud, Bell, DollarSign, TrendingUp, Bookmark
 } from 'lucide-react';
 import { UserProfile, ForumPost, ForumReply, Story } from '@/types';
 import { LocationAlerts } from './types';
@@ -20,11 +20,13 @@ interface FeedTabProps {
   replyInput: string;
   setReplyInput: (v: string) => void;
   likedPostIds: string[];
+  bookmarkedPostIds: string[];
   userProfile: UserProfile;
   isSignedIn: boolean;
   avatarError: boolean;
   setAvatarError: (v: boolean) => void;
   likePost: (id: string) => void;
+  toggleBookmark: (id: string) => void;
   addPostReply: (postId: string, content: string) => Promise<ForumReply[]>;
   setActivePostReplies: (replies: ForumReply[]) => void;
   showToast: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
@@ -39,9 +41,9 @@ interface FeedTabProps {
 const FeedTab: React.FC<FeedTabProps> = ({
   localStories, viewingStory, setViewingStory, setIsStoryModalOpen,
   posts, searchQuery, setSearchQuery, expandedPostId, setExpandedPostId,
-  activePostReplies, replyInput, setReplyInput, likedPostIds,
+  activePostReplies, replyInput, setReplyInput, likedPostIds, bookmarkedPostIds,
   userProfile, isSignedIn, avatarError, setAvatarError,
-  likePost, addPostReply, setActivePostReplies,
+  likePost, toggleBookmark, addPostReply, setActivePostReplies,
   showToast, deletePost, handleAuthRequiredAction,
   setIsPostModalOpen, getRelativeTime, locationAlerts,
   mobileRightSidebar,
@@ -148,11 +150,12 @@ const FeedTab: React.FC<FeedTabProps> = ({
                 )}
 
                 <div className="flex justify-between items-center text-xs text-[var(--text-secondary)] font-semibold organic-divider pt-4 mt-2">
-                   <div className="flex gap-4">
-                      <button onClick={() => likePost(post.id)} className={`flex items-center gap-1.5 hover:text-red-500 transition-colors ${likedPostIds.includes(post.id) ? 'text-red-500' : ''}`}><Heart className={`w-4 h-4 ${likedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> {post.likes} Likes</button>
-                      <button onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)} className="flex items-center gap-1.5 hover:text-blue-500 transition-colors"><MessageCircle className="w-4 h-4"/> {post.replies} Comments</button>
-                   </div>
-                    <button onClick={() => { const text = `${post.title} - ${post.content.slice(0, 100)}`; navigator.clipboard?.writeText(text).then(() => showToast("Link copied to clipboard!", "success")).catch(() => showToast("Share link copied!", "success")); }} className="flex items-center gap-1.5 hover:text-jade-500 transition-colors"><Share2 className="w-4 h-4"/> Share</button>
+                    <div className="flex gap-4">
+                       <button onClick={() => likePost(post.id)} className={`flex items-center gap-1.5 hover:text-red-500 transition-colors ${likedPostIds.includes(post.id) ? 'text-red-500' : ''}`}><Heart className={`w-4 h-4 ${likedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> {post.likes} Likes</button>
+                       <button onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)} className="flex items-center gap-1.5 hover:text-blue-500 transition-colors"><MessageCircle className="w-4 h-4"/> {post.replies} Comments</button>
+                       <button onClick={() => handleAuthRequiredAction(() => toggleBookmark(post.id))} className={`flex items-center gap-1.5 hover:text-amber-500 transition-colors ${bookmarkedPostIds.includes(post.id) ? 'text-amber-600' : ''}`}><Bookmark className={`w-4 h-4 ${bookmarkedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> Save</button>
+                    </div>
+                     <button onClick={() => { const text = `${post.title} - ${post.content.slice(0, 100)}`; navigator.clipboard?.writeText(text).then(() => showToast("Link copied to clipboard!", "success")).catch(() => showToast("Share link copied!", "success")); }} className="flex items-center gap-1.5 hover:text-jade-500 transition-colors"><Share2 className="w-4 h-4"/> Share</button>
                 </div>
              </div>
              

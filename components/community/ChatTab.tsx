@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Send, Hash } from 'lucide-react';
 import { ChatMessage, UserProfile } from '@/types';
+
+const TYPING_NAMES = ['Adebayo F.', 'Chioma M.', 'Kwame A.', 'Fatima Z.', 'Jean-Pierre D.'];
 
 interface ChatTabProps {
   channels: { id: string; name: string; desc: string; icon: React.ElementType }[];
@@ -14,11 +16,44 @@ interface ChatTabProps {
   chatEndRef: React.RefObject<HTMLDivElement>;
 }
 
+const TypingIndicator: React.FC<{ name: string }> = ({ name }) => (
+  <div className="flex items-center gap-2 px-2 py-1.5 animate-fade-in-up">
+    <span className="text-[10px] font-semibold text-[var(--text-tertiary)]">{name} is typing</span>
+    <span className="flex gap-0.5">
+      <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-tertiary)] animate-bounce" style={{ animationDelay: '0ms' }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-tertiary)] animate-bounce" style={{ animationDelay: '150ms' }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-tertiary)] animate-bounce" style={{ animationDelay: '300ms' }} />
+    </span>
+  </div>
+);
+
 const ChatTab: React.FC<ChatTabProps> = ({
   channels, activeChannel, setActiveChannel,
   chatMessages, chatInput, setChatInput,
   userProfile, onSendChatMessage, chatEndRef,
-}) => (
+}) => {
+  const [typingUser, setTypingUser] = useState<string | null>(null);
+
+  const triggerTyping = useCallback(() => {
+    const name = TYPING_NAMES[Math.floor(Math.random() * TYPING_NAMES.length)];
+    setTypingUser(name);
+    const delay = 1500 + Math.random() * 2000;
+    const timer = setTimeout(() => setTypingUser(null), delay);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (chatInput.trim()) {
+      onSendChatMessage({ channelId: activeChannel, author: userProfile.name, text: chatInput, isMe: true, avatar: userProfile.avatar });
+      setChatInput('');
+      const cleanup = triggerTyping();
+      setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+      return cleanup;
+    }
+  };
+
+  return (
   <div className="card-surface h-full flex flex-col overflow-hidden mt-4 lg:mt-0">
     <div className="flex h-full">
       <div className="w-20 lg:w-64 border-r border-[var(--border-card)] bg-[var(--bg-content)] flex flex-col">
@@ -47,15 +82,17 @@ const ChatTab: React.FC<ChatTabProps> = ({
               </div>
             </div>
           ))}
+          {typingUser && <TypingIndicator name={typingUser} />}
           <div ref={chatEndRef}></div>
         </div>
-        <form onSubmit={(e) => { e.preventDefault(); if(chatInput.trim()) { onSendChatMessage({ channelId: activeChannel, author: userProfile.name, text: chatInput, isMe: true, avatar: userProfile.avatar }); setChatInput(''); setTimeout(() => chatEndRef.current?.scrollIntoView(), 100); } }} className="p-3 bg-[var(--bg-card)] border-t border-[var(--border-card)] flex gap-2">
+        <form onSubmit={handleSubmit} className="p-3 bg-[var(--bg-card)] border-t border-[var(--border-card)] flex gap-2">
           <input value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Type a message..." className="flex-1 bg-[var(--bg-content)] border-transparent focus:border-sunburst-500 focus:bg-[var(--bg-card)] rounded-xl px-4 py-2.5 text-sm transition-all focus:outline-none" />
           <button type="submit" aria-label="Send message" className="bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 p-2.5 rounded-xl shadow-md hover:scale-105 transition-transform"><Send className="w-5 h-5" aria-hidden="true"/></button>
         </form>
       </div>
     </div>
   </div>
-);
+  );
+};
 
 export default ChatTab;

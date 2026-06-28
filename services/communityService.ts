@@ -148,6 +148,20 @@ export class CommunityService {
     };
   }
 
+  static async getBookmarkedPostIds(): Promise<string[]> {
+    return await db.getBookmarkedPostIds();
+  }
+
+  static async toggleBookmark(postId: string): Promise<string[]> {
+    const bookmarkedIds = await db.getBookmarkedPostIds();
+    const isBookmarked = bookmarkedIds.includes(postId);
+    const updated = isBookmarked
+      ? bookmarkedIds.filter(id => id !== postId)
+      : [...bookmarkedIds, postId];
+    await db.saveBookmarkedPostIds(updated);
+    return updated;
+  }
+
   // --- Chat ---
   static async getChatMessages(channelId?: string): Promise<CommunityChatMessage[]> {
     const allMessages = await db.getChatMessages();

@@ -26,8 +26,8 @@ import CreateStoryModal from './community/CreateStoryModal';
 const CommunityHub: React.FC = () => {
   const { 
     userProfile, isSignedIn,
-    listings, posts, chatMessages, stories: contextStories, trends, suggestedUsers, followedUserIds, likedPostIds,
-    addListing, markListingSold, addPost, deletePost, getPostReplies, addPostReply, likePost,
+    listings, posts, chatMessages, stories: contextStories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
+    addListing, markListingSold, addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser,
     showToast, weather, alerts, marketPrices,
     pollData, pollVoted, handlePollVote,
@@ -418,11 +418,13 @@ const CommunityHub: React.FC = () => {
                   replyInput={replyInput}
                   setReplyInput={setReplyInput}
                   likedPostIds={likedPostIds}
+                  bookmarkedPostIds={bookmarkedPostIds}
                   userProfile={userProfile}
                   isSignedIn={isSignedIn}
                   avatarError={avatarError}
                   setAvatarError={setAvatarError}
                   likePost={likePost}
+                  toggleBookmark={toggleBookmark}
                   addPostReply={addPostReply}
                   setActivePostReplies={setActivePostReplies}
                   showToast={showToast}

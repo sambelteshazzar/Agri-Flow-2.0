@@ -17,6 +17,7 @@ export const DB_KEYS = {
   CHAT: 'agriflow_chat',
   FOLLOWED_USERS: 'agriflow_followed_users',
   LIKED_POSTS: 'agriflow_liked_posts',
+  BOOKMARKED_POSTS: 'agriflow_bookmarked_posts',
   USER_PROFILE: 'agriflow_user_profile',
   LABOR_INPUT: 'agriflow_labor_input',
   RESOURCE_RESULT: 'agriflow_resource_result',
@@ -214,6 +215,14 @@ class PersistenceService {
 
   async saveLikedPostIds(ids: string[]): Promise<void> {
     this.setItem(DB_KEYS.LIKED_POSTS, ids);
+  }
+
+  async getBookmarkedPostIds(): Promise<string[]> {
+    return this.getItem<string[]>(DB_KEYS.BOOKMARKED_POSTS, []);
+  }
+
+  async saveBookmarkedPostIds(ids: string[]): Promise<void> {
+    this.setItem(DB_KEYS.BOOKMARKED_POSTS, ids);
   }
 
   async getFollowedUserIds(): Promise<string[]> {
