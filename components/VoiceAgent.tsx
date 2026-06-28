@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, X, Activity, Zap, Command, MicOff } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
-import { isAIConfigured, getLiveAIClient } from '../services/geminiService';
+import { isAIConfigured, hasLiveVoice, getLiveAIClient } from '../services/geminiService';
 import { LiveServerMessage, Modality, Type, FunctionDeclaration } from "@google/genai";
 import { NavigationTab } from '../types';
 
@@ -131,9 +131,19 @@ const VoiceAgent: React.FC = () => {
       return;
     }
 
+    if (!hasLiveVoice()) {
+      showToast("Live voice requires a Gemini API key", "error");
+      return;
+    }
+
     setIsConnecting(true);
     try {
       const ai = getLiveAIClient();
+      if (!ai) {
+        showToast("Live voice unavailable with current provider", "error");
+        setIsConnecting(false);
+        return;
+      }
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContextClass({ sampleRate: 16000 }); // Try 16k, but browser might override
       await ctx.resume(); // Ensure context is running
@@ -371,12 +381,15 @@ const VoiceAgent: React.FC = () => {
       {/* Toggle Button */}
       <button 
         onClick={isActive ? disconnect : connect}
-        disabled={isConnecting}
+        disabled={isConnecting || !hasLiveVoice()}
+        title={!hasLiveVoice() ? 'Voice agent requires Gemini API key' : undefined}
         className={`
           w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all active:scale-95 border-4
-          ${isActive 
-            ? 'bg-red-500 hover:bg-red-600 border-red-400 text-white animate-pulse' 
-            : 'bg-jade-950 dark:bg-white text-white dark:text-jade-950 border-jade-700 dark:border-terra-200 hover:scale-110'}
+          ${!hasLiveVoice() 
+            ? 'bg-gray-400 dark:bg-gray-700 text-gray-600 dark:text-gray-500 border-gray-300 dark:border-gray-600 cursor-not-allowed opacity-50'
+            : isActive 
+              ? 'bg-red-500 hover:bg-red-600 border-red-400 text-white animate-pulse' 
+              : 'bg-jade-950 dark:bg-white text-white dark:text-jade-950 border-jade-700 dark:border-terra-200 hover:scale-110'}
         `}
       >
         {isConnecting ? (

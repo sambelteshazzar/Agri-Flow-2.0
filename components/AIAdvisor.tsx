@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Camera, Send, Loader2, Sparkles, Info, BrainCircuit, ExternalLink, Globe, X, Phone, Mic, MicOff, Activity } from 'lucide-react';
-import { getFarmingAdvice, analyzeCropImage, CountryContext, isAIConfigured, getLiveAIClient } from '../services/geminiService';
+import { getFarmingAdvice, analyzeCropImage, CountryContext, isAIConfigured, hasLiveVoice, getLiveAIClient } from '../services/geminiService';
 import { ChatMessage } from '../types';
 import { useFarm } from '../contexts/FarmContext';
 import { LiveServerMessage, Modality } from "@google/genai";
@@ -95,9 +95,19 @@ const AIAdvisor: React.FC = () => {
       return;
     }
 
+    if (!hasLiveVoice()) {
+      showToast("Live voice requires a Gemini API key", "error");
+      return;
+    }
+
     setIsConnectingCall(true);
     try {
       const ai = getLiveAIClient();
+      if (!ai) {
+        showToast("Live voice unavailable with current provider", "error");
+        setIsConnectingCall(false);
+        return;
+      }
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContextClass({ sampleRate: 16000 });
       await ctx.resume();
@@ -371,14 +381,15 @@ const AIAdvisor: React.FC = () => {
         </div>
         <button 
           onClick={isCallActive ? endCall : startCall}
-          disabled={isConnectingCall}
+          disabled={isConnectingCall || !hasLiveVoice()}
+          title={!hasLiveVoice() ? 'Live voice requires Gemini API key' : undefined}
           className={`
             flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs transition-all shadow-md
-            ${isConnectingCall ? 'bg-terra-100 text-terra-500 dark:bg-jade-800 dark:text-jade-400' : 'bg-jade-800 dark:bg-sunburst-100 text-white dark:text-jade-900 hover:bg-jade-700 dark:hover:bg-sunburst-200'}
+            ${!hasLiveVoice() ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed' : isConnectingCall ? 'bg-terra-100 text-terra-500 dark:bg-jade-800 dark:text-jade-400' : 'bg-jade-800 dark:bg-sunburst-100 text-white dark:text-jade-900 hover:bg-jade-700 dark:hover:bg-sunburst-200'}
           `}
         >
           {isConnectingCall ? <Loader2 className="w-4 h-4 animate-spin"/> : <Phone className="w-4 h-4" />}
-          {isConnectingCall ? 'Connecting...' : 'Voice Call'}
+          {isConnectingCall ? 'Connecting...' : !hasLiveVoice() ? 'Voice (Gemini)' : 'Voice Call'}
         </button>
       </div>
 

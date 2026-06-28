@@ -63,6 +63,7 @@ const CommunityHub: React.FC = () => {
   const [newAnswer, setNewAnswer] = useState('');
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
   const [qaSearchQuery, setQaSearchQuery] = useState('');
+  const [qaCategoryFilter, setQaCategoryFilter] = useState('ALL');
   const [challengeProgress, setChallengeProgress] = useState<Record<string, number>>({});
   
   const [avatarError, setAvatarError] = useState(false);
@@ -100,14 +101,20 @@ const CommunityHub: React.FC = () => {
   }, [alerts, marketPrices]);
 
   const filteredQuestions = useMemo(() => {
-    if (!qaSearchQuery) return questions;
-    const q = qaSearchQuery.toLowerCase();
-    return questions.filter(quest => 
-      quest.title.toLowerCase().includes(q) || 
-      quest.body.toLowerCase().includes(q) || 
-      quest.category.toLowerCase().includes(q)
-    );
-  }, [questions, qaSearchQuery]);
+    let result = questions;
+    if (qaCategoryFilter !== 'ALL') {
+      result = result.filter(q => q.category === qaCategoryFilter);
+    }
+    if (qaSearchQuery) {
+      const q = qaSearchQuery.toLowerCase();
+      result = result.filter(quest => 
+        quest.title.toLowerCase().includes(q) || 
+        quest.body.toLowerCase().includes(q) || 
+        quest.category.toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [questions, qaSearchQuery, qaCategoryFilter]);
 
   const prevStoriesRef = useRef<Story[]>([]);
   useEffect(() => {
@@ -467,6 +474,8 @@ const CommunityHub: React.FC = () => {
                   userProfile={userProfile}
                   qaSearchQuery={qaSearchQuery}
                   setQaSearchQuery={setQaSearchQuery}
+                  qaCategoryFilter={qaCategoryFilter}
+                  setQaCategoryFilter={setQaCategoryFilter}
                   onLikeQuestion={handleLikeQuestion}
                   onAcceptAnswer={handleAcceptAnswer}
                   onAnswerSubmit={handleAnswerSubmit}

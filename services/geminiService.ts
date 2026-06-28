@@ -1,10 +1,12 @@
 import { WeatherData, Crop, NewsArticle } from '../types';
-import { getAIProvider } from './ai';
+import { getAIProvider, hasLiveVoice as _hasLiveVoice } from './ai';
 import type { CountryContext, FarmingAdviceResult } from './ai/AIProvider';
 
 export type { CountryContext } from './ai/AIProvider';
 
 export const isAIConfigured = (): boolean => getAIProvider().isConfigured();
+
+export const hasLiveVoice = _hasLiveVoice;
 
 export const getFarmingAdvice = async (prompt: string, countryCtx?: CountryContext): Promise<FarmingAdviceResult> => {
   return getAIProvider().getFarmingAdvice(prompt, countryCtx);

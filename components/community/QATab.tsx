@@ -1,7 +1,17 @@
 import React from 'react';
-import { Search, HelpCircle, ThumbsUp, CheckCircle, MessageCircle, Shield, Sparkles } from 'lucide-react';
+import { Search, HelpCircle, ThumbsUp, CheckCircle, MessageCircle, Shield, Sparkles, Leaf, Bug, Wheat, Wrench, Droplets, TrendingUp, Tag } from 'lucide-react';
 import { UserProfile } from '@/types';
 import { Question, Answer } from './types';
+
+const QA_CATEGORIES = [
+  { key: 'ALL', label: 'All', icon: Tag },
+  { key: 'Crops', label: 'Crops', icon: Wheat },
+  { key: 'Pests', label: 'Pests', icon: Bug },
+  { key: 'Livestock', label: 'Livestock', icon: Leaf },
+  { key: 'Equipment', label: 'Equipment', icon: Wrench },
+  { key: 'Soil', label: 'Soil & Fertilizer', icon: Droplets },
+  { key: 'Market', label: 'Market & Prices', icon: TrendingUp },
+];
 
 interface QATabProps {
   questions: Question[];
@@ -14,6 +24,8 @@ interface QATabProps {
   userProfile: UserProfile;
   qaSearchQuery: string;
   setQaSearchQuery: (q: string) => void;
+  qaCategoryFilter: string;
+  setQaCategoryFilter: (c: string) => void;
   onLikeQuestion: (id: string) => void;
   onAcceptAnswer: (questionId: string, answerId: string) => void;
   onAnswerSubmit: (questionId: string) => void;
@@ -28,6 +40,7 @@ const QATab: React.FC<QATabProps> = ({
   newAnswer, setNewAnswer,
   isSignedIn, userProfile,
   qaSearchQuery, setQaSearchQuery,
+  qaCategoryFilter, setQaCategoryFilter,
   onLikeQuestion, onAcceptAnswer, onAnswerSubmit,
   setIsQuestionModalOpen, handleAuthRequiredAction,
   getRelativeTime,
@@ -45,6 +58,30 @@ const QATab: React.FC<QATabProps> = ({
         </div>
         <button onClick={() => handleAuthRequiredAction(() => setIsQuestionModalOpen(true))} className="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-xl font-semibold text-xs shadow-lg flex items-center gap-2 transition-transform active:scale-95 shrink-0"><HelpCircle className="w-4 h-4"/> Ask</button>
       </div>
+    </div>
+
+    <div className="flex gap-3 px-1 overflow-x-auto no-scrollbar">
+      {QA_CATEGORIES.map(cat => {
+        const Icon = cat.icon;
+        const count = cat.key === 'ALL'
+          ? questions.length
+          : questions.filter(q => q.category === cat.key).length;
+        return (
+          <button
+            key={cat.key}
+            onClick={() => setQaCategoryFilter(cat.key)}
+            className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-all ${
+              qaCategoryFilter === cat.key
+                ? 'bg-amber-600 text-white shadow-sm'
+                : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border-card)] hover:border-amber-400'
+            }`}
+          >
+            <Icon className="w-3.5 h-3.5" />
+            {cat.label}
+            {count > 0 && <span className={`ml-0.5 text-[10px] ${qaCategoryFilter === cat.key ? 'text-amber-200' : 'text-[var(--text-tertiary)]'}`}>({count})</span>}
+          </button>
+        );
+      })}
     </div>
 
     <div className="flex gap-3 px-1 overflow-x-auto no-scrollbar">
@@ -137,6 +174,12 @@ const QATab: React.FC<QATabProps> = ({
         </div>
       )}
     </div>
+
+    {(qaSearchQuery || qaCategoryFilter !== 'ALL') && questions.length > 0 && (
+      <p className="text-center text-[10px] text-[var(--text-tertiary)] mt-2 font-semibold">
+        Showing {filteredQuestions.length} of {questions.length} questions
+      </p>
+    )}
   </div>
 );
 
