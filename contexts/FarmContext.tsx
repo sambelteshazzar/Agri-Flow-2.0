@@ -9,7 +9,7 @@ import { CommunityService } from '../services/communityService';
 import { WeatherService } from '../services/weatherService';
 import { fetchAgNews, CountryContext } from '../services/geminiService';
 import { db, DB_KEYS } from '../services/persistence';
-import { MOCK_WEATHER, CURRENT_USER, GUEST_USER, INITIAL_ALERTS, COUNTRY_REGISTRY } from '../constants';
+import { MOCK_WEATHER, GUEST_USER, COUNTRY_REGISTRY } from '../constants';
 import type { OnboardingData } from '../components/AuthModal';
 
 interface FarmContextType {
@@ -107,8 +107,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [alerts, setAlerts] = useState<SystemAlert[]>(() => {
     const saved = localStorage.getItem(DB_KEYS.ALERTS);
-    if (saved) { try { return JSON.parse(saved); } catch { return INITIAL_ALERTS; } }
-    return INITIAL_ALERTS;
+    if (saved) { try { return JSON.parse(saved); } catch { return []; } }
+    return [];
   });
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [laborInput, setLaborInput] = useState<LaborInput | null>(null);
@@ -374,7 +374,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       const newProfile: UserProfile = {
-        ...CURRENT_USER,
+        ...GUEST_USER,
         name: data.name,
         farmName: data.farmName,
         countryCode: countryCfg.code,

@@ -1,5 +1,6 @@
 
 import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult, Story, SocialTrend, SuggestedUser, SystemAlert } from '../types';
+import { GUEST_USER } from '../constants';
 
 // --- DATABASE KEYS ---
 export const DB_KEYS = {
@@ -243,7 +244,7 @@ class PersistenceService {
 
   // 11. USER PROFILE
   async getUserProfile(): Promise<UserProfile> {
-    return this.getItem<UserProfile>(DB_KEYS.USER_PROFILE, CURRENT_USER);
+    return this.getItem<UserProfile>(DB_KEYS.USER_PROFILE, GUEST_USER);
   }
 
   async saveUserProfile(profile: UserProfile): Promise<void> {
@@ -268,7 +269,7 @@ class PersistenceService {
 
   // 12. STORIES
   async getStories(): Promise<Story[]> {
-    return this.getItem<Story[]>(DB_KEYS.STORIES, INITIAL_STORIES);
+    return this.getItem<Story[]>(DB_KEYS.STORIES, []);
   }
 
   async saveStories(stories: Story[]): Promise<void> {
@@ -277,7 +278,7 @@ class PersistenceService {
 
   // 13. TRENDS
   async getTrends(): Promise<SocialTrend[]> {
-    return this.getItem<SocialTrend[]>(DB_KEYS.TRENDS, INITIAL_TRENDS);
+    return this.getItem<SocialTrend[]>(DB_KEYS.TRENDS, []);
   }
 
   async saveTrends(trends: SocialTrend[]): Promise<void> {
@@ -286,7 +287,7 @@ class PersistenceService {
 
   // 14. SUGGESTED USERS
   async getSuggestedUsers(): Promise<SuggestedUser[]> {
-    return this.getItem<SuggestedUser[]>(DB_KEYS.SUGGESTED_USERS, INITIAL_SUGGESTED_USERS);
+    return this.getItem<SuggestedUser[]>(DB_KEYS.SUGGESTED_USERS, []);
   }
 
   async saveSuggestedUsers(users: SuggestedUser[]): Promise<void> {
@@ -295,7 +296,7 @@ class PersistenceService {
 
   // 15. ALERTS
   async getAlerts(): Promise<SystemAlert[]> {
-    return this.getItem<SystemAlert[]>(DB_KEYS.ALERTS, INITIAL_ALERTS);
+    return this.getItem<SystemAlert[]>(DB_KEYS.ALERTS, []);
   }
 
   async saveAlerts(alerts: SystemAlert[]): Promise<void> {

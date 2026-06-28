@@ -321,7 +321,7 @@ const AIAdvisor: React.FC = () => {
     <div className="h-[calc(100vh-2rem)] flex flex-col md:h-[calc(100vh-3rem)] relative">
       
       {isCallActive && (
-        <div className="absolute inset-0 z-50 bg-jade-950/95 flex flex-col items-center justify-center animate-fade-in">
+        <div className="absolute inset-0 z-[55] bg-jade-950/95 flex flex-col items-center justify-center animate-fade-in">
            <div className="relative w-full max-w-md p-8 flex flex-col items-center text-center">
               <div className="mb-8 relative">
                  <div className="w-32 h-32 rounded-full bg-sunburst-500/20 flex items-center justify-center animate-pulse">

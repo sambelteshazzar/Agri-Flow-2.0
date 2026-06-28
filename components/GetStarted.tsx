@@ -72,7 +72,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       </div>
 
       {/* --- NAVIGATION (Sticky) --- */}
-      <nav className="sticky top-0 z-50 w-full p-6 flex justify-between items-center border-b border-white/5 bg-jade-950/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-[35] w-full p-6 flex justify-between items-center border-b border-white/5 bg-jade-950/80 backdrop-blur-md">
         <div className="flex items-center gap-3">
            <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-10 h-10 rounded-lg shadow-lg shadow-jade-500/20" />
            <div className="flex flex-col">

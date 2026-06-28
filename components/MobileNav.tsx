@@ -27,7 +27,7 @@ const secondaryTabs = [
 
 const MobileNav: React.FC<MobileNavProps> = ({ activeTab, onNavigate }) => {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/[0.97] dark:bg-jade-950/[0.97] backdrop-blur-xl border-t border-terra-200/50 dark:border-jade-800/50 safe-area-bottom shadow-[0_-4px_20px_rgba(58,39,25,0.06)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/[0.97] dark:bg-jade-950/[0.97] backdrop-blur-xl border-t border-terra-200/50 dark:border-jade-800/50 safe-area-bottom shadow-[0_-4px_20px_rgba(58,39,25,0.06)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
       <div className="flex flex-col">
         <div className="flex items-center justify-around h-[52px] px-0.5">
           {primaryTabs.map(tab => {
