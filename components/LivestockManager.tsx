@@ -249,7 +249,7 @@ const LivestockManager: React.FC = () => {
 
                  <div className="flex gap-2 border-t border-[var(--border-card)] pt-3">
                    <button onClick={() => openRecordsModal(animal.id)} className="flex-1 py-2 text-xs font-semibold bg-[var(--bg-content)] dark:bg-jade-800 hover:bg-terra-300 dark:hover:bg-jade-700 text-[var(--text-primary)] dark:text-[var(--text-primary)] rounded transition-colors border border-[var(--border-card)] dark:border-jade-600 focus:outline-none focus:ring-2 focus:ring-jade-400">Records</button>
-                   <button onClick={() => deleteLivestock(animal.id)} aria-label="Delete livestock entry" className="px-3 py-2 text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] hover:text-red-600 dark:hover:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border border-[var(--border-card)] focus:outline-none focus:ring-2 focus:ring-red-500"><Trash2 className="w-4 h-4" aria-hidden="true" /></button>
+                    <button onClick={() => { if (window.confirm(`Delete "${animal.name}"? This cannot be undone.`)) deleteLivestock(animal.id); }} aria-label="Delete livestock entry" className="px-3 py-2 text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] hover:text-red-600 dark:hover:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border border-[var(--border-card)] focus:outline-none focus:ring-2 focus:ring-red-500"><Trash2 className="w-4 h-4" aria-hidden="true" /></button>
                 </div>
               </div>
             </div>

@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Calculator, Droplets, Sprout, RefreshCw } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import type { ResourceResult } from '../types';
+import { formatCurrency, formatAreaLabel } from '../utils/localeFormat';
 
 const ResourceCalculator: React.FC = () => {
-  const { resourceResult: savedResourceResult, saveResourceResult } = useFarm();
+  const { resourceResult: savedResourceResult, saveResourceResult, userProfile } = useFarm();
+
+  const areaUnit = userProfile.areaUnit || 'ha';
+  const currencyCode = userProfile.currencyCode || 'USD';
+  const currencySymbol = userProfile.currencySymbol || '$';
 
   const [mode, setMode] = useState<'FERTILIZER' | 'IRRIGATION'>(savedResourceResult?.mode ?? 'FERTILIZER');
 
@@ -34,7 +39,7 @@ const ResourceCalculator: React.FC = () => {
   };
 
   const calculateIrrigation = () => {
-    const areaM2 = area * 10000;
+    const areaM2 = areaUnit === 'acres' ? area * 4046.86 : area * 10000;
     const demandMm = et0 * cropFactor;
     const grossDemandMm = demandMm / efficiency;
     const liters = Math.round(grossDemandMm * areaM2);
@@ -100,8 +105,8 @@ const ResourceCalculator: React.FC = () => {
                 <div>
                    <label htmlFor="fertArea" className={labelCls}>Field Area</label>
                    <div className="flex items-center">
-                     <input id="fertArea" type="number" value={area} onChange={e => setArea(Number(e.target.value))} className={inputCls}/>
-                     <span className={unitCls} aria-hidden="true">ha</span>
+                      <input id="fertArea" type="number" value={area} onChange={e => setArea(Number(e.target.value))} className={inputCls}/>
+                      <span className={unitCls} aria-hidden="true">{formatAreaLabel(areaUnit as any)}</span>
                    </div>
                 </div>
                  <button onClick={calculateFertilizer} className="w-full bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 py-4 font-semibold hover:bg-jade-700 dark:hover:bg-sunburst-400 mt-4 focus:outline-none focus:ring-2 focus:ring-sunburst-500 focus:ring-offset-2 rounded transition-colors shadow-lg">Calculate Requirements</button>
@@ -135,8 +140,8 @@ const ResourceCalculator: React.FC = () => {
                 <div>
                    <label htmlFor="irrArea" className={labelCls}>Field Area</label>
                    <div className="flex items-center">
-                     <input id="irrArea" type="number" value={area} onChange={e => setArea(Number(e.target.value))} className={inputCls}/>
-                     <span className={unitCls} aria-hidden="true">ha</span>
+                      <input id="irrArea" type="number" value={area} onChange={e => setArea(Number(e.target.value))} className={inputCls}/>
+                      <span className={unitCls} aria-hidden="true">{formatAreaLabel(areaUnit as any)}</span>
                    </div>
                 </div>
                 <button onClick={calculateIrrigation} className="w-full bg-jade-700 dark:bg-jade-600 text-white py-4 font-semibold hover:bg-jade-600 dark:hover:bg-jade-500 mt-4 focus:outline-none focus:ring-2 focus:ring-jade-400 focus:ring-offset-2 rounded transition-colors shadow-lg">Calculate Water Needs</button>
@@ -156,7 +161,7 @@ const ResourceCalculator: React.FC = () => {
                   <div className="text-sunburst-500 text-xl font-bold mb-6">Kilograms Needed</div>
                   <div className="card-inner p-4 rounded text-left">
                     <p className="text-xs text-jade-300 font-semibold mb-2">Cost Estimation</p>
-                    <p className="text-sm">At current market rates (~$1.20/kg), this application will cost approximately <span className="text-white font-bold">${(fertResult * 1.2).toFixed(2)}</span>.</p>
+                    <p className="text-sm">At current market rates (~{formatCurrency(1.2, currencyCode, currencySymbol)}/kg), this application will cost approximately <span className="text-white font-bold">{formatCurrency(fertResult * 1.2, currencyCode, currencySymbol)}</span>.</p>
                   </div>
                 </>
               ) : (

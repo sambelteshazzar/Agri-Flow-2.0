@@ -1,0 +1,29 @@
+{
+  "name": "AgriFlow - Smart Farming",
+  "short_name": "AgriFlow",
+  "description": "AI-powered agricultural management platform for smallholder farmers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0C1810",
+  "theme_color": "#057855",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "categories": ["agriculture", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/logo-AgriFlow.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-AgriFlow.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

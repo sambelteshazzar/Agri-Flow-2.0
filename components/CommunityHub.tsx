@@ -373,8 +373,8 @@ const CommunityHub: React.FC = () => {
               </div>
               <div className="space-y-4">
                  {[
-                   { id: 1, title: 'Soil Regeneration Webinar', date: 'OCT 24', time: '2:00 PM EST', type: 'Online' },
-                   { id: 2, title: 'Regional Machinery Auction', date: 'NOV 02', time: '9:00 AM CST', type: 'In-Person' },
+                    { id: 1, title: 'Soil Regeneration Webinar', date: 'OCT 24', time: '2:00 PM WAT', type: 'Online' },
+                    { id: 2, title: 'Regional Machinery Auction', date: 'NOV 02', time: '9:00 AM WAT', type: 'In-Person' },
                    { id: 3, title: 'Co-op Annual Meeting', date: 'NOV 15', time: '10:00 AM', type: 'Hybrid' },
                  ].map(evt => (
                      <div key={evt.id} className="flex gap-3 group cursor-pointer" onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(evt.title + ' agriculture farming 2026')}`, '_blank', 'noopener,noreferrer')}>

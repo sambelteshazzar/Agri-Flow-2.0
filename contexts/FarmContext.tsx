@@ -106,7 +106,11 @@ const FarmContext = createContext<FarmContextType | undefined>(undefined);
 export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // --- State ---
   const [userProfile, setUserProfile] = useState<UserProfile>(GUEST_USER);
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('agriflow_is_signed_in') === 'true';
+    } catch { return false; }
+  });
   const [alerts, setAlerts] = useState<SystemAlert[]>(() => {
     const saved = localStorage.getItem(DB_KEYS.ALERTS);
     if (saved) { try { return JSON.parse(saved); } catch { return []; } }
@@ -124,7 +128,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     [NavigationTab.NEWS]: 'news',
     [NavigationTab.AI_ADVISOR]: 'ai',
     [NavigationTab.CALCULATOR]: 'calculators',
-    [NavigationTab.EDUCATION]: 'learn',
+    [NavigationTab.EDUCATION]: 'education',
     [NavigationTab.COMMUNITY]: 'community',
     [NavigationTab.LABOR]: 'labor',
     [NavigationTab.SETTINGS]: 'settings',
@@ -279,7 +283,13 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     refreshLocation();
   }, []);
 
+  const VALID_TABS = new Set(Object.values(NavigationTab));
+
   const navigate = useCallback((view: NavigationTab) => {
+    if (!VALID_TABS.has(view)) {
+      console.warn(`[AgriFlow] Invalid navigation target: "${view}", defaulting to DASHBOARD`);
+      view = NavigationTab.DASHBOARD;
+    }
     setCurrentView(view);
     const hash = VIEW_HASH[view] || 'dashboard';
     if (window.location.hash.replace('#', '') !== hash) {
@@ -396,6 +406,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       };
       setUserProfile(newProfile);
       setIsSignedIn(true);
+      localStorage.setItem('agriflow_is_signed_in', 'true');
 
       setCrops(countryCfg.defaultCrops);
       setLivestock(countryCfg.defaultLivestock);
@@ -447,9 +458,11 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (savedProfile && savedProfile.name !== GUEST_USER.name) {
         setUserProfile(savedProfile);
         setIsSignedIn(true);
+        localStorage.setItem('agriflow_is_signed_in', 'true');
         showToast(`Welcome back, ${savedProfile.name}!`, 'success');
       } else {
         setIsSignedIn(true);
+        localStorage.setItem('agriflow_is_signed_in', 'true');
         showToast('Signed in. Set up your farm to get started.', 'info');
       }
     } catch (err) {
@@ -462,6 +475,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = useCallback(() => {
     Object.values(DB_KEYS).forEach(key => localStorage.removeItem(key));
     localStorage.removeItem('agriflow_theme');
+    localStorage.removeItem('agriflow_is_signed_in');
+    localStorage.removeItem('agriflow_has_started');
     setUserProfile(GUEST_USER);
     setIsSignedIn(false);
     setCrops([]);
@@ -511,9 +526,10 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [showToast]);
 
   const resetApp = useCallback(() => {
-    // Clear Local Storage Keys for App
     Object.values(DB_KEYS).forEach(key => localStorage.removeItem(key));
     localStorage.removeItem('agriflow_theme');
+    localStorage.removeItem('agriflow_is_signed_in');
+    localStorage.removeItem('agriflow_has_started');
     window.location.reload();
   }, []);
 

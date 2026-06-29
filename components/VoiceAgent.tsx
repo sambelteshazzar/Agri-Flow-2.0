@@ -27,10 +27,12 @@ const VoiceAgent: React.FC = () => {
   // Refs for Live Data (To avoid stale closures in the long-running connection)
   const weatherRef = useRef(weather);
   const marketPricesRef = useRef(marketPrices);
+  const userProfileRef = useRef(userProfile);
 
   // Sync Refs
   useEffect(() => { weatherRef.current = weather; }, [weather]);
   useEffect(() => { marketPricesRef.current = marketPrices; }, [marketPrices]);
+  useEffect(() => { userProfileRef.current = userProfile; }, [userProfile]);
 
   // --- TOOLS DEFINITION ---
   const navTool: FunctionDeclaration = {
@@ -221,8 +223,12 @@ const VoiceAgent: React.FC = () => {
                 try {
                   if (fc.name === 'navigateApp') {
                     const dest = (fc.args as any).destination;
-                    navigate(dest as NavigationTab);
-                    result = { output: `Navigated to ${dest}` };
+                    if (Object.values(NavigationTab).includes(dest as NavigationTab)) {
+                      navigate(dest as NavigationTab);
+                      result = { output: `Navigated to ${dest}` };
+                    } else {
+                      result = { output: `Unknown destination: ${dest}. Valid tabs: ${Object.values(NavigationTab).join(', ')}` };
+                    }
                   } else if (fc.name === 'setTheme') {
                     const mode = (fc.args as any).mode;
                     if (mode === 'light' || mode === 'dark' || mode === 'high-contrast') {
@@ -243,11 +249,13 @@ const VoiceAgent: React.FC = () => {
                     const prices = marketPricesRef.current;
                     if (commodity) {
                       const match = prices.find(p => p.cropName.toLowerCase().includes(commodity.toLowerCase()));
+                      const cs = userProfileRef.current?.currencySymbol || '$';
                       result = match 
-                        ? { output: `${match.cropName} is trading at $${match.price}. Trend is ${match.trend}.` } 
+                        ? { output: `${match.cropName} is trading at ${cs}${match.price}. Trend is ${match.trend}.` } 
                         : { output: `No data found for ${commodity}.` };
                     } else {
-                      const top = prices.slice(0, 3).map(p => `${p.cropName}: $${p.price}`).join(', ');
+                      const cs = userProfileRef.current?.currencySymbol || '$';
+                      const top = prices.slice(0, 3).map(p => `${p.cropName}: ${cs}${p.price}`).join(', ');
                       result = { output: `Market Snapshot: ${top}` };
                     }
                   }

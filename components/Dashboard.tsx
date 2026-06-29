@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { CloudRain, Wind, Droplets, Thermometer, AlertTriangle, Calendar, CheckSquare, Square, MapPin, Activity, ShieldCheck, TrendingDown, TrendingUp, Sparkles, Loader2, Navigation, MapPinOff, Globe, X, Sprout, Beef, ArrowUpRight, ArrowDownRight, Minus, Clock, BarChart3, Leaf, Zap, Sun, Cloud, CloudDrizzle } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import { generateDailyTasks, getLiveAgriIntel, CountryContext } from '../services/geminiService';
+import { formatArea } from '../utils/localeFormat';
 
 const Dashboard: React.FC = () => {
   const { tasks, toggleTask, crops, addTask, livestock, marketPrices, userLocation, weather, alerts, userProfile } = useFarm();
@@ -445,7 +446,7 @@ const Dashboard: React.FC = () => {
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold text-primary-dynamic truncate">{crop.name}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-secondary-dynamic">{crop.area} ac</span>
+                      <span className="text-xs text-secondary-dynamic">{formatArea(crop.area, userProfile.areaUnit || 'ha')}</span>
                       <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-lg ${style} border`}>{crop.status}</span>
                     </div>
                   </div>

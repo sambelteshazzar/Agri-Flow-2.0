@@ -67,6 +67,7 @@ const AppContent: React.FC = () => {
   const mainRef = useRef<HTMLElement>(null);
   const scrollPositions = useRef<Record<string, number>>({});
   const prevViewRef = useRef<NavigationTab>(currentView);
+  const notifRef = useRef<HTMLDivElement>(null);
 
   const unreadAlerts = alerts.length;
 
@@ -84,6 +85,23 @@ const AppContent: React.FC = () => {
       case NavigationTab.LABOR: return 'Labor Planner';
       case NavigationTab.SETTINGS: return 'Settings';
       default: return 'AgriFlow';
+    }
+  };
+
+  const getPageSubtitle = (tab: NavigationTab) => {
+    switch(tab) {
+      case NavigationTab.AI_ADVISOR: return 'Ask questions, get advice';
+      case NavigationTab.CALCULATOR: return 'Optimize inputs & reduce waste';
+      case NavigationTab.COMMUNITY: return 'Connect with fellow farmers';
+      case NavigationTab.CROPS: return 'Monitor & manage your fields';
+      case NavigationTab.DASHBOARD: return 'Your farm at a glance';
+      case NavigationTab.EDUCATION: return 'Grow your knowledge';
+      case NavigationTab.LIVESTOCK: return 'Track your herd & records';
+      case NavigationTab.MARKET: return 'Prices, trends & opportunities';
+      case NavigationTab.NEWS: return 'Agricultural news & updates';
+      case NavigationTab.LABOR: return 'Plan tasks & workforce';
+      case NavigationTab.SETTINGS: return 'Profile & preferences';
+      default: return 'Smart farming assistant';
     }
   };
 
@@ -110,6 +128,17 @@ const AppContent: React.FC = () => {
       link.href = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${emoji}</text></svg>`;
     }
   }, [currentView]);
+
+  useEffect(() => {
+    if (!showNotifications) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showNotifications]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -168,6 +197,7 @@ const AppContent: React.FC = () => {
        setIsAuthModalOpen(false);
        setHasStarted(true);
        localStorage.setItem('agriflow_has_started', 'true');
+       navigate(NavigationTab.DASHBOARD);
      } catch (err) {
        console.error('[Auth] Login failed:', err);
      }
@@ -179,6 +209,7 @@ const AppContent: React.FC = () => {
        setIsAuthModalOpen(false);
        setHasStarted(true);
        localStorage.setItem('agriflow_has_started', 'true');
+       navigate(NavigationTab.DASHBOARD);
      } catch (err) {
        console.error('[Auth] Signup failed:', err);
      }
@@ -274,7 +305,7 @@ const AppContent: React.FC = () => {
                 {getPageTitle(currentView)}
               </h1>
               <p className="text-[10px] md:text-xs text-jade-600 dark:text-jade-400 font-medium hidden md:block">
-                Your farm at a glance
+                {getPageSubtitle(currentView)}
               </p>
             </div>
           </div>
@@ -303,7 +334,7 @@ const AppContent: React.FC = () => {
               </div>
 
               {/* Notifications Dropdown */}
-              <div className="relative">
+              <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
                   className="relative p-2 text-terra-400 dark:text-[#7BA896] hover:text-terra-600 dark:hover:text-[#E8F0EA] transition-colors focus:outline-none"
