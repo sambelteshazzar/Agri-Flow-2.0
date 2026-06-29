@@ -36,7 +36,7 @@ const CropLogModal: React.FC<CropLogModalProps> = ({ isOpen, onClose, selectedCr
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-full-modal flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
       <div className="bg-[var(--bg-card)] w-full max-w-md shadow-2xl rounded-md border border-jade-600">
         <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-sunburst-500">
           <h3 className="text-xl font-bold text-white flex items-center">

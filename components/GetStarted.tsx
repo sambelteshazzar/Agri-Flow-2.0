@@ -72,7 +72,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       </div>
 
       {/* --- NAVIGATION (Sticky) --- */}
-      <nav className="sticky top-0 z-[35] w-full p-6 flex justify-between items-center border-b border-white/5 bg-jade-950/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-landing-nav w-full p-6 flex justify-between items-center border-b border-white/5 bg-jade-950/80 backdrop-blur-md">
         <div className="flex items-center gap-3">
            <img src="/logo-AgriFlow.png" alt="AgriFlow" className="w-10 h-10 rounded-lg shadow-lg shadow-jade-500/20" />
            <div className="flex flex-col">
@@ -120,7 +120,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
                   console.log('GetStarted button clicked');
                   onStart();
                 }}
-                className="group px-10 py-5 bg-green-600 hover:bg-green-500 text-white font-bold text-lg rounded-full transition-all shadow-[0_0_30px_rgba(22,163,74,0.3)] hover:shadow-[0_0_50px_rgba(22,163,74,0.5)] flex items-center gap-3 w-full md:w-auto justify-center"
+                className="group px-10 py-5 bg-jade-600 hover:bg-jade-500 text-white font-bold text-lg rounded-full transition-all shadow-[0_0_30px_rgba(22,163,74,0.3)] hover:shadow-[0_0_50px_rgba(22,163,74,0.5)] flex items-center gap-3 w-full md:w-auto justify-center"
               >
                 Sign in
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

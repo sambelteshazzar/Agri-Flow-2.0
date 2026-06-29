@@ -78,7 +78,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose, onNavi
   const categories = [...new Set(filtered.map(c => c.category))];
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[15vh] animate-fade-in" onClick={onClose}>
+    <div className="fixed inset-0 z-command-palette flex items-start justify-center pt-[15vh] animate-fade-in" onClick={onClose}>
       <div className="absolute inset-0 bg-jade-950/60 backdrop-blur-sm" />
       <div
         className="relative w-full max-w-lg mx-4 bg-[var(--bg-card)] rounded-2xl shadow-2xl border border-[var(--border-card)] overflow-hidden animate-fade-in-up"

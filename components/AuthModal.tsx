@@ -96,7 +96,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
    const inputClasses = "w-full pl-12 pr-4 py-4 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl font-medium text-[var(--text-primary)] focus-visible:ring-2 focus-visible:ring-jade-500 focus-visible:ring-offset-2 transition-all placeholder:text-[var(--text-tertiary)]";
 
   return (
-       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-jade-950/90 backdrop-blur-lg animate-fade-in">
+       <div className="fixed inset-0 z-full-modal flex items-center justify-center bg-jade-950/90 backdrop-blur-lg animate-fade-in">
        <div className="w-full max-w-2xl mx-4 rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-card)] animate-fade-in-up bg-[var(--bg-card)] flex flex-col max-h-[90vh] card-surface">
 
         <div className="relative px-8 pt-8 pb-4">

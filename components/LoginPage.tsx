@@ -123,7 +123,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center animate-fade-in"
+      className="fixed inset-0 z-full-modal flex items-center justify-center animate-fade-in"
       role="dialog"
       aria-modal="true"
       aria-label={mode === 'signin' ? 'Sign in to AgriFlow' : 'Create your AgriFlow account'}

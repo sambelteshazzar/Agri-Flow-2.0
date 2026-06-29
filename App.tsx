@@ -233,7 +233,7 @@ const AppContent: React.FC = () => {
     <div className="flex h-screen h-[100dvh] bg-app dark:bg-[#0C1810] overflow-hidden relative transition-colors duration-300">
 
       {/* GLOBAL TOAST CONTAINER */}
-      <div aria-live="polite" aria-atomic="false" className="fixed top-24 right-4 z-[9999] flex flex-col gap-3 pointer-events-none">
+      <div aria-live="polite" aria-atomic="false" className="fixed top-24 right-4 z-toast flex flex-col gap-3 pointer-events-none">
         {toasts.map(toast => (
           <div
             key={toast.id}
@@ -344,7 +344,7 @@ const AppContent: React.FC = () => {
                 </button>
 
                 {showNotifications && (
-                  <div className="absolute right-0 top-full mt-2 w-80 card-surface z-[30] animate-fade-in-up overflow-hidden">
+                  <div className="absolute right-0 top-full mt-2 w-80 card-surface z-dropdown animate-fade-in-up overflow-hidden">
                     <div className="bg-terra-50 dark:bg-[#163D2F] p-3 border-b border-terra-200 dark:border-[#1E5A47] flex justify-between items-center">
                       <h3 className="text-xs font-semibold text-terra-800 dark:text-[#E8F0EA]">Alerts ({unreadAlerts})</h3>
                       <button onClick={() => setShowNotifications(false)} className="text-terra-400 hover:text-terra-600 dark:hover:text-[#E8F0EA]">

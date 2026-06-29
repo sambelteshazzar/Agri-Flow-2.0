@@ -17,7 +17,7 @@ const CreateStoryModal: React.FC<CreateStoryModalProps> = ({
 }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-full-modal flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md animate-fade-in">
       <div className="bg-[var(--bg-card)] w-full max-w-sm rounded-2xl shadow-2xl p-6 relative flex flex-col items-center text-center">
         <button onClick={onClose} aria-label="Close" className="absolute top-4 right-4 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"><X className="w-6 h-6" aria-hidden="true" /></button>
         <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">Add to Story</h3>

@@ -259,7 +259,7 @@ const LivestockManager: React.FC = () => {
 
       {/* Records Modal */}
       {isRecordsModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-full-modal flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
           <div className="bg-[var(--bg-card)] dark:bg-jade-950 w-full max-w-lg shadow-2xl rounded-md border border-jade-600 max-h-[85vh] flex flex-col">
             <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-sunburst-500 shrink-0">
               <h3 className="text-xl font-bold text-white font-semibold flex items-center">
@@ -307,7 +307,7 @@ const LivestockManager: React.FC = () => {
 
       {/* Add Livestock Modal (Standard Form) */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-full-modal flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
           <div className="bg-[var(--bg-card)] dark:bg-jade-950 w-full max-w-lg shadow-2xl rounded-md border border-jade-600 max-h-[90vh] overflow-y-auto">
              <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-sunburst-500 sticky top-0 z-10">
                 <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Beef className="w-5 h-5 mr-2 text-sunburst-500" /> New Herd Entry</h3>
@@ -374,7 +374,7 @@ const LivestockManager: React.FC = () => {
 
       {/* AI Health Scanner Modal */}
       {isScannerOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-jade-950/90 backdrop-blur-md" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-full-modal flex items-center justify-center p-4 bg-jade-950/90 backdrop-blur-md" role="dialog" aria-modal="true">
            <div className="bg-[var(--bg-content)] dark:bg-jade-950 w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-jade-600">
                <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
                  <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Stethoscope className="w-5 h-5 mr-2 text-red-500" /> Animal Health Check</h3>

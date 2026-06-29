@@ -9,7 +9,7 @@ interface IntroOverlayProps {
 }
 
 const IntroOverlay: React.FC<IntroOverlayProps> = ({ showIntro, onDismiss, introBgError, setIntroBgError }) => (
-  <div className={`absolute inset-0 z-[45] bg-jade-950 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-700 ${!showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+  <div className={`absolute inset-0 z-intro-overlay bg-jade-950 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-700 ${!showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
     
     <div className="absolute inset-0 opacity-40">
       {!introBgError ? (

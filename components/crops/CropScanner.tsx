@@ -43,7 +43,7 @@ const CropScanner: React.FC<CropScannerProps> = ({ isOpen, onClose, countryCtx }
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-jade-950/90 backdrop-blur-md" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-full-modal flex items-center justify-center p-4 bg-jade-950/90 backdrop-blur-md" role="dialog" aria-modal="true">
       <div className="bg-[var(--bg-content)] w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-jade-600">
         <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
           <h3 className="text-xl font-semibold text-white flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-500" /> Crop Health Check</h3>

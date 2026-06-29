@@ -354,7 +354,7 @@ const VoiceAgent: React.FC = () => {
   };
 
   return (
-    <div className={`fixed bottom-6 right-6 z-[80] flex flex-col items-end gap-4 transition-all ${isActive ? 'translate-y-0' : ''}`}>
+    <div className={`fixed bottom-6 right-6 z-voice-agent flex flex-col items-end gap-4 transition-all ${isActive ? 'translate-y-0' : ''}`}>
       
       {/* Visualizer Overlay */}
       {isActive && (

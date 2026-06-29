@@ -51,7 +51,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <div 
-          className="fixed inset-0 z-[60] bg-terra-900/40 dark:bg-black/60 md:hidden backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 z-sidebar-backdrop bg-terra-900/40 dark:bg-black/60 md:hidden backdrop-blur-sm transition-opacity"
           onClick={() => setIsMobileOpen(false)}
           aria-hidden="true"
         />
@@ -60,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen
       {/* Sidebar Container */}
       <aside 
         className={`
-          fixed top-0 left-0 z-[70] h-full w-[260px] bg-sidebar-dynamic text-primary-dynamic
+          fixed top-0 left-0 z-sidebar h-full w-[260px] bg-sidebar-dynamic text-primary-dynamic
           shadow-2xl md:shadow-none transform transition-transform duration-300 ease-in-out
           border-r border-terra-200/50 dark:border-jade-800/50
           md:translate-x-0 md:static md:h-screen flex flex-col

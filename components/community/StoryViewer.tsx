@@ -21,7 +21,7 @@ const StoryViewer: React.FC<StoryViewerProps> = ({
 }) => {
   if (!viewingStory) return null;
   return (
-    <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center animate-fade-in">
+    <div className="fixed inset-0 z-full-modal bg-black flex flex-col items-center justify-center animate-fade-in">
       <div className="absolute top-4 left-4 right-4 flex gap-2 z-20"><div className="h-1 bg-white/30 rounded-full flex-1 overflow-hidden"><div className="h-full bg-white transition-all duration-[50ms] ease-linear" style={{ width: `${storyProgress}%` }}></div></div></div>
       <div className="absolute top-8 left-4 z-20 flex items-center gap-3"><div className="w-8 h-8 rounded-full border border-white/20 overflow-hidden"><img src={viewingStory.img} className="w-full h-full object-cover" /></div><span className="text-white font-bold text-sm shadow-black drop-shadow-md">{viewingStory.name}</span><span className="text-white/60 text-xs font-medium">2h</span></div>
       <button onClick={onClose} aria-label="Close story" className="absolute top-8 right-4 z-20 text-white hover:text-white/80 transition-colors"><XCircle className="w-8 h-8" aria-hidden="true" /></button>
