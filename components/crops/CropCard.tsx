@@ -1,13 +1,18 @@
 import React from 'react';
-import { Trash2, Ruler, CalendarDays, Droplets, Droplet } from 'lucide-react';
-import { Crop } from '@/types';
-import { formatArea } from '@/utils/localeFormat';
+import { Trash2, Ruler, CalendarDays, Droplets, Droplet, Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import { Crop, CropExpense, CropIncome } from '@/types';
+import { formatArea, formatCurrency } from '@/utils/localeFormat';
 
 interface CropCardProps {
   crop: Crop;
   areaUnit: string;
+  expenses: CropExpense[];
+  incomes: CropIncome[];
+  currencyCode: string;
+  currencySymbol: string;
   onLogActivity: (id: string) => void;
   onDelete: (id: string) => void;
+  onOpenFinancials: (id: string) => void;
 }
 
 const getStatusColor = (status: string) => {
@@ -29,7 +34,14 @@ const getWaterEfficiencyColor = (efficiency: string) => {
   }
 };
 
-const CropCard: React.FC<CropCardProps> = ({ crop, areaUnit, onLogActivity, onDelete }) => {
+const CropCard: React.FC<CropCardProps> = ({ crop, areaUnit, expenses, incomes, currencyCode, currencySymbol, onLogActivity, onDelete, onOpenFinancials }) => {
+  const cropExpenses = expenses.filter(e => e.cropId === crop.id);
+  const cropIncomes = incomes.filter(i => i.cropId === crop.id);
+  const totalExp = cropExpenses.reduce((s, e) => s + e.amount, 0);
+  const totalInc = cropIncomes.reduce((s, i) => s + i.totalAmount, 0);
+  const profit = totalInc - totalExp;
+  const hasFinancials = cropExpenses.length > 0 || cropIncomes.length > 0;
+
   return (
     <div className="bg-[var(--bg-card)] rounded-lg shadow-md border border-[var(--border-card)] overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300">
       <div className={`h-3 w-full ${getStatusColor(crop.status)}`}></div>
@@ -83,9 +95,35 @@ const CropCard: React.FC<CropCardProps> = ({ crop, areaUnit, onLogActivity, onDe
           </div>
         </div>
 
-        <div className="mt-auto flex gap-3">
+        {hasFinancials && (
+          <div className="flex gap-2 mb-4 border-b border-[var(--border-card)] pb-4">
+            <div className="flex-1 p-2 rounded border-2 text-center bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800">
+              <div className="text-[10px] font-semibold text-red-600 dark:text-red-400 mb-1 flex items-center justify-center gap-1">
+                <TrendingDown className="w-3 h-3" /> Spent
+              </div>
+              <div className="text-sm font-bold text-red-700 dark:text-red-300">{formatCurrency(totalExp, currencyCode, currencySymbol)}</div>
+            </div>
+            <div className="flex-1 p-2 rounded border-2 text-center bg-jade-50 border-jade-200 dark:bg-jade-900/20 dark:border-jade-800">
+              <div className="text-[10px] font-semibold text-jade-600 dark:text-jade-400 mb-1 flex items-center justify-center gap-1">
+                <TrendingUp className="w-3 h-3" /> Earned
+              </div>
+              <div className="text-sm font-bold text-jade-700 dark:text-jade-300">{formatCurrency(totalInc, currencyCode, currencySymbol)}</div>
+            </div>
+            <div className={`flex-1 p-2 rounded border-2 text-center ${profit >= 0 ? 'bg-jade-50 border-jade-200 dark:bg-jade-900/20 dark:border-jade-800' : 'bg-terra-50 border-terra-200 dark:bg-terra-900/20 dark:border-terra-800'}`}>
+              <div className={`text-[10px] font-semibold mb-1 flex items-center justify-center gap-1 ${profit >= 0 ? 'text-jade-600 dark:text-jade-400' : 'text-terra-600 dark:text-terra-400'}`}>
+                <DollarSign className="w-3 h-3" /> Profit
+              </div>
+              <div className={`text-sm font-bold ${profit >= 0 ? 'text-jade-700 dark:text-jade-300' : 'text-terra-700 dark:text-terra-300'}`}>{profit >= 0 ? '+' : ''}{formatCurrency(profit, currencyCode, currencySymbol)}</div>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-auto flex gap-2">
           <button onClick={() => onLogActivity(crop.id)} className="flex-1 py-3 bg-jade-800 dark:bg-jade-700 text-white text-sm font-semibold rounded hover:bg-jade-950 dark:hover:bg-jade-600 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-jade-500 cursor-pointer active:scale-95">
             Log Activity
+          </button>
+          <button onClick={() => onOpenFinancials(crop.id)} className="flex-1 py-3 bg-[var(--bg-content)] border-2 border-jade-600 text-jade-700 dark:text-jade-400 text-sm font-semibold rounded hover:bg-jade-50 dark:hover:bg-jade-900/20 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-jade-500 cursor-pointer active:scale-95 flex items-center justify-center gap-1">
+            <Wallet className="w-4 h-4" /> Finances
           </button>
           <button onClick={() => { if (window.confirm(`Delete "${crop.name}"? This cannot be undone.`)) onDelete(crop.id); }} aria-label={`Delete ${crop.name} plot`} className="px-3 py-2 bg-[var(--bg-card)] text-[var(--text-secondary)] rounded hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-colors border-2 border-[var(--border-card)] hover:border-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer active:scale-95">
             <Trash2 className="w-5 h-5" />

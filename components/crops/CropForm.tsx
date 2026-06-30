@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Sprout, Coffee, Wheat, Image as ImageIcon } from 'lucide-react';
+import { X, Sprout, Image as ImageIcon } from 'lucide-react';
 import { Crop } from '@/types';
 import { formatAreaLabel } from '@/utils/localeFormat';
 import getCropImage from './getCropImage';
@@ -92,28 +92,21 @@ const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowTo
 
           <div className="mb-6 bg-[var(--bg-content)] p-4 rounded border border-[var(--border-card)]">
             <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Quick Start Templates</label>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => applyTemplate(CROP_TEMPLATES[0])}
-                className="flex-1 py-2 px-2 bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-sunburst-500 dark:hover:border-sunburst-500 text-[var(--text-secondary)] hover:text-sunburst-700 dark:hover:text-sunburst-400 rounded text-xs font-semibold transition-colors shadow-sm flex items-center justify-center gap-1"
-              >
-                <Sprout className="w-3 h-3" /> Maize
-              </button>
-              <button
-                type="button"
-                onClick={() => applyTemplate(CROP_TEMPLATES[1])}
-                className="flex-1 py-2 px-2 bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-sunburst-500 dark:hover:border-sunburst-500 text-[var(--text-secondary)] hover:text-sunburst-700 dark:hover:text-sunburst-400 rounded text-xs font-semibold transition-colors shadow-sm flex items-center justify-center gap-1"
-              >
-                <Coffee className="w-3 h-3" /> Rice
-              </button>
-              <button
-                type="button"
-                onClick={() => applyTemplate(CROP_TEMPLATES[2])}
-                className="flex-1 py-2 px-2 bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-sunburst-500 dark:hover:border-sunburst-500 text-[var(--text-secondary)] hover:text-sunburst-700 dark:hover:text-sunburst-400 rounded text-xs font-semibold transition-colors shadow-sm flex items-center justify-center gap-1"
-              >
-                <Wheat className="w-3 h-3" /> Millet
-              </button>
+            <div className="grid grid-cols-4 gap-2">
+              {CROP_TEMPLATES.map((template, i) => (
+                <button
+                  key={template.name}
+                  type="button"
+                  onClick={() => applyTemplate(template)}
+                  className={`py-2 px-2 border rounded text-xs font-semibold transition-colors shadow-sm flex items-center justify-center gap-1 ${
+                    newCrop.name === template.name
+                      ? 'bg-sunburst-500/10 border-sunburst-500 text-sunburst-700 dark:text-sunburst-400'
+                      : 'bg-[var(--bg-card)] border-[var(--border-card)] text-[var(--text-secondary)] hover:border-sunburst-500 dark:hover:border-sunburst-500 hover:text-sunburst-700 dark:hover:text-sunburst-400'
+                  }`}
+                >
+                  <Sprout className="w-3 h-3" /> {template.name}
+                </button>
+              ))}
             </div>
           </div>
 

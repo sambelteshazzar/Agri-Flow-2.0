@@ -306,6 +306,26 @@ export interface IrrigationInput {
   area: number;
 }
 
+export interface CropExpense {
+  id: string;
+  cropId: string;
+  category: 'Seeds' | 'Fertilizer' | 'Labor' | 'Irrigation' | 'Equipment' | 'Pesticide' | 'Transport' | 'Other';
+  description: string;
+  amount: number;
+  date: string;
+}
+
+export interface CropIncome {
+  id: string;
+  cropId: string;
+  type: 'Harvest Sale' | 'Subsidy' | 'Insurance Payout' | 'Processing' | 'Other';
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  totalAmount: number;
+  date: string;
+}
+
 export interface ResourceResult {
   mode: 'FERTILIZER' | 'IRRIGATION';
   fertilizerKg: number;

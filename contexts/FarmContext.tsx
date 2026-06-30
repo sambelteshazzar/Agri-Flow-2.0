@@ -1,12 +1,13 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef } from 'react';
-import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab, LaborInput, ResourceResult } from '../types';
+import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab, LaborInput, ResourceResult, CropExpense, CropIncome } from '../types';
 import { CropService } from '../services/cropService';
 import { LivestockService } from '../services/livestockService';
 import { MarketService } from '../services/marketService';
 import { LogService } from '../services/logService';
 import { CommunityService } from '../services/communityService';
 import { WeatherService } from '../services/weatherService';
+import { FinancialService } from '../services/financialService';
 import { fetchAgNews, CountryContext } from '../services/geminiService';
 import { db, DB_KEYS } from '../services/persistence';
 import { MOCK_WEATHER, GUEST_USER, COUNTRY_REGISTRY } from '../constants';
@@ -99,6 +100,14 @@ interface FarmContextType {
   resourceResult: ResourceResult | null;
   saveLaborInput: (input: LaborInput) => Promise<void>;
   saveResourceResult: (result: ResourceResult) => Promise<void>;
+
+  // Financial
+  cropExpenses: CropExpense[];
+  cropIncomes: CropIncome[];
+  addCropExpense: (expense: Omit<CropExpense, 'id'>) => Promise<void>;
+  deleteCropExpense: (id: string) => Promise<void>;
+  addCropIncome: (income: Omit<CropIncome, 'id'>) => Promise<void>;
+  deleteCropIncome: (id: string) => Promise<void>;
 }
 
 const FarmContext = createContext<FarmContextType | undefined>(undefined);
@@ -119,6 +128,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [laborInput, setLaborInput] = useState<LaborInput | null>(null);
   const [resourceResult, setResourceResult] = useState<ResourceResult | null>(null);
+  const [cropExpenses, setCropExpenses] = useState<CropExpense[]>([]);
+  const [cropIncomes, setCropIncomes] = useState<CropIncome[]>([]);
   
   const VIEW_HASH: Record<NavigationTab, string> = {
     [NavigationTab.DASHBOARD]: 'dashboard',
@@ -232,8 +243,10 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           loadedLikes,
           loadedBookmarks,
           loadedProfile,
-          loadedLaborInput,
-          loadedResourceResult
+           loadedLaborInput,
+           loadedResourceResult,
+           loadedExpenses,
+           loadedIncomes
          ] = await Promise.all([
           CropService.getAll(),
           LivestockService.getAll(),
@@ -251,7 +264,9 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           CommunityService.getBookmarkedPostIds(),
           db.getUserProfile(),
           db.getLaborInput(),
-          db.getResourceResult()
+           db.getResourceResult(),
+           FinancialService.getAllExpenses(),
+           FinancialService.getAllIncomes()
         ]);
 
         setCrops(loadedCrops);
@@ -270,6 +285,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setBookmarkedPostIds(loadedBookmarks);
         if (loadedLaborInput) setLaborInput(loadedLaborInput);
         if (loadedResourceResult) setResourceResult(loadedResourceResult);
+        setCropExpenses(loadedExpenses);
+        setCropIncomes(loadedIncomes);
         
         if (loadedProfile && loadedProfile.name !== GUEST_USER.name) {
            setUserProfile(loadedProfile);
@@ -525,6 +542,49 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try { await db.saveResourceResult(result); } catch { showToast('Could not save resource data', 'warning'); }
   }, [showToast]);
 
+  // --- Financial Actions ---
+  const addCropExpense = useCallback(async (data: Omit<CropExpense, 'id'>) => {
+    try {
+      const updated = await FinancialService.addExpense(data);
+      setCropExpenses(updated);
+      showToast('Expense recorded', 'success');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to record expense', 'error');
+    }
+  }, [showToast]);
+
+  const deleteCropExpense = useCallback(async (id: string) => {
+    try {
+      const updated = await FinancialService.deleteExpense(id);
+      setCropExpenses(updated);
+      showToast('Expense removed', 'info');
+    } catch (e) {
+      console.error(e);
+    }
+  }, [showToast]);
+
+  const addCropIncome = useCallback(async (data: Omit<CropIncome, 'id'>) => {
+    try {
+      const updated = await FinancialService.addIncome(data);
+      setCropIncomes(updated);
+      showToast('Income recorded', 'success');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to record income', 'error');
+    }
+  }, [showToast]);
+
+  const deleteCropIncome = useCallback(async (id: string) => {
+    try {
+      const updated = await FinancialService.deleteIncome(id);
+      setCropIncomes(updated);
+      showToast('Income removed', 'info');
+    } catch (e) {
+      console.error(e);
+    }
+  }, [showToast]);
+
   const resetApp = useCallback(() => {
     Object.values(DB_KEYS).forEach(key => localStorage.removeItem(key));
     localStorage.removeItem('agriflow_theme');
@@ -591,8 +651,14 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const deleteCrop = useCallback(async (id: string) => {
     try {
-      const updated = await CropService.delete(id);
-      setCrops(updated);
+      const [updatedCrops, updatedExpenses, updatedIncomes] = await Promise.all([
+        CropService.delete(id),
+        FinancialService.deleteExpensesByCrop(id),
+        FinancialService.deleteIncomesByCrop(id)
+      ]);
+      setCrops(updatedCrops);
+      setCropExpenses(updatedExpenses);
+      setCropIncomes(updatedIncomes);
       showToast('Crop plot removed', 'info');
     } catch (e) {
       console.error(e);
@@ -866,7 +932,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     addListing, markListingSold, 
     addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
-    laborInput, resourceResult, saveLaborInput: saveLaborInputAction, saveResourceResult: saveResourceResultAction
+    laborInput, resourceResult, saveLaborInput: saveLaborInputAction, saveResourceResult: saveResourceResultAction,
+    cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, addCropIncome, deleteCropIncome
   }), [
     userProfile, isSignedIn, alerts,
     theme, toggleTheme, setThemeMode, currentView, navigate,

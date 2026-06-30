@@ -1,5 +1,5 @@
 
-import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult, Story, SocialTrend, SuggestedUser, SystemAlert } from '../types';
+import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult, Story, SocialTrend, SuggestedUser, SystemAlert, CropExpense, CropIncome } from '../types';
 import { GUEST_USER } from '../constants';
 
 // --- DATABASE KEYS ---
@@ -26,7 +26,9 @@ export const DB_KEYS = {
   SUGGESTED_USERS: 'agriflow_suggested_users',
   ALERTS: 'agriflow_alerts',
   POLL_VOTED: 'agriflow_poll_voted',
-  QUESTIONS: 'agriflow_qa_questions'
+  QUESTIONS: 'agriflow_qa_questions',
+  CROP_EXPENSES: 'agriflow_crop_expenses',
+  CROP_INCOMES: 'agriflow_crop_incomes'
 };
 
 // --- SIMULATED LATENCY ---
@@ -328,6 +330,24 @@ class PersistenceService {
 
   async saveQuestions(questions: any[]): Promise<void> {
     this.setItem(DB_KEYS.QUESTIONS, questions);
+  }
+
+  // 18. CROP EXPENSES
+  async getCropExpenses(): Promise<CropExpense[]> {
+    return this.getItem<CropExpense[]>(DB_KEYS.CROP_EXPENSES, []);
+  }
+
+  async saveCropExpenses(expenses: CropExpense[]): Promise<void> {
+    this.setItem(DB_KEYS.CROP_EXPENSES, expenses);
+  }
+
+  // 19. CROP INCOMES
+  async getCropIncomes(): Promise<CropIncome[]> {
+    return this.getItem<CropIncome[]>(DB_KEYS.CROP_INCOMES, []);
+  }
+
+  async saveCropIncomes(incomes: CropIncome[]): Promise<void> {
+    this.setItem(DB_KEYS.CROP_INCOMES, incomes);
   }
 }
 

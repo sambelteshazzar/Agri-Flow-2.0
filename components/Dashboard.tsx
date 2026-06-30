@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { CloudRain, Wind, Droplets, Thermometer, AlertTriangle, Calendar, CheckSquare, Square, MapPin, Activity, ShieldCheck, TrendingDown, TrendingUp, Sparkles, Loader2, Navigation, MapPinOff, Globe, X, Sprout, Beef, ArrowUpRight, ArrowDownRight, Minus, Clock, BarChart3, Leaf, Zap, Sun, Cloud, CloudDrizzle } from 'lucide-react';
+import { CloudRain, Wind, Droplets, Thermometer, AlertTriangle, Calendar, CheckSquare, Square, MapPin, Activity, ShieldCheck, TrendingDown, TrendingUp, Sparkles, Loader2, Navigation, MapPinOff, Globe, X, Sprout, Beef, ArrowUpRight, ArrowDownRight, Minus, Clock, BarChart3, Leaf, Zap, Sun, Cloud, CloudDrizzle, DollarSign, Wallet } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import { generateDailyTasks, getLiveAgriIntel, CountryContext } from '../services/geminiService';
-import { formatArea } from '../utils/localeFormat';
+import { formatArea, formatCurrency } from '../utils/localeFormat';
 
 const Dashboard: React.FC = () => {
-  const { tasks, toggleTask, crops, addTask, livestock, marketPrices, userLocation, weather, alerts, userProfile } = useFarm();
+  const { tasks, toggleTask, crops, addTask, livestock, marketPrices, userLocation, weather, alerts, userProfile, cropExpenses, cropIncomes } = useFarm();
 
   const countryCtx: CountryContext | undefined = userProfile.countryCode ? {
     countryCode: userProfile.countryCode,
@@ -120,6 +120,10 @@ const Dashboard: React.FC = () => {
   const pendingTasks = tasks.filter(t => !t.completed).length;
   const completedToday = tasks.filter(t => t.completed).length;
 
+  const totalExpenses = cropExpenses.reduce((sum, e) => sum + e.amount, 0);
+  const totalIncomes = cropIncomes.reduce((sum, i) => sum + i.totalAmount, 0);
+  const farmProfit = totalIncomes - totalExpenses;
+
   return (
     <div className="space-y-6 animate-fade-in pb-8">
 
@@ -173,7 +177,7 @@ const Dashboard: React.FC = () => {
       </header>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         {[
           {
             label: 'Active Crops',
@@ -218,6 +222,17 @@ const Dashboard: React.FC = () => {
             borderColor: alerts.filter(a => a.severity === 'critical').length > 0 ? 'border-red-200/60 dark:border-red-800/30' : 'border-terra-200/60 dark:border-jade-800/40',
             trend: alerts.length === 0 ? 'up' : 'down',
             trendLabel: alerts.length === 0 ? 'All clear' : 'Review needed',
+          },
+          {
+            label: 'Farm Profit',
+            value: formatCurrency(farmProfit, userProfile.currencyCode || 'USD', userProfile.currencySymbol || '$'),
+            detail: `${formatCurrency(totalExpenses, userProfile.currencyCode || 'USD', userProfile.currencySymbol || '$')} spent · ${formatCurrency(totalIncomes, userProfile.currencyCode || 'USD', userProfile.currencySymbol || '$')} earned`,
+            icon: Wallet,
+            iconBg: farmProfit >= 0 ? 'bg-jade-50 dark:bg-jade-900/30' : 'bg-red-50 dark:bg-red-900/20',
+            iconColor: farmProfit >= 0 ? 'text-jade-600 dark:text-jade-400' : 'text-red-600 dark:text-red-400',
+            borderColor: farmProfit >= 0 ? 'border-jade-200/60 dark:border-jade-800/40' : 'border-red-200/60 dark:border-red-800/30',
+            trend: farmProfit >= 0 ? 'up' : 'down',
+            trendLabel: farmProfit >= 0 ? 'Profitable' : 'Loss',
           },
         ].map((kpi, i) => (
           <div key={kpi.label} className={`card-surface leaf-glow p-5 opacity-0 animate-stagger-${i + 1} border ${kpi.borderColor}`}>

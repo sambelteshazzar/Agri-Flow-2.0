@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mail, Lock, Eye, EyeOff, Check, Loader2, ArrowRight } from 'lucide-react';
+import { useFarm } from '../../contexts/FarmContext';
 
 interface SignInFormProps {
   email: string;
@@ -25,7 +26,14 @@ export const SignInForm: React.FC<SignInFormProps> = ({
   setRemember,
   isLoading,
   onSubmit,
-}) => (
+}) => {
+  const { showToast, userProfile } = useFarm();
+  const phonePlaceholder = userProfile.countryCode === 'NG' ? '0801 234 5678'
+    : userProfile.countryCode === 'GH' ? '024 123 4567'
+    : userProfile.countryCode === 'KE' ? '0712 345 678'
+    : '+1 234 567 8900';
+
+  return (
   <form onSubmit={onSubmit} className="space-y-5">
     <div>
       <label htmlFor="signin-email" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Email address</label>
@@ -84,7 +92,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
         </div>
         <span className="text-[var(--text-secondary)] text-[13px] font-medium">Remember this device</span>
       </label>
-      <button type="button" className="text-jade-600 dark:text-jade-400 text-[13px] font-semibold hover:underline">
+      <button type="button" onClick={() => showToast('Password reset is not available in this demo. Contact support for help.', 'info')} className="text-jade-600 dark:text-jade-400 text-[13px] font-semibold hover:underline">
         Forgot password?
       </button>
     </div>
@@ -104,4 +112,5 @@ export const SignInForm: React.FC<SignInFormProps> = ({
       )}
     </button>
   </form>
-);
+  );
+};

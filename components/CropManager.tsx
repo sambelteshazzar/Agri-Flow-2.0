@@ -7,13 +7,14 @@ import CropCard from './crops/CropCard';
 import CropSuggestion from './crops/CropSuggestion';
 import CropForm from './crops/CropForm';
 import CropLogModal from './crops/CropLogModal';
+import CropFinancialsModal from './crops/CropFinancialsModal';
 import CropScanner from './crops/CropScanner';
 import getCropImage from './crops/getCropImage';
 import CROP_TEMPLATES from './crops/cropTemplates';
 import { Suggestion } from './crops/types';
 
 const CropManager: React.FC = () => {
-  const { crops, addCrop, deleteCrop, addActivityLog, getLogsByRef, updateCropStatus, showToast, userProfile } = useFarm();
+  const { crops, addCrop, deleteCrop, addActivityLog, getLogsByRef, updateCropStatus, showToast, userProfile, cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, addCropIncome, deleteCropIncome } = useFarm();
 
   const countryCtx: CountryContext | undefined = userProfile.countryCode ? {
     countryCode: userProfile.countryCode,
@@ -31,6 +32,8 @@ const CropManager: React.FC = () => {
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
   const [selectedCropId, setSelectedCropId] = useState<string | null>(null);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isFinancialsOpen, setIsFinancialsOpen] = useState(false);
+  const [financialsCropId, setFinancialsCropId] = useState<string | null>(null);
 
   useEffect(() => {
     const runAnalysis = async () => {
@@ -128,6 +131,11 @@ const CropManager: React.FC = () => {
     setIsLogModalOpen(true);
   };
 
+  const openFinancials = (id: string) => {
+    setFinancialsCropId(id);
+    setIsFinancialsOpen(true);
+  };
+
   return (
     <div className="space-y-6 animate-fade-in pb-10 relative">
 
@@ -183,8 +191,13 @@ const CropManager: React.FC = () => {
               key={crop.id}
               crop={crop}
               areaUnit={userProfile.areaUnit}
+              expenses={cropExpenses}
+              incomes={cropIncomes}
+              currencyCode={userProfile.currencyCode}
+              currencySymbol={userProfile.currencySymbol}
               onLogActivity={openLogModal}
               onDelete={deleteCrop}
+              onOpenFinancials={openFinancials}
             />
           ))}
         </div>
@@ -211,6 +224,21 @@ const CropManager: React.FC = () => {
         isOpen={isScannerOpen}
         onClose={() => setIsScannerOpen(false)}
         countryCtx={countryCtx}
+      />
+
+      <CropFinancialsModal
+        isOpen={isFinancialsOpen}
+        onClose={() => { setIsFinancialsOpen(false); setFinancialsCropId(null); }}
+        cropName={crops.find(c => c.id === financialsCropId)?.name || ''}
+        cropId={financialsCropId || ''}
+        expenses={cropExpenses}
+        incomes={cropIncomes}
+        onAddExpense={addCropExpense}
+        onDeleteExpense={deleteCropExpense}
+        onAddIncome={addCropIncome}
+        onDeleteIncome={deleteCropIncome}
+        currencyCode={userProfile.currencyCode}
+        currencySymbol={userProfile.currencySymbol}
       />
     </div>
   );

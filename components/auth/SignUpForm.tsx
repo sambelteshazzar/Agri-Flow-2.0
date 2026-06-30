@@ -59,7 +59,20 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
   setFarmType,
   isLoading,
   onSubmit,
-}) => (
+}) => {
+  const cc = selectedCountry?.code;
+  const phoneHint = cc === 'NG' ? '+234 801 234 5678'
+    : cc === 'GH' ? '+233 24 123 4567'
+    : cc === 'KE' ? '+254 712 345 678'
+    : cc === 'ET' ? '+251 91 234 5678'
+    : '+1 234 567 8900';
+  const locationHint = cc === 'NG' ? 'Kano, Kano State'
+    : cc === 'GH' ? 'Kumasi, Ashanti Region'
+    : cc === 'KE' ? 'Eldoret, Uasin Gishu County'
+    : cc === 'ET' ? 'Hawassa, SNNPR'
+    : 'City, Region';
+
+  return (
   <form onSubmit={onSubmit} className="space-y-5">
     <div className="grid grid-cols-2 gap-3">
       <div>
@@ -121,7 +134,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
             type="tel"
             value={phoneNumber}
             onChange={e => setPhoneNumber(e.target.value)}
-            placeholder="+234 801 234 5678"
+            placeholder={phoneHint}
             autoComplete="tel"
             className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
           />
@@ -136,7 +149,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
             type="text"
             value={location}
             onChange={e => setLocation(e.target.value)}
-            placeholder="Kano, Kano State"
+            placeholder={locationHint}
             autoComplete="address-level2"
             className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
           />
@@ -243,4 +256,5 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
       )}
     </button>
   </form>
-);
+  );
+};
