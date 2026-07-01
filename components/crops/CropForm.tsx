@@ -11,27 +11,33 @@ interface CropFormProps {
   onSubmit: (crop: Omit<Crop, 'id'>) => void;
   onShowToast: (msg: string, type: string) => void;
   areaUnit: string;
+  editingCrop?: Crop | null;
 }
 
-const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowToast, areaUnit }) => {
-  const [newCrop, setNewCrop] = useState<Partial<Crop>>({
-    name: '',
-    variety: '',
-    plantingDate: '',
-    harvestDate: '',
-    status: 'Healthy',
-    area: 0,
-    imageUrl: getCropImage('Generic'),
-    soilHealth: 'Unknown',
-    waterEfficiency: 'Moderate',
-    biodiversityScore: 50
-  });
+const DEFAULT_CROP: Partial<Crop> = {
+  name: '',
+  variety: '',
+  plantingDate: '',
+  harvestDate: '',
+  status: 'Healthy',
+  area: 0,
+  imageUrl: getCropImage('Generic'),
+  soilHealth: 'Unknown',
+  waterEfficiency: 'Moderate',
+  biodiversityScore: 50
+};
+
+const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowToast, areaUnit, editingCrop }) => {
+  const [newCrop, setNewCrop] = useState<Partial<Crop>>(DEFAULT_CROP);
 
   const firstInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (isOpen && firstInputRef.current) firstInputRef.current.focus();
-  }, [isOpen]);
+    if (isOpen) {
+      setNewCrop(editingCrop ? { ...editingCrop } : { ...DEFAULT_CROP });
+      if (firstInputRef.current) firstInputRef.current.focus();
+    }
+  }, [isOpen, editingCrop]);
 
   const applyTemplate = (template: typeof CROP_TEMPLATES[0]) => {
     setNewCrop({
@@ -61,19 +67,10 @@ const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowTo
     e.preventDefault();
     if (newCrop.name && newCrop.variety && newCrop.plantingDate && newCrop.harvestDate && newCrop.area && newCrop.area > 0) {
       onSubmit(newCrop as Omit<Crop, 'id'>);
+      if (!editingCrop) {
+        setNewCrop({ ...DEFAULT_CROP });
+      }
       onClose();
-      setNewCrop({
-        name: '',
-        variety: '',
-        plantingDate: '',
-        harvestDate: '',
-        status: 'Healthy',
-        area: 0,
-        imageUrl: getCropImage('Generic'),
-        soilHealth: 'Unknown',
-        waterEfficiency: 'Moderate',
-        biodiversityScore: 50
-      });
     } else {
       onShowToast("Please check fields. Area must be > 0.", "error");
     }
@@ -85,7 +82,7 @@ const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowTo
     <div className="fixed inset-0 z-full-modal flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
       <div className="bg-[var(--bg-card)] w-full max-w-lg shadow-2xl rounded-md border border-jade-600 max-h-[90vh] overflow-y-auto">
         <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-sunburst-500 sticky top-0 z-10">
-          <h3 className="text-xl font-semibold text-white flex items-center"><Sprout className="w-5 h-5 mr-2 text-sunburst-500" /> Register New Plot</h3>
+          <h3 className="text-xl font-semibold text-white flex items-center"><Sprout className="w-5 h-5 mr-2 text-sunburst-500" /> {editingCrop ? 'Edit Plot' : 'Register New Plot'}</h3>
           <button onClick={onClose} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
         </div>
         <div className="p-6">
@@ -184,7 +181,7 @@ const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowTo
                 </select>
               </div>
             </div>
-            <button type="submit" className="w-full bg-sunburst-500 text-jade-950 py-4 font-semibold hover:bg-sunburst-400 rounded-sm shadow-md">Confirm & Save</button>
+            <button type="submit" className="w-full bg-sunburst-500 text-jade-950 py-4 font-semibold hover:bg-sunburst-400 rounded-sm shadow-md">{editingCrop ? 'Save Changes' : 'Confirm & Save'}</button>
           </form>
         </div>
       </div>

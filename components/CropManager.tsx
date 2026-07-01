@@ -14,7 +14,7 @@ import CROP_TEMPLATES from './crops/cropTemplates';
 import { Suggestion } from './crops/types';
 
 const CropManager: React.FC = () => {
-  const { crops, addCrop, deleteCrop, addActivityLog, getLogsByRef, updateCropStatus, showToast, userProfile, cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, addCropIncome, deleteCropIncome } = useFarm();
+  const { crops, addCrop, deleteCrop, updateCrop, addActivityLog, getLogsByRef, updateCropStatus, showToast, userProfile, cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, updateCropExpense, addCropIncome, deleteCropIncome, updateCropIncome } = useFarm();
 
   const countryCtx: CountryContext | undefined = userProfile.countryCode ? {
     countryCode: userProfile.countryCode,
@@ -29,6 +29,7 @@ const CropManager: React.FC = () => {
 
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCrop, setEditingCrop] = useState<Crop | null>(null);
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
   const [selectedCropId, setSelectedCropId] = useState<string | null>(null);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
@@ -119,7 +120,21 @@ const CropManager: React.FC = () => {
   };
 
   const handleAddSubmit = (crop: Omit<Crop, 'id'>) => {
-    addCrop(crop);
+    if (editingCrop) {
+      updateCrop(editingCrop.id, crop);
+    } else {
+      addCrop(crop);
+    }
+  };
+
+  const openEditModal = (crop: Crop) => {
+    setEditingCrop(crop);
+    setIsModalOpen(true);
+  };
+
+  const closeCropForm = () => {
+    setIsModalOpen(false);
+    setEditingCrop(null);
   };
 
   const handleLogSubmit = async (data: { referenceId: string; category: string; date: string; type: LogEntry['type']; note: string }) => {
@@ -198,6 +213,7 @@ const CropManager: React.FC = () => {
               onLogActivity={openLogModal}
               onDelete={deleteCrop}
               onOpenFinancials={openFinancials}
+              onEdit={openEditModal}
             />
           ))}
         </div>
@@ -214,10 +230,11 @@ const CropManager: React.FC = () => {
 
       <CropForm
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={closeCropForm}
         onSubmit={handleAddSubmit}
         onShowToast={showToast}
         areaUnit={userProfile.areaUnit}
+        editingCrop={editingCrop}
       />
 
       <CropScanner
@@ -235,8 +252,10 @@ const CropManager: React.FC = () => {
         incomes={cropIncomes}
         onAddExpense={addCropExpense}
         onDeleteExpense={deleteCropExpense}
+        onUpdateExpense={updateCropExpense}
         onAddIncome={addCropIncome}
         onDeleteIncome={deleteCropIncome}
+        onUpdateIncome={updateCropIncome}
         currencyCode={userProfile.currencyCode}
         currencySymbol={userProfile.currencySymbol}
       />

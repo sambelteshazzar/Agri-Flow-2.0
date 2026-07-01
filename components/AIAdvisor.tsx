@@ -23,11 +23,16 @@ const AIAdvisor: React.FC = () => {
   const userNameRef = useRef(userProfile.name);
   userNameRef.current = userProfile.name;
 
+  const aiConfigured = isAIConfigured();
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
       role: 'model',
-      text: 'Your farming companion is ready.\n\nI can help analyze crop images for health issues, review soil reports, or explore market trends. Tap the phone icon for a live voice consultation.',
+      text: aiConfigured
+        ? 'Your farming companion is ready.\n\nI can help analyze crop images for health issues, review soil reports, or explore market trends. Tap the phone icon for a live voice consultation.'
+        : 'Your farming companion is in demo mode.\n\nNo AI API key is configured. Responses will use pre-built examples, not live analysis. To enable live AI, add VITE_GEMINI_API_KEY or VITE_NVIDIA_API_KEY to your .env file.',
+      isSimulated: !aiConfigured,
       timestamp: new Date()
     }
   ]);
@@ -297,6 +302,7 @@ const AIAdvisor: React.FC = () => {
     try {
       let responseText = '';
       let responseSources = undefined;
+      let responseSimulated = !isAIConfigured();
 
       if (userMsg.image) {
         responseText = await analyzeCropImage(userMsg.image, userMsg.text, countryCtx);
@@ -304,6 +310,7 @@ const AIAdvisor: React.FC = () => {
         const result = await getFarmingAdvice(userMsg.text, countryCtx);
         responseText = result.text;
         responseSources = result.sources;
+        if (result.isSimulated) responseSimulated = true;
       }
 
       const modelMsg: ChatMessage = {
@@ -311,6 +318,7 @@ const AIAdvisor: React.FC = () => {
         role: 'model',
         text: responseText,
         sources: responseSources,
+        isSimulated: responseSimulated,
         timestamp: new Date()
       };
       setMessages(prev => [...prev, modelMsg]);
@@ -413,6 +421,9 @@ const AIAdvisor: React.FC = () => {
                   <div className="flex items-center mb-2 pb-2 border-b border-jade-600">
                     <Sparkles className="w-3 h-3 mr-2 text-sunburst-500" aria-hidden="true" />
                     <span className="text-[10px] font-semibold text-jade-300">Analysis</span>
+                    {msg.isSimulated && (
+                      <span className="ml-2 px-1.5 py-0.5 bg-terra-200 dark:bg-terra-800 text-terra-700 dark:text-terra-300 text-[9px] font-bold rounded uppercase tracking-wide">Simulated</span>
+                    )}
                   </div>
                 )}
                 

@@ -193,25 +193,24 @@ const AppContent: React.FC = () => {
 
    const handleAuthSubmit = async (data: { email: string; password: string; remember: boolean }) => {
      try {
-       await signIn();
+       await signIn(data.email, data.password);
        setIsAuthModalOpen(false);
        setHasStarted(true);
        localStorage.setItem('agriflow_has_started', 'true');
        navigate(NavigationTab.DASHBOARD);
      } catch (err) {
-       console.error('[Auth] Login failed:', err);
      }
    };
 
    const handleSignup = async (data: OnboardingData & { email: string; password: string }) => {
      try {
        await login(data);
+       localStorage.setItem('agriflow_credentials', JSON.stringify({ email: data.email, password: data.password }));
        setIsAuthModalOpen(false);
        setHasStarted(true);
        localStorage.setItem('agriflow_has_started', 'true');
        navigate(NavigationTab.DASHBOARD);
      } catch (err) {
-       console.error('[Auth] Signup failed:', err);
      }
    };
 

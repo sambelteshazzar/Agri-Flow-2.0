@@ -66,7 +66,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
       await onLogin({ email: trimmedEmail, password: trimmedPassword, remember });
       onClose();
     } catch {
-      showToast('Login failed. Please try again.', 'error');
     } finally {
       setIsLoading(false);
     }

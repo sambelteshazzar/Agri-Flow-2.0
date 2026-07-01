@@ -6,6 +6,8 @@ export type { CountryContext } from './ai/AIProvider';
 
 export const isAIConfigured = (): boolean => getAIProvider().isConfigured();
 
+export const isWeatherSimulated = (): boolean => !(import.meta.env.VITE_OWM_API_KEY || '');
+
 export const hasLiveVoice = _hasLiveVoice;
 
 export const getFarmingAdvice = async (prompt: string, countryCtx?: CountryContext): Promise<FarmingAdviceResult> => {

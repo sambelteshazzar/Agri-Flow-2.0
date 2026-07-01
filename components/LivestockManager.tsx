@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { useFarm } from '../contexts/FarmContext';
-import { Plus, Trash2, X, Beef, Tag, ClipboardList, Calendar, HeartPulse, Image as ImageIcon, Scan, Upload, Loader2, Stethoscope, Clipboard, Database } from 'lucide-react';
+import { Plus, Trash2, Pencil, X, Beef, Tag, ClipboardList, Calendar, HeartPulse, Image as ImageIcon, Scan, Upload, Loader2, Stethoscope, Clipboard, Database } from 'lucide-react';
 import { Livestock, LogEntry } from '../types';
-import { analyzeCropImage, CountryContext } from '../services/geminiService';
+import { analyzeCropImage, CountryContext, isAIConfigured } from '../services/geminiService';
 
 // Helper to provide context-aware default images
 const getLivestockImage = (species: string) => {
@@ -18,7 +18,7 @@ const getLivestockImage = (species: string) => {
 };
 
 const LivestockManager: React.FC = () => {
-  const { livestock, addLivestock, deleteLivestock, updateLivestockStatus, addActivityLog, getLogsByRef, showToast, userProfile } = useFarm();
+  const { livestock, addLivestock, deleteLivestock, updateLivestock, updateLivestockStatus, addActivityLog, getLogsByRef, showToast, userProfile } = useFarm();
 
   const countryCtx: CountryContext | undefined = userProfile.countryCode ? {
     countryCode: userProfile.countryCode,
@@ -32,6 +32,7 @@ const LivestockManager: React.FC = () => {
   } : undefined;
   
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingAnimal, setEditingAnimal] = useState<Livestock | null>(null);
   const [newAnimal, setNewAnimal] = useState<Partial<Livestock>>({ 
     name: '', 
     species: 'Cattle', 
@@ -54,6 +55,7 @@ const LivestockManager: React.FC = () => {
   const [scanContext, setScanContext] = useState('');
   const [scanResult, setScanResult] = useState('');
   const [isScanning, setIsScanning] = useState(false);
+  const [isScanSimulated, setIsScanSimulated] = useState(false);
   const scanInputRef = useRef<HTMLInputElement>(null);
 
   const openRecordsModal = async (id: string) => {
@@ -108,9 +110,13 @@ const LivestockManager: React.FC = () => {
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (newAnimal.name && newAnimal.count && newAnimal.count > 0) {
-      addLivestock(newAnimal as Omit<Livestock, 'id'>);
+      if (editingAnimal) {
+        updateLivestock(editingAnimal.id, newAnimal as Partial<Omit<Livestock, 'id'>>);
+        setEditingAnimal(null);
+      } else {
+        addLivestock(newAnimal as Omit<Livestock, 'id'>);
+      }
       setIsModalOpen(false);
-      // Reset form
       setNewAnimal({ 
         name: '', 
         species: 'Cattle', 
@@ -123,6 +129,26 @@ const LivestockManager: React.FC = () => {
     } else {
        showToast("Please enter a valid Herd Name and a Count greater than 0.", "error");
     }
+  };
+
+  const openEditModal = (animal: Livestock) => {
+    setEditingAnimal(animal);
+    setNewAnimal({ ...animal });
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingAnimal(null);
+    setNewAnimal({ 
+      name: '', 
+      species: 'Cattle', 
+      count: 1, 
+      status: 'Healthy', 
+      grazingType: 'Rotational', 
+      imageUrl: getLivestockImage('Cattle'), 
+      notes: '' 
+    });
   };
 
   const handleStatusChange = async (id: string, newStatus: Livestock['status']) => {
@@ -143,9 +169,9 @@ const LivestockManager: React.FC = () => {
     if (!scanImage) return;
     setIsScanning(true);
     try {
-      // Reusing the AI vision service with livestock context
       const diagnosis = await analyzeCropImage(scanImage, `LIVESTOCK HEALTH ANALYSIS: ${scanContext}. Check for signs of disease, injury, or malnutrition.`, countryCtx);
       setScanResult(diagnosis);
+      setIsScanSimulated(!isAIConfigured());
     } catch {
       setScanResult("Could not complete the analysis. Please ensure the image is clear.");
     } finally {
@@ -153,7 +179,7 @@ const LivestockManager: React.FC = () => {
     }
   };
 
-  const resetScanner = () => { setScanImage(null); setScanContext(''); setScanResult(''); setIsScannerOpen(false); };
+  const resetScanner = () => { setScanImage(null); setScanContext(''); setScanResult(''); setIsScanSimulated(false); setIsScannerOpen(false); };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -247,10 +273,11 @@ const LivestockManager: React.FC = () => {
                    )}
                 </div>
 
-                 <div className="flex gap-2 border-t border-[var(--border-card)] pt-3">
-                   <button onClick={() => openRecordsModal(animal.id)} className="flex-1 py-2 text-xs font-semibold bg-[var(--bg-content)] dark:bg-jade-800 hover:bg-terra-300 dark:hover:bg-jade-700 text-[var(--text-primary)] dark:text-[var(--text-primary)] rounded transition-colors border border-[var(--border-card)] dark:border-jade-600 focus:outline-none focus:ring-2 focus:ring-jade-400">Records</button>
-                    <button onClick={() => { if (window.confirm(`Delete "${animal.name}"? This cannot be undone.`)) deleteLivestock(animal.id); }} aria-label="Delete livestock entry" className="px-3 py-2 text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] hover:text-red-600 dark:hover:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border border-[var(--border-card)] focus:outline-none focus:ring-2 focus:ring-red-500"><Trash2 className="w-4 h-4" aria-hidden="true" /></button>
-                </div>
+                  <div className="flex gap-2 border-t border-[var(--border-card)] pt-3">
+                    <button onClick={() => openRecordsModal(animal.id)} className="flex-1 py-2 text-xs font-semibold bg-[var(--bg-content)] dark:bg-jade-800 hover:bg-terra-300 dark:hover:bg-jade-700 text-[var(--text-primary)] dark:text-[var(--text-primary)] rounded transition-colors border border-[var(--border-card)] dark:border-jade-600 focus:outline-none focus:ring-2 focus:ring-jade-400">Records</button>
+                    <button onClick={() => openEditModal(animal)} aria-label={`Edit ${animal.name}`} className="px-3 py-2 text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] hover:text-jade-600 dark:hover:text-jade-400 rounded hover:bg-jade-50 dark:hover:bg-jade-900/20 transition-colors border border-[var(--border-card)] focus:outline-none focus:ring-2 focus:ring-jade-500"><Pencil className="w-4 h-4" aria-hidden="true" /></button>
+                     <button onClick={() => { if (window.confirm(`Delete "${animal.name}"? This cannot be undone.`)) deleteLivestock(animal.id); }} aria-label="Delete livestock entry" className="px-3 py-2 text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] hover:text-red-600 dark:hover:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border border-[var(--border-card)] focus:outline-none focus:ring-2 focus:ring-red-500"><Trash2 className="w-4 h-4" aria-hidden="true" /></button>
+                 </div>
               </div>
             </div>
           ))}
@@ -310,8 +337,8 @@ const LivestockManager: React.FC = () => {
         <div className="fixed inset-0 z-full-modal flex items-center justify-center p-4 bg-jade-950/80 backdrop-blur-md" role="dialog" aria-modal="true">
           <div className="bg-[var(--bg-card)] dark:bg-jade-950 w-full max-w-lg shadow-2xl rounded-md border border-jade-600 max-h-[90vh] overflow-y-auto">
              <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-sunburst-500 sticky top-0 z-10">
-                <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Beef className="w-5 h-5 mr-2 text-sunburst-500" /> New Herd Entry</h3>
-                <button onClick={() => setIsModalOpen(false)} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
+                 <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Beef className="w-5 h-5 mr-2 text-sunburst-500" /> {editingAnimal ? 'Edit Herd Entry' : 'New Herd Entry'}</h3>
+                <button onClick={closeModal} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
              </div>
              <div className="p-6">
                 <form onSubmit={handleAddSubmit} className="space-y-4">
@@ -365,7 +392,7 @@ const LivestockManager: React.FC = () => {
                       />
                    </div>
 
-                    <button type="submit" className="w-full bg-sunburst-500 text-jade-950 py-4 font-semibold hover:bg-sunburst-400 rounded-sm shadow-md">Confirm Entry</button>
+                     <button type="submit" className="w-full bg-sunburst-500 text-jade-950 py-4 font-semibold hover:bg-sunburst-400 rounded-sm shadow-md">{editingAnimal ? 'Save Changes' : 'Confirm Entry'}</button>
                 </form>
              </div>
           </div>
@@ -377,7 +404,7 @@ const LivestockManager: React.FC = () => {
         <div className="fixed inset-0 z-full-modal flex items-center justify-center p-4 bg-jade-950/90 backdrop-blur-md" role="dialog" aria-modal="true">
            <div className="bg-[var(--bg-content)] dark:bg-jade-950 w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-jade-600">
                <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
-                 <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Stethoscope className="w-5 h-5 mr-2 text-red-500" /> Animal Health Check</h3>
+                  <h3 className="text-xl font-bold text-white font-semibold flex items-center"><Stethoscope className="w-5 h-5 mr-2 text-red-500" /> Animal Health Check{!isAIConfigured() && <span className="ml-2 px-1.5 py-0.5 bg-white/20 text-white text-[9px] font-bold rounded uppercase tracking-wide">Demo</span>}</h3>
                 <button onClick={resetScanner} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
               </div>
               <div className="p-6 overflow-y-auto">
@@ -393,9 +420,12 @@ const LivestockManager: React.FC = () => {
                       </button>
                    </div>
                  ) : (
-                   <div className="space-y-4">
-                       <div className="bg-[var(--bg-card)] dark:bg-jade-800 border-l-4 border-red-600 p-6 shadow-sm"><p className="whitespace-pre-wrap font-medium text-[var(--text-primary)]">{scanResult}</p></div>
-                       <button onClick={() => setScanResult('')} className="w-full py-3 bg-jade-800 text-white font-semibold rounded-sm">New Scan</button>
+                    <div className="space-y-4">
+                        <div className="bg-[var(--bg-card)] dark:bg-jade-800 border-l-4 border-red-600 p-6 shadow-sm">
+                          {isScanSimulated && <span className="inline-block mb-2 px-1.5 py-0.5 bg-terra-200 dark:bg-terra-800 text-terra-700 dark:text-terra-300 text-[9px] font-bold rounded uppercase tracking-wide">Simulated Result</span>}
+                          <p className="whitespace-pre-wrap font-medium text-[var(--text-primary)]">{scanResult}</p>
+                        </div>
+                        <button onClick={() => { setScanResult(''); setIsScanSimulated(false); }} className="w-full py-3 bg-jade-800 text-white font-semibold rounded-sm">New Scan</button>
                    </div>
                  )}
               </div>

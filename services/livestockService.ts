@@ -47,4 +47,13 @@ export class LivestockService {
     await db.saveLivestock(updatedLivestock);
     return updatedLivestock;
   }
+
+  static async update(id: string, data: Partial<Omit<Livestock, 'id'>>): Promise<Livestock[]> {
+    const currentLivestock = await db.getLivestock();
+    const updatedLivestock = currentLivestock.map(a =>
+      a.id === id ? { ...a, ...data } : a
+    );
+    await db.saveLivestock(updatedLivestock);
+    return updatedLivestock;
+  }
 }

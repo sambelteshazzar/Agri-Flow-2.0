@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { X, AlertTriangle, Upload, Loader2 } from 'lucide-react';
-import { analyzeCropImage } from '@/services/geminiService';
+import { analyzeCropImage, isAIConfigured } from '@/services/geminiService';
 import type { CountryContext } from '@/services/geminiService';
 
 interface CropScannerProps {
@@ -14,6 +14,7 @@ const CropScanner: React.FC<CropScannerProps> = ({ isOpen, onClose, countryCtx }
   const [scanContext, setScanContext] = useState('');
   const [scanResult, setScanResult] = useState('');
   const [isScanning, setIsScanning] = useState(false);
+  const [isResultSimulated, setIsResultSimulated] = useState(false);
   const scanInputRef = useRef<HTMLInputElement>(null);
 
   const handleScanUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +32,7 @@ const CropScanner: React.FC<CropScannerProps> = ({ isOpen, onClose, countryCtx }
     try {
       const diagnosis = await analyzeCropImage(scanImage, scanContext, countryCtx);
       setScanResult(diagnosis);
+      setIsResultSimulated(!isAIConfigured());
     } catch {
       setScanResult("Could not complete the analysis.");
     } finally {
@@ -46,7 +48,7 @@ const CropScanner: React.FC<CropScannerProps> = ({ isOpen, onClose, countryCtx }
     <div className="fixed inset-0 z-full-modal flex items-center justify-center p-4 bg-jade-950/90 backdrop-blur-md" role="dialog" aria-modal="true">
       <div className="bg-[var(--bg-content)] w-full max-w-2xl shadow-2xl rounded-md flex flex-col max-h-[90vh] border border-jade-600">
         <div className="bg-jade-950 p-5 flex justify-between items-center border-b-4 border-red-600 shrink-0">
-          <h3 className="text-xl font-semibold text-white flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-500" /> Crop Health Check</h3>
+          <h3 className="text-xl font-semibold text-white flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-500" /> Crop Health Check{!isAIConfigured() && <span className="ml-2 px-1.5 py-0.5 bg-white/20 text-white text-[9px] font-bold rounded uppercase tracking-wide">Demo</span>}</h3>
           <button onClick={resetScanner} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-white"><X className="w-6 h-6" aria-hidden="true" /></button>
         </div>
         <div className="p-6 overflow-y-auto">
@@ -63,7 +65,10 @@ const CropScanner: React.FC<CropScannerProps> = ({ isOpen, onClose, countryCtx }
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="bg-[var(--bg-card)] border-l-4 border-red-600 p-6 shadow-sm"><p className="whitespace-pre-wrap font-medium text-[var(--text-primary)]">{scanResult}</p></div>
+              <div className="bg-[var(--bg-card)] border-l-4 border-red-600 p-6 shadow-sm">
+                {isResultSimulated && <span className="inline-block mb-2 px-1.5 py-0.5 bg-terra-200 dark:bg-terra-800 text-terra-700 dark:text-terra-300 text-[9px] font-bold rounded uppercase tracking-wide">Simulated Result</span>}
+                <p className="whitespace-pre-wrap font-medium text-[var(--text-primary)]">{scanResult}</p>
+              </div>
               <button onClick={() => setScanResult('')} className="w-full py-3 bg-jade-800 text-white font-semibold rounded-sm">Scan Again</button>
             </div>
           )}

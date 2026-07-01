@@ -155,6 +155,7 @@ export interface NewsArticle {
   source: string;
   timeAgo: string;
   url?: string;
+  isSimulated?: boolean;
 }
 
 export interface MarketPrice {
@@ -173,6 +174,7 @@ export interface ChatMessage {
   image?: string;
   timestamp: Date;
   isRegenerativeAnalysis?: boolean;
+  isSimulated?: boolean;
   sources?: { title: string; uri: string }[];
 }
 

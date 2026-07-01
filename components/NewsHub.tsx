@@ -1,7 +1,7 @@
-
 import React, { useEffect } from 'react';
 import { useFarm } from '../contexts/FarmContext';
 import { Newspaper, Loader2, ExternalLink, Clock, RefreshCw, Zap, TrendingUp, Leaf, Landmark, Signal, Search } from 'lucide-react';
+import { isAIConfigured } from '../services/geminiService';
 
 const AG_NEWS_SOURCES: Record<string, string> = {
   Market: 'https://www.reuters.com/business/agriculture/',
@@ -70,7 +70,8 @@ const NewsHub: React.FC = () => {
             Field Wire <span className="ml-2 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
           </h2>
           <p className="text-secondary-dynamic font-semibold text-xs mt-1 flex items-center">
-            <Signal className="w-3 h-3 mr-1" /> Live Agricultural Feed
+            <Signal className="w-3 h-3 mr-1" /> {isAIConfigured() ? 'Live Agricultural Feed' : 'Sample Agricultural Feed'}
+            {!isAIConfigured() && <span className="ml-1.5 px-1 py-0.5 bg-terra-200 dark:bg-terra-800 text-terra-700 dark:text-terra-300 text-[8px] font-bold rounded uppercase tracking-wide">Simulated</span>}
           </p>
         </div>
         <button 

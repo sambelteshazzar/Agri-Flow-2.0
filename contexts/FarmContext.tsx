@@ -59,7 +59,7 @@ interface FarmContextType {
 
   // Auth Methods
   login: (data: OnboardingData) => Promise<void>;
-  signIn: () => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
   logout: () => void;
   updateUserProfile: (profile: Partial<UserProfile>) => Promise<void>;
   resetApp: () => void;
@@ -67,9 +67,11 @@ interface FarmContextType {
   addCrop: (crop: Omit<Crop, 'id'>) => Promise<void>;
   deleteCrop: (id: string) => Promise<void>;
   updateCropStatus: (id: string, status: Crop['status']) => Promise<void>;
+  updateCrop: (id: string, data: Partial<Omit<Crop, 'id'>>) => Promise<void>;
   addLivestock: (animal: Omit<Livestock, 'id'>) => Promise<void>;
   deleteLivestock: (id: string) => Promise<void>;
   updateLivestockStatus: (id: string, status: Livestock['status']) => Promise<void>;
+  updateLivestock: (id: string, data: Partial<Omit<Livestock, 'id'>>) => Promise<void>;
   toggleTask: (id: string) => void;
   addTask: (text: string) => void;
   completeModule: (id: string) => void;
@@ -106,8 +108,10 @@ interface FarmContextType {
   cropIncomes: CropIncome[];
   addCropExpense: (expense: Omit<CropExpense, 'id'>) => Promise<void>;
   deleteCropExpense: (id: string) => Promise<void>;
+  updateCropExpense: (id: string, data: Partial<Omit<CropExpense, 'id' | 'cropId'>>) => Promise<void>;
   addCropIncome: (income: Omit<CropIncome, 'id'>) => Promise<void>;
   deleteCropIncome: (id: string) => Promise<void>;
+  updateCropIncome: (id: string, data: Partial<Omit<CropIncome, 'id' | 'cropId'>>) => Promise<void>;
 }
 
 const FarmContext = createContext<FarmContextType | undefined>(undefined);
@@ -468,23 +472,27 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [showToast]);
 
-  const signIn = useCallback(async () => {
+  const signIn = useCallback(async (email: string, password: string) => {
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
+      const storedCreds = localStorage.getItem('agriflow_credentials');
+      if (storedCreds) {
+        const creds = JSON.parse(storedCreds);
+        const emailMatch = creds.email?.toLowerCase() === email.toLowerCase();
+        const passMatch = creds.password === password;
+        if (!emailMatch || !passMatch) {
+          throw new Error('Invalid email or password.');
+        }
+      }
       const savedProfile = await db.getUserProfile();
       if (savedProfile && savedProfile.name !== GUEST_USER.name) {
         setUserProfile(savedProfile);
-        setIsSignedIn(true);
-        localStorage.setItem('agriflow_is_signed_in', 'true');
-        showToast(`Welcome back, ${savedProfile.name}!`, 'success');
-      } else {
-        setIsSignedIn(true);
-        localStorage.setItem('agriflow_is_signed_in', 'true');
-        showToast('Signed in. Set up your farm to get started.', 'info');
       }
-    } catch (err) {
-      console.error('[FarmContext] signIn error:', err);
-      showToast('Sign in failed. Please try again.', 'error');
+      setIsSignedIn(true);
+      localStorage.setItem('agriflow_is_signed_in', 'true');
+      showToast(`Welcome back, ${savedProfile?.name || 'Farmer'}!`, 'success');
+    } catch (err: any) {
+      showToast(err.message || 'Sign in failed. Please try again.', 'error');
       throw err;
     }
   }, [showToast]);
@@ -494,6 +502,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('agriflow_theme');
     localStorage.removeItem('agriflow_is_signed_in');
     localStorage.removeItem('agriflow_has_started');
+    localStorage.removeItem('agriflow_credentials');
     setUserProfile(GUEST_USER);
     setIsSignedIn(false);
     setCrops([]);
@@ -564,6 +573,17 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [showToast]);
 
+  const updateCropExpense = useCallback(async (id: string, data: Partial<Omit<CropExpense, 'id' | 'cropId'>>) => {
+    try {
+      const updated = await FinancialService.updateExpense(id, data);
+      setCropExpenses(updated);
+      showToast('Expense updated', 'success');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to update expense', 'error');
+    }
+  }, [showToast]);
+
   const addCropIncome = useCallback(async (data: Omit<CropIncome, 'id'>) => {
     try {
       const updated = await FinancialService.addIncome(data);
@@ -585,11 +605,23 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [showToast]);
 
+  const updateCropIncome = useCallback(async (id: string, data: Partial<Omit<CropIncome, 'id' | 'cropId'>>) => {
+    try {
+      const updated = await FinancialService.updateIncome(id, data);
+      setCropIncomes(updated);
+      showToast('Income updated', 'success');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to update income', 'error');
+    }
+  }, [showToast]);
+
   const resetApp = useCallback(() => {
     Object.values(DB_KEYS).forEach(key => localStorage.removeItem(key));
     localStorage.removeItem('agriflow_theme');
     localStorage.removeItem('agriflow_is_signed_in');
     localStorage.removeItem('agriflow_has_started');
+    localStorage.removeItem('agriflow_credentials');
     window.location.reload();
   }, []);
 
@@ -675,6 +707,17 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [showToast]);
 
+  const updateCrop = useCallback(async (id: string, data: Partial<Omit<Crop, 'id'>>) => {
+    try {
+      const updated = await CropService.update(id, data);
+      setCrops(updated);
+      showToast('Plot updated', 'success');
+    } catch (e) {
+      console.error("Failed to update crop", e);
+      showToast('Failed to update plot', 'error');
+    }
+  }, [showToast]);
+
   // --- Livestock Actions ---
   const addLivestock = useCallback(async (animalData: Omit<Livestock, 'id'>) => {
     try {
@@ -704,6 +747,17 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       showToast(`Herd status updated to ${status}`, 'success');
     } catch (e) {
       console.error("Failed to update livestock status", e);
+    }
+  }, [showToast]);
+
+  const updateLivestock = useCallback(async (id: string, data: Partial<Omit<Livestock, 'id'>>) => {
+    try {
+      const updated = await LivestockService.update(id, data);
+      setLivestock(updated);
+      showToast('Herd updated', 'success');
+    } catch (e) {
+      console.error("Failed to update livestock", e);
+      showToast('Failed to update herd', 'error');
     }
   }, [showToast]);
 
@@ -926,14 +980,14 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     stories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
     pollData, pollVoted, handlePollVote,
     login, signIn, logout, updateUserProfile, resetApp,
-    addCrop, deleteCrop, updateCropStatus, addLivestock, deleteLivestock, updateLivestockStatus, toggleTask, addTask, completeModule, 
+    addCrop, deleteCrop, updateCropStatus, updateCrop, addLivestock, deleteLivestock, updateLivestockStatus, updateLivestock, toggleTask, addTask, completeModule, 
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
     addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
     laborInput, resourceResult, saveLaborInput: saveLaborInputAction, saveResourceResult: saveResourceResultAction,
-    cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, addCropIncome, deleteCropIncome
+    cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, updateCropExpense, addCropIncome, deleteCropIncome, updateCropIncome
   }), [
     userProfile, isSignedIn, alerts,
     theme, toggleTheme, setThemeMode, currentView, navigate,
@@ -942,7 +996,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     stories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
     pollData, pollVoted, handlePollVote,
     login, signIn, logout, updateUserProfile, resetApp,
-    addCrop, deleteCrop, updateCropStatus, addLivestock, deleteLivestock, updateLivestockStatus, toggleTask, addTask, completeModule, 
+    addCrop, deleteCrop, updateCropStatus, updateCrop, addLivestock, deleteLivestock, updateLivestockStatus, updateLivestock, toggleTask, addTask, completeModule, 
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 

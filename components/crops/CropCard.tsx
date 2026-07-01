@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Ruler, CalendarDays, Droplets, Droplet, Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import { Trash2, Pencil, Ruler, CalendarDays, Droplets, Droplet, Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 import { Crop, CropExpense, CropIncome } from '@/types';
 import { formatArea, formatCurrency } from '@/utils/localeFormat';
 
@@ -13,6 +13,7 @@ interface CropCardProps {
   onLogActivity: (id: string) => void;
   onDelete: (id: string) => void;
   onOpenFinancials: (id: string) => void;
+  onEdit: (crop: Crop) => void;
 }
 
 const getStatusColor = (status: string) => {
@@ -34,7 +35,7 @@ const getWaterEfficiencyColor = (efficiency: string) => {
   }
 };
 
-const CropCard: React.FC<CropCardProps> = ({ crop, areaUnit, expenses, incomes, currencyCode, currencySymbol, onLogActivity, onDelete, onOpenFinancials }) => {
+const CropCard: React.FC<CropCardProps> = ({ crop, areaUnit, expenses, incomes, currencyCode, currencySymbol, onLogActivity, onDelete, onOpenFinancials, onEdit }) => {
   const cropExpenses = expenses.filter(e => e.cropId === crop.id);
   const cropIncomes = incomes.filter(i => i.cropId === crop.id);
   const totalExp = cropExpenses.reduce((s, e) => s + e.amount, 0);
@@ -124,6 +125,9 @@ const CropCard: React.FC<CropCardProps> = ({ crop, areaUnit, expenses, incomes, 
           </button>
           <button onClick={() => onOpenFinancials(crop.id)} className="flex-1 py-3 bg-[var(--bg-content)] border-2 border-jade-600 text-jade-700 dark:text-jade-400 text-sm font-semibold rounded hover:bg-jade-50 dark:hover:bg-jade-900/20 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-jade-500 cursor-pointer active:scale-95 flex items-center justify-center gap-1">
             <Wallet className="w-4 h-4" /> Finances
+          </button>
+          <button onClick={() => onEdit(crop)} aria-label={`Edit ${crop.name} plot`} className="px-3 py-2 bg-[var(--bg-card)] text-[var(--text-secondary)] rounded hover:bg-jade-50 dark:hover:bg-jade-900/20 hover:text-jade-600 dark:hover:text-jade-400 transition-colors border-2 border-[var(--border-card)] hover:border-jade-200 focus:outline-none focus:ring-2 focus:ring-jade-500 cursor-pointer active:scale-95">
+            <Pencil className="w-5 h-5" />
           </button>
           <button onClick={() => { if (window.confirm(`Delete "${crop.name}"? This cannot be undone.`)) onDelete(crop.id); }} aria-label={`Delete ${crop.name} plot`} className="px-3 py-2 bg-[var(--bg-card)] text-[var(--text-secondary)] rounded hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-colors border-2 border-[var(--border-card)] hover:border-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer active:scale-95">
             <Trash2 className="w-5 h-5" />

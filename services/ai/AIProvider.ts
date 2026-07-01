@@ -19,6 +19,7 @@ export interface AISource {
 export interface FarmingAdviceResult {
   text: string;
   sources?: AISource[];
+  isSimulated?: boolean;
 }
 
 export interface AIProvider {

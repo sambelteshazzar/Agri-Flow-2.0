@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { X, DollarSign, TrendingUp, TrendingDown, Plus, Trash2, Wallet } from 'lucide-react';
+import { X, DollarSign, TrendingUp, TrendingDown, Plus, Trash2, Pencil, Wallet } from 'lucide-react';
 import { CropExpense, CropIncome } from '@/types';
 import { formatCurrency } from '@/utils/localeFormat';
 
@@ -12,8 +12,10 @@ interface CropFinancialsModalProps {
   incomes: CropIncome[];
   onAddExpense: (data: Omit<CropExpense, 'id'>) => void;
   onDeleteExpense: (id: string) => void;
+  onUpdateExpense: (id: string, data: Partial<Omit<CropExpense, 'id' | 'cropId'>>) => void;
   onAddIncome: (data: Omit<CropIncome, 'id'>) => void;
   onDeleteIncome: (id: string) => void;
+  onUpdateIncome: (id: string, data: Partial<Omit<CropIncome, 'id' | 'cropId'>>) => void;
   currencyCode: string;
   currencySymbol: string;
 }
@@ -32,13 +34,17 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
   incomes,
   onAddExpense,
   onDeleteExpense,
+  onUpdateExpense,
   onAddIncome,
   onDeleteIncome,
+  onUpdateIncome,
   currencyCode,
   currencySymbol
 }) => {
   const [tab, setTab] = useState<Tab>('expenses');
   const [showForm, setShowForm] = useState(false);
+  const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
+  const [editingIncomeId, setEditingIncomeId] = useState<string | null>(null);
 
   const [expCategory, setExpCategory] = useState<CropExpense['category']>('Seeds');
   const [expDescription, setExpDescription] = useState('');
@@ -63,6 +69,7 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
     setExpAmount('');
     setExpDate(new Date().toISOString().split('T')[0]);
     setShowForm(false);
+    setEditingExpenseId(null);
   };
 
   const resetIncForm = () => {
@@ -72,18 +79,47 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
     setIncUnitPrice('');
     setIncDate(new Date().toISOString().split('T')[0]);
     setShowForm(false);
+    setEditingIncomeId(null);
+  };
+
+  const startEditExpense = (exp: CropExpense) => {
+    setEditingExpenseId(exp.id);
+    setExpCategory(exp.category);
+    setExpDescription(exp.description);
+    setExpAmount(String(exp.amount));
+    setExpDate(new Date(exp.date).toISOString().split('T')[0]);
+    setShowForm(true);
+  };
+
+  const startEditIncome = (inc: CropIncome) => {
+    setEditingIncomeId(inc.id);
+    setIncType(inc.type);
+    setIncDescription(inc.description);
+    setIncQuantity(String(inc.quantity));
+    setIncUnitPrice(String(inc.unitPrice));
+    setIncDate(new Date(inc.date).toISOString().split('T')[0]);
+    setShowForm(true);
   };
 
   const handleAddExpense = (e: React.FormEvent) => {
     e.preventDefault();
     if (!expAmount || Number(expAmount) <= 0) return;
-    onAddExpense({
-      cropId,
-      category: expCategory,
-      description: expDescription || expCategory,
-      amount: Number(expAmount),
-      date: new Date(expDate).toISOString()
-    });
+    if (editingExpenseId) {
+      onUpdateExpense(editingExpenseId, {
+        category: expCategory,
+        description: expDescription || expCategory,
+        amount: Number(expAmount),
+        date: new Date(expDate).toISOString()
+      });
+    } else {
+      onAddExpense({
+        cropId,
+        category: expCategory,
+        description: expDescription || expCategory,
+        amount: Number(expAmount),
+        date: new Date(expDate).toISOString()
+      });
+    }
     resetExpForm();
   };
 
@@ -93,15 +129,26 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
     const price = Number(incUnitPrice) || 0;
     const total = qty * price;
     if (total <= 0) return;
-    onAddIncome({
-      cropId,
-      type: incType,
-      description: incDescription || incType,
-      quantity: qty,
-      unitPrice: price,
-      totalAmount: total,
-      date: new Date(incDate).toISOString()
-    });
+    if (editingIncomeId) {
+      onUpdateIncome(editingIncomeId, {
+        type: incType,
+        description: incDescription || incType,
+        quantity: qty,
+        unitPrice: price,
+        totalAmount: total,
+        date: new Date(incDate).toISOString()
+      });
+    } else {
+      onAddIncome({
+        cropId,
+        type: incType,
+        description: incDescription || incType,
+        quantity: qty,
+        unitPrice: price,
+        totalAmount: total,
+        date: new Date(incDate).toISOString()
+      });
+    }
     resetIncForm();
   };
 
@@ -149,7 +196,7 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
 
           <div className="flex gap-2 mb-4">
             <button
-              onClick={() => { setTab('expenses'); setShowForm(false); }}
+              onClick={() => { setTab('expenses'); setShowForm(false); setEditingExpenseId(null); setEditingIncomeId(null); }}
               className={`flex-1 py-2 text-sm font-semibold rounded border-2 transition-colors ${
                 tab === 'expenses'
                   ? 'bg-red-50 dark:bg-red-900/20 border-red-400 text-red-700 dark:text-red-300'
@@ -159,7 +206,7 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
               Expenses ({cropExpenses.length})
             </button>
             <button
-              onClick={() => { setTab('income'); setShowForm(false); }}
+              onClick={() => { setTab('income'); setShowForm(false); setEditingExpenseId(null); setEditingIncomeId(null); }}
               className={`flex-1 py-2 text-sm font-semibold rounded border-2 transition-colors ${
                 tab === 'income'
                   ? 'bg-jade-50 dark:bg-jade-900/20 border-jade-400 text-jade-700 dark:text-jade-300'
@@ -174,7 +221,7 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
             onClick={() => setShowForm(!showForm)}
             className="w-full mb-4 py-2 bg-jade-800 dark:bg-jade-700 text-white text-sm font-semibold rounded hover:bg-jade-950 dark:hover:bg-jade-600 transition-colors shadow-sm flex items-center justify-center gap-2 active:scale-[0.98]"
           >
-            <Plus className="w-4 h-4" /> Add {tab === 'expenses' ? 'Expense' : 'Income'}
+            <Plus className="w-4 h-4" />             {editingExpenseId || editingIncomeId ? 'Cancel Edit' : `Add ${tab === 'expenses' ? 'Expense' : 'Income'}`}
           </button>
 
           {showForm && tab === 'expenses' && (
@@ -200,7 +247,7 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
                 <input type="date" value={expDate} onChange={e => setExpDate(e.target.value)} className="w-full px-3 py-2 border-2 border-[var(--border-card)] rounded-sm bg-[var(--bg-card)] text-[var(--text-primary)] text-sm font-medium focus:border-sunburst-500 focus:outline-none" required />
               </div>
               <div className="flex gap-2">
-                <button type="submit" className="flex-1 py-2.5 bg-red-600 text-white text-sm font-semibold rounded hover:bg-red-700 transition-colors">Save Expense</button>
+                <button type="submit" className="flex-1 py-2.5 bg-red-600 text-white text-sm font-semibold rounded hover:bg-red-700 transition-colors">{editingExpenseId ? 'Update Expense' : 'Save Expense'}</button>
                 <button type="button" onClick={resetExpForm} className="px-4 py-2.5 border-2 border-[var(--border-card)] text-[var(--text-secondary)] text-sm font-semibold rounded hover:bg-[var(--bg-content)]">Cancel</button>
               </div>
             </form>
@@ -239,7 +286,7 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
                 <input type="date" value={incDate} onChange={e => setIncDate(e.target.value)} className="w-full px-3 py-2 border-2 border-[var(--border-card)] rounded-sm bg-[var(--bg-card)] text-[var(--text-primary)] text-sm font-medium focus:border-sunburst-500 focus:outline-none" required />
               </div>
               <div className="flex gap-2">
-                <button type="submit" className="flex-1 py-2.5 bg-jade-700 text-white text-sm font-semibold rounded hover:bg-jade-800 transition-colors">Save Income</button>
+                <button type="submit" className="flex-1 py-2.5 bg-jade-700 text-white text-sm font-semibold rounded hover:bg-jade-800 transition-colors">{editingIncomeId ? 'Update Income' : 'Save Income'}</button>
                 <button type="button" onClick={resetIncForm} className="px-4 py-2.5 border-2 border-[var(--border-card)] text-[var(--text-secondary)] text-sm font-semibold rounded hover:bg-[var(--bg-content)]">Cancel</button>
               </div>
             </form>
@@ -265,6 +312,13 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
                     <p className="text-[10px] text-[var(--text-tertiary)]">{new Date(exp.date).toLocaleDateString()}</p>
                   </div>
                   <button
+                    onClick={() => startEditExpense(exp)}
+                    className="opacity-0 group-hover:opacity-100 p-1.5 text-jade-500 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded transition-opacity"
+                    aria-label="Edit expense"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button
                     onClick={() => { if (window.confirm('Delete this expense?')) onDeleteExpense(exp.id); }}
                     className="opacity-0 group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-opacity"
                     aria-label="Delete expense"
@@ -288,6 +342,13 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
                     <p className="text-xs text-[var(--text-secondary)] mt-0.5 truncate">{inc.description} &middot; {inc.quantity} @ {currencySymbol}{inc.unitPrice}</p>
                     <p className="text-[10px] text-[var(--text-tertiary)]">{new Date(inc.date).toLocaleDateString()}</p>
                   </div>
+                  <button
+                    onClick={() => startEditIncome(inc)}
+                    className="opacity-0 group-hover:opacity-100 p-1.5 text-jade-500 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded transition-opacity"
+                    aria-label="Edit income"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
                   <button
                     onClick={() => { if (window.confirm('Delete this income entry?')) onDeleteIncome(inc.id); }}
                     className="opacity-0 group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-opacity"

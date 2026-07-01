@@ -45,6 +45,15 @@ export class CropService {
     return updatedCrops;
   }
 
+  static async update(id: string, data: Partial<Omit<Crop, 'id'>>): Promise<Crop[]> {
+    const currentCrops = await db.getCrops();
+    const updatedCrops = currentCrops.map(c =>
+      c.id === id ? { ...c, ...data } : c
+    );
+    await db.saveCrops(updatedCrops);
+    return updatedCrops;
+  }
+
   /**
    * Calculates projected revenue based on area, soil health, and current market price.
    * This represents logic that would typically live on a backend server.

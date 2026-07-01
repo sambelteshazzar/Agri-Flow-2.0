@@ -33,6 +33,13 @@ export class FinancialService {
     return updated;
   }
 
+  static async updateExpense(id: string, data: Partial<Omit<CropExpense, 'id' | 'cropId'>>): Promise<CropExpense[]> {
+    const current = await db.getCropExpenses();
+    const updated = current.map(e => e.id === id ? { ...e, ...data } : e);
+    await db.saveCropExpenses(updated);
+    return updated;
+  }
+
   static async deleteExpensesByCrop(cropId: string): Promise<CropExpense[]> {
     const current = await db.getCropExpenses();
     const updated = current.filter(e => e.cropId !== cropId);
@@ -67,6 +74,13 @@ export class FinancialService {
   static async deleteIncome(id: string): Promise<CropIncome[]> {
     const current = await db.getCropIncomes();
     const updated = current.filter(i => i.id !== id);
+    await db.saveCropIncomes(updated);
+    return updated;
+  }
+
+  static async updateIncome(id: string, data: Partial<Omit<CropIncome, 'id' | 'cropId'>>): Promise<CropIncome[]> {
+    const current = await db.getCropIncomes();
+    const updated = current.map(i => i.id === id ? { ...i, ...data } : i);
     await db.saveCropIncomes(updated);
     return updated;
   }
