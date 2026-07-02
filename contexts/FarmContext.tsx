@@ -75,6 +75,7 @@ interface FarmContextType {
   toggleTask: (id: string) => void;
   addTask: (text: string) => void;
   completeModule: (id: string) => void;
+  updateModuleProgress: (id: string, progress: number, completedLesson?: number) => void;
   refreshMarketPrices: () => Promise<void>;
   refreshNews: () => Promise<void>;
   refreshLocation: () => void;
@@ -146,6 +147,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     [NavigationTab.EDUCATION]: 'education',
     [NavigationTab.COMMUNITY]: 'community',
     [NavigationTab.LABOR]: 'labor',
+    [NavigationTab.CALENDAR]: 'calendar',
     [NavigationTab.SETTINGS]: 'settings',
   };
 
@@ -798,7 +800,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // --- Education Actions ---
   const completeModule = useCallback((id: string) => {
     setLearningModules(prevModules => {
-      const updated = prevModules.map(m => m.id === id ? { ...m, completed: true } : m);
+      const updated = prevModules.map(m => m.id === id ? { ...m, completed: true, progress: 100 } : m);
       if (!moduleSaveRef.current) {
         moduleSaveRef.current = true;
         if (flushModules.current) clearTimeout(flushModules.current);
@@ -811,6 +813,35 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
     showToast('Course completed! Certificate saved.', 'success');
   }, [showToast]);
+
+  const updateModuleProgress = useCallback((id: string, progress: number, completedLesson?: number) => {
+    setLearningModules(prevModules => {
+      const updated = prevModules.map(m => {
+        if (m.id === id) {
+          const newCompletedLessons = completedLesson !== undefined && !m.completedLessons.includes(completedLesson)
+            ? [...m.completedLessons, completedLesson]
+            : m.completedLessons;
+          const newProgress = Math.max(progress, Math.round((newCompletedLessons.length / m.lessonsCount) * 100));
+          return { 
+            ...m, 
+            progress: Math.min(newProgress, 100),
+            completedLessons: newCompletedLessons,
+            completed: newProgress >= 100
+          };
+        }
+        return m;
+      });
+      if (!moduleSaveRef.current) {
+        moduleSaveRef.current = true;
+        if (flushModules.current) clearTimeout(flushModules.current);
+        flushModules.current = setTimeout(() => {
+          setLearningModules(current => { db.saveModules(current); return current; });
+          moduleSaveRef.current = false;
+        }, 100);
+      }
+      return updated;
+    });
+  }, []);
 
   // --- Market Actions ---
   const refreshMarketPrices = useCallback(async () => {
@@ -996,7 +1027,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     stories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
     pollData, pollVoted, handlePollVote,
     login, signIn, logout, updateUserProfile, resetApp,
-    addCrop, deleteCrop, updateCropStatus, updateCrop, addLivestock, deleteLivestock, updateLivestockStatus, updateLivestock, toggleTask, addTask, completeModule, 
+    addCrop, deleteCrop, updateCropStatus, updateCrop, addLivestock, deleteLivestock, updateLivestockStatus, updateLivestock, toggleTask, addTask, completeModule, updateModuleProgress,
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 

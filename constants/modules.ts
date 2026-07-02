@@ -11,7 +11,10 @@ export const INITIAL_MODULES: LearningModule[] = [
     difficulty: 'Advanced',
     duration: '4h 15m',
     completed: false,
-    description: 'Drought-tolerant varieties, conservation agriculture, and Zai pit techniques for the Sahel. Improve soil organic matter and water retention on sandy soils.'
+    description: 'Drought-tolerant varieties, conservation agriculture, and Zai pit techniques for the Sahel. Improve soil organic matter and water retention on sandy soils.',
+    videoId: 'h2P5z2Q3yJ0',
+    progress: 0,
+    completedLessons: [],
   },
   {
     id: '2',
@@ -23,7 +26,10 @@ export const INITIAL_MODULES: LearningModule[] = [
     difficulty: 'Intermediate',
     duration: '2h 30m',
     completed: true,
-    description: 'Navigating Naira volatility, input cost spikes, and cooperative bulk purchasing. Accessing NIRSAL credit and BOA loan windows for 2026 season.'
+    description: 'Navigating Naira volatility, input cost spikes, and cooperative bulk purchasing. Accessing NIRSAL credit and BOA loan windows for 2026 season.',
+    videoId: 'Q6sL-7sF_Gw',
+    progress: 100,
+    completedLessons: [0, 1, 2, 3, 4, 5, 6, 7],
   },
   {
     id: '3',
@@ -35,7 +41,10 @@ export const INITIAL_MODULES: LearningModule[] = [
     difficulty: 'Advanced',
     duration: '5h 00m',
     completed: false,
-    description: 'Solar-powered drip irrigation, treadle pumps, and smart soil moisture sensors. Optimizing water usage under Sahel dry spell conditions.'
+    description: 'Solar-powered drip irrigation, treadle pumps, and smart soil moisture sensors. Optimizing water usage under Sahel dry spell conditions.',
+    videoId: '1s5o7s3y_wY',
+    progress: 0,
+    completedLessons: [],
   },
   {
     id: '4',
@@ -47,7 +56,10 @@ export const INITIAL_MODULES: LearningModule[] = [
     difficulty: 'Beginner',
     duration: '1h 45m',
     completed: false,
-    description: 'Deploy NDVI drones to detect Fall Armyworm and Striga stress early. Practical training for smallholder and medium-scale farms.'
+    description: 'Deploy NDVI drones to detect Fall Armyworm and Striga stress early. Practical training for smallholder and medium-scale farms.',
+    videoId: 'G9K7z9JcQj8',
+    progress: 0,
+    completedLessons: [],
   },
   {
     id: '5',
@@ -59,6 +71,9 @@ export const INITIAL_MODULES: LearningModule[] = [
     difficulty: 'Intermediate',
     duration: '3h 20m',
     completed: false,
-    description: 'Push-pull technology for FAW control, Striga management, pheromone traps, and cowpea intercropping. Reducing pesticide dependence across West Africa.'
+    description: 'Push-pull technology for FAW control, Striga management, pheromone traps, and cowpea intercropping. Reducing pesticide dependence across West Africa.',
+    videoId: '6S6PJ8W1gbM',
+    progress: 0,
+    completedLessons: [],
   }
 ];

@@ -2,14 +2,14 @@
 import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import { Menu, Wifi, WifiOff, Globe, Bell, X, AlertTriangle, TrendingUp, Info, LogIn, User, Loader2, CheckCircle, AlertCircle, Info as InfoIcon, Search, Command } from 'lucide-react';
 import Sidebar from './components/Sidebar';
-import Dashboard from './components/Dashboard';
-import CropManager from './components/CropManager';
-import LivestockManager from './components/LivestockManager';
 import MobileNav from './components/MobileNav';
 import CommandPalette from './components/CommandPalette';
 import GetStarted from './components/GetStarted';
 import { LoginPage } from './components/LoginPage';
 
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const CropManager = lazy(() => import('./components/CropManager'));
+const LivestockManager = lazy(() => import('./components/LivestockManager'));
 const EducationHub = lazy(() => import('./components/EducationHub'));
 const MarketAnalytics = lazy(() => import('./components/MarketAnalytics'));
 const NewsHub = lazy(() => import('./components/NewsHub'));
@@ -19,6 +19,7 @@ const CommunityHub = lazy(() => import('./components/CommunityHub'));
 const FarmLaborPlanner = lazy(() => import('./components/FarmLaborPlanner'));
 const SettingsPage = lazy(() => import('./components/Settings'));
 const VoiceAgent = lazy(() => import('./components/VoiceAgent'));
+const PlantingCalendar = lazy(() => import('./components/PlantingCalendar'));
 
 import { NavigationTab } from './types';
 import { RouteErrorBoundary } from './components/RouteErrorBoundary';
@@ -100,6 +101,7 @@ const AppContent: React.FC = () => {
       case NavigationTab.MARKET: return 'Prices, trends & opportunities';
       case NavigationTab.NEWS: return 'Agricultural news & updates';
       case NavigationTab.LABOR: return 'Plan tasks & workforce';
+      case NavigationTab.CALENDAR: return 'Plan your season';
       case NavigationTab.SETTINGS: return 'Profile & preferences';
       default: return 'Smart farming assistant';
     }
@@ -175,6 +177,7 @@ const AppContent: React.FC = () => {
             case NavigationTab.NEWS: return <RouteErrorBoundary routeName="News Hub" onNavigateHome={goHome}><NewsHub /></RouteErrorBoundary>;
             case NavigationTab.AI_ADVISOR: return <RouteErrorBoundary routeName="AI Advisor" onNavigateHome={goHome}><AIAdvisor /></RouteErrorBoundary>;
             case NavigationTab.LABOR: return <RouteErrorBoundary routeName="Labor Planner" onNavigateHome={goHome}><FarmLaborPlanner /></RouteErrorBoundary>;
+            case NavigationTab.CALENDAR: return <RouteErrorBoundary routeName="Planting Calendar" onNavigateHome={goHome}><PlantingCalendar /></RouteErrorBoundary>;
             case NavigationTab.SETTINGS: return <RouteErrorBoundary routeName="Settings" onNavigateHome={goHome}><SettingsPage /></RouteErrorBoundary>;
             default: return <RouteErrorBoundary routeName="Dashboard" onNavigateHome={goHome}><Dashboard /></RouteErrorBoundary>;
           }

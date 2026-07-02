@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutDashboard, Sprout, TrendingUp, BrainCircuit, Beef, GraduationCap, Calculator, Users, HardHat, Globe, LogOut, Settings as SettingsIcon } from 'lucide-react';
+import { LayoutDashboard, Sprout, TrendingUp, BrainCircuit, Beef, GraduationCap, Calculator, Users, HardHat, Globe, LogOut, Settings as SettingsIcon, CalendarDays } from 'lucide-react';
 import { NavigationTab } from '../types';
 
 interface SidebarProps {
@@ -28,15 +28,16 @@ const navGroups = [
       { id: NavigationTab.AI_ADVISOR, label: 'AI Advisor', icon: BrainCircuit },
     ],
   },
-  {
-    label: 'Tools',
-    items: [
-      { id: NavigationTab.CALCULATOR, label: 'Calculators', icon: Calculator },
-      { id: NavigationTab.EDUCATION, label: 'Learn', icon: GraduationCap },
-      { id: NavigationTab.COMMUNITY, label: 'Community', icon: Users },
-      { id: NavigationTab.LABOR, label: 'Labor Planner', icon: HardHat },
-    ],
-  },
+{
+      label: 'Tools',
+      items: [
+        { id: NavigationTab.CALCULATOR, label: 'Calculators', icon: Calculator },
+        { id: NavigationTab.EDUCATION, label: 'Learn', icon: GraduationCap },
+        { id: NavigationTab.COMMUNITY, label: 'Community', icon: Users },
+        { id: NavigationTab.LABOR, label: 'Labor Planner', icon: HardHat },
+        { id: NavigationTab.CALENDAR, label: 'Planting Calendar', icon: CalendarDays },
+      ],
+    },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isMobileOpen, setIsMobileOpen, onLogout }) => {

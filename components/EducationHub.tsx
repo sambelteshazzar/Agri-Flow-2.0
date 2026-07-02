@@ -1,17 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { useFarm } from '../contexts/FarmContext';
-import { GraduationCap, PlayCircle, Check, Clock, BookOpen, User, Star, Search, ArrowLeft, Play, FileText, Lock, Award, Pause } from 'lucide-react';
-
-const COURSE_CONTENT_MAP: Record<string, string> = {
-  'Regenerative': 'h2P5z2Q3yJ0',
-  'Tech': 'Q6sL-7sF_Gw',
-  'Economics': '1s5o7s3y_wY',
-  'Resilience': 'G9K7z9JcQj8',
-  'Default': '6S6PJ8W1gbM'
-};
+import { GraduationCap, PlayCircle, Check, Clock, BookOpen, User, Star, Search, ArrowLeft, Play, FileText, Lock, Award, Pause, CheckCircle2 } from 'lucide-react';
 
 const EducationHub: React.FC = () => {
-  const { learningModules, completeModule } = useFarm();
+  const { learningModules, completeModule, updateModuleProgress } = useFarm();
   const [filterCategory, setFilterCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCourseId, setActiveCourseId] = useState<string | null>(null);
@@ -42,7 +34,7 @@ const EducationHub: React.FC = () => {
   const handleStartCourse = (id: string) => {
     const mod = learningModules.find(m => m.id === id);
     setActiveCourseId(id);
-    setCurrentLessonIdx(mod?.completed ? (mod.lessonsCount - 1) : 0);
+    setCurrentLessonIdx(mod?.completed ? (mod.lessonsCount - 1) : (mod.completedLessons.length > 0 ? Math.max(...mod.completedLessons) + 1 : 0));
     setIsPlaying(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -50,6 +42,12 @@ const EducationHub: React.FC = () => {
   const handleCompleteCourse = () => {
     if (activeCourseId) {
       completeModule(activeCourseId);
+    }
+  };
+
+  const handleLessonComplete = (idx: number) => {
+    if (activeCourseId) {
+      updateModuleProgress(activeCourseId, Math.round(((idx + 1) / activeCourse.lessonsCount) * 100), idx);
     }
   };
 
@@ -78,11 +76,11 @@ const EducationHub: React.FC = () => {
       id: i,
       title: getLessonTitle(i, activeCourse.lessonsCount, activeCourse.category),
       duration: `${15 + (i % 5) * 3}:00`,
-      isLocked: i > currentLessonIdx,
-      isCompleted: i < currentLessonIdx
+      isLocked: i > currentLessonIdx && !activeCourse.completedLessons.includes(i),
+      isCompleted: activeCourse.completedLessons.includes(i)
     }));
 
-    const videoId = COURSE_CONTENT_MAP[activeCourse.category] || COURSE_CONTENT_MAP['Default'];
+    const videoId = activeCourse.videoId;
 
     return (
       <div className="h-full flex flex-col animate-fade-in pb-10">
@@ -194,29 +192,37 @@ const EducationHub: React.FC = () => {
                     </div>
                  </div>
                  
-                 <div className="flex-1 overflow-y-auto custom-scrollbar">
-                    {lessons.map((lesson, idx) => (
-                       <button 
-                         key={lesson.id}
-                         onClick={() => !lesson.isLocked && handleLessonChange(idx)}
-                         disabled={lesson.isLocked}
-                         className={`w-full text-left p-4 border-b border-primary-dynamic transition-colors flex items-start gap-3 hover:bg-terra-50 dark:hover:bg-jade-800/50 ${currentLessonIdx === idx ? 'bg-jade-50 dark:bg-jade-900/20 border-l-4 border-l-jade-500' : 'border-l-4 border-l-transparent'}`}
-                       >
-                          <div className={`mt-0.5 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center border ${
-                             currentLessonIdx === idx ? 'bg-jade-500 border-jade-500 text-white' : 
-                             lesson.isLocked ? 'border-terra-300 dark:border-jade-600 text-terra-300 dark:text-jade-500' : 'border-jade-500 text-jade-500'
-                          }`}>
-                             {lesson.isLocked ? <Lock className="w-3 h-3" /> : (currentLessonIdx === idx ? (isPlaying ? <Pause className="w-3 h-3 fill-current"/> : <Play className="w-3 h-3 fill-current" />) : <Check className="w-3 h-3" />)}
-                          </div>
-                          <div className="flex-1">
-                             <p className={`text-sm font-bold ${currentLessonIdx === idx ? 'text-jade-700 dark:text-jade-400' : lesson.isLocked ? 'text-jade-400 dark:text-jade-500' : 'text-secondary-dynamic'}`}>
-                                {lesson.title}
-                             </p>
-                             <span className="text-[10px] font-mono text-jade-400 dark:text-jade-500 mt-1 block">{lesson.duration}</span>
-                          </div>
-                       </button>
-                    ))}
-                 </div>
+<div className="flex-1 overflow-y-auto custom-scrollbar">
+                     {lessons.map((lesson, idx) => (
+                        <button 
+                          key={lesson.id}
+                          onClick={() => !lesson.isLocked && handleLessonChange(idx)}
+                          disabled={lesson.isLocked}
+                          className={`w-full text-left p-4 border-b border-primary-dynamic transition-colors flex items-start gap-3 hover:bg-terra-50 dark:hover:bg-jade-800/50 ${currentLessonIdx === idx ? 'bg-jade-50 dark:bg-jade-900/20 border-l-4 border-l-jade-500' : 'border-l-4 border-l-transparent'}`}
+                        >
+                           <div className={`mt-0.5 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center border ${currentLessonIdx === idx ? 'bg-jade-500 border-jade-500 text-white' : lesson.isCompleted ? 'bg-jade-500 border-jade-500 text-white' : lesson.isLocked ? 'border-terra-300 dark:border-jade-600 text-terra-300 dark:text-jade-500' : 'border-jade-500 text-jade-500'}`}>
+                              {lesson.isCompleted ? <CheckCircle2 className="w-3 h-3 fill-current" /> : (currentLessonIdx === idx ? (isPlaying ? <Pause className="w-3 h-3 fill-current"/> : <Play className="w-3 h-3 fill-current" />) : <Lock className="w-3 h-3" />)}
+                           </div>
+                           <div className="flex-1">
+                              <p className={`text-sm font-bold ${currentLessonIdx === idx ? 'text-jade-700 dark:text-jade-400' : lesson.isCompleted ? 'text-jade-600 dark:text-jade-400' : lesson.isLocked ? 'text-jade-400 dark:text-jade-500' : 'text-secondary-dynamic'}`}>
+                                 {lesson.title}
+                              </p>
+                              <span className="text-[10px] font-mono text-jade-400 dark:text-jade-500 mt-1 block">{lesson.duration}</span>
+                           </div>
+                           {!lesson.isLocked && !lesson.isCompleted && (
+                             <button 
+                               onClick={(e) => { e.stopPropagation(); handleLessonComplete(idx); }}
+                               className="px-3 py-1 text-xs font-semibold bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-300 rounded hover:bg-jade-200 dark:hover:bg-jade-800/50 transition-colors"
+                             >
+                               Mark Complete
+                             </button>
+                           )}
+                           {lesson.isCompleted && (
+                             <span className="px-3 py-1 text-xs font-semibold bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-300 rounded">Done</span>
+                           )}
+                        </button>
+                     ))}
+                  </div>
                  
                  <div className="p-4 bg-terra-50 dark:bg-jade-900 border-t border-primary-dynamic">
                     <div className="flex justify-between text-xs font-bold text-jade-500 mb-2">

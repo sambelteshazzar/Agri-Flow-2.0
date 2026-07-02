@@ -10,6 +10,7 @@ export enum NavigationTab {
   CALCULATOR = 'CALCULATOR',
   COMMUNITY = 'COMMUNITY',
   LABOR = 'LABOR',
+  CALENDAR = 'CALENDAR',
   SETTINGS = 'SETTINGS'
 }
 
@@ -145,6 +146,9 @@ export interface LearningModule {
   duration: string;
   completed: boolean;
   description: string;
+  videoId: string;
+  progress: number;
+  completedLessons: number[];
 }
 
 export interface NewsArticle {
