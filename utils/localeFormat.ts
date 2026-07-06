@@ -27,33 +27,3 @@ export function formatArea(value: number, unit: AreaUnit): string {
 export function formatAreaLabel(unit: AreaUnit): string {
   return unit === 'acres' ? 'Acres' : 'Hectares';
 }
-
-export function formatDate(dateStr: string, language: string = 'en'): string {
-  try {
-    const localeMap: Record<string, string> = {
-      en: 'en-US', fr: 'fr-FR', es: 'es-MX', pt: 'pt-BR',
-      am: 'am-ET', th: 'th-TH', de: 'de-DE', hi: 'hi-IN',
-    };
-    const locale = localeMap[language] || 'en-US';
-    return new Intl.DateTimeFormat(locale, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    }).format(new Date(dateStr));
-  } catch {
-    return new Date(dateStr).toLocaleDateString();
-  }
-}
-
-export function formatNumber(value: number, language: string = 'en'): string {
-  try {
-    const localeMap: Record<string, string> = {
-      en: 'en-US', fr: 'fr-FR', es: 'es-MX', pt: 'pt-BR',
-      am: 'am-ET', th: 'th-TH', de: 'de-DE', hi: 'hi-IN',
-    };
-    const locale = localeMap[language] || 'en-US';
-    return new Intl.NumberFormat(locale).format(value);
-  } catch {
-    return value.toLocaleString();
-  }
-}

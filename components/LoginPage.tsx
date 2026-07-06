@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useFarm } from '../contexts/FarmContext';
 import { X, Wheat, Globe, Sprout } from 'lucide-react';
-import type { OnboardingData } from './AuthModal';
+import type { OnboardingData } from '../types';
 import { SignInForm } from './auth/SignInForm';
 import { SignUpForm } from './auth/SignUpForm';
 

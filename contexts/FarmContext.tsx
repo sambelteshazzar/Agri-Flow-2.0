@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef } from 'react';
-import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab, LaborInput, ResourceResult, CropExpense, CropIncome } from '../types';
+import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab, LaborInput, ResourceResult, CropExpense, CropIncome, OnboardingData } from '../types';
 import { CropService } from '../services/cropService';
 import { LivestockService } from '../services/livestockService';
 import { MarketService } from '../services/marketService';
@@ -11,7 +11,6 @@ import { FinancialService } from '../services/financialService';
 import { fetchAgNews, CountryContext } from '../services/geminiService';
 import { db, DB_KEYS } from '../services/persistence';
 import { MOCK_WEATHER, GUEST_USER, COUNTRY_REGISTRY } from '../constants';
-import type { OnboardingData } from '../components/AuthModal';
 
 interface FarmContextType {
   userProfile: UserProfile;

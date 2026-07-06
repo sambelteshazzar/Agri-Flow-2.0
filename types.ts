@@ -338,3 +338,14 @@ export interface ResourceResult {
   irrigationLitersPerDay: number;
   savedAt: string;
 }
+
+export interface OnboardingData {
+  name: string;
+  farmName: string;
+  countryCode: string;
+  farmType: FarmType;
+  farmSize: number;
+  areaUnit: AreaUnit;
+  phoneNumber: string;
+  location: string;
+}

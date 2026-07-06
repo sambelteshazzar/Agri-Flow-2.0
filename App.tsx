@@ -21,9 +21,8 @@ const SettingsPage = lazy(() => import('./components/Settings'));
 const VoiceAgent = lazy(() => import('./components/VoiceAgent'));
 const PlantingCalendar = lazy(() => import('./components/PlantingCalendar'));
 
-import { NavigationTab } from './types';
+import { NavigationTab, OnboardingData } from './types';
 import { RouteErrorBoundary } from './components/RouteErrorBoundary';
-import type { OnboardingData } from './components/AuthModal';
 import { FarmProvider, useFarm } from './contexts/FarmContext';
 
 const LazyLoader: React.FC = () => (

@@ -1,28 +1,5 @@
 import { UserProfile, ChartDataPoint } from '../types';
 
-export const APP_NAME = "AgriFlow";
-
-export const CURRENT_USER: UserProfile = {
-  name: "Adebayo Okonkwo",
-  role: "Farm Manager",
-  farmName: "Green Sahel Farms",
-  avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80",
-  bio: "Managing 200 hectares of maize, rice and cassava in Kano State, Nigeria. Focused on climate-smart agriculture and precision irrigation.",
-  followers: 1890,
-  following: 120,
-  posts: 256,
-  countryCode: "NG",
-  currencyCode: "NGN",
-  currencySymbol: "₦",
-  language: "en",
-  region: "West Africa",
-  farmType: "mixed",
-  areaUnit: "ha",
-  climateZone: "sahel",
-  phoneNumber: "+234 801 234 5678",
-  location: "Kano, Kano State"
-};
-
 export const GUEST_USER: UserProfile = {
   name: "Guest Farmer",
   role: "Visitor",
