@@ -97,7 +97,8 @@ npm run preview
 │   ├── weatherService.ts   # Weather simulation
 │   ├── communityService.ts # Social operations
 │   ├── logService.ts       # Activity logs
-│   └── geminiService.ts    # Gemini AI integration
+│   └── geminiService.ts    # Gemini AI integration/Nvidia API Provider
+
 ```
 
 ## Browser Permissions
