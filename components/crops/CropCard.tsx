@@ -2,6 +2,7 @@ import React from 'react';
 import { Trash2, Pencil, Ruler, CalendarDays, Droplets, Droplet, Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 import { Crop, CropExpense, CropIncome } from '@/types';
 import { formatArea, formatCurrency } from '@/utils/localeFormat';
+import { getCropImage } from '@/utils/stockImages';
 
 interface CropCardProps {
   crop: Crop;
@@ -48,11 +49,11 @@ const CropCard: React.FC<CropCardProps> = ({ crop, areaUnit, expenses, incomes, 
       <div className={`h-3 w-full ${getStatusColor(crop.status)}`}></div>
       <div className="relative h-56 bg-[var(--bg-content)]">
         <img
-          src={crop.imageUrl}
+          src={crop.imageUrl || getCropImage(crop.name)}
           alt={crop.name}
           className="w-full h-full object-cover"
           onError={(e) => {
-            e.currentTarget.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop';
+            e.currentTarget.src = getCropImage(crop.name);
           }}
         />
         <div className="absolute top-0 right-0 bg-jade-950 text-white px-3 py-1 m-2 rounded text-xs font-semibold shadow-md border border-jade-700">{crop.status}</div>

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
-import { Menu, Wifi, WifiOff, Globe, Bell, X, AlertTriangle, TrendingUp, Info, LogIn, User, Loader2, CheckCircle, AlertCircle, Info as InfoIcon, Search, Command } from 'lucide-react';
+import { Avatar } from '@/utils/avatar';
 import Sidebar from './components/Sidebar';
 import MobileNav from './components/MobileNav';
 import CommandPalette from './components/CommandPalette';
@@ -395,11 +395,11 @@ const AppContent: React.FC = () => {
                         alt="Profile"
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userProfile.name)}&background=random`;
+                          e.currentTarget.src = '/stock/user.svg';
                         }}
                       />
                     ) : (
-                      userProfile.name.charAt(0)
+                      <Avatar name={userProfile.name} size={40} />
                     )}
                   </div>
                   <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#12261A] ${isOnline ? 'bg-jade-500' : 'bg-red-500'} shadow-sm`}></div>
