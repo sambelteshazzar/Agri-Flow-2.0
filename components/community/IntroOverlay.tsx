@@ -33,7 +33,7 @@ const IntroOverlay: React.FC<IntroOverlayProps> = ({ showIntro, onDismiss, intro
          </div>
       </div>
       <h1 className="text-6xl md:text-8xl font-black text-white mb-6 font-heading">
-         Agri-<span className="text-transparent bg-clip-text bg-gradient-to-r from-jade-400 to-sunburst-400">Connect</span>
+         Agri<span className="text-transparent bg-clip-text bg-gradient-to-r from-jade-400 to-sunburst-400">Flow</span>
       </h1>
       <p className="text-lg md:text-xl text-jade-300 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
         Connect with thousands of growers, trade equipment in the marketplace, and share real-time insights to build a more resilient future.

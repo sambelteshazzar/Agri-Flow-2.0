@@ -67,7 +67,7 @@ const NewsHub: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end organic-divider pb-4 transition-colors">
         <div>
           <h2 className="text-3xl font-bold text-primary-dynamic font-heading flex items-center">
-            Field Wire <span className="ml-2 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
+            AgriFlow News <span className="ml-2 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
           </h2>
           <p className="text-secondary-dynamic font-semibold text-xs mt-1 flex items-center">
             <Signal className="w-3 h-3 mr-1" /> {isAIConfigured() ? 'Live Agricultural Feed' : 'Sample Agricultural Feed'}

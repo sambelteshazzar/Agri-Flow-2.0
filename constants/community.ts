@@ -94,6 +94,8 @@ export const INITIAL_CHAT_MESSAGES: CommunityChatMessage[] = [
   { id: '2', channelId: 'general', author: 'Fatima M.', text: 'Thanks Yusuf! My cowpea is already in the ground. Should I consider replanting if the rains fail in July?', timestamp: new Date(Date.now() - 1800000).toISOString(), avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop', isMe: false },
   { id: '3', channelId: 'market', author: 'Ibrahim D.', text: 'Maize prices up 8% in Kano market this week. Fertilizer costs still climbing — urea at ₦28,000 per 50kg bag.', timestamp: new Date(Date.now() - 900000).toISOString(), avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop', isMe: false },
   { id: '4', channelId: 'livestock', author: 'Herdsmann Ali', text: 'Moving cattle south early this year — Sahel pasture already thinning. Who else is doing early transhumance?', timestamp: new Date(Date.now() - 4000000).toISOString(), avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop', isMe: false },
+  { id: '5', channelId: 'general', author: 'Kwame A.', text: 'Minor rains started in Kumasi last week. Soil moisture good for the cocoa rehabilitation — hope the dry spell skips us this year.', timestamp: new Date(Date.now() - 2400000).toISOString(), avatar: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=150&h=150&fit=crop', isMe: false },
+  { id: '6', channelId: 'market', author: 'Awa D.', text: 'Millet prices stable in Dakar market this week but the CILSS dry spell advisory is keeping buyers cautious.', timestamp: new Date(Date.now() - 1500000).toISOString(), avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop', isMe: false },
 ];
 
 export const INITIAL_STORIES: Story[] = [
@@ -106,7 +108,7 @@ export const INITIAL_STORIES: Story[] = [
 
 export const INITIAL_TRENDS: SocialTrend[] = [
   { id: '1', tag: '#SahelRain2026', volume: '18.7K Posts' },
-  { id: '2', tag: '#FoodSecurityNG', volume: '14.3K Posts' },
+  { id: '2', tag: '#FoodSecurityWA', volume: '14.3K Posts' },
   { id: '3', tag: '#DrySpellAlert', volume: '9.5K Posts' },
   { id: '4', tag: '#CocoaPrices', volume: '6.8K Posts' },
   { id: '5', tag: '#AgriTechWestAfrica', volume: '4.2K Posts' },
