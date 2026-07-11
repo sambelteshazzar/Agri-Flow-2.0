@@ -410,7 +410,7 @@ const AppContent: React.FC = () => {
                 onClick={() => setIsAuthModalOpen(true)}
                 className="flex items-center gap-2 px-5 py-2.5 bg-sunburst-500 hover:bg-sunburst-400 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-sunburst-500/20 active:scale-95"
               >
-                <LogIn className="w-4 h-4" /> Sign In
+                <LogIn className="w-4 h-4" /> Sign in
               </button>
             )}
 

@@ -212,19 +212,32 @@ Return ONLY a valid JSON array of strings. Do not include markdown formatting or
 
     try {
       const enhancedPrompt = `
-Analyze this image acting as a Resilience Agronomist.
-User Context: ${userPrompt || "Assess for disease, nutrient deficiency, or soil health indicators."}
+        Analyze this crop image as a Resilience Agronomist for a farmer in ${countryCtx?.countryCode || 'West Africa'}.
+        User Observation: ${userPrompt || "General crop health check."}
 
-Look for:
-1. Early signs of disease (Monoculture fragility risk).
-2. Soil compaction or degradation symptoms.
-3. Water stress indicators.
+        Return a JSON object with exactly these fields:
+        {
+          "diagnosis": "Primary condition name (e.g., Nitrogen Deficiency, Fall Armyworm, Maize Streak Virus, Healthy)",
+          "confidence": "High|Medium|Low",
+          "indicators": ["Specific visual evidence from the image (e.g., 'Yellowing starting at leaf tip moving down midrib', 'Ragged holes in whorl leaves with frass')"],
+          "severity": "None|Mild|Moderate|Severe",
+          "immediateActions": ["Actionable step 1", "Actionable step 2"],
+          "economicNote": "Brief cost/benefit context in local currency",
+          "regenerativeTip": "Soil/ecosystem health recommendation"
+        }
 
-Provide a diagnosis that balances biological treatment with economic reality.`;
+        Focus on: nutrient deficiencies (N, P, K, Mg, Zn), common diseases (MLNV, FAW, Rust, Blight, Streak), water stress, pest damage. Be specific to West African crops if possible.
+      `;
 
       const systemInstruction = buildSystemInstruction(countryCtx);
       const rawText = await nvidiaVisionCompletion(base64Image, enhancedPrompt, systemInstruction);
-      return cleanAIOutput(rawText || "I analyzed the image but couldn't generate a specific diagnosis.");
+      
+      try {
+        const parsed = JSON.parse(extractJson(rawText));
+        return `Diagnosis: ${parsed.diagnosis} (${parsed.confidence} confidence)\n\nIndicators:\n${parsed.indicators.map((i: string) => `• ${i}`).join('\n')}\n\nSeverity: ${parsed.severity}\n\nImmediate Actions:\n${parsed.immediateActions.map((a: string) => `1. ${a}`).join('\n')}\n\nEconomic Note: ${parsed.economicNote}\n\nRegenerative Tip: ${parsed.regenerativeTip}`;
+      } catch {
+        return cleanAIOutput(rawText || "Analysis complete but format unexpected.");
+      }
     } catch (error) {
       console.error("NVIDIA Vision Error (Falling back):", error);
       return FALLBACK_ANALYSIS;

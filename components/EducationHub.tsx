@@ -258,7 +258,7 @@ const EducationHub: React.FC = () => {
                Master Regenerative <br/> Agriculture
             </h1>
             <p className="text-jade-300 text-lg mb-8 font-medium leading-relaxed max-w-lg">
-               Join over 10,000 farmers enhancing soil health and profitability. Led by world-class agronomists.
+               Learn regenerative agriculture from leading experts. Courses designed for West African conditions.
             </p>
              <button onClick={() => document.getElementById('course-catalog')?.scrollIntoView({ behavior: 'smooth' })} className="bg-white text-jade-900 px-8 py-3 rounded-full font-semibold hover:bg-sunburst-100 transition-colors shadow-lg flex items-center gap-2">
                Explore Courses <BookOpen className="w-4 h-4" />

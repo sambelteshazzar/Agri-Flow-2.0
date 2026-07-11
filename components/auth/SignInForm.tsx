@@ -106,7 +106,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
         <Loader2 className="w-5 h-5 animate-spin" />
       ) : (
         <>
-          <span>Sign In</span>
+          <span>Sign in</span>
           <ArrowRight className="w-4 h-4" />
         </>
       )}

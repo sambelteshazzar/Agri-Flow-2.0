@@ -212,15 +212,21 @@ export class GeminiProvider implements AIProvider {
       const base64Data = base64Image.split(',')[1] || base64Image;
 
       const enhancedPrompt = `
-        Analyze this image acting as a Resilience Agronomist.
-        User Context: ${userPrompt || "Assess for disease, nutrient deficiency, or soil health indicators."}
+        Analyze this crop image as a Resilience Agronomist for a farmer in ${countryCtx?.countryCode || 'West Africa'}.
+        User Observation: ${userPrompt || "General crop health check."}
 
-        Look for:
-        1. Early signs of disease (Monoculture fragility risk).
-        2. Soil compaction or degradation symptoms.
-        3. Water stress indicators.
+        Return a JSON object with exactly these fields:
+        {
+          "diagnosis": "Primary condition name (e.g., Nitrogen Deficiency, Fall Armyworm, Maize Streak Virus, Healthy)",
+          "confidence": "High|Medium|Low",
+          "indicators": ["Specific visual evidence from the image (e.g., 'Yellowing starting at leaf tip moving down midrib', 'Ragged holes in whorl leaves with frass')"],
+          "severity": "None|Mild|Moderate|Severe",
+          "immediateActions": ["Actionable step 1", "Actionable step 2"],
+          "economicNote": "Brief cost/benefit context in local currency",
+          "regenerativeTip": "Soil/ecosystem health recommendation"
+        }
 
-        Provide a diagnosis that balances biological treatment with economic reality.
+        Focus on: nutrient deficiencies (N, P, K, Mg, Zn), common diseases (MLNV, FAW, Rust, Blight, Streak), water stress, pest damage. Be specific to West African crops if possible.
       `;
 
       const response: GenerateContentResponse = await getAI()?.models.generateContent({
@@ -231,11 +237,33 @@ export class GeminiProvider implements AIProvider {
             { text: enhancedPrompt }
           ]
         },
-        config: { systemInstruction: buildSystemInstruction(countryCtx) }
+        config: {
+          systemInstruction: buildSystemInstruction(countryCtx),
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              diagnosis: { type: Type.STRING },
+              confidence: { type: Type.STRING, enum: ["High", "Medium", "Low"] },
+              indicators: { type: Type.ARRAY, items: { type: Type.STRING } },
+              severity: { type: Type.STRING, enum: ["None", "Mild", "Moderate", "Severe"] },
+              immediateActions: { type: Type.ARRAY, items: { type: Type.STRING } },
+              economicNote: { type: Type.STRING },
+              regenerativeTip: { type: Type.STRING }
+            },
+            required: ["diagnosis", "confidence", "indicators", "severity", "immediateActions", "economicNote", "regenerativeTip"]
+          }
+        }
       });
 
-      const text = response.text || "I analyzed the image but couldn't generate a specific diagnosis.";
-      return cleanAIOutput(text);
+      const jsonStr = extractJson(response.text || "{}");
+      try {
+        const parsed = JSON.parse(jsonStr);
+        // Format as clean text for the UI
+        return `Diagnosis: ${parsed.diagnosis} (${parsed.confidence} confidence)\n\nIndicators:\n${parsed.indicators.map((i: string) => `• ${i}`).join('\n')}\n\nSeverity: ${parsed.severity}\n\nImmediate Actions:\n${parsed.immediateActions.map((a: string) => `1. ${a}`).join('\n')}\n\nEconomic Note: ${parsed.economicNote}\n\nRegenerative Tip: ${parsed.regenerativeTip}`;
+      } catch {
+        return cleanAIOutput(response.text || "Analysis complete but format unexpected.");
+      }
     } catch (error) {
       console.error("AI Vision Error (Falling back):", error);
       return FALLBACK_ANALYSIS;

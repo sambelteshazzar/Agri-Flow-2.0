@@ -177,7 +177,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
             </div>
 
             <p className="text-[11px] text-jade-600 font-medium">
-              Trusted by 10,000+ farmers across West Africa
+              Designed for farmers across West Africa
             </p>
           </div>
         </div>

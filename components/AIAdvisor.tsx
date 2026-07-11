@@ -31,7 +31,7 @@ const AIAdvisor: React.FC = () => {
       role: 'model',
       text: aiConfigured
         ? 'Your farming companion is ready.\n\nI can help analyze crop images for health issues, review soil reports, or explore market trends. Tap the phone icon for a live voice consultation.'
-        : 'Your farming companion is in demo mode.\n\nNo AI API key is configured. Responses will use pre-built examples, not live analysis. To enable live AI, add VITE_GEMINI_API_KEY or VITE_NVIDIA_API_KEY to your .env file.',
+        : 'Your farming companion is in demo mode.\n\nNo AI API key is configured. Responses will use pre-built examples, not live analysis. To enable live AI, contact your administrator.',
       isSimulated: !aiConfigured,
       timestamp: new Date()
     }
@@ -383,7 +383,7 @@ const AIAdvisor: React.FC = () => {
         <div>
            <h2 className="text-2xl font-bold text-primary-dynamic font-heading flex items-center">
              <BrainCircuit className="w-6 h-6 text-sunburst-500 mr-2" aria-hidden="true" />
-             AI Consultant
+              AI Advisor
            </h2>
             <p className="text-secondary-dynamic text-xs font-semibold">AI Assistant / Live Search / Vision</p>
         </div>

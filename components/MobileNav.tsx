@@ -9,20 +9,20 @@ interface MobileNavProps {
 }
 
 const primaryTabs = [
-  { id: NavigationTab.DASHBOARD, label: 'Home', icon: LayoutDashboard },
+  { id: NavigationTab.DASHBOARD, label: 'Dashboard', icon: LayoutDashboard },
   { id: NavigationTab.CROPS, label: 'Crops', icon: Sprout },
-  { id: NavigationTab.LIVESTOCK, label: 'Stock', icon: Beef },
+  { id: NavigationTab.LIVESTOCK, label: 'Livestock', icon: Beef },
   { id: NavigationTab.MARKET, label: 'Market', icon: TrendingUp },
   { id: NavigationTab.NEWS, label: 'News', icon: Globe },
 ];
 
 const secondaryTabs = [
-  { id: NavigationTab.AI_ADVISOR, label: 'AI', icon: BrainCircuit },
-  { id: NavigationTab.CALCULATOR, label: 'Calc', icon: Calculator },
+  { id: NavigationTab.AI_ADVISOR, label: 'Advisor', icon: BrainCircuit },
+  { id: NavigationTab.CALCULATOR, label: 'Calculators', icon: Calculator },
   { id: NavigationTab.EDUCATION, label: 'Learn', icon: GraduationCap },
-  { id: NavigationTab.COMMUNITY, label: 'Social', icon: Users },
+  { id: NavigationTab.COMMUNITY, label: 'Community', icon: Users },
   { id: NavigationTab.LABOR, label: 'Labor', icon: HardHat },
-  { id: NavigationTab.SETTINGS, label: 'More', icon: Settings },
+  { id: NavigationTab.SETTINGS, label: 'Settings', icon: Settings },
 ];
 
 const MobileNav: React.FC<MobileNavProps> = ({ activeTab, onNavigate }) => {
