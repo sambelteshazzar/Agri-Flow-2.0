@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { Camera, Upload, X, Check } from 'lucide-react';
-import { uploadImageFile, createImagePreview } from '../../utils/imageUpload';
+import { Camera, Upload, X } from 'lucide-react';
+import { uploadImageFile } from '../../utils/imageUpload';
 
 interface ImageUploadProps {
   value: string;
@@ -34,9 +34,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   className = '',
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [useFallback, setUseFallback] = useState(false);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -44,16 +44,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
     setIsUploading(true);
     setError(null);
+    setUseFallback(false);
 
     try {
-      const previewUrl = await createImagePreview(file);
-      setPreview(previewUrl);
-
       const uploaded = await uploadImageFile(file);
       onChange(uploaded.dataUrl);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
-      setPreview(null);
     } finally {
       setIsUploading(false);
     }
@@ -61,12 +58,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const handleRemove = () => {
     onChange('');
-    setPreview(null);
+    setUseFallback(false);
     if (inputRef.current) inputRef.current.value = '';
   };
 
-  const displayImage = preview || value;
   const shapeClass = shape === 'circle' ? 'rounded-full' : 'rounded-xl';
+  const hasImage = value && !useFallback;
 
   return (
     <div className={`flex flex-col items-center gap-2 ${className}`}>
@@ -76,12 +73,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         role="button"
         aria-label={label}
       >
-        {displayImage ? (
+        {hasImage ? (
           <>
             <img
-              src={displayImage}
+              src={value}
               alt={label}
               className="w-full h-full object-cover"
+              onError={() => setUseFallback(true)}
             />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <Upload className={`${iconSizeMap[size]} text-white`} />
@@ -92,7 +90,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 e.stopPropagation();
                 handleRemove();
               }}
-              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5 shadow hover:bg-red-600 transition-colors"
+              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 shadow hover:bg-red-600 transition-colors z-10"
               aria-label="Remove image"
             >
               <X className="w-3 h-3" />

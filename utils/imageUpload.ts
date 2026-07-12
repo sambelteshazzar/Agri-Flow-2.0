@@ -7,38 +7,6 @@ export interface UploadedImage {
   uploadedAt: string;
 }
 
-const IMAGES_KEY = 'agriflow_uploaded_images';
-
-export function getUploadedImages(): UploadedImage[] {
-  try {
-    const stored = localStorage.getItem(IMAGES_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function saveUploadedImage(image: UploadedImage): UploadedImage[] {
-  const images = getUploadedImages();
-  const updated = [image, ...images].slice(0, 50);
-  try {
-    localStorage.setItem(IMAGES_KEY, JSON.stringify(updated));
-  } catch (e) {
-    console.warn('Storage full, removing older images...');
-    const trimmed = [image, ...images].slice(0, 20);
-    localStorage.setItem(IMAGES_KEY, JSON.stringify(trimmed));
-    return trimmed;
-  }
-  return updated;
-}
-
-export function deleteUploadedImage(id: string): UploadedImage[] {
-  const images = getUploadedImages();
-  const updated = images.filter(img => img.id !== id);
-  localStorage.setItem(IMAGES_KEY, JSON.stringify(updated));
-  return updated;
-}
-
 export function uploadImageFile(file: File): Promise<UploadedImage> {
   return new Promise((resolve, reject) => {
     if (!file.type.startsWith('image/')) {
@@ -61,7 +29,6 @@ export function uploadImageFile(file: File): Promise<UploadedImage> {
         size: file.size,
         uploadedAt: new Date().toISOString(),
       };
-      saveUploadedImage(image);
       resolve(image);
     };
     reader.onerror = () => reject(new Error('Failed to read file'));
