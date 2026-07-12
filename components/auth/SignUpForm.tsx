@@ -175,7 +175,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors p-0.5"
+          className="absolute right-3.5 top-1/2 -translate-y-1/2 z-10 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors p-1.5 cursor-pointer"
           aria-label={showPassword ? 'Hide password' : 'Show password'}
         >
           {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -201,7 +201,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
         <button
           type="button"
           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors p-0.5"
+          className="absolute right-3.5 top-1/2 -translate-y-1/2 z-10 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors p-1.5 cursor-pointer"
           aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
         >
           {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
