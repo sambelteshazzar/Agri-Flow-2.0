@@ -344,13 +344,13 @@ const LivestockManager: React.FC = () => {
                    
                    {/* Image Upload Area */}
                      <div className="flex gap-4 items-start bg-[var(--bg-content)] dark:bg-jade-800 p-3 rounded border border-[var(--border-card)]">
-                      <ImageUpload
-                        value={newAnimal.imageUrl || ''}
-                        onChange={(url) => setNewAnimal(prev => ({...prev, imageUrl: url || getLivestockImage(prev.species)}))}
-                        label="Upload livestock image"
-                        placeholder="Livestock photo"
-                        size="md"
-                      />
+<ImageUpload
+                         value={newAnimal.imageUrl || ''}
+                         onChange={(url) => setNewAnimal(prev => ({...prev, imageUrl: url || getLivestockImage(prev.species)}))}
+                         label="Upload livestock image"
+                         placeholder="Livestock photo"
+                         size="md"
+                       />
                      <div className="flex-1">
                        <p className="text-[10px] text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] font-medium">Upload a photo of your livestock, or leave empty to use the default image for {newAnimal.species || 'this species'}.</p>
                        {newAnimal.imageUrl && !newAnimal.imageUrl.startsWith('data:') && (
