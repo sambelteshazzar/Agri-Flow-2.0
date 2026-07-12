@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { getStockImage } from '@/utils/stockImages';
 import { useFarm } from '../contexts/FarmContext';
 import { Newspaper, Loader2, ExternalLink, Clock, RefreshCw, Zap, TrendingUp, Leaf, Landmark, Signal, Search } from 'lucide-react';
 import { isAIConfigured } from '../services/geminiService';
@@ -50,11 +51,11 @@ const NewsHub: React.FC = () => {
 
   const getDeterministicImage = (cat: string) => {
     switch (cat) {
-      case 'Tech': return 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80&fit=crop';
-      case 'Market': return 'https://images.unsplash.com/photo-1611974765270-ca1258634369?w=800&q=80&fit=crop';
-      case 'Climate': return 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80&fit=crop';
-      case 'Policy': return 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800&q=80&fit=crop';
-      default: return 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80&fit=crop';
+      case 'Tech': return getStockImage('techNews');
+      case 'Market': return getStockImage('marketNews');
+      case 'Climate': return getStockImage('climateNews');
+      case 'Policy': return getStockImage('policyNews');
+      default: return getStockImage('news');
     }
   };
 

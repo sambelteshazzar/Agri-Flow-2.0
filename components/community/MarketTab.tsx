@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { getStockImage } from '@/utils/stockImages';
 import { Plus, MapPin, Search, ShoppingBag, ArrowRightLeft } from 'lucide-react';
 import { MarketplaceListing, UserProfile } from '@/types';
 
@@ -100,7 +101,7 @@ const MarketTab: React.FC<MarketTabProps> = ({
           {filteredListings.map(item => (
             <div key={item.id} className="bg-[var(--bg-card)] rounded-2xl shadow-sm border border-[var(--border-card)] overflow-hidden hover:border-jade-500 transition-all group flex flex-col">
               <div className="h-48 bg-[var(--bg-content)] relative overflow-hidden">
-                <img src={item.image || 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=800&fit=crop'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={item.item} onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=800&fit=crop'; }} />
+                <img src={item.image || getStockImage('marketplace')} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={item.item} onError={(e) => { e.currentTarget.src = getStockImage('marketplace'); }} />
                 <div className="absolute top-3 right-3"><span className={`px-3 py-1 rounded-lg text-[10px] font-semibold shadow-md ${item.status === 'SOLD' ? 'bg-[var(--text-tertiary)] text-white' : item.type === 'SELL' ? 'bg-jade-500 text-white' : 'bg-blue-500 text-white'}`}>{item.status === 'SOLD' ? 'SOLD' : item.type}</span></div>
                 {item.status === 'SOLD' && <div className="absolute inset-0 bg-black/40 flex items-center justify-center"><span className="text-white font-black text-xl tracking-wide rotate-[-15deg] border-2 border-white px-4 py-1">SOLD</span></div>}
               </div>

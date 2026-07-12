@@ -81,7 +81,7 @@ class PersistenceService {
       waterEfficiency: crop.waterEfficiency || 'Moderate',
       biodiversityScore: typeof crop.biodiversityScore === 'number' ? crop.biodiversityScore : 50,
       status: crop.status || 'Healthy',
-      imageUrl: crop.imageUrl || `https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop`,
+      imageUrl: crop.imageUrl || '/stock/crops.svg',
       name: crop.name || 'Unnamed Crop',
       variety: crop.variety || 'Unknown Variety',
       area: Number(crop.area) || 0

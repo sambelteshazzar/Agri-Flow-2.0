@@ -4,17 +4,10 @@ import { Plus, Trash2, Pencil, X, Beef, Tag, ClipboardList, Calendar, HeartPulse
 import { Livestock, LogEntry } from '../types';
 import { analyzeCropImage, CountryContext, isAIConfigured } from '../services/geminiService';
 
-// Helper to provide context-aware default images
+import { getStockImage } from '@/utils/stockImages';
+
 const getLivestockImage = (species: string) => {
-  const s = species.toLowerCase();
-  if (s.includes('cattle') || s.includes('cow') || s.includes('bull')) return 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?q=80&w=1000&auto=format&fit=crop';
-  if (s.includes('goat')) return 'https://images.unsplash.com/photo-1527153857715-3908f2bae5e8?q=80&w=1000&auto=format&fit=crop';
-  if (s.includes('sheep') || s.includes('lamb')) return 'https://images.unsplash.com/photo-1484557985045-edf25e08da73?q=80&w=1000&auto=format&fit=crop';
-  if (s.includes('chicken') || s.includes('poultry') || s.includes('hen')) return 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?q=80&w=1000&auto=format&fit=crop';
-  if (s.includes('pig') || s.includes('swine')) return 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?q=80&w=1000&auto=format&fit=crop';
-  if (s.includes('horse')) return 'https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1000&auto=format&fit=crop';
-  // Default Farm Animal
-  return 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?q=80&w=1000&auto=format&fit=crop';
+  return getStockImage(species);
 };
 
 const LivestockManager: React.FC = () => {

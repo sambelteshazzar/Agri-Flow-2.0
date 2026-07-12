@@ -1,5 +1,7 @@
 import React from 'react';
-import { 
+import { Avatar } from '@/utils/avatar';
+import { getStockImage } from '@/utils/stockImages';
+import {
   Search, Plus, Image as ImageIcon, Camera, Heart, MessageCircle, Share2,
   Send, MoreHorizontal, Award, Shield, Cloud, Bell, DollarSign, TrendingUp, Bookmark
 } from 'lucide-react';
@@ -82,7 +84,7 @@ const FeedTab: React.FC<FeedTabProps> = ({
               <div className={`w-16 h-16 rounded-full p-[3px] transition-transform duration-200 group-hover:scale-105 ${story.isUser ? 'border-2 border-dashed border-[var(--text-tertiary)] dark:border-[var(--text-tertiary)]' : (story.hasUpdate ? 'bg-gradient-to-tr from-sunburst-400 to-red-500' : 'bg-[var(--bg-content)]')}`}>
                  <div className="w-full h-full rounded-full border-2 border-white dark:border-[var(--bg-card)] overflow-hidden bg-[var(--bg-content)] relative">
                     {story.isUser && <div className="absolute inset-0 flex items-center justify-center bg-[var(--bg-content)]"><Plus className="w-6 h-6 text-[var(--text-tertiary)]"/></div>}
-                    <img src={story.img} alt={story.name} className={`w-full h-full object-cover ${story.isUser ? 'opacity-50' : ''}`} onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(story.name)}&background=random`; }} />
+                    <img src={story.img} alt={story.name} className={`w-full h-full object-cover ${story.isUser ? 'opacity-50' : ''}`} onError={(e) => { e.currentTarget.src = getStockImage('user'); }} />
                  </div>
               </div>
               <span className="text-[10px] font-bold text-[var(--text-secondary)] truncate w-full text-center">{story.name}</span>
@@ -98,10 +100,10 @@ const FeedTab: React.FC<FeedTabProps> = ({
 
      {/* Create Post Widget */}
      <div className="card-surface p-5">
-        <div className="flex gap-4 mb-4">
-           <div className="w-10 h-10 rounded-full overflow-hidden bg-[var(--bg-content)]">
-              {!avatarError ? <img src={userProfile.avatar} className="w-full h-full object-cover" alt="User" onError={() => setAvatarError(true)} /> : <div className="w-full h-full bg-terra-300 flex items-center justify-center font-bold text-[var(--text-secondary)]">{userProfile.name.charAt(0)}</div>}
-           </div>
+<div className="flex gap-4 mb-4">
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-[var(--bg-content)]">
+               <Avatar name={userProfile.name} size={40} />
+            </div>
            <div onClick={() => handleAuthRequiredAction(() => setIsPostModalOpen(true))} className="flex-1 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-2xl px-4 py-3 text-[var(--text-secondary)] text-sm font-medium cursor-pointer hover:bg-[var(--bg-content)] transition-colors">
              Share insights, asking prices, or crop updates...
            </div>
@@ -129,9 +131,9 @@ const FeedTab: React.FC<FeedTabProps> = ({
              <div className="p-5">
                 <div className="flex justify-between items-start mb-4">
                    <div className="flex gap-3">
-                      <div className="w-11 h-11 rounded-full bg-[var(--bg-content)] overflow-hidden">
-                         <img src={post.author === userProfile.name ? (avatarError ? `https://ui-avatars.com/api/?name=${encodeURIComponent(userProfile.name)}` : userProfile.avatar) : `https://i.pravatar.cc/150?u=${post.author}`} className="w-full h-full object-cover" alt="Author" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=random`; }} />
-                      </div>
+<div className="w-11 h-11 rounded-full bg-[var(--bg-content)] overflow-hidden">
+                          <Avatar name={post.author} size={44} />
+                       </div>
                       <div>
                          <h4 className="font-bold text-[var(--text-primary)] text-sm flex items-center gap-1">{post.author} {parseInt(post.id) % 3 === 0 && <Award className="w-3.5 h-3.5 text-amber-500" />}</h4>
                          <p className="text-xs text-[var(--text-secondary)] font-medium">{post.category} • {getRelativeTime(post.date)}</p>
@@ -145,7 +147,7 @@ const FeedTab: React.FC<FeedTabProps> = ({
                 
                 {(post.image || (parseInt(post.id) % 2 === 0)) && (
                   <div className="mb-4 rounded-2xl overflow-hidden h-64 bg-[var(--bg-content)] relative">
-                     <img src={post.image || `https://images.unsplash.com/photo-1625246333195-00305256a836?q=80&w=800&fit=crop`} className="w-full h-full object-cover" alt="Content" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&fit=crop'; }} />
+                     <img src={post.image || getStockImage('marketplace')} className="w-full h-full object-cover" alt="Content" onError={(e) => { e.currentTarget.src = getStockImage('marketplace'); }} />
                   </div>
                 )}
 
@@ -164,7 +166,7 @@ const FeedTab: React.FC<FeedTabProps> = ({
                    <div className="space-y-4 mb-4 max-h-60 overflow-y-auto custom-scrollbar">
                       {activePostReplies.map(reply => (
                          <div key={reply.id} className="flex gap-3">
-                            <div className="w-8 h-8 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0"><img src={`https://i.pravatar.cc/150?u=${reply.author}`} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reply.author)}&background=random`; }} /></div>
+                            <div className="w-8 h-8 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0"><Avatar name={reply.author} size={32} /></div>
                             <div className="flex-1 bg-[var(--bg-card)] p-3 rounded-2xl rounded-tl-none border border-[var(--border-card)] shadow-sm">
                                <div className="flex justify-between items-center mb-1"><span className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1">{reply.author} {reply.id.charCodeAt(reply.id.length - 1) % 3 === 0 && <Shield className="w-3 h-3 text-amber-500" />}</span><span className="text-[10px] text-[var(--text-tertiary)]">{getRelativeTime(reply.date)}</span></div>
                                <p className="text-sm text-[var(--text-secondary)]">{reply.content}</p>

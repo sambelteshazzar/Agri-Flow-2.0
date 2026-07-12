@@ -118,7 +118,7 @@ const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowTo
                     alt="Crop Preview"
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop';
+                      e.currentTarget.src = getCropImage(newCrop.name);
                     }}
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors pointer-events-none"></div>
