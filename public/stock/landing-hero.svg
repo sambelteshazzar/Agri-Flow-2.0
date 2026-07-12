@@ -1,123 +1,176 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" fill="none">
-  <rect width="1200" height="800" fill="#052e16"/>
-  <!-- Sky gradient -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" fill="none">
   <defs>
-    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#043d1a"/>
-      <stop offset="50%" stop-color="#052e16"/>
-      <stop offset="100%" stop-color="#02200c"/>
+    <linearGradient id="skyGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3a2a"/>
+      <stop offset="30%" stop-color="#2d5a3d"/>
+      <stop offset="60%" stop-color="#3d7a4d"/>
+      <stop offset="100%" stop-color="#4a8a5a"/>
     </linearGradient>
-    <linearGradient id="sunGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.3"/>
-      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    <linearGradient id="fieldGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2d7d3d"/>
+      <stop offset="50%" stop-color="#3d9d4d"/>
+      <stop offset="100%" stop-color="#4daa5d"/>
     </linearGradient>
-    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    <linearGradient id="fieldGradient2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1d6d2d"/>
+      <stop offset="50%" stop-color="#2d8d3d"/>
+      <stop offset="100%" stop-color="#3d9d4d"/>
+    </linearGradient>
+    <linearGradient id="fieldGradient3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3d8d4d"/>
+      <stop offset="50%" stop-color="#4daa5d"/>
+      <stop offset="100%" stop-color="#5dbc6d"/>
+    </linearGradient>
+    <linearGradient id="sunGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#ffaa00" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="sunCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff8e0" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#ffd700" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#ffaa00" stop-opacity="0"/>
     </radialGradient>
+    <linearGradient id="treeGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a4a1a"/>
+      <stop offset="100%" stop-color="#0d2d0d"/>
+    </linearGradient>
+    <linearGradient id="pathGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8b7355" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#a68a6b" stop-opacity"0.4"/>
+      <stop offset="100%" stop-color="#8b7355" stop-opacity="0.6"/>
+    </linearGradient>
   </defs>
-  <rect width="1200" height="800" fill="url(#skyGrad)"/>
-  
-  <!-- Sun glow -->
-  <ellipse cx="1000" cy="150" rx="300" ry="200" fill="url(#sunGrad)"/>
-  <circle cx="1000" cy="150" r="80" fill="#f59e0b" opacity="0.4"/>
-  <circle cx="1000" cy="150" r="40" fill="#f59e0b" opacity="0.6"/>
-  
+
+  <!-- Sky -->
+  <rect width="1600" height="900" fill="url(#skyGradient)"/>
+
+  <!-- Atmospheric haze layers -->
+  <ellipse cx="800" cy="500" rx="1000" ry="400" fill="#4daa5d" opacity="0.1"/>
+  <ellipse cx="800" cy="600" rx="1200" ry="300" fill="#5dbc6d" opacity="0.08"/>
+
+  <!-- Sun -->
+  <ellipse cx="1350" cy="150" rx="400" ry="250" fill="url(#sunGradient)"/>
+  <circle cx="1350" cy="150" r="120" fill="url(#sunCore)"/>
+
   <!-- Sun rays -->
-  <g stroke="#f59e0b" stroke-width="2" stroke-linecap="round" opacity="0.3">
-    <line x1="1000" y1="50" x2="1000" y2="20"/>
-    <line x1="1000" y1="250" x2="1000" y2="280"/>
-    <line x1="920" y1="150" x2="890" y2="150"/>
-    <line x1="1110" y1="150" x2="1140" y2="150"/>
-    <line x1="955" y1="75" x2="940" y2="60"/>
-    <line x1="1045" y1="75" x2="1060" y2="60"/>
-    <line x1="955" y1="225" x2="940" y2="240"/>
-    <line x1="1045" y1="225" x2="1060" y2="240"/>
+  <g stroke="#ffd700" stroke-width="3" stroke-linecap="round" opacity="0.25">
+    <line x1="1350" y1="10" x2="1350" y2="30"/>
+    <line x1="1350" y1="270" x2="1350" y2="290"/>
+    <line x1="1230" y1="150" x2="1210" y2="150"/>
+    <line x1="1490" y1="150" x2="1510" y2="150"/>
+    <line x1="1255" y1="55" x2="1240" y2="40"/>
+    <line x1="1445" y1="55" x2="1460" y2="40"/>
+    <line x1="1255" y1="245" x2="1240" y2="260"/>
+    <line x1="1445" y1="245" x2="1460" y2="260"/>
   </g>
-  
-  <!-- Distant hills -->
-  <path d="M0 500 Q300 350 600 450 Q900 300 1200 400 L1200 800 L0 800 Z" fill="#043d1a" opacity="0.8"/>
-  <path d="M0 550 Q250 420 500 500 Q750 380 1000 480 L1200 650 L1200 800 L0 800 Z" fill="#052e16" opacity="0.6"/>
-  
-  <!-- Farm fields - geometric pattern -->
-  <g fill="none" stroke="#166534" stroke-width="1.5" opacity="0.4">
-    <rect x="100" y="520" width="200" height="180" rx="4"/>
-    <rect x="320" y="520" width="200" height="180" rx="4"/>
-    <rect x="540" y="520" width="200" height="180" rx="4"/>
-    <rect x="760" y="520" width="200" height="180" rx="4"/>
-    <rect x="980" y="520" width="200" height="180" rx="4"/>
+
+  <!-- Distant mountains/hills -->
+  <path d="M-100 580 Q200 400 500 520 Q800 380 1100 500 Q1400 350 1700 550 L1700 900 L-100 900 Z" fill="#1a3a2a" opacity="0.7"/>
+  <path d="M-100 620 Q250 450 600 580 Q950 420 1300 560 Q1650 400 1900 600 L1900 900 L-100 900 Z" fill="#2d5a3d" opacity="0.5"/>
+
+  <!-- Tree line on horizon -->
+  <g fill="#0d2d0d" opacity="0.6">
+    <ellipse cx="200" cy="570" rx="60" ry="90"/>
+    <ellipse cx="280" cy="550" rx="70" ry="100"/>
+    <ellipse cx="380" cy="570" rx="65" ry="95"/>
+    <ellipse cx="1100" cy="560" rx="75" ry="105"/>
+    <ellipse cx="1200" cy="540" rx="80" ry="110"/>
+    <ellipse cx="1300" cy="560" rx="70" ry="100"/>
+    <ellipse cx="1400" cy="570" rx="65" ry="95"/>
   </g>
+
+  <!-- Farm fields (patchwork quilt pattern) -->
+  <!-- Field 1 - bright green (young crops) -->
+  <path d="M100 650 Q200 620 350 660 Q500 700 600 680 Q700 660 750 690 L750 900 L100 900 Z" fill="url(#fieldGradient)"/>
   
+  <!-- Field 2 - medium green -->
+  <path d="M350 660 Q500 630 650 680 Q800 730 900 690 Q1000 650 1050 700 L1050 900 L350 900 Z" fill="url(#fieldGradient2)"/>
+  
+  <!-- Field 3 - lighter green (mature crops) -->
+  <path d="M650 680 Q800 650 950 700 Q1100 750 1200 710 Q1300 670 1350 720 L1350 900 L650 900 Z" fill="url(#fieldGradient3)"/>
+
   <!-- Crop rows in fields -->
-  <g stroke="#22c55e" stroke-width="0.8" opacity="0.3">
-    <line x1="110" y1="530" x2="290" y2="530"/>
-    <line x1="110" y1="560" x2="290" y2="560"/>
-    <line x1="110" y1="590" x2="290" y2="590"/>
-    <line x1="110" y1="620" x2="290" y2="620"/>
-    <line x1="110" y1="650" x2="290" y2="650"/>
-    <line x1="110" y1="680" x2="290" y2="680"/>
+  <g stroke="#5dbc6d" stroke-width="1.5" opacity="0.4">
+    <!-- Field 1 rows -->
+    <line x1="130" y1="680" x2="700" y2="720"/>
+    <line x1="130" y1="710" x2="700" y2="750"/>
+    <line x1="130" y1="740" x2="700" y2="780"/>
+    <line x1="130" y1="770" x2="700" y2="810"/>
+    <line x1="130" y1="800" x2="700" y2="840"/>
+    <line x1="130" y1="830" x2="700" y2="870"/>
+    <line x1="130" y1="860" x2="700" y2="900"/>
     
-    <line x1="330" y1="530" x2="510" y2="530"/>
-    <line x1="330" y1="560" x2="510" y2="560"/>
-    <line x1="330" y1="590" x2="510" y2="590"/>
-    <line x1="330" y1="620" x2="510" y2="620"/>
-    <line x1="330" y1="650" x2="510" y2="650"/>
-    <line x1="330" y1="680" x2="510" y2="680"/>
+    <!-- Field 2 rows -->
+    <line x1="380" y1="690" x2="1000" y2="730"/>
+    <line x1="380" y1="720" x2="1000" y2="760"/>
+    <line x1="380" y1="750" x2="1000" y2="790"/>
+    <line x1="380" y1="780" x2="1000" y2="820"/>
+    <line x1="380" y1="810" x2="1000" y2="850"/>
+    <line x1="380" y1="840" x2="1000" y2="880"/>
+    <line x1="380" y1="870" x2="1000" y2="900"/>
     
-    <line x1="550" y1="530" x2="730" y2="530"/>
-    <line x1="550" y1="560" x2="730" y2="560"/>
-    <line x1="550" y1="590" x2="730" y2="590"/>
-    <line x1="550" y1="620" x2="730" y2="620"/>
-    <line x1="550" y1="650" x2="730" y2="650"/>
-    <line x1="550" y1="680" x2="730" y2="680"/>
+    <!-- Field 3 rows -->
+    <line x1="680" y1="710" x2="1300" y2="750"/>
+    <line x1="680" y1="740" x2="1300" y2="780"/>
+    <line x1="680" y1="770" x2="1300" y2="810"/>
+    <line x1="680" y1="800" x2="1300" y2="840"/>
+    <line x1="680" y1="830" x2="1300" y2="870"/>
+    <line x1="680" y1="860" x2="1300" y2="900"/>
   </g>
-  
-  <!-- Irrigation pivot center -->
-  <circle cx="860" cy="610" r="8" fill="#0e7c2e" opacity="0.8"/>
-  <circle cx="860" cy="610" r="60" fill="none" stroke="#166534" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>
-  
-  <!-- Trees/windbreaks -->
-  <g fill="#0e7c2e" opacity="0.5">
-    <ellipse cx="60" cy="580" rx="25" ry="40"/>
-    <ellipse cx="1150" cy="570" rx="30" ry="45"/>
-    <ellipse cx="50" cy="620" rx="20" ry="35"/>
-    <ellipse cx="1180" cy="610" rx="22" ry="38"/>
+
+  <!-- Irrigation pivot -->
+  <g transform="translate(1100, 720)">
+    <circle cx="0" cy="0" r="8" fill="#2d7d3d" opacity="0.9"/>
+    <circle cx="0" cy="0" r="120" fill="none" stroke="#3d9d4d" stroke-width="1.5" stroke-dasharray="8 8" opacity="0.3"/>
+    <!-- Pivot arm -->
+    <line x1="0" y1="0" x2="120" y2="-20" stroke="#3d9d4d" stroke-width="3" opacity="0.4"/>
+    <line x1="0" y1="0" x2="100" y2="50" stroke="#3d9d4d" stroke-width="3" opacity="0.4"/>
+    <line x1="0" y1="0" x2="80" y2="100" stroke="#3d9d4d" stroke-width="3" opacity="0.4"/>
   </g>
-  
-  <!-- Farm buildings -->
-  <rect x="400" y="460" width="80" height="60" rx="3" fill="#166534" opacity="0.6"/>
-  <path d="M400 460 L440 430 L480 460 Z" fill="#2d4a2d" opacity="0.6"/>
-  <rect x="420" y="480" width="20" height="40" fill="#0e7c2e" opacity="0.5"/>
-  
-  <!-- Data visualization elements (floating) -->
-  <g fill="#22c55e" opacity="0.15">
-    <rect x="150" y="200" width="120" height="60" rx="6"/>
-    <rect x="150" y="200" width="40" height="40" rx="4"/>
-    <rect x="200" y="200" width="40" height="20" rx="2"/>
-    <rect x="200" y="225" width="60" height="25" rx="2"/>
-  </g>
-  
-  <g fill="#f59e0b" opacity="0.15">
-    <circle cx="800" cy="250" r="50"/>
-    <path d="M800 220 L790 200 L810 200 Z" fill="#f59e0b" opacity="0.2"/>
-    <path d="M800 280 L790 300 L810 300 Z" fill="#f59e0b" opacity="0.2"/>
-  </g>
-  
-  <!-- AI/Brain nodes -->
-  <g stroke="#22c55e" stroke-width="1.5" fill="none" opacity="0.2">
-    <circle cx="300" cy="200" r="30"/>
-    <circle cx="300" cy="200" r="20"/>
-    <circle cx="300" cy="200" r="10"/>
-    <line x1="270" y1="200" x2="250" y2="180"/>
-    <line x1="330" y1="200" x2="350" y2="180"/>
-    <line x1="300" y1="170" x2="300" y2="150"/>
-    <line x1="300" y1="230" x2="300" y2="250"/>
+
+  <!-- Dirt path between fields -->
+  <path d="M350 660 Q500 680 650 680 Q800 680 950 700 Q1100 720 1200 710" fill="none" stroke="#8b7355" stroke-width="25" stroke-linecap="round" opacity="0.5"/>
+  <path d="M350 660 Q500 680 650 680 Q800 680 950 700 Q1100 720 1200 710" fill="none" stroke="#a68a6b" stroke-width="15" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Foreground trees (large, detailed) -->
+  <g fill="url(#treeGradient)">
+    <!-- Left large tree -->
+    <ellipse cx="120" cy="720" rx="80" ry="130"/>
+    <ellipse cx="180" cy="700" rx="90" ry="140"/>
+    <ellipse cx="60" cy="730" rx="70" ry="120"/>
     
-    <circle cx="950" cy="350" r="25"/>
-    <circle cx="950" cy="350" r="15"/>
-    <circle cx="950" cy="350" r="5"/>
+    <!-- Right large tree -->
+    <ellipse cx="1480" cy="700" rx="90" ry="140"/>
+    <ellipse cx="1540" cy="680" rx="80" ry="130"/>
+    <ellipse cx="1420" cy="710" rx="75" ry="125"/>
   </g>
-  
-  <!-- Title text area (transparent, for CSS overlay) -->
-  <rect x="100" y="100" width="600" height="200" fill="none"/>
+
+  <!-- Foreground grass tufts -->
+  <g fill="#3d9d4d" opacity="0.6">
+    <ellipse cx="50" cy="850" rx="15" ry="8"/>
+    <ellipse cx="100" cy="870" rx="12" ry="10"/>
+    <ellipse cx="180" cy="860" rx="18" ry="9"/>
+    <ellipse cx="250" cy="880" rx="10" ry="12"/>
+    <ellipse cx="1550" cy="850" rx="15" ry="8"/>
+    <ellipse cx="1500" cy="870" rx="12" ry="10"/>
+    <ellipse cx="1420" cy="860" rx="18" ry="9"/>
+    <ellipse cx="1350" cy="880" rx="10" ry="12"/>
+  </g>
+
+  <!-- Wind turbines in far distance -->
+  <g stroke="#1a3a2a" stroke-width="2" opacity="0.3">
+    <line x1="1400" y1="400" x2="1400" y2="550"/>
+    <line x1="1390" y1="410" x2="1410" y2="410"/>
+    <line x1="1390" y1="400" x2="1410" y2="400"/>
+    
+    <line x1="1500" y1="420" x2="1500" y2="560"/>
+    <line x1="1490" y1="430" x2="1510" y2="430"/>
+    <line x1="1490" y1="420" x2="1510" y2="420"/>
+  </g>
+
+  <!-- Subtle lens flare / light streaks -->
+  <g fill="#ffd700" opacity="0.08">
+    <ellipse cx="1200" cy="200" rx="150" ry="20" transform="rotate(-15 1200 200)"/>
+    <ellipse cx="1300" cy="180" rx="100" ry="15" transform="rotate(-10 1300 180)"/>
+  </g>
 </svg>

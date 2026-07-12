@@ -51,10 +51,10 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       
 {/* --- CINEMATIC BACKGROUND LAYER (Fixed relative to viewport) --- */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        {/* Primary Image */}
+        {/* Primary Image - Local photorealistic hero background */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50 animate-slow-zoom"
-          style={{ backgroundImage: 'url("/stock/landing-hero.svg")' }}
+          style={{ backgroundImage: 'url("/hero-bg.jpg")' }}
         ></div>
         
         {/* Gradients */}
