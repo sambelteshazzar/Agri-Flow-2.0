@@ -63,7 +63,7 @@ const LivestockManager: React.FC = () => {
     setNewAnimal(prev => ({
       ...prev,
       species: species as any,
-      imageUrl: getLivestockImage(species)
+      imageUrl: prev.imageUrl && prev.imageUrl.startsWith('data:') ? prev.imageUrl : getLivestockImage(species)
     }));
   };
 
@@ -259,7 +259,12 @@ const LivestockManager: React.FC = () => {
                 </div>
                 
                 <div className="h-28 w-full bg-[var(--bg-content)] dark:bg-jade-800 mb-4 rounded-sm overflow-hidden border border-[var(--border-card)] relative group">
-                   <img src={animal.imageUrl} className="w-full h-full object-cover" alt={`${animal.name} photo`} />
+                    <img 
+                      src={animal.imageUrl} 
+                      className="w-full h-full object-cover" 
+                      alt={`${animal.name} photo`}
+                      onError={(e) => { e.currentTarget.src = getLivestockImage(animal.species); }}
+                    />
                    {animal.notes && (
                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity p-4 text-center">
                        <p className="text-white text-xs font-medium italic">"{animal.notes}"</p>

@@ -60,7 +60,7 @@ const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowTo
     setNewCrop(prev => ({
       ...prev,
       name: name,
-      imageUrl: getCropImage(name)
+      imageUrl: prev.imageUrl && prev.imageUrl.startsWith('data:') ? prev.imageUrl : getCropImage(name)
     }));
   };
 
