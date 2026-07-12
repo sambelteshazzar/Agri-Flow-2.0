@@ -122,7 +122,7 @@ const EducationHub: React.FC = () => {
                        className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" 
                        alt="Video cover" 
                        onError={(e) => {
-                         e.currentTarget.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80';
+                         e.currentTarget.src = '/stock/education.svg';
                        }}
                      />
                      <div className="absolute inset-0 flex items-center justify-center">
@@ -247,7 +247,7 @@ const EducationHub: React.FC = () => {
     <div className="h-full flex flex-col space-y-6 animate-fade-in pb-10">
       
       <div className="relative bg-jade-800 dark:bg-jade-950 rounded-3xl p-8 overflow-hidden shadow-2xl flex-shrink-0">
-         <div className="absolute inset-0 opacity-60 bg-[url('https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center"></div>
+         <div className="absolute inset-0 opacity-60 bg-jade-700 bg-cover bg-center"></div>
          <div className="absolute inset-0 bg-gradient-to-r from-jade-800 dark:from-jade-950 via-jade-900/80 to-transparent"></div>
          <div className="relative z-10 max-w-2xl">
             <div className="flex items-center gap-2 mb-4">
@@ -296,7 +296,7 @@ const EducationHub: React.FC = () => {
                     alt={module.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     onError={(e) => {
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80';
+                      e.currentTarget.src = '/stock/education.svg';
                     }}
                   />
                   {module.completed && (

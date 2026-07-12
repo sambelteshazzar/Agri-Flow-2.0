@@ -9,7 +9,7 @@ export const INITIAL_CROPS: Crop[] = [
     harvestDate: '2026-09-30',
     status: 'Needs Attention',
     area: 50,
-    imageUrl: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: '/stock/maize.svg',
     soilHealth: 'Degraded',
     waterEfficiency: 'Low',
     biodiversityScore: 22
@@ -22,7 +22,7 @@ export const INITIAL_CROPS: Crop[] = [
     harvestDate: '2026-10-15',
     status: 'Healthy',
     area: 30,
-    imageUrl: 'https://images.unsplash.com/photo-1599940824399-b87987ced72a?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: '/stock/rice.svg',
     soilHealth: 'Good',
     waterEfficiency: 'Moderate',
     biodiversityScore: 55
@@ -35,7 +35,7 @@ export const INITIAL_CROPS: Crop[] = [
     harvestDate: '2027-02-28',
     status: 'Healthy',
     area: 25,
-    imageUrl: 'https://images.unsplash.com/photo-1584345604325-f5091269a0d1?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: '/stock/cassava.svg',
     soilHealth: 'Good',
     waterEfficiency: 'High',
     biodiversityScore: 68
@@ -48,7 +48,7 @@ export const INITIAL_CROPS: Crop[] = [
     harvestDate: '2026-10-01',
     status: 'Healthy',
     area: 15,
-    imageUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: '/stock/cowpea.svg',
     soilHealth: 'Good',
     waterEfficiency: 'High',
     biodiversityScore: 80
@@ -61,7 +61,7 @@ export const INITIAL_CROPS: Crop[] = [
     harvestDate: '2026-10-30',
     status: 'Needs Attention',
     area: 20,
-    imageUrl: 'https://images.unsplash.com/photo-1533230537024-38c3459c9c9b?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: '/stock/sorghum.svg',
     soilHealth: 'Degraded',
     waterEfficiency: 'Moderate',
     biodiversityScore: 35

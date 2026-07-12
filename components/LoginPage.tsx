@@ -137,7 +137,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
         <div className="hidden md:flex w-[420px] shrink-0 relative overflow-hidden flex-col justify-between p-10 bg-jade-950">
           <div
             className="absolute inset-0 bg-cover bg-center opacity-75 animate-slow-zoom"
-            style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1527847263472-aa5338d178b8?q=80&w=1200&auto=format&fit=crop")' }}
+            style={{ backgroundImage: 'radial-gradient(ellipse at 30% 40%, rgba(34,197,94,0.35) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(245,158,11,0.2) 0%, transparent 50%)' }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-jade-950 via-jade-950/50 to-jade-950/20" />
 

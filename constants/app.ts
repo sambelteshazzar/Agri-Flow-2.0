@@ -4,7 +4,7 @@ export const GUEST_USER: UserProfile = {
   name: "Guest Farmer",
   role: "Visitor",
   farmName: "Demo Farm",
-  avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80",
+  avatar: "/stock/user.svg",
   bio: "Exploring the AgriFlow platform. Sign in to access your farm dashboard and market prices.",
   followers: 0,
   following: 0,

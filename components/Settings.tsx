@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { useFarm } from '../contexts/FarmContext';
 import { Save, User, Download, Upload, AlertTriangle, Moon, Sun, Trash2, Shield, MapPin, Eye } from 'lucide-react';
 import { DB_KEYS } from '../services/persistence';
+import { ImageUpload } from './ui/ImageUpload';
 
 const Settings: React.FC = () => {
   const { userProfile, updateUserProfile, theme, setThemeMode, resetApp, showToast } = useFarm();
@@ -86,18 +86,20 @@ const Settings: React.FC = () => {
            </div>
            
            <form onSubmit={handleProfileSave} className="space-y-4">
-              <div className="flex items-center gap-4 mb-4">
-                 <img src={formData.avatar} alt="Avatar Preview" className="w-16 h-16 rounded-full border-4 border-terra-200 dark:border-jade-700 object-cover" />
-                 <div className="flex-1">
-                    <label className="block text-xs font-semibold text-[var(--text-tertiary)] mb-1">Avatar URL</label>
-                    <input 
-                      type="text" 
-                      value={formData.avatar} 
-                      onChange={e => setFormData({...formData, avatar: e.target.value})}
-                      className="w-full p-2 bg-[var(--bg-content)] border border-[var(--border-card)] rounded-lg text-sm font-medium focus:outline-none focus:border-jade-500 text-[var(--text-primary)]"
-                    />
-                 </div>
-              </div>
+               <div className="flex items-center gap-4 mb-4">
+                  <ImageUpload
+                    value={formData.avatar}
+                    onChange={(url) => setFormData({...formData, avatar: url})}
+                    label="Upload avatar"
+                    placeholder="Your photo"
+                    shape="circle"
+                    size="md"
+                  />
+                  <div className="flex-1">
+                     <label className="block text-xs font-semibold text-[var(--text-tertiary)] mb-1">Avatar</label>
+                     <p className="text-[10px] text-[var(--text-tertiary)] font-medium">Upload a profile photo from your device. Images are stored locally.</p>
+                  </div>
+               </div>
 
               <div className="grid grid-cols-2 gap-4">
                  <div>

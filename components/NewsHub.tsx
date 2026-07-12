@@ -103,7 +103,7 @@ const NewsHub: React.FC = () => {
                  alt={featuredArticle.title} 
                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                  onError={(e) => {
-                   e.currentTarget.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80&fit=crop';
+                   e.currentTarget.src = '/stock/news.svg';
                  }}
                />
                <div className="absolute inset-0 bg-gradient-to-t from-jade-950 via-jade-950/80 to-transparent opacity-90 group-hover:opacity-100 transition-opacity"></div>
@@ -156,7 +156,7 @@ const NewsHub: React.FC = () => {
                        loading="lazy"
                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                        onError={(e) => {
-                         e.currentTarget.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80&fit=crop';
+                         e.currentTarget.src = '/stock/news.svg';
                        }}
                      />
                      <div className="absolute top-3 right-3">

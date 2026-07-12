@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" fill="none">
+  <rect width="400" height="250" fill="#052e16"/>
+  <rect x="50" y="50" width="300" height="150" rx="8" fill="#043d1a" stroke="#0e7c2e" stroke-width="2"/>
+  <rect x="70" y="70" width="260" height="20" rx="4" fill="#0e7c2e" opacity="0.3"/>
+  <rect x="70" y="105" width="200" height="12" rx="3" fill="#0e7c2e" opacity="0.5"/>
+  <rect x="70" y="130" width="240" height="12" rx="3" fill="#0e7c2e" opacity="0.4"/>
+  <rect x="70" y="155" width="180" height="12" rx="3" fill="#0e7c2e" opacity="0.3"/>
+  <circle cx="340" cy="110" r="12" fill="#0e7c2e" opacity="0.6"/>
+  <path d="M100 190 L150 140 L200 170 L250 120 L300 150" stroke="#0e7c2e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+  <text x="200" y="220" font-family="system-ui, sans-serif" font-size="14" fill="#0e7c2e" text-anchor="middle" font-weight="600">AgriTech News</text>
+</svg>

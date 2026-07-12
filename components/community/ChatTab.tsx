@@ -75,7 +75,7 @@ const ChatTab: React.FC<ChatTabProps> = ({
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {chatMessages.filter(m => m.channelId === activeChannel).map(msg => (
             <div key={msg.id} className={`flex gap-3 ${msg.isMe ? 'flex-row-reverse' : ''} animate-fade-in-up`}>
-              <div className="w-8 h-8 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0"><img src={msg.avatar} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${msg.author}`; }} /></div>
+              <div className="w-8 h-8 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0"><img src={msg.avatar} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = '/stock/user.svg'; }} /></div>
               <div className={`max-w-[75%] p-3 rounded-2xl text-sm shadow-sm ${msg.isMe ? 'bg-sunburst-500 text-jade-950 rounded-tr-none font-medium' : 'bg-[var(--bg-card)] text-[var(--text-secondary)] rounded-tl-none border border-[var(--border-card)]'}`}>
                 {!msg.isMe && <div className="text-[10px] font-semibold text-[var(--text-tertiary)] mb-1">{msg.author}</div>}
                 {msg.text}

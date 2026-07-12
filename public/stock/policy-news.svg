@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" fill="none">
+  <rect width="400" height="250" fill="#052e16"/>
+  <rect x="50" y="50" width="300" height="150" rx="8" fill="#043d1a" stroke="#a16207" stroke-width="2"/>
+  <!-- Building/gov -->
+  <rect x="100" y="70" width="200" height="110" rx="4" fill="#166534" opacity="0.3"/>
+  <rect x="150" y="50" width="100" height="30" rx="3" fill="#166534" opacity="0.5"/>
+  <rect x="165" y="40" width="20" height="20" rx="3" fill="#a16207" opacity="0.8"/>
+  <!-- Columns -->
+  <rect x="115" y="110" width="15" height="70" rx="2" fill="#a16207" opacity="0.7"/>
+  <rect x="140" y="110" width="15" height="70" rx="2" fill="#a16207" opacity="0.7"/>
+  <rect x="165" y="110" width="15" height="70" rx="2" fill="#a16207" opacity="0.7"/>
+  <rect x="190" y="110" width="15" height="70" rx="2" fill="#a16207" opacity="0.7"/>
+  <rect x="215" y="110" width="15" height="70" rx="2" fill="#a16207" opacity="0.7"/>
+  <rect x="240" y="110" width="15" height="70" rx="2" fill="#a16207" opacity="0.7"/>
+  <!-- Document -->
+  <rect x="130" y="105" width="30" height="40" rx="2" fill="#f59e0b" opacity="0.3" stroke="#a16207" stroke-width="1"/>
+  <rect x="240" y="105" width="30" height="40" rx="2" fill="#0e7c2e" opacity="0.3" stroke="#0e7c2e" stroke-width="1"/>
+  <text x="200" y="220" font-family="system-ui, sans-serif" font-size="14" fill="#a16207" text-anchor="middle" font-weight="600">Policy & Regulation</text>
+</svg>

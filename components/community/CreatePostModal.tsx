@@ -30,7 +30,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         <form onSubmit={onSubmit}>
           <div className="p-6">
             <div className="flex gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-[var(--bg-content)] overflow-hidden"><img src={userProfile.avatar} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userProfile.name)}&background=random`; }} /></div>
+              <div className="w-10 h-10 rounded-full bg-[var(--bg-content)] overflow-hidden"><img src={userProfile.avatar} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = '/stock/user.svg'; }} /></div>
               <div><span className="font-bold text-sm text-[var(--text-primary)] block">{userProfile.name}</span><select value={newPost.category} onChange={e => setNewPost({...newPost, category: e.target.value as any})} className="text-xs bg-transparent border-none p-0 focus:ring-0 cursor-pointer font-bold text-[var(--text-secondary)]"><option value="General">General</option><option value="Pests">Pests</option><option value="Market">Market</option><option value="Weather">Weather</option><option value="Equipment">Equipment</option></select></div>
             </div>
             <input placeholder="Title (Optional)" value={newPost.title} onChange={e => setNewPost({...newPost, title: e.target.value})} className="w-full mb-2 text-lg font-bold placeholder-[var(--text-tertiary)] border-none focus:ring-0 p-0 bg-transparent text-[var(--text-primary)]"/>

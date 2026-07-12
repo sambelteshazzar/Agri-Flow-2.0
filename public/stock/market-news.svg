@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" fill="none">
+  <rect width="400" height="250" fill="#052e16"/>
+  <rect x="50" y="50" width="300" height="150" rx="8" fill="#043d1a" stroke="#f59e0b" stroke-width="2"/>
+  <rect x="70" y="70" width="260" height="25" rx="4" fill="#f59e0b" opacity="0.2"/>
+  <text x="100" y="88" font-family="system-ui, sans-serif" font-size="16" fill="#f59e0b" font-weight="700">MAIZE: 52,000/100kg</text>
+  <rect x="70" y="110" width="260" height="25" rx="4" fill="#0e7c2e" opacity="0.15"/>
+  <text x="100" y="128" font-family="system-ui, sans-serif" font-size="16" fill="#0e7c2e" font-weight="700">RICE: 48,500/100kg ▲</text>
+  <rect x="70" y="150" width="260" height="25" rx="4" fill="#f59e0b" opacity="0.15"/>
+  <text x="100" y="168" font-family="system-ui, sans-serif" font-size="16" fill="#f59e0b" font-weight="700">COCOA: 8,950/ton ▲</text>
+  <path d="M80 190 L130 160 L180 180 L230 140 L280 160 L330 130" stroke="#f59e0b" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+  <circle cx="330" cy="130" r="6" fill="#f59e0b"/>
+  <text x="200" y="220" font-family="system-ui, sans-serif" font-size="14" fill="#f59e0b" text-anchor="middle" font-weight="600">Market Prices</text>
+</svg>

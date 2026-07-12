@@ -4,6 +4,7 @@ import { Crop } from '@/types';
 import { formatAreaLabel } from '@/utils/localeFormat';
 import getCropImage from './getCropImage';
 import CROP_TEMPLATES from './cropTemplates';
+import { ImageUpload } from '@/components/ui/ImageUpload';
 
 interface CropFormProps {
   isOpen: boolean;
@@ -112,28 +113,26 @@ const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowTo
             <div className="mb-4">
               <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1 flex items-center"><ImageIcon className="w-3 h-3 mr-1" /> Plot Imagery</label>
               <div className="flex gap-4 items-start bg-[var(--bg-content)] p-3 rounded border border-[var(--border-card)]">
-                <div className="w-24 h-24 shrink-0 bg-[var(--bg-content)] rounded border border-[var(--border-card)] overflow-hidden relative group">
-                  <img
-                    src={newCrop.imageUrl}
-                    alt="Crop Preview"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = getCropImage(newCrop.name);
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors pointer-events-none"></div>
-                </div>
+                <ImageUpload
+                  value={newCrop.imageUrl || ''}
+                  onChange={(url) => setNewCrop({...newCrop, imageUrl: url || getCropImage(newCrop.name)})}
+                  label="Upload crop image"
+                  placeholder="Crop photo"
+                  size="md"
+                />
                 <div className="flex-1">
-                  <input
-                    type="text"
-                    value={newCrop.imageUrl}
-                    onChange={e => setNewCrop({...newCrop, imageUrl: e.target.value})}
-                    className="w-full px-4 py-2 border-[var(--border-card)] bg-[var(--bg-content)] focus:border-sunburst-500 dark:focus:border-sunburst-500 focus:ring-4 focus:ring-jade-500/10 rounded-sm font-medium text-[var(--text-primary)] text-xs mb-2"
-                    placeholder="https://example.com/image.jpg"
-                  />
                   <p className="text-[10px] text-[var(--text-secondary)] font-medium">
-                    The system automatically assigns an image based on the crop name. You can paste a custom URL here to override it.
+                    Upload a photo of your crop, or leave empty to use the default image for {newCrop.name || 'this crop type'}.
                   </p>
+                  {newCrop.imageUrl && !newCrop.imageUrl.startsWith('data:') && (
+                    <button
+                      type="button"
+                      onClick={() => setNewCrop({...newCrop, imageUrl: getCropImage(newCrop.name)})}
+                      className="mt-2 text-[10px] text-jade-600 hover:text-jade-700 font-semibold"
+                    >
+                      Reset to default
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

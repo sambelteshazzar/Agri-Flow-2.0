@@ -98,13 +98,15 @@ async function networkFirstWithFallback(request) {
 
 async function cacheFirstWithNetworkUpdate(request) {
   const cached = await caches.match(request);
-  const fetchPromise = fetch(request).then((response) => {
-    if (response.ok) {
-      const cache = caches.open(CACHE_NAME);
-      cache.then((c) => c.put(request, response.clone()));
-    }
-    return response;
-  }).catch(() => cached);
+  const fetchPromise = fetch(request)
+    .then(async (response) => {
+      if (response.ok) {
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, response.clone());
+      }
+      return response;
+    })
+    .catch(() => cached);
 
   return cached || fetchPromise;
 }

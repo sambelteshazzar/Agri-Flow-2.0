@@ -54,7 +54,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
         {/* Primary Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 animate-slow-zoom"
-          style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1527847263472-aa5338d178b8?q=80&w=2674&auto=format&fit=crop")' }}
+          style={{ backgroundImage: 'radial-gradient(ellipse at center, rgba(34,197,94,0.25) 0%, transparent 70%)' }}
         ></div>
         
         {/* Gradients */}
@@ -318,7 +318,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
             </div>
             
             <div className="order-1 lg:order-2 relative h-[500px] rounded-3xl overflow-hidden shadow-2xl border border-jade-800 group">
-               <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"></div>
+               <div className="absolute inset-0 bg-gradient-to-br from-jade-700 via-jade-800 to-jade-950 transition-transform duration-700 group-hover:scale-105"></div>
                <div className="absolute inset-0 bg-gradient-to-t from-jade-950 via-jade-950/20 to-transparent"></div>
                <div className="absolute bottom-0 left-0 p-10 w-full bg-gradient-to-t from-jade-950/90 to-transparent">
                    <p className="text-white font-bold text-3xl font-heading mb-3">"Better data, better harvests."</p>

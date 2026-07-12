@@ -3,6 +3,7 @@ import { useFarm } from '../contexts/FarmContext';
 import { Plus, Trash2, Pencil, X, Beef, Tag, ClipboardList, Calendar, HeartPulse, Image as ImageIcon, Scan, Upload, Loader2, Stethoscope, Clipboard, Database } from 'lucide-react';
 import { Livestock, LogEntry } from '../types';
 import { analyzeCropImage, CountryContext, isAIConfigured } from '../services/geminiService';
+import { ImageUpload } from '@/components/ui/ImageUpload';
 
 import { getStockImage } from '@/utils/stockImages';
 
@@ -336,25 +337,28 @@ const LivestockManager: React.FC = () => {
              <div className="p-6">
                 <form onSubmit={handleAddSubmit} className="space-y-4">
                    
-                   {/* Image Preview Area */}
-                    <div className="flex gap-4 items-start bg-[var(--bg-content)] dark:bg-jade-800 p-3 rounded border border-[var(--border-card)]">
-                     <div className="w-24 h-24 shrink-0 bg-[var(--bg-content)] dark:bg-jade-700 rounded border border-[var(--border-card)] dark:border-jade-600 overflow-hidden relative group">
-                       <img src={newAnimal.imageUrl} alt="Animal Preview" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="flex-1">
-                       <div className="mb-2">
-                          <label className="block text-xs font-semibold text-[var(--text-primary)] dark:text-[var(--text-secondary)] mb-1 flex items-center"><ImageIcon className="w-3 h-3 mr-1" /> Image URL</label>
-                          <input 
-                            type="text" 
-                            value={newAnimal.imageUrl} 
-                            onChange={e => setNewAnimal({...newAnimal, imageUrl: e.target.value})} 
-                            className="w-full px-4 py-2 border-2 border-[var(--border-card)] dark:border-jade-600 focus:border-jade-500 dark:focus:border-jade-400 rounded-sm font-medium text-[var(--text-primary)] text-xs bg-[var(--bg-card)] dark:bg-jade-950"
-                            placeholder="https://..."
-                          />
-                        </div>
-                        <p className="text-[10px] text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] font-medium">Auto-assigned based on species. Replace if you have a specific photo URL.</p>
-                    </div>
-                  </div>
+                   {/* Image Upload Area */}
+                     <div className="flex gap-4 items-start bg-[var(--bg-content)] dark:bg-jade-800 p-3 rounded border border-[var(--border-card)]">
+                      <ImageUpload
+                        value={newAnimal.imageUrl || ''}
+                        onChange={(url) => setNewAnimal({...newAnimal, imageUrl: url || getLivestockImage(newAnimal.species)})}
+                        label="Upload livestock image"
+                        placeholder="Livestock photo"
+                        size="md"
+                      />
+                     <div className="flex-1">
+                       <p className="text-[10px] text-[var(--text-secondary)] dark:text-[var(--text-tertiary)] font-medium">Upload a photo of your livestock, or leave empty to use the default image for {newAnimal.species || 'this species'}.</p>
+                       {newAnimal.imageUrl && !newAnimal.imageUrl.startsWith('data:') && (
+                         <button
+                           type="button"
+                           onClick={() => setNewAnimal({...newAnimal, imageUrl: getLivestockImage(newAnimal.species)})}
+                           className="mt-2 text-[10px] text-jade-600 hover:text-jade-700 font-semibold"
+                         >
+                           Reset to default
+                         </button>
+                       )}
+                     </div>
+                   </div>
 
                    <div><label className="block text-xs font-semibold text-[var(--text-primary)] dark:text-[var(--text-secondary)] mb-1">Herd ID / Name</label><input autoFocus type="text" value={newAnimal.name} onChange={e => setNewAnimal({...newAnimal, name: e.target.value})} className="w-full px-4 py-3 border-2 border-[var(--border-card)] dark:border-jade-600 rounded-sm font-bold text-[var(--text-primary)] placeholder-[var(--text-secondary)] dark:placeholder-[var(--text-tertiary)] bg-[var(--bg-card)] dark:bg-jade-950 focus:outline-none focus:border-jade-500" placeholder="e.g. Black Angus Herd #4" required /></div>
                    <div className="grid grid-cols-2 gap-4">

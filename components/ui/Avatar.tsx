@@ -70,7 +70,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         className={`${SIZE_CLASSES[size]} rounded-full object-cover ${className}`}
         onError={(e) => {
           if (onError) onError();
-          e.currentTarget.src = `/placeholders/user-default.svg`;
+          e.currentTarget.src = `/stock/user.svg`;
         }}
       />
     );

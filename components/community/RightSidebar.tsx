@@ -157,7 +157,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
         {FARMER_MATCHES.slice(0, 3).map(fm => (
           <div key={fm.id} className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0">
-              <img src={fm.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(fm.name)}&background=random`} className="w-full h-full object-cover" alt={fm.name} />
+              <img src={fm.avatar || '/stock/user.svg'} className="w-full h-full object-cover" alt={fm.name} />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold text-[var(--text-primary)] truncate">{fm.name}</p>
@@ -217,7 +217,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
              {suggestedUsers.map((person) => (
                 <div key={person.id} className="flex items-center justify-between">
                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-[var(--bg-content)] overflow-hidden"><img src={person.img} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(person.name)}`; }} /></div>
+                      <div className="w-9 h-9 rounded-full bg-[var(--bg-content)] overflow-hidden"><img src={person.img} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = '/stock/user.svg'; }} /></div>
                        <div><p className="text-sm font-bold text-[var(--text-primary)] leading-none hover:underline cursor-pointer" onClick={() => onAuthRequiredAction(() => toggleFollowUser(person.id))}>{person.name}</p><p className="text-[10px] text-[var(--text-secondary)] mt-0.5">{person.role}</p></div>
                    </div>
                    <button onClick={() => onAuthRequiredAction(() => toggleFollowUser(person.id))} className={`p-1.5 rounded-full transition-colors ${followedUserIds.includes(person.id) ? 'bg-jade-100 text-jade-600' : 'bg-[var(--bg-content)] text-[var(--text-tertiary)] hover:bg-terra-300'}`}>{followedUserIds.includes(person.id) ? <CheckCircle className="w-4 h-4"/> : <Plus className="w-4 h-4"/>}</button>

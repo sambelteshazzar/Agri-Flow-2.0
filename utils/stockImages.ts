@@ -1,16 +1,16 @@
 export const STOCK_IMAGES = {
   // Crops
   'crop-default': '/stock/crop-default.svg',
-  'maize': '/stock/crop-default.svg',
-  'rice': '/stock/crop-default.svg',
-  'cassava': '/stock/crop-default.svg',
-  'sorghum': '/stock/crop-default.svg',
-  'millet': '/stock/crop-default.svg',
-  'cocoa': '/stock/fruit-tree.svg',
-  'oil palm': '/stock/fruit-tree.svg',
-  'groundnut': '/stock/crop-default.svg',
-  'yam': '/stock/crop-default.svg',
-  'vegetables': '/stock/crop-default.svg',
+  'maize': '/stock/maize.svg',
+  'rice': '/stock/rice.svg',
+  'cassava': '/stock/cassava.svg',
+  'sorghum': '/stock/sorghum.svg',
+  'millet': '/stock/millet.svg',
+  'cocoa': '/stock/cocoa.svg',
+  'oil palm': '/stock/oil-palm.svg',
+  'groundnut': '/stock/groundnut.svg',
+  'yam': '/stock/yam.svg',
+  'vegetables': '/stock/vegetable.svg',
   'fruit tree': '/stock/fruit-tree.svg',
 
   // Livestock
@@ -27,6 +27,12 @@ export const STOCK_IMAGES = {
   'swine': '/stock/pig.svg',
   'horse': '/stock/horse.svg',
   'other livestock': '/stock/other-livestock.svg',
+
+  // News categories
+  'technews': '/stock/tech-news.svg',
+  'marketnews': '/stock/market-news.svg',
+  'climatenews': '/stock/climate-news.svg',
+  'policynews': '/stock/policy-news.svg',
 
   // Categories
   marketplace: '/stock/marketplace.svg',

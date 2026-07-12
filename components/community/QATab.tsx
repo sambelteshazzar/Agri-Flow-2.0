@@ -135,7 +135,7 @@ const QATab: React.FC<QATabProps> = ({
               {q.answers.map(a => (
                 <div key={a.id} className={`flex gap-3 p-4 rounded-xl ${a.accepted ? 'bg-jade-50 dark:bg-jade-950/20 border border-jade-200 dark:border-jade-800' : 'bg-[var(--bg-card)] border border-[var(--border-card)]'}`}>
                   <div className="w-8 h-8 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0">
-                    <img src={a.authorAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(a.author)}&background=random`} className="w-full h-full object-cover" alt={a.author} />
+                    <img src={a.authorAvatar || '/stock/user.svg'} className="w-full h-full object-cover" alt={a.author} />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">

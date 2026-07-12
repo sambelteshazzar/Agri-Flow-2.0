@@ -101,7 +101,7 @@ class PersistenceService {
       ...animal,
       grazingType: animal.grazingType || 'Rotational',
       status: animal.status || 'Healthy',
-      imageUrl: animal.imageUrl || `https://images.unsplash.com/photo-1546445317-29f4545e9d53?q=80&w=1000&auto=format&fit=crop`,
+      imageUrl: animal.imageUrl || '/stock/livestock.svg',
       name: animal.name || 'Unnamed Herd',
       count: Number(animal.count) || 0
     }));
@@ -130,7 +130,7 @@ class PersistenceService {
     return modules.map(m => ({
       ...m,
       instructor: m.instructor || 'AgriFlow Expert',
-      thumbnail: m.thumbnail || 'https://images.unsplash.com/photo-1625246333195-00305256a836?q=80&w=800',
+      thumbnail: m.thumbnail || '/stock/education.svg',
       lessonsCount: m.lessonsCount || 5,
       description: m.description || 'Professional agricultural training module.'
     }));

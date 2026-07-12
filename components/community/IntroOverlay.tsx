@@ -4,24 +4,13 @@ import { Globe, ShoppingBag, HelpCircle, Zap, ArrowRight } from 'lucide-react';
 interface IntroOverlayProps {
   showIntro: boolean;
   onDismiss: () => void;
-  introBgError: boolean;
-  setIntroBgError: (v: boolean) => void;
 }
 
-const IntroOverlay: React.FC<IntroOverlayProps> = ({ showIntro, onDismiss, introBgError, setIntroBgError }) => (
+const IntroOverlay: React.FC<IntroOverlayProps> = ({ showIntro, onDismiss }) => (
   <div className={`absolute inset-0 z-intro-overlay bg-jade-950 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-700 ${!showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
     
     <div className="absolute inset-0 opacity-40">
-      {!introBgError ? (
-        <img 
-          src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=2000&auto=format&fit=crop" 
-          alt="Community Background" 
-          className="w-full h-full object-cover"
-          onError={() => setIntroBgError(true)}
-        />
-      ) : (
-        <div className="w-full h-full bg-gradient-to-br from-jade-800/40 via-jade-900 to-jade-950"></div>
-      )}
+      <div className="w-full h-full bg-gradient-to-br from-jade-800/40 via-jade-900 to-jade-950"></div>
     </div>
     
     <div className="absolute inset-0 bg-gradient-to-t from-jade-950 via-jade-950/80 to-transparent"></div>
