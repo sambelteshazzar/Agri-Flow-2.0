@@ -53,13 +53,13 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       <div className="fixed inset-0 z-0 pointer-events-none">
         {/* Primary Image - Local photorealistic hero background */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50 animate-slow-zoom"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-70 animate-slow-zoom"
           style={{ backgroundImage: 'url("/hero-bg.jpg")' }}
         ></div>
         
-        {/* Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-r from-jade-950/95 via-jade-900/80 to-jade-900/40"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-jade-900/50 to-jade-950"></div>
+        {/* Gradients - lighter to let image show through */}
+        <div className="absolute inset-0 bg-gradient-to-r from-jade-950/80 via-jade-900/60 to-jade-900/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-jade-900/30 to-jade-950"></div>
 
         {/* Interactive Glow */}
         <div 
