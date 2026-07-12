@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" fill="none">
+  <rect width="1200" height="800" fill="#052e16"/>
+  <!-- Sky gradient -->
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#043d1a"/>
+      <stop offset="50%" stop-color="#052e16"/>
+      <stop offset="100%" stop-color="#02200c"/>
+    </linearGradient>
+    <linearGradient id="sunGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#skyGrad)"/>
+  
+  <!-- Sun glow -->
+  <ellipse cx="1000" cy="150" rx="300" ry="200" fill="url(#sunGrad)"/>
+  <circle cx="1000" cy="150" r="80" fill="#f59e0b" opacity="0.4"/>
+  <circle cx="1000" cy="150" r="40" fill="#f59e0b" opacity="0.6"/>
+  
+  <!-- Sun rays -->
+  <g stroke="#f59e0b" stroke-width="2" stroke-linecap="round" opacity="0.3">
+    <line x1="1000" y1="50" x2="1000" y2="20"/>
+    <line x1="1000" y1="250" x2="1000" y2="280"/>
+    <line x1="920" y1="150" x2="890" y2="150"/>
+    <line x1="1110" y1="150" x2="1140" y2="150"/>
+    <line x1="955" y1="75" x2="940" y2="60"/>
+    <line x1="1045" y1="75" x2="1060" y2="60"/>
+    <line x1="955" y1="225" x2="940" y2="240"/>
+    <line x1="1045" y1="225" x2="1060" y2="240"/>
+  </g>
+  
+  <!-- Distant hills -->
+  <path d="M0 500 Q300 350 600 450 Q900 300 1200 400 L1200 800 L0 800 Z" fill="#043d1a" opacity="0.8"/>
+  <path d="M0 550 Q250 420 500 500 Q750 380 1000 480 L1200 650 L1200 800 L0 800 Z" fill="#052e16" opacity="0.6"/>
+  
+  <!-- Farm fields - geometric pattern -->
+  <g fill="none" stroke="#166534" stroke-width="1.5" opacity="0.4">
+    <rect x="100" y="520" width="200" height="180" rx="4"/>
+    <rect x="320" y="520" width="200" height="180" rx="4"/>
+    <rect x="540" y="520" width="200" height="180" rx="4"/>
+    <rect x="760" y="520" width="200" height="180" rx="4"/>
+    <rect x="980" y="520" width="200" height="180" rx="4"/>
+  </g>
+  
+  <!-- Crop rows in fields -->
+  <g stroke="#22c55e" stroke-width="0.8" opacity="0.3">
+    <line x1="110" y1="530" x2="290" y2="530"/>
+    <line x1="110" y1="560" x2="290" y2="560"/>
+    <line x1="110" y1="590" x2="290" y2="590"/>
+    <line x1="110" y1="620" x2="290" y2="620"/>
+    <line x1="110" y1="650" x2="290" y2="650"/>
+    <line x1="110" y1="680" x2="290" y2="680"/>
+    
+    <line x1="330" y1="530" x2="510" y2="530"/>
+    <line x1="330" y1="560" x2="510" y2="560"/>
+    <line x1="330" y1="590" x2="510" y2="590"/>
+    <line x1="330" y1="620" x2="510" y2="620"/>
+    <line x1="330" y1="650" x2="510" y2="650"/>
+    <line x1="330" y1="680" x2="510" y2="680"/>
+    
+    <line x1="550" y1="530" x2="730" y2="530"/>
+    <line x1="550" y1="560" x2="730" y2="560"/>
+    <line x1="550" y1="590" x2="730" y2="590"/>
+    <line x1="550" y1="620" x2="730" y2="620"/>
+    <line x1="550" y1="650" x2="730" y2="650"/>
+    <line x1="550" y1="680" x2="730" y2="680"/>
+  </g>
+  
+  <!-- Irrigation pivot center -->
+  <circle cx="860" cy="610" r="8" fill="#0e7c2e" opacity="0.8"/>
+  <circle cx="860" cy="610" r="60" fill="none" stroke="#166534" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>
+  
+  <!-- Trees/windbreaks -->
+  <g fill="#0e7c2e" opacity="0.5">
+    <ellipse cx="60" cy="580" rx="25" ry="40"/>
+    <ellipse cx="1150" cy="570" rx="30" ry="45"/>
+    <ellipse cx="50" cy="620" rx="20" ry="35"/>
+    <ellipse cx="1180" cy="610" rx="22" ry="38"/>
+  </g>
+  
+  <!-- Farm buildings -->
+  <rect x="400" y="460" width="80" height="60" rx="3" fill="#166534" opacity="0.6"/>
+  <path d="M400 460 L440 430 L480 460 Z" fill="#2d4a2d" opacity="0.6"/>
+  <rect x="420" y="480" width="20" height="40" fill="#0e7c2e" opacity="0.5"/>
+  
+  <!-- Data visualization elements (floating) -->
+  <g fill="#22c55e" opacity="0.15">
+    <rect x="150" y="200" width="120" height="60" rx="6"/>
+    <rect x="150" y="200" width="40" height="40" rx="4"/>
+    <rect x="200" y="200" width="40" height="20" rx="2"/>
+    <rect x="200" y="225" width="60" height="25" rx="2"/>
+  </g>
+  
+  <g fill="#f59e0b" opacity="0.15">
+    <circle cx="800" cy="250" r="50"/>
+    <path d="M800 220 L790 200 L810 200 Z" fill="#f59e0b" opacity="0.2"/>
+    <path d="M800 280 L790 300 L810 300 Z" fill="#f59e0b" opacity="0.2"/>
+  </g>
+  
+  <!-- AI/Brain nodes -->
+  <g stroke="#22c55e" stroke-width="1.5" fill="none" opacity="0.2">
+    <circle cx="300" cy="200" r="30"/>
+    <circle cx="300" cy="200" r="20"/>
+    <circle cx="300" cy="200" r="10"/>
+    <line x1="270" y1="200" x2="250" y2="180"/>
+    <line x1="330" y1="200" x2="350" y2="180"/>
+    <line x1="300" y1="170" x2="300" y2="150"/>
+    <line x1="300" y1="230" x2="300" y2="250"/>
+    
+    <circle cx="950" cy="350" r="25"/>
+    <circle cx="950" cy="350" r="15"/>
+    <circle cx="950" cy="350" r="5"/>
+  </g>
+  
+  <!-- Title text area (transparent, for CSS overlay) -->
+  <rect x="100" y="100" width="600" height="200" fill="none"/>
+</svg>

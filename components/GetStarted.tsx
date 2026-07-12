@@ -49,12 +49,12 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
       className="h-screen w-full bg-jade-950 text-white font-sans selection:bg-green-500 selection:text-white overflow-y-auto overflow-x-hidden relative scroll-smooth"
     >
       
-      {/* --- CINEMATIC BACKGROUND LAYER (Fixed relative to viewport) --- */}
+{/* --- CINEMATIC BACKGROUND LAYER (Fixed relative to viewport) --- */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         {/* Primary Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 animate-slow-zoom"
-          style={{ backgroundImage: 'radial-gradient(ellipse at center, rgba(34,197,94,0.25) 0%, transparent 70%)' }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50 animate-slow-zoom"
+          style={{ backgroundImage: 'url("/stock/landing-hero.svg")' }}
         ></div>
         
         {/* Gradients */}
