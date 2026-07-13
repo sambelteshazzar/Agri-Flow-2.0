@@ -160,6 +160,9 @@ export interface NewsArticle {
   timeAgo: string;
   url?: string;
   isSimulated?: boolean;
+  // Optional Pixabay cover photo URL, fetched client-side by NewsHub.
+  // Falls back to the category SVG placeholder when absent or failed to load.
+  imageUrl?: string;
 }
 
 export interface MarketPrice {

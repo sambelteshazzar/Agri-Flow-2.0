@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getStockImage } from '@/utils/stockImages';
+import { fetchNewsImage, isPixabayConfigured } from '@/utils/newsImages';
 import { useFarm } from '../contexts/FarmContext';
 import { Newspaper, Loader2, ExternalLink, Clock, RefreshCw, Zap, TrendingUp, Leaf, Landmark, Signal, Search } from 'lucide-react';
 import { isAIConfigured } from '../services/geminiService';
@@ -13,12 +14,42 @@ const AG_NEWS_SOURCES: Record<string, string> = {
 
 const NewsHub: React.FC = () => {
   const { newsArticles, refreshNews, isLoadingNews, showToast } = useFarm();
+  // Pixabay-fetched cover photos keyed by article.id. Populated asynchronously
+  // after articles load; missing keys fall back to category SVG placeholders.
+  const [photoMap, setPhotoMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (newsArticles.length === 0) {
       refreshNews();
     }
   }, [refreshNews, newsArticles.length]);
+
+  useEffect(() => {
+    if (!isPixabayConfigured() || newsArticles.length === 0) return;
+    const controller = new AbortController();
+    const missing = newsArticles.filter(a => !a.imageUrl && !photoMap[a.id]);
+    if (missing.length === 0) return;
+
+    (async () => {
+      const entries = await Promise.all(
+        missing.map(async a => {
+          const url = await fetchNewsImage(a, {
+            preferLarge: a.id === newsArticles[0]?.id,
+            signal: controller.signal,
+          });
+          return [a.id, url] as const;
+        }),
+      );
+      if (controller.signal.aborted) return;
+      const next: Record<string, string> = { ...photoMap };
+      for (const [id, url] of entries) {
+        if (url) next[id] = url;
+      }
+      setPhotoMap(next);
+    })();
+
+    return () => controller.abort();
+  }, [newsArticles, photoMap]);
 
   const handleNewsClick = (e: React.MouseEvent, url?: string, category?: string) => {
     if (!url || url === '#' || url.trim() === '') {
@@ -57,6 +88,12 @@ const NewsHub: React.FC = () => {
       case 'Policy': return getStockImage('policyNews');
       default: return getStockImage('news');
     }
+  };
+
+  // Resolve the actual <img src> for an article: prefer Pixabay photo, then
+  // an AI-supplied imageUrl (future), then the category SVG placeholder.
+  const resolveCover = (article: { id: string; category: string; imageUrl?: string }): string => {
+    return photoMap[article.id] || article.imageUrl || getDeterministicImage(article.category);
   };
 
   const featuredArticle = newsArticles[0];
@@ -98,14 +135,14 @@ const NewsHub: React.FC = () => {
         <>
           {featuredArticle && (
             <div className="relative h-[450px] rounded-2xl overflow-hidden shadow-2xl group cursor-pointer border border-jade-900/20 dark:border-jade-700/30">
-               <img 
-                 src={getDeterministicImage(featuredArticle.category)} 
-                 alt={featuredArticle.title} 
-                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                 onError={(e) => {
-                   e.currentTarget.src = '/stock/news.svg';
-                 }}
-               />
+                <img 
+                  src={resolveCover(featuredArticle)} 
+                  alt={featuredArticle.title} 
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  onError={(e) => {
+                    e.currentTarget.src = '/stock/news.svg';
+                  }}
+                />
                <div className="absolute inset-0 bg-gradient-to-t from-jade-950 via-jade-950/80 to-transparent opacity-90 group-hover:opacity-100 transition-opacity"></div>
                
                <div className="absolute bottom-0 left-0 p-6 md:p-10 w-full max-w-4xl">
@@ -150,15 +187,15 @@ const NewsHub: React.FC = () => {
              {remainingArticles.map(article => (
                <div key={article.id} className="card-surface rounded-xl overflow-hidden flex flex-col group hover:-translate-y-1">
                   <div className="h-44 overflow-hidden relative">
-                     <img 
-                       src={getDeterministicImage(article.category)} 
-                       alt={article.title} 
-                       loading="lazy"
-                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                       onError={(e) => {
-                         e.currentTarget.src = '/stock/news.svg';
-                       }}
-                     />
+                      <img 
+                        src={resolveCover(article)} 
+                        alt={article.title} 
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onError={(e) => {
+                          e.currentTarget.src = '/stock/news.svg';
+                        }}
+                      />
                      <div className="absolute top-3 right-3">
                         <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold border shadow-sm ${getCategoryColor(article.category)} bg-white/95 dark:bg-jade-900/90 backdrop-blur-sm`}>
                            {getCategoryIcon(article.category)} {article.category}
