@@ -142,7 +142,7 @@ export async function fetchNewsImage(
 
   const query = buildQuery(article);
   const url = await fetchFromCommons(query, opts);
-  writeCache(cacheKey, url);
+  if (url) writeCache(cacheKey, url); // only cache successful results
   return url;
 }
 
