@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Camera, Send, Loader2, Sparkles, Info, BrainCircuit, ExternalLink, Globe, X, Phone, Mic, MicOff, Activity } from 'lucide-react';
-import { getFarmingAdvice, analyzeCropImage, CountryContext, isAIConfigured, hasLiveVoice, getLiveAIClient } from '../services/geminiService';
+import { Camera, Send, Loader2, Sparkles, Info, BrainCircuit, ExternalLink, Globe, X, Phone, Mic, MicOff, Activity, AlertCircle, CheckCircle } from 'lucide-react';
+import { getFarmingAdvice, analyzeCropImage, CountryContext, isAIConfigured, hasLiveVoice, getLiveAIClient, getAIProvider } from '../services/geminiService';
 import { ChatMessage } from '../types';
 import { useFarm } from '../contexts/FarmContext';
 import { LiveServerMessage, Modality } from "@google/genai";
@@ -24,13 +24,15 @@ const AIAdvisor: React.FC = () => {
   userNameRef.current = userProfile.name;
 
   const aiConfigured = isAIConfigured();
+  const provider = getAIProvider();
+  const providerName = provider.constructor.name;
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
       role: 'model',
       text: aiConfigured
-        ? 'Your farming companion is ready.\n\nI can help analyze crop images for health issues, review soil reports, or explore market trends. Tap the phone icon for a live voice consultation.'
+        ? `Your farming companion is ready.\n\nProvider: ${providerName} (${aiConfigured ? 'configured' : 'NOT configured'})\n\nI can help analyze crop images for health issues, review soil reports, or explore market trends. Tap the phone icon for a live voice consultation.`
         : 'Your farming companion is in demo mode.\n\nNo AI API key is configured. Responses will use pre-built examples, not live analysis. To enable live AI, contact your administrator.',
       isSimulated: !aiConfigured,
       timestamp: new Date()

@@ -33,3 +33,5 @@ export const analyzeCropImage = async (base64Image: string, userPrompt: string, 
 export function getLiveAIClient() {
   return getAIProvider().getLiveClient();
 }
+
+export { getAIProvider, resetAIProvider } from './ai';
