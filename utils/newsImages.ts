@@ -12,8 +12,7 @@ const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const CACHE_PREFIX = 'agflow_commons_img_';
 const MEMORY_CACHE = new Map<string, { url: string | null; ts: number }>();
 
-// Category fallback queries — used when title keywords yield no good hits
-// or as a relevance booster combined with extracted title keywords.
+// Category queries — consistently return 3+ agriculture JPEGs.
 const CATEGORY_TERMS: Record<NewsArticle['category'], string> = {
   Market: 'grain market harvest crops trading',
   Tech: 'agriculture drone technology farming',
@@ -67,36 +66,6 @@ interface CommonsResponse {
 
 // Extract up to 3 meaningful keywords from a title, ignoring common stopwords.
 // Returns a space-separated query string suitable for Commons' search.
-const STOPWORDS = new Set([
-  'the', 'a', 'an', 'and', 'or', 'but', 'for', 'in', 'on', 'at', 'to', 'of', 'with',
-  'is', 'are', 'was', 'were', 'be', 'been', 'being', 'this', 'that', 'these', 'those',
-  'from', 'as', 'by', 'it', 'its', 'has', 'have', 'had', 'will', 'would', 'could',
-  'should', 'may', 'might', 'can', 'must', 'about', 'into', 'than', 'then', 'over',
-  'under', 'after', 'before', 'new', 'report', 'reports', 'says', 'said', 'news',
-  'update', 'latest', 'first', 'one', 'two', 'three', 'all', 'more', 'most', 'other',
-  'after', 'year', 'month', 'week', 'day', 'ago',
-]);
-function extractKeywords(title: string): string {
-  const words = (title.toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/))
-    .filter(w => w.length > 2 && !STOPWORDS.has(w));
-  const seen = new Set<string>();
-  const picked: string[] = [];
-  for (const w of words) {
-    if (seen.has(w)) continue;
-    seen.add(w);
-    picked.push(w);
-    if (picked.length >= 3) break;
-  }
-  return picked.join(' ');
-}
-
-function buildQuery(article: NewsArticle): string {
-  const titleKw = extractKeywords(article.title);
-  const catKw = CATEGORY_TERMS[article.category] || 'agriculture farming';
-  // Wikimedia search works best with a few specific words.
-  return (titleKw || catKw).slice(0, 100);
-}
-
 interface FetchOptions {
   // When true, prefer the original full-resolution URL — used for the featured
   // hero card which is much larger. Otherwise, prefer the 800px thumbnail.
