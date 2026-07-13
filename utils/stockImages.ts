@@ -55,3 +55,20 @@ export function getStockImage(key: string): string {
   // Fallback
   return '/stock/crop-default.svg';
 }
+
+// Unsplash source URLs for news categories - returns real photos
+const UNSPLASH_NEWS_IMAGES = {
+  tech: 'https://source.unsplash.com/featured/800x450/?agriculture,technology,drones,farming',
+  market: 'https://source.unsplash.com/featured/800x450/?crops,market,grains,trading,agriculture',
+  climate: 'https://source.unsplash.com/featured/800x450/?weather,climate,farming,drought,rain',
+  policy: 'https://source.unsplash.com/featured/800x450/?policy,government,agriculture,farming,regulation',
+  default: 'https://source.unsplash.com/featured/800x450/?agriculture,farming,crops',
+} as const;
+
+export function getNewsImage(category: string): string {
+  const cat = category.toLowerCase().trim();
+  if (cat in UNSPLASH_NEWS_IMAGES) {
+    return UNSPLASH_NEWS_IMAGES[cat as keyof typeof UNSPLASH_NEWS_IMAGES];
+  }
+  return UNSPLASH_NEWS_IMAGES.default;
+}

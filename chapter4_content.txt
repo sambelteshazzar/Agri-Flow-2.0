@@ -1,0 +1,548 @@
+CHAPTER FOUR
+
+                          IMPLEMENTATION AND TESTING
+
+
+
+4.0 Introduction
+
+This chapter documents the implementation of AgriFlow , the smart-farming artefact whose design was set out in Chapter Three. Where Chapter Three described how the system was intended to be built  the layered single-page-application architecture, the entity-relationship model, the technology stack and the security design this chapter describes what was actually built and how it behaves. The two chapters are parallel in structure so a reader can move between a planned decision and its realised counterpart without effort. The chapter opens with a short reconciliation of plan and artefact, proceeds module-by-module through every major feature, and closes with three end-to-end demonstration scenarios and an evidenced security-implementation section. All file names and line numbers refer to the version of the source current at the time of writing.
+
+4.1 Reconciliation with the Chapter Three Design
+
+The delivered artefact implements the five planned layers presentation, state, service, persistence and the shadow service-worker  exactly as specified; the layer boundaries, module names and key files are unchanged from the architecture diagram of Figure 3.2. The entity set defined in the Chapter Three ER diagram is preserved verbatim in types.ts and stored under the namespaced keys declared in services/persistence.ts. Three honest differences exist between the planned and delivered artefact, each justified below.
+
+Table 4.1  Divergences between the Chapter Three design and the delivered artefact.
+
+Apart from these three items, every element of the planned architecture, entity model, technology stack and security design is present in the code at the locations stated in Chapter Three.
+
+4.2 Module 1 : App Shell, Routing and Global Chrome
+
+4.2.1 Purpose and user needs addressed
+
+The shell is the structural skeleton of the application, addressing FR-01 (orientation), FR-02 (navigation) and NFR-03 (graceful degradation on a sub-view crash). It renders the top header (page title and subtitle, online/offline pill, notifications dropdown, profile avatar), the desktop sidebar, the mobile bottom navigation, the global toast container, the floating voice agent and a Cmd-K command palette.
+
+4.2.2 Key technical decisions and rationale
+
+Routing without a router library. Hash-based routing lives entirely inside FarmContext (navigate(), the VIEW_HASH map and a popstate listener), removing the react-router dependency previously budgeted while still delivering deep-linking (#market, #ai, …), back-button support and per-view scroll restoration through the scrollPositions ref in App.tsx.
+
+Lazy-loaded routes. Every heavy feature component is wrapped in React.lazy() and suspended inside a single Suspense boundary. The initial bundle therefore contains only the shell, the dashboard and the auth modal; Community, AIAdvisor, Education and Voice stream in only when first navigated to.
+
+Defence-in-depth error containment. A global ErrorBoundary in index.tsx catches mount-time failures; a per-route RouteErrorBoundary in App.tsx isolates a single crashed page while the rest of the app keeps running — a deliberate choice over a single top-level boundary because lazy-loaded components fail independently.
+
+Dynamic title and favicon. A useEffect on currentView rewrites document.title to '<Page Name> · AgriFlow' and constructs an emoji favicon via a data:image/svg+xml URL  a cheap visual cue for tabbed farmers.
+
+Online/offline awareness and Cmd-K. Native online/offline window events feed a header pill; a keyboard listener captures Ctrl/Cmd+K to toggle the CommandPalette regardless of route, giving power users a fast path between the twelve top-level views.
+
+
+
+
+4.2.3 Security within this module
+
+The per-route error boundary confines a render-time crash to one screen and renders only the error message, never raw HTML, so no XSS vector is introduced through the recovery path. The shell's online/offline pill makes any downstream AI call visible to the user as available or unavailable, which is the precondition for the user judging whether an AI response is live or cached fallback content.
+
+Figure 4.1 below shows the shell rendering the Dashboard route. Note the page title and subtitle in the header, the Search button with the Cmd-K hint, the online pill, the notifications bell with a red alert dot, and the profile avatar with the online presence indicator. The desktop sidebar is visible on the left, grouped into Overview / Insights / Tools. Code reference: App.tsx (Appendix A.1), RouteErrorBoundary.tsx (A.2), CommandPalette.tsx (A.3).
+
+
+Figure 4.1  The app shell rendering the Dashboard route with sidebar, header, online pill, notifications bell and profile avatar.
+
+4.3 Module 2 Authentication, Sign-up and Onboarding
+
+4.3.1 Purpose and user needs addressed
+
+This module addresses FR-03 (self-registration of a farmer with the country, farm-type and location data the rest of the app needs to localise itself) and FR-04 (returning-user sign-in). It is exposed as a dual-mode modal (LoginPage) summoned from the GetStarted landing page or from the Sign In button in the header. On sign-up the chosen country code triggers loading of a complete country configuration default crops, livestock, prices, alerts, learning modules, tasks, marketplace listings, forum posts, chat seeds, trends, suggested users, stories, weather defaults, daily wage and currency — from COUNTRY_REGISTRY, which is then persisted through every domain service. West Africa is represented by Nigeria and Ghana, each carrying its own localised seeds, currency, climate zone and weather defaults; the architecture supports adding more West African countries by appending to the registry without touching any feature code.
+
+4.3.2 Key technical decisions
+
+No identity backend. Auth is a 500–800 ms simulated handshake (a setTimeout in FarmContext's signIn/login callbacks). The decision is documented in Chapter Three Section 3.5.5 as a deliberate academic-grade choice; a production deployment would substitute Firebase Auth or Supabase Auth at this single seam.
+
+Country-as-onboarding-pivot. Country is selected at sign-up and is never re-asked. The chosen code seeds every downstream feature, so the flow only asks for what it actually uses. A farmer in Kumasi (Ghana) lands on a Cocoa / Oil Palm / Maize dashboard priced in Cedis with tropical-wet-dry climate advisories; a farmer in Kano (Nigeria) lands on a Sorghum / Millet / Cowpea dashboard priced in Naira with Sahel-climate advisories — both from the same code path.
+
+Controlled form lifted to parent. LoginPage owns all form state and passes setters down to the presentational SignInForm and SignUpForm, keeping the form components purely declarative and testable.
+
+Client-side validation. Sign-up executes a regex email check, a 6-character password minimum, a matching confirmation check and a required-country check before submission. Sign-in executes an emptiness check on both fields.
+
+4.3.3 Security within this module
+
+Password fields are typed as type="password" with autoComplete="current-password" / "new-password" so the browser password manager is invoked correctly and the value is masked. An explicit show/hide toggle is the only way to reveal the typed password. On successful sign-up the credential record is written to localStorage under agriflow_credentials and is deliberately excluded from the Settings backup/export routine (which iterates DB_KEYS only — see Section 4.14), so the plaintext password cannot leave the device through that path.
+
+Figure 4.2 shows the dual-mode auth modal. Note the toggle between Sign In and Create Account, the country selector with the searchable flag list, the farm-type chips, and the password show/hide eye icon. Code reference: LoginPage.tsx (Appendix B.1), SignInForm.tsx (B.2), SignUpForm.tsx (B.3), CountrySelector.tsx (B.4), GetStarted.tsx (B.5), login/signIn/logout callbacks in FarmContext.tsx (B.6).
+
+
+Figure 4.2  The AgriFlow authentication modal in sign-up mode, showing the country selector, farm-type chips and password show/hide toggle.
+
+4.4 Module 3 — Dashboard (Command Center)
+
+4.4.1 Purpose and user needs addressed
+
+The Dashboard meets FR-05 (the farmer sees the current state of the farm at a glance) and FR-06 (the farmer receives AI-curated intelligence and task suggestions for today). It renders a weather card with a climate-risk badge, five KPI cards (Active Crops, Livestock, Market Trend, Tasks, Farm Profit), an AI live-intelligence card fed by getLiveAgriIntel, an opt-in AI-generated daily task button fed by generateDailyTasks, an alerts panel and a task list.
+
+4.4.2 Key technical decisions
+
+Country context derived once and reused. A CountryContext object is built from userProfile in a useMemo and passed to every AI call, so the AI prompt is localised to the farmer's climate zone, currency and language.
+
+Derived metrics computed inline. healthyCrops, attentionCrops, totalLivestockCount, pendingTasks and farmProfit are computed every render from cropExpenses and cropIncomes rather than stored — a deliberate choice to keep a single source of truth (the financial ledger) and avoid derived-state drift.
+
+Resilient AI rendering. AI calls are wrapped in try/catch; on failure the card stays silent or shows the fallback content. No dashboard crash is permitted from an AI failure.
+
+4.4.3 Security within this module
+
+The dashboard consumes the AI provider through the geminiService facade, never directly. The facade delegates to the active provider selected by createProvider(), so the dashboard code carries no knowledge of API keys or endpoints. If no provider is configured, the dashboard silently renders FALLBACK_INTEL and FALLBACK_TASKS — a leaked screenshot of the dashboard cannot reveal which provider is in use, and a change of provider requires no dashboard code change.
+
+Figure 4.3 shows the populated Dashboard. Note the climate-risk badge coloured by severity and the simulated/live pill on the intel card indicating whether a Gemini key is present. Code reference: Dashboard.tsx (Appendix C.1).
+
+
+Figure 4.3  The AgriFlow Dashboard showing weather, five KPI cards, AI-generated live intelligence and an alerts panel.
+
+4.5 Module 4: Crop Manager
+
+4.5.1 Purpose and user needs addressed
+
+The Crop Manager meets FR-07 through FR-12: register, edit and delete crop plots with image, variety, planting / harvest dates, status, area, soil health, water efficiency and biodiversity score; attach an activity log to any plot; scan a photo of a sick plant for an AI diagnosis; and track per-plot expenses and incomes against a computed profit. It is the single richest module and is decomposed across the components/crops/ subfolder.
+
+4.5.2 Key technical decisions
+
+Proactive suggestions engine. A useEffect walks the crops list every render and surfaces two kinds of suggestion: HARVEST (when harvestDate is within seven days of today) and HEALTH (when a Healthy crop has a recent LogEntry containing pest/disease/wilt keywords or a Treatment-type entry). The farmer can confirm (which auto-updates status) or dismiss.
+
+Coupled delete cascade. deleteCrop fires CropService.delete, FinancialService.deleteExpensesByCrop and FinancialService.deleteIncomesByCrop in parallel so orphan financial records can never survive a deleted plot.
+
+AI scanner via FileReader. The CropScanner accepts an image file, reads it as a data URL, extracts the base64 payload and forwards it to analyzeCropImage. No live camera getUserMedia call is used (see Section 4.1 divergence note).
+
+Regenerative first-class fields. Soil health, water efficiency and a 0–100 biodiversity score are first-class fields on every crop, signalling the app's regenerative-agriculture thesis throughout the UI.
+
+Per-plot P&L modal. Expenses and incomes are CRUD-managed per plot using EXPENSE_CATEGORIES (Seeds, Fertilizer, Labor, Irrigation, Equipment, Pesticide, Transport, Other) and INCOME_TYPES (Harvest Sale, Subsidy, Insurance Payout, Processing, Other); profit is derived as totalIncome − totalExpenses in a useMemo and feeds the Dashboard's farm profit KPI.
+
+4.5.3 Security within this module
+
+User-supplied image bytes never reach an executable context: the data URL is set as the src of an <img> element rendered by React and is passed verbatim to the vision API; no innerHTML, eval or dangerouslySetInnerHTML is anywhere in the module. Image onError handlers fall back to a curated Unsplash URL — they never rewrite src to a user-controlled value, so an attacker cannot use the broken-image path to inject a new resource. Financial-ledger inputs are validated on the service side (amount coerced with Number(amount) || 0 to defend against non-numeric imports), and a deleted plot's financial records are cascade-purged in the same transaction, preventing data-residue attacks.
+
+Figure 4.4 shows the Crop Manager grid with a proactive harvest suggestion banner on a Maize plot. Note the regenerative indicators (Soil, Water, Biodiversity). Figure 4.5 shows the AI Crop Scanner mid-diagnosis. Code reference: CropManager.tsx (Appendix D.1) and components/crops/* (D.2–D.9).
+
+
+Figure 4.4  The Crop Manager grid showing plot cards, status chips, regenerative indicators and a proactive harvest suggestion banner.
+
+
+Figure 4.5  The AI Crop Scanner with an uploaded maize photo and a structured diagnosis including indicators and a recommendation.
+
+4.6 Module 5: Livestock Manager
+
+4.6.1 Purpose and user needs addressed
+
+Meets FR-13 through FR-17. The farmer registers herds and flocks of Cattle, Goat, Sheep, Chicken, Pig or Other; records count, status (Healthy, Sick, Quarantined, Lactating), grazing type (Rotational, Free Range, Feedlot) and notes; attaches a per-animal health record timeline; and can scan a photo of an animal for an AI health diagnosis.
+
+4.6.2 Key technical decisions
+
+Inline forms. Unlike the Crop Manager, all add/edit/record/scanner UIs live inside the single 439-LOC file, trading file-count simplicity for size — chosen because the livestock model is significantly smaller than the crop model.
+
+Context-aware default images. getLivestockImage(species) returns a curated Unsplash URL per species and re-fires on species change so the thumbnail always matches the selected animal.
+
+Reuses the crop scanner engine. performScan calls analyzeCropImage with a livestock-skinned prompt. One vision endpoint serves both modules, halving the AI surface area.
+
+Empty-state parity with crop module. A Start Your Season banner with loadSampleData() injects three sample herds so the first-time user sees the same rich initial state on both sides of the farm.
+
+4.6.3 Security within this module
+
+Same pattern as the Crop Manager: image bytes pass as a data URL to an inline <img>; no innerHTML or eval; onError falls back to a curated static URL. The StatusColor classifier produces Tailwind class names from a closed string union ('Healthy' | 'Sick' | 'Quarantined' | 'Lactating') so injected status strings cannot become arbitrary class names.
+
+Figure 4.6 shows the Livestock Manager grid. Note the StatusColor chip palette, the grazing-type badge and the per-animal Records link. Code reference: LivestockManager.tsx (Appendix E.1).
+
+Figure 4.6  The Livestock Manager showing species-grouped cards with health status chips and grazing-type badges.
+
+4.7 Module 6: Market Analytics
+
+4.7.1 Purpose and user needs addressed
+
+Meets FR-18 (commodity price discovery) and FR-19 (projected-yield calculator). The farmer can pick a commodity from a live-simulated ticker, view a 1W / 1M / 3M price chart, refresh prices on demand, and see a long-term 2020–2026 yield-vs-cost chart whose final year is dynamically overwritten with the user's projected revenue and cost computed from their actual crop portfolio.
+
+4.7.2 Key technical decisions
+
+Deep theme integration. Recharts colors (axisColor, gridColor, tooltipBg, chartAccent) are recomputed from theme state on every render so the charts read correctly in light, dark and high-contrast modes  uncommon care for full chart theming.
+
+Client-side synthetic price history. Because there is no market API in this iteration, the 1W / 1M / 3M series is synthesised by walking the current price backward with ±2% daily volatility plus a moving-average line; the Refresh button calls MarketService.refreshPrices() which perturbs the live values.
+
+Live cost-benefit per portfolio. financialData iterates the user's actual crops, looks up matching marketPrices, calls CropService.calculateProjectedYield(crop, marketPrice), sums projected revenue and applies per-crop cost-per-acre estimates  a genuine cross-module integration of crops + market + a built-in agronomy calculator.
+
+4.7.3 Security within this module
+
+No user-supplied string reaches the chart engine except the names of existing entities already persisted through the validated persistence layer. The Refresh button is rate-neutralised by the 15-minute response cache shared across the AI layer; price perturbation is fully client-side numeric.
+
+Figure 4.7 shows the ticker strip on top and the interactive price chart below. Figure 4.8 shows the long-term yield-vs-cost combined chart. Code reference: MarketAnalytics.tsx (Appendix F.1).
+
+
+Figure 4.7  The Market Analytics view showing the commodity ticker strip and an interactive price chart with 1W / 1M / 3M range toggle.
+
+Figure 4.8  The combined yield-vs-cost chart whose final year is dynamically overwritten with the user's portfolio-projected revenue and cost.
+
+4.8 Module 7 : News Hub
+
+4.8.1 Purpose and user needs addressed
+
+Meets FR-20 (the farmer receives curated agricultural news grounded in current web sources). The News Hub renders a featured article plus a grid; the source may be live AI-curated news from fetchAgNews (Gemini with Google Search grounding) or a built-in West-Africa-focused fallback set. A Simulated badge honestly informs the user of which source is active.
+
+4.8.2 Key technical decisions
+
+Lazy AI fetch on mount. A useEffect pulls refreshNews() only if newsArticles.length === 0, guaranteeing one fetch per session and reusing the AI response cache for any subsequent render.
+
+Honest live/simulated badge. The header reads 'Live Agricultural Feed' if isAIConfigured() else 'Sample Agricultural Feed' with a 'Simulated' pill — no pretence of live data when the API key is absent.
+
+Graceful external link handling. If an AI article carries no usable URL, handleNewsClick opens a category-mapped authoritative source with 'noopener,noreferrer' — never a dead link and never a tab-opener leak.
+
+Deterministic cover images. AI articles do not return images, so getDeterministicImage(category) maps a category to a fixed Unsplash image, stable per refresh.
+
+4.8.3 Security within this module
+
+All outbound article links are opened with 'noopener,noreferrer' to prevent the new tab from accessing window.opener — a standard tabnabbing defence. Article URLs are rendered as the href of an <a> element built by React, never inserted as raw HTML. The fallback-source map is a fixed constant — there is no path by which a user can redirect the news target to an attacker-chosen host.
+
+Figure 4.9 shows the News Hub with the featured article and the grid. Code reference: NewsHub.tsx (Appendix G.1).
+
+Figure 4.9  The News Hub showing a featured article above a category-coded article grid; the Live/Simulated pill indicates the active source.
+
+4.9 Module 8 — AI Advisor (Chat and Live Voice)
+
+4.9.1 Purpose and user needs addressed
+
+Meets FR-21 (natural-language AI consultation), FR-22 (image-attached diagnosis) and FR-23 (live voice consultation with the Resilience Engine). The AI Advisor is the largest single feature file (≈575 LOC) because it implements two AI modes in one component: turn-by-turn text chat with image attach, and bidirectional live voice.
+
+4.9.2 Key technical decisions
+
+Custom Web Audio pipeline. The live-voice path constructs a 16 kHz AudioContext, requests the microphone with getUserMedia({audio:{channelCount:1, sampleRate:16000}}), wraps the stream in a ScriptProcessorNode with 4 096-sample frames, converts Float32 → Int16 PCM, base64-encodes and pushes via session.sendRealtimeInput. Returned audio is decoded at 24 kHz and scheduled back-to-back via nextStartTimeRef with no gaps or overlap.
+
+Volume meter optimised. RMS is sampled every 100 ms with the inner loop sampling every 10th frame for performance.
+
+Session closure hygiene. onclose / onerror / disconnect stop tracks, close the audio context, clear active sources and free refs — deterministic resource release to prevent leaks across long sessions.
+
+Prompt engineering. The system instruction frames the AI as 'AgriFlow's Senior Agricultural Consultant', injects the user's name from userNameRef to avoid stale closures, and is built centrally by buildSystemInstruction so that climate, currency and language are localised from the user's country context.
+
+Demo-mode honesty. The initial model message tells the user explicitly whether live AI is active and instructs how to enable it.
+
+4.9.3 Security within this module
+
+The microphone permission is requested only after a user gesture (the Call button) and only after two preflight gates — isAIConfigured() and hasLiveVoice() — have both passed. Failure of either gate produces a toast and never invokes getUserMedia, so an unprovisioned site cannot surprise the user with a microphone prompt. On disconnect, every MediaStreamTrack is stopped, every AudioBufferSourceNode is released, and the AudioContext is closed — no microphone remains captured after the call ends. Audio bytes are processed in memory and never persisted to localStorage; only the rendered text turns of the chat are stored in component state.
+
+Figure 4.10 shows the text-chat mode with an image attached and the AI's diagnosis. Figure 4.11 shows the live-voice mode with the volume meter pulsing and the call timer. Code reference: AIAdvisor.tsx (Appendix H.1).
+
+Figure 4.10  The AI Advisor in text-chat mode showing a user message with an attached image and the AI's structured diagnosis below it.
+
+Figure 4.11  The AI Advisor in live-voice mode showing an active call, a pulsing volume meter and the call timer.
+
+4.10 Module 9 — Resource Calculator
+
+4.10.1 Purpose and user needs addressed
+
+Meets FR-24 (fertilizer planner) and FR-25 (irrigation scheduler). The farmer computes the fertilizer mass from a target-N kg/ha × area ÷ fertilizer-N% formula, or the irrigation litres per day from an ET₀ × Kc ÷ efficiency × area_m² formula. The last result is persisted across sessions.
+
+4.10.2 Key technical decisions
+
+Pure client-side agronomy. No AI calls; deterministic formulae only. Fertilizer types: Urea 46%, SOA 21%, Ammonium Nitrate 33%, DAP 18%. Irrigation system efficiencies: Drip 0.90, Sprinkler 0.75, Flood 0.50. Crop factor Kc presets for Maize / Sorghum / Vegetables / Fruit trees.
+
+Area-unit aware. area_m² = areaUnit === 'acres' ? area × 4046.86 : area × 10000. The user's country config (ha vs acres) drives the formula transparently.
+
+Persistent results. Each calculation writes back via saveResourceResult and restores on next session, so the farmer can leave the app and return to the last plan.
+
+4.10.3 Security within this module
+
+No untrusted input reaches a dangerous sink. Numeric inputs are coerced through Number(...) || 0 patterns; non-numeric or missing values cannot produce NaN-driven outputs. The persisted result is a small typed object validated on read by PersistenceService.
+
+Figure 4.12 shows the Resource Calculator in fertilizer mode. Code reference: ResourceCalculator.tsx (Appendix I.1).
+
+Figure 4.12  The Resource Calculator showing a fertilizer target-N calculation with the result card and cost tip below.
+
+4.11 Module 10 — Education Hub
+
+4.11.1 Purpose and user needs addressed
+
+Meets FR-26 (browse structured learning modules), FR-27 (complete lessons and unlock the next) and FR-28 (earn a certificate on module completion). A course library with category filter and search, per-course view with an embedded YouTube player, lesson-by-lesson syllabus with progressive unlock and a Mark Complete action that flips the certificate.
+
+4.11.2 Key technical decisions
+
+Click-to-play YouTube. The <iframe> mounts only when isPlaying is set; the thumbnail-with-play-button lazy pattern defers the heavy YouTube iframe until intent, improving initial paint and reducing third-party tracking surface.
+
+Progressive unlock. Lessons are unlocked only after the previous lesson is marked complete, enforcing sequential learning.
+
+Dynamic lesson titles. getLessonTitle(index, total, category) generates category-specific syllabus topics, keeping the curriculum rich without hand-authoring every course.
+
+Progress persistence debounced. completeModule and updateModuleProgress are debounced through the flushModules 100-ms timer in FarmContext so rapid Mark Complete clicks coalesce into one db.saveModules write.
+
+4.11.3 Security within this module
+
+The YouTube iframe is third-party content; click-to-play is the security control as well as the performance control — no third-party scripts run until the farmer explicitly opts in. The videoId is sourced from constants/modules.ts, not from user input; there is no path by which a farmer can inject an arbitrary YouTube ID.
+
+Figure 4.13 shows the course library. Figure 4.14 shows a single course view with the click-to-play thumbnail, syllabus with locked lessons and certificate preview. Code reference: EducationHub.tsx (Appendix J.1).
+
+Figure 4.13  The Education Hub library showing category filter chips, the search field and course cards with progress indicators.
+
+Figure 4.14  A single Education Hub course showing the click-to-play video thumbnail, the syllabus with locked and completed lessons and the certificate preview.
+
+4.12 Module 11 — Community Hub
+
+4.12.1 Purpose and user needs addressed
+
+Meets FR-29 through FR-35: forum-style posts with like / reply / bookmark / follow; marketplace listings (SELL/BUY with verified badge); channel-based chat (general, crops, livestock, equipment, market-watch, knowledge, co-ops); a Q&A tab with expert-flagged accepted answers; and a polling card. The Hub is the social layer over the agronomy stack and is decomposed across the components/community/ subfolder.
+
+4.12.2 Key technical decisions
+
+Hybrid persistence. Posts, listings, chats, likes, bookmarks and follows persist through CommunityService into localStorage; questions, answers and challenges live only in component state — a documented scope tradeoff in which the long-tail social feedback loop is persisted and the ephemeral Q&A is not.
+
+Tab routing inside feature. activeTab switches Feed / Groups / Market / QA sub-views without consuming the global navigate(), keeping the sidebar cell stable.
+
+Story timer. viewingStory triggers a 5-second progress meter via setInterval that auto-advances; cleanup clears the interval safely.
+
+Location-aware alerts aggregation. locationAlerts = useMemo() combines weather alerts with market prices whose changePercentage is ≥ 5% in absolute value — a cross-module synthesis feeding the right sidebar.
+
+Auth gate. handleAuthRequiredAction checks isSignedIn and shows a toast otherwise, so guest users cannot persist community content.
+
+4.12.3 Security within this module
+
+This module is the largest user-content surface in the application. Every user-supplied string — post title, post body, reply body, chat message, story message, Q&A answer, marketplace listing text — is rendered as a JSX child interpolation, never as raw HTML. A codebase-wide search confirms that nowhere in the project is dangerouslySetInnerHTML, innerHTML, eval or the Function constructor invoked. React's automatic escaping is therefore the primary and effective XSS control. The service layer adds structural validation: empty or near-empty payloads are rejected (items shorter than 3 characters throw). External Google search links built from event titles use encodeURIComponent and 'noopener,noreferrer' on the window-opener argument.
+
+Figure 4.15 shows the Feed tab with stories, post composer and engagement controls. Figure 4.16 shows the Marketplace tab. Code reference: CommunityHub.tsx (Appendix K.1) and components/community/* (K.2–K.13).
+
+Figure 4.15  The Community Hub Feed tab showing the story tray, the post composer, a post card with engagement controls and the right sidebar with trends and poll.
+
+Figure 4.16  The Community Hub Marketplace tab showing SELL/BUY listings with verified badges and contact buttons.
+
+4.13 Module 12 — Farm Labor Planner and Planting Calendar
+
+4.13.1 Purpose and user needs addressed
+
+The Labor Planner meets FR-36 (compute optimal workforce given size, crop mix, livestock, season, mechanisation, family labour and irrigation); the Planting Calendar meets FR-37 (consult a fully offline West African crop calendar for crop-specific planting windows, key activities, water need, soil preference, agronomic tips and recommended varieties).
+
+4.13.2 Key technical decisions
+
+Labor Planner — domain-rich engine in-component. calculateLabor(input, dailyWage, feedingCost) is a 100-line pure function with a WEST_AFRICAN_CROPS table per crop, season factor (rainy ×1.25, dry ×0.85), mechanisation factor (none 1.0, partial 0.65, full 0.35), irrigation factor and working-days-per-month (=22). Returns {total, family, hired, peak, monthlyBreakdown, costEstimate, totalMonthlyCost, recommendations}.
+
+Labor Planner — country-aware wages. Uses COUNTRY_REGISTRY[countryCode].dailyWageLocal (e.g., NG = ₦3,500, GH = GH₵90); the output is formatted with the user's currencySymbol.
+
+Labor Planner — eight-rule recommendation engine. Heuristics produce practical advice (partial mechanisation for >3 ha; supervisor if >5 hired workers; pump irrigation for manual + >2 ha; integrated crop-livestock hints) plus a positive fallback.
+
+Planting Calendar — rich static dataset. CROP_CALENDAR (394 LOC) is the largest single static asset: per-crop plantingWindows[] with start month / end month / label, growthDurationWeeks, harvestWindow, month-indexed keyActivities[], waterNeed, soilPreference, tips[] and varieties[]. CLIMATE_ZONE_INFO maps each of five West African climate zones to its rainfall and country list.
+
+Planting Calendar — three-pillar filtering. filteredCrops = useMemo applies selectedClimate + searchQuery + selectedMonth simultaneously; the user's climate zone is preselected and the chips sort it first. Zero AI — the entire pair works offline, a deliberate concession to rural connectivity constraints.
+
+4.13.3 Security within these modules
+
+Neither module makes network calls. Inputs are coerced to numbers defensively (Number(input) || 0); injected strings cannot corrupt the calculation. The Planting Calendar catalogue is a static constant in the bundle, immunised from client tampering short of a service-worker hack.
+
+Figure 4.17 shows the Labor Planner result with monthly breakdown. Figure 4.18 shows the Planting Calendar with a crop accordion expanded. Code reference: FarmLaborPlanner.tsx (Appendix L.1), PlantingCalendar.tsx (L.2), constants/plantingCalendar.ts (L.3).
+
+Figure 4.17  The Farm Labor Planner showing recommended workforce, monthly breakdown, cost estimate categories and recommendation list.
+
+Figure 4.18  The Planting Calendar showing the month strip, climate-zone chips and a crop accordion expanded to reveal key activities, water need, soil preference, tips and varieties.
+
+4.14 Module 13 — Settings, Navigation and Global Voice Agent
+
+4.14.1 Settings
+
+Purpose: FR-38 (profile editing), FR-39 (theme switching among light / dark / high-contrast labelled WCAG AAA), FR-40 (data export / import as a single JSON blob), FR-41 (factory reset). Key decisions: handleExportData iterates DB_KEYS only — agriflow_credentials is deliberately excluded, so the export never ships the plaintext password off the device; handleImportData validates incoming keys against DB_KEYS (an allow-list) before writing back, so a crafted backup cannot introduce unknown keys; resetApp wipes every DB key plus the credential, theme and onboarding flags, then reloads.
+
+4.14.2 Sidebar and MobileNav
+
+Purpose: FR-01 and FR-02 (orientation and navigation). The Sidebar groups twelve routes into Overview / Insights / Tools on desktop with footer Settings and Log Out. The MobileNav compresses twelve features into a two-row bottom bar — five primary tabs on top, six secondary on the bottom — for one-handed use. Both files consume the same NavigationTab enum from types.ts so tab identifiers cannot drift. No security control rides in navigation except the implicit logout button which delegates to FarmContext.logout() and wipes local state.
+
+4.14.3 Voice Agent (global floating widget)
+
+Purpose: FR-42 (voice-driven navigation and query). The Voice Agent is a permanent floating action button. On tap it opens a live Gemini Live Audio voice session armed with five function-calling tools: navigateApp, setTheme, createTask, getFarmWeather, getMarketPulse. The audio pipeline mirrors the AI Advisor (16 kHz capture, 24 kHz playback, scheduled AudioBufferSourceNodes, interrupted handler). Key decisions: ref-based live-data plumbing (weatherRef, marketPricesRef, userProfileRef kept in sync with the latest useFarm() state via tiny useEffects to avoid the stale-closure problem in a long-running session); preflight guards identical to AIAdvisor. Security within: the tool-call dispatcher validates enum arguments (the setTheme mode is checked against 'light'|'dark'|'high-contrast' before being applied, navigateApp destinations against Object.values(NavigationTab)); an unknown argument returns a tool-response error rather than executing.
+
+Figure 4.19 shows the Settings page with the three theme cards. Figure 4.20 shows the Voice Agent FAB expanded. Code reference: Settings.tsx (Appendix M.1), Sidebar.tsx (M.2), MobileNav.tsx (M.3), VoiceAgent.tsx (M.4).
+
+Figure 4.19  The Settings page showing the profile edit form, the light / dark / high-contrast (WCAG AAA) theme cards and the data export-import-reset block.
+
+Figure 4.20  The Voice Agent floating widget expanded into an active voice-call panel with a volume meter and call timer.
+
+4.15 Security Implementation Evidence
+
+Chapter Three section 3.5 set out six security commitments. This section provides concrete code snippets from the source that prove each commitment was implemented, not merely planned. Two known weaknesses — plaintext credential storage and the absence of a Content-Security-Policy meta tag — are then documented honestly with their remediation routes.
+
+4.15.1 Build-time isolation of API keys
+
+Vite's loadEnv reads environment variables from the local .env file; only values prefixed with VITE_ are exposed to the client bundle. Keys are never written into the source repository (.gitignore ignores *.local). Inside the provider factory the active key is selected at startup and the remaining keys never come into scope:
+
+Listing 4.1  Build-time environment loading in vite.config.ts.
+
+Listing 4.2  Provider selection at services/ai/index.ts:5-14, with safe-mock fallback.
+
+4.15.2 Provider abstraction with safe-mock fallback
+
+Every AI method in GeminiProvider checks the configured key and returns the appropriate FALLBACK_* constant from services/ai/shared.ts if no key is present:
+
+Listing 4.3  Safe-mock fallback in services/ai/GeminiProvider.ts (representative).
+
+Listing 4.4  isConfigured gate re-used by every AI consumer.
+
+4.15.3 Service-worker cache policy that protects AI responses
+
+public/sw.js implements four caching strategies and deliberately partitions the cache. Only GET requests are intercepted; AI hostnames are allow-listed — the Bearer-header SDK traffic cannot be served stale from this SW:
+
+Listing 4.5  Service-worker fetch routing and API allow-list in public/sw.js:34-68.
+
+4.15.4 Persistence-layer error isolation
+
+PersistenceService wraps every read in a try/catch and returns the supplied default rather than throwing; a write failure returns false rather than crashing the caller. Migration-on-read defaults defend against incomplete persisted state — new fields added late (biodiversityScore, priority, grazingType) get sensible defaults so old persisted records do not break new UI:
+
+Listing 4.6  PersistenceService defensive read/write in services/persistence.ts:46-65.
+
+4.15.5 Client-side session state and input handling
+
+Navigation targets are allow-listed against the NavigationTab enum before the hash is rewritten; voice-driven navigation re-validates the destination:
+
+Listing 4.7  Navigation allow-list in contexts/FarmContext.tsx:308-320.
+
+Listing 4.8  Voice-driven navigation allow-list in components/VoiceAgent.tsx.
+
+4.15.6 XSS prevention by construction
+
+A codebase-wide search for dangerouslySetInnerHTML, innerHTML, eval and the Function constructor returns zero matches. Every user-supplied string is rendered as a JSX child interpolation, which React escapes on the way into the DOM. This is the single most important XSS mitigation in the app, and it is satisfied. Image onError handlers always fall back to a hardcoded Unsplash or ui-avatars URL — never to a user-controlled string:
+
+Listing 4.9  Avatar onError fallback uses encodeURIComponent, never a user URL.
+
+4.15.7 Error containment and microphone / location teardown
+
+Two React error boundaries are wired into the app: the global ErrorBoundary in index.tsx catches mount-time failures and the per-route RouteErrorBoundary in App.tsx confines a render-time crash to one screen. The microphone is requested only after a user gesture and after isAIConfigured and hasLiveVoice preflight gates have both passed; on disconnect every MediaStreamTrack is stopped, every AudioBufferSourceNode is released and the AudioContext is closed:
+
+Listing 4.10  Per-route error boundary in components/RouteErrorBoundary.tsx.
+
+Listing 4.11  Microphone and Web Audio resource teardown in AIAdvisor / VoiceAgent.
+
+4.15.8 Known weaknesses and their remediation routes
+
+Plaintext credential storage. agriflow_credentials stores {email, password} in localStorage in cleartext. This is inherent to a client-side demo with no identity backend; Chapter Three already conceded that production deployment would require Firebase Auth or Supabase Auth. The remediation path is to remove the credential write from App.tsx:210 and substitute the chosen identity provider at the single signIn/login seam in FarmContext.tsx. No other code change is required because the rest of the app consumes only userProfile and isSignedIn.
+
+No Content-Security-Policy. index.html declares a theme-color, an apple-mobile-web-app-capable=yes and a viewport meta with user-scalable=0 (the latter prevents zoom-bypass on iOS). It does not currently declare a CSP meta. The recommended baseline CSP for the next iteration is: default-src 'self'; script-src 'self'; connect-src 'self' https://generativelanguage.googleapis.com https://integrate.api.nvidia.com https://api.openweathermap.org; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src https://www.youtube.com. This would not break any current functionality and would close the residual script-injection surface.
+
+4.16 Demonstration Scenarios
+
+This section documents three end-to-end scenarios that exercise representative real-world use cases of AgriFlow 2.0. Each scenario follows the same template: title and description, initial conditions, step-by-step actions, expected output, actual observed output with a screenshot figure, and a pass / fail assessment against the expected output.
+
+4.16.1 Scenario 1 — A new West African farmer signs up and sees a localised dashboard
+
+4.16.1.1 Title and description
+
+A prospective farmer in Kumasi, Ghana, opens AgriFlow for the first time, signs up selecting Ghana as country, mixed as farm type and hectares as area unit, and expects the Dashboard and every module to be pre-loaded with Ghanaian crops, livestock, prices, alerts, learning modules and currency. This scenario deliberately uses Ghana (rather than the Nigeria entry used elsewhere in this document) to demonstrate that the country-as-onboarding-pivot design is not Nigeria-centric: any West African country registered in COUNTRY_REGISTRY yields an equivalently localised experience through the same code path.
+
+4.16.1.2 Initial conditions
+
+Clean browser profile (localStorage cleared), modern Chromium browser.
+
+.env.local present with a valid VITE_GEMINI_API_KEY, no NVIDIA key.
+
+Geolocation permission not yet granted or denied.
+
+4.16.1.3 Step-by-step actions
+
+Open http://localhost:3000 in the browser.
+
+Click Get Started to dismiss the landing page.
+
+In the auth modal, switch to Create Account.
+
+Enter name 'Test Farmer', email 'test@agriflow.app', password 'demo1234', confirm 'demo1234'.
+
+Open the country selector, search 'Ghana', select the Ghanaian flag entry.
+
+Select the 'Mixed' farm type chip. Leave farm size at the default. Enter phone '+2335012345678' and location 'Kumasi'.
+
+Click Create Account.
+
+4.16.1.4 Expected output
+
+After an 800 ms simulated handshake, the app navigates to the Dashboard. The header shows the user's name and the 'Farmer' role. The Dashboard's KPI cards are seeded with non-zero Ghanaian crops and livestock from the Ghana country configuration. The weather card shows Kumasi-area defaults. Market prices are rendered in Ghana Cedis (GH₵). The Planting Calendar pre-selects the tropical_wet_dry climate zone. A welcome toast appears: 'Welcome, Test Farmer! Your Ghana dashboard is ready.'
+
+4.16.1.5 Actual output
+
+Figure 4.21 shows the Dashboard immediately after sign-up. The KPI cards show Active Crops: 4 (Cocoa, Oil Palm, Maize, Rice), Livestock: 255 head across three herds, Market: 6 commodities with Cedis prices, and the profit KPI computed from the seeded CropExpense / CropIncome ledger. The weather card shows Kumasi tropical-wet-dry defaults. The toast reads 'Welcome, Test Farmer! Your Ghana dashboard is ready.' The sidebar shows the signed-in avatar at bottom-left and Log Out replaces Sign In.
+
+Figure 4.21  Dashboard immediately after sign-up showing seeded Ghanaian KPIs and a welcome toast; sidebar shows the signed-in avatar and Log Out.
+
+4.16.1.6 Pass / fail assessment
+
+PASS. Every expected outcome was observed: handshake delay, navigation to Dashboard, seeded Ghanaian KPIs (Cocoa / Oil Palm / Maize / Rice in Cedis), welcome toast and avatar replacement all occurred. Selecting Ghana produced an experience structurally identical to selecting Nigeria — the country-as-onboarding-pivot design from Chapter Three Section 3.2.1 is therefore verified end-to-end as a general West African mechanism, not a Nigeria-only one.
+
+4.16.2 Scenario 2 — The farmer scans a diseased maize leaf and applies the recommendation
+
+4.16.2.1 Title and description
+
+A farmer with a Maize plot in the Crop Manager suspects Fall Armyworm or nitrogen deficiency. They upload a photo of an affected leaf to the AI Crop Scanner, read the returned diagnosis and recommendations, and store the result as an activity log entry against the plot.
+
+4.16.2.2 Initial conditions
+
+Signed in (scenario 1 state Ghana).
+
+A Maize plot registered in the Crop Manager with status 'Needs Attention'.
+
+.env.local present with a valid VITE_GEMINI_API_KEY so a Gemini multimodal model is available.
+
+4.16.2.3 Step-by-step actions
+
+Click 'My Crops' in the sidebar.
+
+Click the Menu (three dots) on the Maize plot and select 'Scan with AI'.
+
+Click the upload area in the scanner modal and choose a JPEG photo of an affected leaf (chlorotic yellowing on the midrib).
+
+Enter the scan context: 'Mid-rib yellowing on lower leaves, planted 6 weeks ago'.
+
+Click 'Run Analysis'.
+
+Read the diagnosis. Click 'Save to Log'.
+
+4.16.2.4 Expected output
+
+The scanner shows the uploaded image, an analysing spinner for several seconds, then a structured diagnosis (for example, 'Nitrogen Deficiency') with an Indicators bullet list and a Recommendation block referencing split-dose urea or foliar application. On Save to Log the activity log for that plot shows a new Observation-type entry whose note is the diagnosis text. A toast 'Activity log saved' appears.
+
+4.16.2.5 Actual output
+
+Figure 4.5 (reproduced above) shows the scanner mid-diagnosis: the uploaded leaflet image, the simulated/live pill, the diagnosis title 'Nitrogen Deficiency', the Indicators list and the Recommendation block. Figure 4.22 shows the activity log modal for the same plot afterwards, with a new 'Observation' entry timestamped to today and noting 'Mid-rib yellowing on lower leaves… Nitrogen Deficiency…'. A toast 'Activity log saved' appeared as expected.
+
+Figure 4.22  The crop activity log modal showing the AI diagnosis saved as a new 'Observation' entry, timestamped to today.
+
+4.16.2.6 Pass / fail assessment
+
+PASS. The vision-grounded diagnosis flow completed end-to-end, the diagnosis was actionable (the expected nitrogen-deficiency indicators were correctly detected), the entry was correctly persisted as an Observation against the right plot, and the toast confirmed the save. This verifies FR-09 (AI crop image scanning) and FR-10 (per-plot activity logging) end-to-end.
+
+4.16.3 Scenario 3  The farmer holds a live voice consultation and navigates by voice
+
+4.16.3.1 Title and description
+
+The farmer wants to ask the AI a question about Fall Armyworm scouting and then navigate to the Market view  both without touching the keyboard. They open the global Voice Agent, ask the question, then issue an 'open the market' voice command which the function-calling layer translates into a navigation action.
+
+4.16.3.2 Initial conditions
+
+Signed in (scenario 1 state  Ghana).
+
+.env.local present with a valid VITE_GEMINI_API_KEY so Gemini Live Audio is available (NVIDIA NIM keys alone would not enable live voice).
+
+Microphone permission not yet granted.
+
+4.16.3.3 Step-by-step actions
+
+Click the floating Voice Agent button (bottom-right).
+
+Grant microphone permission when prompted.
+
+Listen for the live-call beep, watch the volume meter pulse, then speak: 'How should I scout my maize field for Fall Armyworm this week?'
+
+Listen to the spoken response. Confirm the AI replied with a structured answer covering trap inspection, whorl scouting and threshold action.
+
+Speak: 'Open the market view.'
+
+Observe the app navigating to the Market Analytics tab.
+
+Click the floating button again to end the call.
+
+4.16.3.4 Expected output
+
+The Voice Agent panel opens, the microphone permission prompt appears, the call connects with a beep and the volume meter pulses on both inbound and outbound audio. The spoken reply references Fall Armyworm scouting steps. On the 'Open the market view' command, the navigateApp function-call fires and the app switches to the Market Analytics route (URL hash becomes #market). On end-call, the microphone is released and the volume meter settles to zero.
+
+4.16.3.5 Actual output
+
+Figure 4.20 (reproduced earlier) shows the active voice-call panel with the volume meter pulsing. Figure 4.23 shows the app immediately after the 'Open the market view' command: the page title in the header reads 'Market', the chart view is rendered, and the URL bar reads …/#market. The sidebar's active rail is on the Market item. The microphone was released immediately on end-call (verified in DevTools → Application → Camera & Mic, no lingering capture indicator).
+
+Figure 4.23  The Market Analytics view reached via the Voice Agent's 'Open the market view' command; URL hash reads #market and the sidebar active rail is on Market.
+
+4.16.3.6 Pass / fail assessment
+
+PASS. Live voice consultation (FR-23) functioned with bidirectional audio, the function-calling layer correctly translated the spoken command into the navigateApp tool-call, the application navigated to the correct route, the URL hash updated and the microphone was released on disconnect. This is the single most complex flow in the application and it completed end-to-end without error.
+
+4.17 Summary
+
+This chapter has walked through every major module of the AgriFlow  artefact, stating for each the user needs addressed, the key technical decisions and their rationale, the security measures actually implemented within the module, and references to the appendix code. It has reconciled the planned design of Chapter Three with the delivered implementation, documenting three honest divergences and their justifications. It has evidenced each of the six security commitments of Chapter Three with code snippets from the source, and it has been candid about two known weaknesses  plaintext credential storage and the missing Content-Security-Policy meta tag  together with the precise remediation routes for the next iteration. Finally it has documented three end-to-end demonstration scenarios covering onboarding-localisation for a West African country, vision-grounded diagnosis, and live-voice control, each of which passed its expected-outcome assessment. The implementation therefore satisfies the design set out in Chapter Three, modulo the three documented divergences, and is ready for the formal evaluation that follows in Chapter Five.

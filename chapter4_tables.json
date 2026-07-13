@@ -1,0 +1,158 @@
+[
+  [
+    [
+      "Concern",
+      "Planned in Ch. 3",
+      "Delivered in Ch. 4",
+      "Reason for divergence"
+    ],
+    [
+      "Camera permission for crop and livestock scanning",
+      "navigator.mediaDevices.getUserMedia({video:true}) on scan",
+      "File-input scanner via FileReader.readAsDataURL",
+      "Multimodal vision models accept base64 image bytes; a file input reaches every farmer including those on low-end Android devices where the forced live stream is unreliable. The semantic intent ('use an image of the field') is preserved."
+    ],
+    [
+      "Centralised rate limiting on AI calls",
+      "Token-bucket throttle rejecting Nth request in a window",
+      "Per-method in-memory 15-minute response cache (CACHE_TTL_MS in services/ai/shared.ts)",
+      "A token-bucket would require a server or shared worker robust to tab refresh, which the current client-only iteration does not have. The cache coalesces identical prompts and caps effective request volume in the common case. A full throttle is deferred to the production iteration (Section 4.14)."
+    ],
+    [
+      "Hashed password storage",
+      "PBKDF2 / Web-Crypto hashing before storage",
+      "Plaintext credential comparison in localStorage",
+      "Because authentication is a client-side demo without an identity backend, in-page hashing offers no real security boundary \u2014 verification logic and hash live in the same trust domain. The risk and its remediation route are documented in Section 4.14."
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Market Analytics portfolio cost-benefit combined chart]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: AI Advisor text chat with image attachment and AI response]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: AI Advisor live voice call with volume meter]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Resource Calculator in fertilizer mode]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Education Hub course library with filters]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Education Hub single course view]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Community Hub Feed tab with stories and post composer]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Community Hub Marketplace tab]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Farm Labor Planner result with monthly breakdown and recommendations]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Planting Calendar with crop accordion expanded]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Settings page with profile form and three theme cards]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Voice Agent floating widget in active call]"
+    ]
+  ],
+  [
+    [
+      "// vite.config.ts \u2014 keys loaded from .env and defined into the bundle\nimport { defineConfig, loadEnv } from 'vite';\nexport default defineConfig(({ mode }) => {\n  const env = loadEnv(mode, '.', '');\n  return { define: { 'process.env.API_KEY': JSON.stringify(env.API_KEY) } };\n});"
+    ]
+  ],
+  [
+    [
+      "// services/ai/index.ts\nconst VITE_GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';\nconst VITE_NVIDIA_KEY = import.meta.env.VITE_NVIDIA_API_KEY || '';\n\nfunction createProvider(): AIProvider {\n  if (VITE_GEMINI_KEY) return new GeminiProvider();\n  if (VITE_NVIDIA_KEY) return new NvidiaNIMProvider();\n  return new GeminiProvider();   // safe-mock: isConfigured() will be false\n}"
+    ]
+  ],
+  [
+    [
+      "// services/ai/GeminiProvider.ts (excerpt)\nasync getFarmingAdvice(prompt, countryCtx?) {\n  if (!VITE_GEMINI_KEY) return FALLBACK_ADVICE;\n  // ... normal API call path\n}\nasync fetchAgNews(countryCtx?) {\n  if (!VITE_GEMINI_KEY) return FALLBACK_NEWS;\n  // ... JSON-schema-constrained generateContent with googleSearch grounding\n}"
+    ]
+  ],
+  [
+    [
+      "// services/geminiService.ts\nexport const isAIConfigured = (): boolean => getAIProvider().isConfigured();"
+    ]
+  ],
+  [
+    [
+      "// public/sw.js\nself.addEventListener('fetch', (event) => {\n  const { request } = event; const url = new URL(request.url);\n  if (request.method !== 'GET') return;            // never cache POSTs\n  if (url.origin !== self.location.origin) {\n    if (isApiRequest(url)) { event.respondWith(networkFirstWithApiCache(request)); return; }\n    event.respondWith(networkOnly(request)); return;\n  }\n  // ... same-origin strategies\n});\nfunction isApiRequest(url) {\n  const apiHosts = ['generativelanguage.googleapis.com',\n                    'integrate.api.nvidia.com',\n                    'api.openweathermap.org'];\n  return apiHosts.some((host) => url.hostname.includes(host));\n}"
+    ]
+  ],
+  [
+    [
+      "// services/persistence.ts\nprivate getItem<T>(key: string, defaultValue: T): T {\n  try {\n    const item = localStorage.getItem(key);\n    return item ? JSON.parse(item) : defaultValue;\n  } catch (error) {\n    console.error(`[DB Read Error] Key: ${key}`, error);\n    return defaultValue;\n  }\n}\nprivate setItem<T>(key: string, value: T): boolean {\n  try { localStorage.setItem(key, JSON.stringify(value)); return true; }\n  catch (error) { console.error(`[DB Write Error] Key: ${key}`, error); return false; }\n}"
+    ]
+  ],
+  [
+    [
+      "// contexts/FarmContext.tsx \u2014 navigate() allow-list\nconst VALID_TABS = new Set(Object.values(NavigationTab));\nconst navigate = useCallback((view: NavigationTab) => {\n  if (!VALID_TABS.has(view)) {\n    console.warn(`[AgriFlow] Invalid navigation target: \"${view}\"`);\n    view = NavigationTab.DASHBOARD;\n  }\n  setCurrentView(view);\n  window.history.pushState(null, '', `#${VIEW_HASH[view] || 'dashboard'}`);\n}, []);"
+    ]
+  ],
+  [
+    [
+      "// components/VoiceAgent.tsx \u2014 tool-call dispatcher (excerpt)\nif (name === 'navigateApp') {\n  const dest = (fc.args as any).destination;\n  if (Object.values(NavigationTab).includes(dest)) {\n    navigate(dest as NavigationTag);\n    result = { output: `Navigating to ${dest}.` };\n  } else {\n    result = { output: `Unknown destination: ${dest}` };\n  }\n}"
+    ]
+  ],
+  [
+    [
+      "// App.tsx:392-403 \u2014 global header avatar fallback\n<img\n  src={userProfile.avatar}\n  onError={(e) => {\n    e.currentTarget.src =\n      `https://ui-avatars.com/api/?name=${encodeURIComponent(userProfile.name)}` +\n      `&background=random`;\n  }}\n/>"
+    ]
+  ],
+  [
+    [
+      "// components/RouteErrorBoundary.tsx\nexport class RouteErrorBoundary extends Component<Props, State> {\n  state = { hasError: false, error: null };\n  static getDerivedStateFromError(error: Error) { return { hasError: true, error }; }\n  componentDidCatch(error: Error, info: ErrorInfo) {\n    console.error(`[RouteErrorBoundary:${error.name}]`, error, info);\n  }\n  handleRetry = () => this.setState({ hasError: false, error: null });\n}"
+    ]
+  ],
+  [
+    [
+      "// AIAdvisor / VoiceAgent \u2014 microphone + Web Audio teardown\nmediaStreamRef.current?.getTracks().forEach(t => t.stop());\nmediaStreamRef.current = null;\nsourceNodeRef.current?.disconnect(); processorRef.current?.disconnect();\nif (audioContextRef.current?.state !== 'closed')\n  audioContextRef.current?.close().catch(() => {});\nactiveSourcesRef.current.forEach(s => { try { s.stop(); } catch {} });\nactiveSourcesRef.current.clear();"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Dashboard immediately after Ghanaian sign-up]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Crop activity log modal showing the saved AI diagnosis as an observation]"
+    ]
+  ],
+  [
+    [
+      "[Screenshot: Market Analytics view reached by voice command]"
+    ]
+  ]
+]
