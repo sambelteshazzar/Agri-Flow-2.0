@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getStockImage } from '@/utils/stockImages';
-import { fetchNewsImage, isPixabayConfigured } from '@/utils/newsImages';
+import { fetchNewsImage, isNewsImageConfigured } from '@/utils/newsImages';
 import { useFarm } from '../contexts/FarmContext';
 import { Newspaper, Loader2, ExternalLink, Clock, RefreshCw, Zap, TrendingUp, Leaf, Landmark, Signal, Search } from 'lucide-react';
 import { isAIConfigured } from '../services/geminiService';
@@ -25,7 +25,7 @@ const NewsHub: React.FC = () => {
   }, [refreshNews, newsArticles.length]);
 
   useEffect(() => {
-    if (!isPixabayConfigured() || newsArticles.length === 0) return;
+    if (!isNewsImageConfigured() || newsArticles.length === 0) return;
     const controller = new AbortController();
     const missing = newsArticles.filter(a => !a.imageUrl && !photoMap[a.id]);
     if (missing.length === 0) return;

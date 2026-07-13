@@ -1,20 +1,24 @@
 import type { NewsArticle } from '../types';
 
-const PIXABAY_KEY = import.meta.env.VITE_PIXABAY_API_KEY || '';
-const PIXABAY_ENDPOINT = 'https://pixabay.com/api/';
+// Wikimedia Commons API — no API key required, no hotlinking restrictions,
+// generous rate limits. Images are CC-BY-SA / public domain.
+const COMMONS_ENDPOINT = 'https://commons.wikimedia.org/w/api.php';
+const UA = 'AgriFlow/2.0 (educational smart-farming project; https://github.com/anomalyco/opencode)';
 
-// Per Pixabay ToS: requests must be cached for 24 hours.
+// Cache image lookups for 24h to be polite to the Commons API. Articles often
+// re-appear across refreshes (same news content), so this avoids re-querying
+// for the same cover photo repeatedly.
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
-const CACHE_PREFIX = 'agflow_pixabay_img_';
+const CACHE_PREFIX = 'agflow_commons_img_';
 const MEMORY_CACHE = new Map<string, { url: string | null; ts: number }>();
 
-// Category -> Pixabay-friendly query terms. Used when title yields no good keywords
+// Category fallback queries — used when title keywords yield no good hits
 // or as a relevance booster combined with extracted title keywords.
 const CATEGORY_TERMS: Record<NewsArticle['category'], string> = {
-  Market: 'agriculture market crops grain trading harvest',
-  Tech: 'agriculture technology drone farming innovation',
-  Policy: 'government agriculture policy farming regulation',
-  Climate: 'climate farming weather drought rain agriculture',
+  Market: 'grain market harvest crops trading',
+  Tech: 'agriculture drone technology farming',
+  Policy: 'government agriculture farming parliament',
+  Climate: 'drought flooded farmland weather',
 };
 
 function readCache(key: string): string | null | undefined {
@@ -48,20 +52,21 @@ function writeCache(key: string, url: string | null): void {
   }
 }
 
-interface PixabayHit {
-  webformatURL?: string;
-  largeImageURL?: string;
-  previewURL?: string;
+interface CommonsImageInfo {
+  thumburl?: string;
+  url?: string;
+  thumbwidth?: number;
+  mime?: string;
 }
-
-interface PixabayResponse {
-  total?: number;
-  totalHits?: number;
-  hits?: PixabayHit[];
+interface CommonsPage {
+  imageinfo?: CommonsImageInfo[];
+}
+interface CommonsResponse {
+  query?: { pages?: Record<string, CommonsPage> };
 }
 
 // Extract up to 3 meaningful keywords from a title, ignoring common stopwords.
-//Returns a space-separated query string suitable for Pixabay's `q` parameter.
+// Returns a space-separated query string suitable for Commons' search.
 const STOPWORDS = new Set([
   'the', 'a', 'an', 'and', 'or', 'but', 'for', 'in', 'on', 'at', 'to', 'of', 'with',
   'is', 'are', 'was', 'were', 'be', 'been', 'being', 'this', 'that', 'these', 'those',
@@ -69,11 +74,11 @@ const STOPWORDS = new Set([
   'should', 'may', 'might', 'can', 'must', 'about', 'into', 'than', 'then', 'over',
   'under', 'after', 'before', 'new', 'report', 'reports', 'says', 'said', 'news',
   'update', 'latest', 'first', 'one', 'two', 'three', 'all', 'more', 'most', 'other',
+  'after', 'year', 'month', 'week', 'day', 'ago',
 ]);
 function extractKeywords(title: string): string {
   const words = (title.toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/))
     .filter(w => w.length > 2 && !STOPWORDS.has(w));
-  // Dedupe + take first 3
   const seen = new Set<string>();
   const picked: string[] = [];
   for (const w of words) {
@@ -88,53 +93,75 @@ function extractKeywords(title: string): string {
 function buildQuery(article: NewsArticle): string {
   const titleKw = extractKeywords(article.title);
   const catKw = CATEGORY_TERMS[article.category] || 'agriculture farming';
-  // Pixabay free-text search works best with a few keywords; prefer title
-  // keywords when present (more specific), fall back to category terms.
+  // Wikimedia search works best with a few specific words.
   return (titleKw || catKw).slice(0, 100);
 }
 
 interface FetchOptions {
-  // When true, prefer largeImageURL (1280px) — used for the featured hero card.
+  // When true, prefer the original full-resolution URL — used for the featured
+  // hero card which is much larger. Otherwise, prefer the 800px thumbnail.
   preferLarge?: boolean;
   signal?: AbortSignal;
 }
 
-async function fetchFromPixabay(
+async function fetchFromCommons(
   query: string,
   opts: FetchOptions,
 ): Promise<string | null> {
-  if (!PIXABAY_KEY) return null;
+  // filetype:bitmap restricts to actual photos (JPEG/PNG), excluding PDFs and
+  // SVGs which are too low-quality or stylistically wrong for cover photos.
   const params = new URLSearchParams({
-    key: PIXABAY_KEY,
-    q: query,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: 'true',
-    per_page: '3',
-    min_width: '800',
+    action: 'query',
+    format: 'json',
+    generator: 'search',
+    gsrsearch: `filetype:bitmap ${query}`,
+    gsrnamespace: '6', // File namespace only
+    gsrlimit: '5',
+    prop: 'imageinfo',
+    iiprop: 'url|mime',
+    iiurlwidth: '800',
+    origin: '*', // CORS-enabled endpoint
   });
-  const url = `${PIXABAY_ENDPOINT}?${params.toString()}`;
+  const url = `${COMMONS_ENDPOINT}?${params.toString()}`;
   try {
-    const res = await fetch(url, { signal: opts.signal });
-    if (!res.ok) return null; // 429 rate limit, 400 key error, etc. — silent fallback
-    const data = (await res.json()) as PixabayResponse;
-    const hit = data.hits?.[0];
-    if (!hit) return null;
-    if (opts.preferLarge) return hit.largeImageURL || hit.webformatURL || hit.previewURL || null;
-    return hit.webformatURL || hit.largeImageURL || hit.previewURL || null;
+    const res = await fetch(url, {
+      signal: opts.signal,
+      headers: { 'Api-User-Agent': UA },
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as CommonsResponse;
+    const pages = data.query?.pages;
+    if (!pages) return null;
+
+    // Wikimedia returns pages as an object keyed by pageid, order not
+    // guaranteed. Sort by the search index field when available, else pick
+    // pics that are JPEGs (skip PNG diagrams / illustrations).
+    const candidates = Object.values(pages)
+      .filter(p => p.imageinfo?.[0])
+      .map(p => p.imageinfo![0]);
+
+    // Prefer JPEGs (real photos); fall back to any bitmap type.
+    const photo = candidates.find(c => c.mime === 'image/jpeg') || candidates[0];
+    if (!photo) return null;
+
+    if (opts.preferLarge) return photo.url || photo.thumburl || null;
+    return photo.thumburl || photo.url || null;
   } catch {
     return null; // network error, abort, etc.
   }
 }
 
 /**
- * Fetch an agriculture-themed cover photo from Pixabay for the given article.
- * Returns null if unconfigured, rate-limited, network failure, or no results.
+ * Fetch an agriculture-themed cover photo from Wikimedia Commons for the given
+ * article. Returns null if no results, network failure, or abort.
  * Callers should fall back to the existing SVG placeholders when null.
  *
- * Results are cached for 24h per Pixabay ToS — both in-memory and in localStorage
- * (when available). Cache key is derived from the article's stable id (or title
- * hash if no id) and the size preference.
+ * Results are cached for 24h (in-memory + localStorage when available). Cache
+ * key is derived from the article's stable id (or a title hash if no id) and
+ * the size preference.
+ *
+ * No API key required. Wikimedia Commons hosts freely-licensed media
+ * (CC-BY-SA / public domain) and permits hotlinking from upload.wikimedia.org.
  */
 export async function fetchNewsImage(
   article: NewsArticle,
@@ -145,7 +172,7 @@ export async function fetchNewsImage(
   if (cached !== undefined) return cached;
 
   const query = buildQuery(article);
-  const url = await fetchFromPixabay(query, opts);
+  const url = await fetchFromCommons(query, opts);
   writeCache(cacheKey, url);
   return url;
 }
@@ -162,9 +189,11 @@ function hashTitle(s: string): string {
 }
 
 /**
- * Convenience: is the Pixabay integration configured at all?
- * Lets the UI skip rendering a "loading photo..." shimmer when there's no key.
+ * Wikimedia Commons requires no API key, so this always returns true once the
+ * module is loaded. Kept for symmetry with the previous Pixabay impl so the
+ * NewsHub component's isConfigured() guard stays meaningful (and stays a
+ * no-op short-circuit when Commons is reachable).
  */
-export function isPixabayConfigured(): boolean {
-  return !!PIXABAY_KEY;
+export function isNewsImageConfigured(): boolean {
+  return true;
 }
