@@ -92,8 +92,12 @@ export class NvidiaNIMProvider implements AIProvider {
       setCache(cacheKey, result);
       return result;
     } catch (error) {
-      console.error("NVIDIA AI Text Error (Falling back):", error);
-      return FALLBACK_ADVICE;
+      const errMsg = error instanceof Error ? error.message : String(error);
+      console.error("NVIDIA AI Text Error:", errMsg);
+      return {
+        text: `AI service error: ${errMsg}. Check API key, quota, or network.`,
+        isSimulated: true
+      };
     }
   }
 
