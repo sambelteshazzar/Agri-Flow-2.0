@@ -54,7 +54,13 @@ export default async function handler(req: {
 
   const model = body.model || DEFAULT_MODEL;
   const temperature = typeof body.temperature === 'number' ? body.temperature : 0.4;
-  const maxTokens = typeof body.max_tokens === 'number' ? body.max_tokens : 2048;
+  // Cap at 800 tokens to keep responses snappy — the system instruction is
+  // already large. NVIDIA sometimes takes 10+ seconds for 2048-token responses,
+  // which blows past Vercel's default function timeout.
+  const maxTokens = Math.min(
+    typeof body.max_tokens === 'number' ? body.max_tokens : 2048,
+    800
+  );
 
   try {
     // Server-side fetch — no CORS restrictions.
