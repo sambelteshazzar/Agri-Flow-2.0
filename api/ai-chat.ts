@@ -17,7 +17,7 @@ interface ChatRequest {
 }
 
 const NVIDIA_API_BASE = 'https://integrate.api.nvidia.com/v1';
-const DEFAULT_MODEL = 'nvidia/llama-3.3-nemotron-super-49b-v1';
+const DEFAULT_MODEL = 'meta/llama-3.1-8b-instruct';
 
 export default async function handler(req: {
   method: string;
