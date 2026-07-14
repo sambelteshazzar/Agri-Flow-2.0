@@ -8,7 +8,7 @@ import {
 
 const VITE_NVIDIA_KEY = import.meta.env.VITE_NVIDIA_API_KEY || '';
 
-const TEXT_MODEL = 'nvidia/llama-3.3-nemotron-super-49b-v1';
+const TEXT_MODEL = 'meta/llama-3.1-8b-instruct';
 const VISION_MODEL = 'microsoft/phi-4-multimodal-instruct';
 
 // In production (Vercel), browser requests to NVIDIA's API fail with CORS.
