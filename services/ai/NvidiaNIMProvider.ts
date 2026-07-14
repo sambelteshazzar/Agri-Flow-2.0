@@ -10,19 +10,21 @@ const VITE_NVIDIA_KEY = import.meta.env.VITE_NVIDIA_API_KEY || '';
 
 const TEXT_MODEL = 'nvidia/llama-3.3-nemotron-super-49b-v1';
 const VISION_MODEL = 'microsoft/phi-4-multimodal-instruct';
-const API_BASE = 'https://integrate.api.nvidia.com/v1';
+
+// In production (Vercel), browser requests to NVIDIA's API fail with CORS.
+// We route through our own /api/ai-chat Vercel serverless function, which
+// forwards the request server-side. In local dev, vite.config.ts proxies
+// /api/ai-chat directly to NVIDIA with the key injected from .env.local.
+const API_ENDPOINT = '/api/ai-chat';
 
 async function nvidiaChatCompletion(
   messages: Array<{ role: string; content: string | any[] }>,
   model: string = TEXT_MODEL,
   temperature: number = 0.4
 ): Promise<string> {
-  const response = await fetch(`${API_BASE}/chat/completions`, {
+  const response = await fetch(API_ENDPOINT, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${VITE_NVIDIA_KEY}`,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model,
       messages,
@@ -33,7 +35,7 @@ async function nvidiaChatCompletion(
 
   if (!response.ok) {
     const errText = await response.text();
-    throw new Error(`NVIDIA API error ${response.status}: ${errText}`);
+    throw new Error(`NVIDIA proxy error ${response.status}: ${errText}`);
   }
 
   const data = await response.json();
