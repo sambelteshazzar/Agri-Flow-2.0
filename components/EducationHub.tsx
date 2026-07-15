@@ -295,9 +295,9 @@ const EducationHub: React.FC = () => {
                     src={module.thumbnail} 
                     alt={module.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                    onError={(e) => {
-                      e.currentTarget.src = '/stock/education.svg';
-                    }}
+                   onError={(e) => {
+                     e.currentTarget.src = '/stock/crop-default.svg';
+                   }}
                   />
                   {module.completed && (
                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center backdrop-blur-[2px]">

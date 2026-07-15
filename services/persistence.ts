@@ -130,7 +130,7 @@ class PersistenceService {
     return modules.map(m => ({
       ...m,
       instructor: m.instructor || 'AgriFlow Expert',
-      thumbnail: m.thumbnail || '/stock/education.svg',
+      thumbnail: m.thumbnail || '/stock/crop-default.svg',
       lessonsCount: m.lessonsCount || 5,
       description: m.description || 'Professional agricultural training module.'
     }));
