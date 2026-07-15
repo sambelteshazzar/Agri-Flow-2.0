@@ -63,14 +63,8 @@ export class GeminiProvider implements AIProvider {
       setCache(cacheKey, result);
       return result;
     } catch (error) {
-      console.error("AI Text Error:", error);
-      // Return error info instead of silent fallback so the UI can show what went wrong
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      return {
-        text: `AI service error: ${errorMessage}. Please check your API quota/key and try again.`,
-        sources: [],
-        isSimulated: false
-      };
+      console.error("AI Text Error (Falling back):", error);
+      return FALLBACK_ADVICE;
     }
   }
 
