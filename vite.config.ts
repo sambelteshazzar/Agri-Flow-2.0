@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     const nvidiaKey = env.VITE_NVIDIA_API_KEY || '';
     return {
+      base: '/',
       plugins: [react()],
       define: {
         'process.env.API_KEY': JSON.stringify(env.API_KEY),
@@ -32,6 +33,13 @@ export default defineConfig(({ mode }) => {
                 proxyReq.setHeader('Content-Type', 'application/json');
               });
             },
+          },
+        },
+      },
+      build: {
+        rollupOptions: {
+          output: {
+            manualChunks: undefined,
           },
         },
       },
