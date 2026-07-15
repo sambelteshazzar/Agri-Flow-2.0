@@ -127,13 +127,43 @@ class PersistenceService {
   // 4. EDUCATION
   async getModules(): Promise<LearningModule[]> {
     const modules = this.getItem<LearningModule[]>(DB_KEYS.LEARNING, []);
-    return modules.map(m => ({
-      ...m,
-      instructor: m.instructor || 'AgriFlow Expert',
-      thumbnail: m.thumbnail || '/stock/crop-default.svg',
-      lessonsCount: m.lessonsCount || 5,
-      description: m.description || 'Professional agricultural training module.'
-    }));
+    return modules.map(m => {
+      // Migration: fix empty videoId based on thumbnail/content
+      let videoId = m.videoId;
+      if (!videoId || videoId === '') {
+        if (m.thumbnail?.includes('cocoa') || m.title.toLowerCase().includes('cocoa') || m.title.toLowerCase().includes('coffee')) {
+          videoId = '6S6PJ8W1gbM';
+        } else if (m.thumbnail?.includes('maize') || m.title.toLowerCase().includes('maize') || m.title.toLowerCase().includes('corn')) {
+          videoId = 'h2P5z2Q3yJ0';
+        } else if (m.thumbnail?.includes('rice') || m.title.toLowerCase().includes('rice') || m.title.toLowerCase().includes('sri')) {
+          videoId = '1s5o7s3y_wY';
+        } else if (m.thumbnail?.includes('oil-palm') || m.title.toLowerCase().includes('oil palm')) {
+          videoId = 'p4mEjL6y6Vk';
+        } else if (m.thumbnail?.includes('groundnut') || m.title.toLowerCase().includes('groundnut') || m.title.toLowerCase().includes('aflatoxin')) {
+          videoId = '3VfJxKq3wJ0';
+        } else if (m.thumbnail?.includes('vegetable') || m.title.toLowerCase().includes('french bean') || m.title.toLowerCase().includes('vegetable')) {
+          videoId = 'p4mEjL6y6Vk';
+        } else if (m.thumbnail?.includes('cattle') || m.title.toLowerCase().includes('grazing') || m.title.toLowerCase().includes('dairy') || m.title.toLowerCase().includes('rangeland')) {
+          videoId = '6S6PJ8W1gbM';
+        } else if (m.thumbnail?.includes('millet') || m.title.toLowerCase().includes('sahel') || m.title.toLowerCase().includes('climate-smart') || m.title.toLowerCase().includes('dryland')) {
+          videoId = 'h2P5z2Q3yJ0';
+        } else if (m.thumbnail?.includes('marketplace') || m.title.toLowerCase().includes('finance') || m.title.toLowerCase().includes('economics') || m.title.toLowerCase().includes('market') || m.title.toLowerCase().includes('export')) {
+          videoId = 'p4mEjL6y6Vk';
+        } else if (m.thumbnail?.includes('crop-default') || m.thumbnail?.includes('drone') || m.title.toLowerCase().includes('precision') || m.title.toLowerCase().includes('tech') || m.title.toLowerCase().includes('drone')) {
+          videoId = 'G9K7z9JcQj8';
+        } else {
+          videoId = 'h2P5z2Q3yJ0'; // default
+        }
+      }
+      return {
+        ...m,
+        instructor: m.instructor || 'AgriFlow Expert',
+        thumbnail: m.thumbnail || '/stock/crop-default.svg',
+        lessonsCount: m.lessonsCount || 5,
+        description: m.description || 'Professional agricultural training module.',
+        videoId,
+      };
+    });
   }
 
   async saveModules(modules: LearningModule[]): Promise<void> {
