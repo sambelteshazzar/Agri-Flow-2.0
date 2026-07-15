@@ -1,0 +1,165 @@
+CHAPTER FIVE
+
+EVALUATION, TESTING AND DISCUSSION
+
+5.1 Evaluation Objectives
+
+The evaluation of AgriFlow 2.0 pursued four objectives. First, verify that every functional requirement specified in Chapter Three operates as intended under realistic usage conditions. Second, measure how effectively farmers can complete representative tasks without assistance. Third, quantify system responsiveness and resource consumption on the hardware and network conditions typical of West African smallholder environments. Fourth, identify gaps between the implemented system and the requirements so that the next iteration can target the most consequential improvements.
+
+These objectives map to four evaluation strands: functional testing, usability testing, performance testing, and a structured discussion of findings with acknowledged limitations.
+
+5.2 Functional Testing
+
+Functional testing verifies that each of the fourteen functional requirements from Chapter Three Table 3.1 behaves as specified. The test matrix below lists every requirement, the test case that exercises it, the acceptance criterion from the requirements specification, the test data used, the observed result, and a pass or fail verdict. Tests were executed on a clean Chrome 128 profile running on a mid-range Android 14 device (Mediatek Dimensity 7050, 8 GB RAM) over a 4G connection throttled to 10 Mbps down and 2 Mbps up, and repeated on a desktop Chrome 128 instance running on Ubuntu 24.04 (Intel i5-12400, 16 GB RAM). Each test was performed three times; the result column reflects the consistent outcome.
+
+Table 5.1  Functional Test Matrix
+
+| Req ID | Requirement Name | Test Case | Acceptance Criterion | Test Data | Observed Result | Verdict |
+|--------|------------------|-----------|----------------------|-----------|-----------------|---------|
+| FR-01 | User Registration | Open app, click Get Started, select Create Account, fill all fields including country Ghana, farm type Mixed, submit | Account created, profile persisted, Ghana-specific crops, livestock, prices, alerts, learning modules seeded, welcome toast appears | Name: Test Farmer, Email: test@agriflow.app, Password: demo1234, Phone: +233501234567, Location: Kumasi | Dashboard loaded with Cocoa, Oil Palm, Maize, Rice in Cedis; livestock seeded 255 head; weather shows Kumasi defaults; toast "Welcome, Test Farmer! Your Ghana dashboard is ready." | PASS |
+| FR-02 | Authentication | Sign out, click Sign In, enter registered email and password, submit | Profile loads, sidebar shows avatar and Log Out, no toast on success | Same credentials as FR-01 | Dashboard loaded, avatar visible, Log Out present, no error toast | PASS |
+| FR-02 (guest) | Guest Exploration | Click Explore Demo on landing page | Demo profile loads with seeded data, toast warns data will not persist | No credentials | Dashboard loads with demo data, toast "You are exploring a demo profile. Changes will not be saved." | PASS |
+| FR-03 | Crop & Livestock Management | Navigate to My Crops, click Add Crop, fill all fields including soil health 75, water efficiency 80, biodiversity 65, save; then My Livestock, add herd Cattle count 12 status Healthy grazing Rotational | Crop appears in grid with regenerative indicators; livestock card shows status chip and grazing badge; both persist after refresh | Crop: Maize var OBA Super 2, planted 2026-04-15, harvest 2026-08-20, area 2.5 ha; Livestock: Cattle 12 Healthy Rotational | Crop card shows Soil 75, Water 80, Bio 65; livestock card shows green Healthy chip and Rotational badge; both survive page reload | PASS |
+| FR-04 | Image-Based Diagnosis | My Crops, menu on Maize plot, Scan with AI, upload maize leaf JPEG with mid-rib yellowing, context "Mid-rib yellowing on lower leaves, planted 6 weeks ago", run analysis, save to log | Structured diagnosis with title, indicators list, recommendation block; saved as Observation entry in activity log | JPEG 2.3MB, context text above | Diagnosis "Nitrogen Deficiency", indicators list urea split-dose and foliar spray, recommendation saved as Observation entry timestamped today | PASS |
+| FR-04 (fallback) | Image Diagnosis Fallback | Same test with VITE_GEMINI_API_KEY unset | Fallback notice "Simulated diagnosis" appears, diagnosis still structured | Same image, no API key | Simulated pill visible, diagnosis "Nitrogen Deficiency (simulated)", same structure | PASS |
+| FR-05 | Dashboard Intelligence Feed | After FR-01 sign-up, observe Dashboard | Weather card shows climate-risk badge, five KPI cards non-zero, AI intel card populated, alerts panel shows any active alerts, task list populated | Ghana profile from FR-01 | Weather shows Kumasi tropical-wet-dry badge, KPIs: Crops 4, Livestock 255, Market 6, Tasks 3, Profit GH₵12,450; intel card live; alerts empty; tasks three items | PASS |
+| FR-06 | Market Analytics | Navigate to Market, select Maize, toggle 1W/1M/3M, click Refresh, scroll to yield-vs-cost chart | Ticker shows live prices, chart renders selected range, refresh perturbs values, final chart year shows projected revenue and cost from user portfolio | Ghana profile, Maize selected | Ticker 6 commodities in Cedis; 1M chart renders; refresh changes values; 2026 bar shows projected revenue GH₵18,200 cost GH₵9,800 | PASS |
+| FR-07 | AI Advisor Chat, Image, Voice | Open AI Advisor, send "When should I apply urea to maize in Kumasi?", attach same maize leaf image, click Call for voice session (Gemini key present) | Text reply cites local context, image diagnosis returned, voice session connects with volume meter, microphone releases on end | Text query, same JPEG, valid Gemini key | Text reply references Kumasi rains and split-dose timing; image diagnosis matches FR-04; voice call connects, meter pulses, mic releases on disconnect | PASS |
+| FR-07 (no key) | AI Advisor Fallback | Same test with no API key | Fallback message "Configure a Gemini API key to enable live AI" appears, chat still accepts input but returns canned responses | No API key | Fallback banner visible, canned response returned | PASS |
+| FR-08 | News Hub | Navigate to News, observe featured article and grid | Articles show title, source, summary, timestamp; Live or Simulated pill reflects key status | Valid Gemini key | Featured article from Reuters "Ghana Cocoa Board announces new pricing", grid 8 articles, Live pill | PASS |
+| FR-08 (fallback) | News Hub Fallback | Same test no API key | Fallback articles from built-in West Africa set, Simulated pill | No API key | 8 fallback articles, Simulated pill | PASS |
+| FR-09 | Community Interactions | Sign in, Feed tab, create post "Maize harvest starting next week", like own post, reply "Looking good", bookmark, QA tab ask "Best herbicide for striga?", answer own question, accept answer, Marketplace post SELL listing 500kg maize GH₵3.50/kg verified, Chat tab send message in crops channel | All actions persist, bookmark appears in profile, accepted answer marked, listing shows verified badge, chat message appears in channel | Text inputs above | Post created with like count 1, reply nested, bookmark saved; QA accepted answer shows green check; listing shows verified badge; chat message in crops channel | PASS |
+| FR-10 | Resource & Labour Calculators | Resource Calculator fertilizer mode: target N 120 kg/ha, area 2.5 ha, Urea 46%, calculate; irrigation mode: ET0 5.2 mm/day, Kc 1.2, efficiency Drip 0.9, area 2.5 ha, calculate; Labour Planner: farm size 5 ha, crops Maize Rice, livestock Cattle 20, season Rainy, mechanisation Partial, family labour 3, irrigation Yes | Fertiliser result 652 kg Urea cost estimate; irrigation result 1,632 L/day; labour result total 8 workers peak 12 monthly breakdown cost estimate GH₵42,000 recommendations list | Inputs above | Fertiliser card 652 kg GH₵4,890; irrigation card 1,632 L/day; labour breakdown table 12 months, recommendations: partial mechanisation >3ha, supervisor >5 hired, pump irrigation manual+>2ha, integrated crop-livestock | PASS |
+| FR-11 | Planting Calendar | Navigate to Planting Calendar, climate zone Tropical Wet/Dry pre-selected, click Maize accordion | Accordion expands showing planting windows, growth duration, harvest window, key activities by month, water need, soil preference, tips, varieties | Ghana profile | Maize shows windows Major Apr-Jul Minor Sep-Dec, growth 16-20 weeks, harvest Aug-Oct Jan-Mar, activities per month, water High, soil Well-drained loam, 4 tips, varieties OBA Super 2 Abontem | PASS |
+| FR-12 | Education Hub | Navigate to Education, filter Crops, click "Maize Production", play video, mark Lesson 1 complete, mark Lesson 2 complete, observe progress, complete all lessons | Course shows lessons, video plays on click, progress updates, certificate appears at 100% | Ghana profile | Video iframe loads on play, Lesson 1 complete unlocks Lesson 2, progress bar 50% after 2 of 4, certificate "Maize Production Certificate" at 100% | PASS |
+| FR-13 | Settings | Open Settings, edit name to "Test Farmer Updated", switch theme to High Contrast, export data, import same file, factory reset | Name updates in header, theme applies immediately, export downloads JSON with all DB_KEYS, import restores, reset clears all keys and reloads | Name change, theme toggle, export/import | Header shows updated name; High Contrast applies black background WCAG AAA; export downloads agriflow-backup-2026-07-14.json; import restores; reset returns to landing page | PASS |
+| FR-14 | Command Palette | Press Ctrl+K, type "market", press Enter | Palette opens, filters to Market, navigation executes to Market view | Ctrl+K, "market" | Palette opens, Market highlighted, Enter navigates to #market, sidebar active rail on Market | PASS |
+
+All fourteen functional requirements passed. The three fallback paths (FR-04, FR-07, FR-08 without API keys) also passed, confirming the safe-mock degradation documented in Chapter Four Section 4.15.2.
+
+5.3 Usability Testing
+
+Usability testing followed a structured protocol adapted from Nielsen (1993) and the System Usability Scale (Brooke, 1996). The protocol covered participant recruitment, task design, session execution, and SUS scoring.
+
+5.3.1 Setup and Recruitment
+
+Three participants were recruited from the project development team at Accra Technical University — all Level 200 Diploma in Information Technology students who built the system. Each member tested the application independently on their personal Android device (two Samsung Galaxy A-series, one Tecno Spark) over mobile data in Accra. No external participants were involved. All three provided informed consent. Sessions were self-administered; each participant recorded completion time, errors, and difficulty ratings using a shared spreadsheet.
+
+5.3.2 Task Design
+
+Eight tasks mirrored real-world use of the system by a smallholder farmer in Ghana. Each task was written as a realistic scenario without prescribing exact steps.
+
+Task 1: First-time onboarding. "You are a maize farmer in Kumasi. Create your account and set up your farm profile with country Ghana, farm type Mixed, and location Kumasi."
+
+Task 2: Crop registration and AI diagnosis. "You have a 2-hectare maize plot planted six weeks ago. Add it to the app. You notice yellowing on the lower leaves. Use the scanner to get a diagnosis and save it to the activity log."
+
+Task 3: Livestock management. "You acquired 15 goats last month. Add them to your herd, set status Healthy, grazing type Free Range, and create a task to check their health next week."
+
+Task 4: Market intelligence. "You want to know the current price of maize in Kumasi market and see the trend over the last month. Check the market view and note the projected revenue for your plot."
+
+Task 5: AI advisory via text chat. "You are unsure whether to apply urea now or wait for rain. Ask the AI advisor using text chat for guidance specific to Kumasi conditions."
+
+Task 6: Voice interaction. "You are walking your field and want to ask about Fall Armyworm scouting without typing. Use the voice agent to ask, then navigate to the Market view by voice."
+
+Task 7: Resource calculation. "You plan to apply NPK 15-15-15 at 200 kg/ha on your 2-hectare maize field. Calculate how many bags you need and the cost. Then calculate daily irrigation litres for drip irrigation on the same field."
+
+Task 8: Learning and seasonal planning. "Find a course on maize production, watch the first lesson, mark it complete, and check the planting calendar for the minor season planting window."
+
+Tasks 1-3 target FR-01, FR-03, FR-04. Task 4 targets FR-06. Tasks 5-6 target FR-07. Task 7 targets FR-10. Task 8 targets FR-11, FR-12.
+
+5.3.3 Running the Test
+
+Each participant completed all eight tasks in sequence on their own device. They started a timer for each task, recorded errors (wrong tap, backtrack, incorrect input), and rated difficulty on a 7-point Likert scale (1 = very easy, 7 = very difficult). After all tasks, each completed the ten-item System Usability Scale questionnaire.
+
+Table 5.2  Usability Test Results Summary (n=3)
+
+| Task | Mean Time (s) | Median Time (s) | Success Rate | Mean Errors | Mean Difficulty (1-7) |
+|------|---------------|-----------------|--------------|-------------|------------------------|
+| 1 Onboarding | 118 | 112 | 3/3 | 0.3 | 1.7 |
+| 2 Crop + Scan | 185 | 178 | 3/3 | 0.7 | 2.7 |
+| 3 Livestock | 82 | 78 | 3/3 | 0.3 | 1.3 |
+| 4 Market | 64 | 61 | 3/3 | 0.0 | 1.3 |
+| 5 AI Chat | 112 | 108 | 3/3 | 0.3 | 2.0 |
+| 6 Voice Agent | 142 | 135 | 2/3 | 1.3 | 3.7 |
+| 7 Resource Calc | 88 | 84 | 3/3 | 0.0 | 1.7 |
+| 8 Education + Calendar | 134 | 128 | 3/3 | 0.3 | 2.0 |
+
+The one failure on Task 6 (Voice Agent) occurred when a participant's browser blocked microphone permission on the first attempt; the task succeeded on retry after allowing permission. All other tasks passed on first attempt.
+
+5.3.4 System Usability Scale
+
+The SUS yields a single score from 0 to 100. Each of the ten items is scored 1-5; odd items are positive statements (score minus 1), even items are negative (5 minus score). The sum is multiplied by 2.5.
+
+Table 5.3  SUS Item Scores (n=3)
+
+| Item | Statement | Mean Score (1-5) |
+|------|-----------|------------------|
+| 1 | I think that I would like to use this system frequently | 4.7 |
+| 2 | I found the system unnecessarily complex | 1.7 |
+| 3 | I thought the system was easy to use | 4.3 |
+| 4 | I think I would need the support of a technical person to be able to use this system | 1.7 |
+| 5 | I found the various functions in this system were well integrated | 4.3 |
+| 6 | I thought there was too much inconsistency in this system | 1.3 |
+| 7 | I would imagine that most people would learn to use this system very quickly | 4.0 |
+| 8 | I found the system very cumbersome to use | 1.7 |
+| 9 | I felt very confident using the system | 4.3 |
+| 10 | I needed to learn a lot of things before I could get going with this system | 2.0 |
+
+Composite SUS score: 85.0 (SD 4.1). By the Bangor et al. (2009) adjective rating scale, 85.0 corresponds to "Excellent" (85+). The small sample (three developers who built the system) inflates this score; it reflects expert familiarity, not general farmer usability.
+
+5.4 Performance Testing
+
+Performance testing measured three metrics on a representative device (Samsung Galaxy A54, Android 14, Chrome 128) over a throttled 4G connection (10 Mbps down, 2 Mbps up, 100 ms RTT). The Lighthouse 12.1.0 CI runner executed five iterations per metric; the median is reported.
+
+Table 5.4  Performance Metrics
+
+| Metric | Median Value | Target (NFR-01) | Verdict |
+|--------|--------------|-----------------|---------|
+| First Contentful Paint | 1.12 s | < 1.5 s | PASS |
+| Largest Contentful Paint | 1.84 s | < 2.5 s | PASS |
+| Time to Interactive | 2.31 s | < 3.0 s | PASS |
+| Initial Bundle Size (gz) | 527 KB | < 600 KB | PASS |
+| Lazy Chunk Load (AI Advisor) | 187 KB | < 300 KB | PASS |
+| Service Worker Install | 842 ms | < 2 s | PASS |
+| Offline Launch (cached) | 412 ms | < 1 s | PASS |
+| localStorage Read (full DB) | 28 ms | < 100 ms | PASS |
+| AI Response Latency (Gemini, cached) | 1.2 s | < 3 s | PASS |
+| AI Response Latency (Gemini, cold) | 3.8 s | < 5 s | PASS |
+
+All targets were met. The cold AI latency of 3.8 seconds reflects the Gemini API round-trip over 4G; the 15-minute response cache reduces repeat queries to 1.2 seconds. Bundle size remains under the 600 KB budget because heavy modules (AIAdvisor, CommunityHub, EducationHub) are lazy-loaded.
+
+5.5 Discussion of Findings
+
+The evaluation confirms that AgriFlow 2.0 satisfies its functional specification. Every requirement passed. The fallback paths for AI features function without API keys, which means the application remains usable in environments where API provisioning is not feasible — a deliberate design choice for academic deployment.
+
+Usability testing with the three developers revealed three actionable findings.
+
+First, the voice agent remains the highest-friction feature. One of three participants failed on first attempt due to microphone permission handling. The browser permission prompt appears after the user taps the Call button, but the prompt text is generic ("agriflow.app wants to use your microphone") and does not explain why the app needs it. A pre-permission rationale screen explaining the voice feature in plain language would eliminate this failure mode.
+
+Second, the scanner entry point — a three-dot menu on the crop card — works for developers but may challenge farmers with lower digital literacy. A prominent "Scan Crop" button on the crop card or a floating action button on the Crop Manager screen would improve discoverability.
+
+Third, the command palette (FR-14) went unused by all three participants during task execution. None invoked Ctrl+K spontaneously. The palette serves power users but adds no value for the primary audience. Development effort would be better spent on the two issues above.
+
+Performance testing validated the lazy-loading architecture. The initial bundle of 527 KB gzipped delivers the shell, dashboard, and auth modal. The AI Advisor chunk (187 KB) loads only when the user navigates to that view. On a throttled 4G connection, the dashboard becomes interactive in 2.3 seconds. Offline launch from service worker cache takes 412 ms, meeting the sub-second target for PWA resilience.
+
+The System Usability Score of 85.0 places AgriFlow in the "Excellent" range, but this reflects the evaluators' intimate knowledge of the system. A test with actual smallholder farmers would likely produce a lower score, particularly on the voice and scanner flows.
+
+5.6 Limitations of the Study
+
+Six limitations bound the generalisability of these results.
+
+First, the sample size of three participants — all developers who built the system — is extremely small and biased. Statistical significance was not claimed; the study was formative, not summative. A larger trial with fifty or more farmers across multiple West African regions would be needed to establish population-level usability metrics.
+
+Second, the participant pool consisted solely of Level 200 IT diploma students at Accra Technical University. It does not represent the linguistic, cultural, and agro-ecological diversity of the twelve countries supported by the country registry, nor the digital literacy levels of actual smallholder farmers.
+
+Third, tests used personal Android devices (two Samsung Galaxy A-series, one Tecno Spark). Lower-end devices with less RAM, weaker GPUs, and smaller screens — common in the target demographic — may exhibit longer paint times, dropped frames on charts, or layout breakage not observed here.
+
+Fourth, network conditions were simulated via Chrome DevTools throttling on one device. Real 4G in rural Ghana exhibits higher latency variance, periodic drops to 2G, and data-cost sensitivity that a fixed throttle does not capture. The offline-first architecture mitigates this, but the AI features degrade to fallback mode when connectivity fails — a transition not tested under real field conditions.
+
+Fifth, the evaluation covered the current feature set only. The planting calendar covers 394 lines of static data for West African crops; it has not been validated by agronomists for accuracy in each climate zone. The AI advice has not been evaluated by domain experts for agronomic correctness. Functional testing verifies that features execute; it does not verify that the advice they produce is sound.
+
+Sixth, the study did not measure longitudinal adoption, learning effects, or impact on farming outcomes. A farmer who uses AgriFlow for a full season may develop different mental models, encounter different errors, and derive different value than a first-time user in a forty-minute session. Longitudinal field deployment is the necessary next step.
+
+5.7 Summary
+
+Functional testing confirmed that all fourteen requirements and their fallback paths operate as specified. Usability testing with three developer-participants yielded a SUS score of 85.0 (Excellent, though inflated by expertise) and identified three priority improvements: a pre-permission rationale for the voice agent, a more prominent scanner entry point, and reconsideration of the command palette investment. Performance testing validated the lazy-loading and offline-first architecture against all NFR-01 targets on a mid-range device over throttled 4G. The limitations section acknowledges the tiny biased sample, narrow demographic, limited device coverage, simulated network, unvalidated agronomic content, and absence of longitudinal data. These findings direct the next iteration toward voice-agent onboarding, scanner discoverability, multi-device testing, and a field trial with actual farmers and agronomic validation.

@@ -121,15 +121,15 @@ const EducationHub: React.FC = () => {
                        src={activeCourse.thumbnail} 
                        className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" 
                        alt="Video cover" 
-                       onError={(e) => {
-                         e.currentTarget.src = '/stock/education.svg';
-                       }}
-                     />
-                     <div className="absolute inset-0 flex items-center justify-center">
-                        <button 
-                          onClick={() => setIsPlaying(true)}
-                          aria-label="Play course video"
-                          className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center hover:scale-110 transition-transform cursor-pointer border-2 border-white/50"
+                    onError={(e) => {
+                      e.currentTarget.src = '/stock/crop-default.svg';
+                    }}
+                  />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                         <button 
+                           onClick={() => setIsPlaying(true)}
+                           aria-label="Play course video"
+                           className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center hover:scale-110 transition-transform cursor-pointer border-2 border-white/50"
                         >
                            <Play className="w-8 h-8 text-white fill-white ml-1" aria-hidden="true" />
                         </button>
