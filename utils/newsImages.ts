@@ -157,6 +157,18 @@ function hashTitle(s: string): string {
   return (h >>> 0).toString(16);
 }
 
+function buildQuery(article: NewsArticle): string {
+  const categoryTerms = CATEGORY_TERMS[article.category] || 'agriculture farming';
+  const titleKeywords = article.title
+    .toLowerCase()
+    .replace(/[^\w\s]/g, '')
+    .split(/\s+/)
+    .filter(w => w.length > 3)
+    .slice(0, 3)
+    .join(' ');
+  return `${categoryTerms} ${titleKeywords}`.trim();
+}
+
 /**
  * Wikimedia Commons requires no API key, so this always returns true once the
  * module is loaded. Kept for symmetry with the previous Pixabay impl so the
