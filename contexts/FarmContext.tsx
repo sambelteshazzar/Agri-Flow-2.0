@@ -477,13 +477,14 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
       const storedCreds = localStorage.getItem('agriflow_credentials');
-      if (storedCreds) {
-        const creds = JSON.parse(storedCreds);
-        const emailMatch = creds.email?.toLowerCase() === email.toLowerCase();
-        const passMatch = creds.password === password;
-        if (!emailMatch || !passMatch) {
-          throw new Error('Invalid email or password.');
-        }
+      if (!storedCreds) {
+        throw new Error('No account found. Please create an account first.');
+      }
+      const creds = JSON.parse(storedCreds);
+      const emailMatch = creds.email?.toLowerCase() === email.toLowerCase();
+      const passMatch = creds.password === password;
+      if (!emailMatch || !passMatch) {
+        throw new Error('Invalid email or password.');
       }
       const savedProfile = await db.getUserProfile();
       if (savedProfile && savedProfile.name !== GUEST_USER.name) {
