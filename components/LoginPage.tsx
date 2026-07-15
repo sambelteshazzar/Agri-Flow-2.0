@@ -65,7 +65,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
     try {
       await onLogin({ email: trimmedEmail, password: trimmedPassword, remember });
       onClose();
-    } catch {
+    } catch (err: any) {
+      // Error toast is shown by FarmContext, but ensure it displays
+      if (err?.message) {
+        showToast(err.message, 'error');
+      }
     } finally {
       setIsLoading(false);
     }
