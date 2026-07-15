@@ -35,7 +35,10 @@ const LazyLoader: React.FC = () => (
 const AppContent: React.FC = () => {
   const { userProfile, alerts, isSignedIn, login, signIn, logout, toasts, removeToast, currentView, navigate, dismissAlert, dismissAllAlerts } = useFarm();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [hasStarted, setHasStarted] = useState(() => localStorage.getItem('agriflow_has_started') === 'true');
+  const [hasStarted, setHasStarted] = useState(() => 
+    localStorage.getItem('agriflow_has_started') === 'true' || 
+    localStorage.getItem('agriflow_is_signed_in') === 'true'
+  );
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   useEffect(() => {
     const goOnline = () => setIsOnline(true);

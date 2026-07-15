@@ -53,7 +53,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
     setMode(m);
   }, [resetForm]);
 
-  const handleSignIn = async (e: React.FormEvent) => {
+const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
@@ -64,9 +64,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
     setIsLoading(true);
     try {
       await onLogin({ email: trimmedEmail, password: trimmedPassword, remember });
+      localStorage.setItem('agriflow_has_started', 'true');
       onClose();
     } catch (err: any) {
-      // Error toast is shown by FarmContext, but ensure it displays
       if (err?.message) {
         showToast(err.message, 'error');
       }
