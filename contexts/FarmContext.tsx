@@ -311,6 +311,15 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
     loadData();
     refreshLocation();
+
+    // Cross-tab sync: reload when localStorage changes in another tab
+    const onStorage = (e: StorageEvent) => {
+      if (e.key && e.key.startsWith('agriflow_') && e.newValue !== e.oldValue) {
+        window.location.reload();
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
   }, []);
 
   const VALID_TABS = new Set(Object.values(NavigationTab));

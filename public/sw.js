@@ -6,9 +6,6 @@ const STATIC_ASSETS = [
   '/manifest.json'
 ];
 
-const API_CACHE_NAME = 'agriflow-api-v1';
-const API_CACHE_TTL = 15 * 60 * 1000;
-
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -23,7 +20,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key !== CACHE_NAME && key !== API_CACHE_NAME)
+          .filter((key) => key !== CACHE_NAME)
           .map((key) => caches.delete(key))
       )
     )
@@ -37,11 +34,9 @@ self.addEventListener('fetch', (event) => {
 
   if (request.method !== 'GET') return;
 
+  // Only cache same-origin requests
   if (url.origin !== self.location.origin) {
-    if (isApiRequest(url)) {
-      event.respondWith(networkFirstWithApiCache(request));
-      return;
-    }
+    // External APIs (AI, weather, market) - never cache, always network
     event.respondWith(networkOnly(request));
     return;
   }
@@ -58,15 +53,6 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith(staleWhileRevalidate(request));
 });
-
-function isApiRequest(url) {
-  const apiHosts = [
-    'generativelanguage.googleapis.com',
-    'integrate.api.nvidia.com',
-    'api.openweathermap.org'
-  ];
-  return apiHosts.some((host) => url.hostname.includes(host));
-}
 
 function isNavigationRequest(request) {
   return request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html');
@@ -125,31 +111,6 @@ async function staleWhileRevalidate(request) {
     .catch(() => cached);
 
   return cached || fetchPromise;
-}
-
-async function networkFirstWithApiCache(request) {
-  const cache = await caches.open(API_CACHE_NAME);
-  try {
-    const response = await fetch(request);
-    if (response.ok) {
-      const responseToCache = response.clone();
-      responseToCache.headers.set('sw-cache-timestamp', Date.now().toString());
-      cache.put(request, responseToCache);
-    }
-    return response;
-  } catch {
-    const cached = await cache.match(request);
-    if (cached) {
-      const timestamp = cached.headers.get('sw-cache-timestamp');
-      if (timestamp && Date.now() - parseInt(timestamp) < API_CACHE_TTL) {
-        return cached;
-      }
-    }
-    return new Response(JSON.stringify({ error: 'offline' }), {
-      status: 503,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
 }
 
 async function networkOnly(request) {
