@@ -267,10 +267,7 @@ export class GeminiProvider implements AIProvider {
 } catch (error) {
       const errMsg = error instanceof Error ? error.message : String(error);
       console.error("AI Text Error:", errMsg);
-      return {
-        text: `AI service error: ${errMsg}. Check API key, quota, or network.`,
-        isSimulated: true
-      };
+      return `AI service error: ${errMsg}. Check API key, quota, or network.`;
     }
   }
 

@@ -22,24 +22,37 @@ async function nvidiaChatCompletion(
   model: string = TEXT_MODEL,
   temperature: number = 0.4
 ): Promise<string> {
-  const response = await fetch(API_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature,
-      max_tokens: 2048,
-    }),
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+  
+  try {
+    const response = await fetch(API_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature,
+        max_tokens: 2048,
+      }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
 
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`NVIDIA proxy error ${response.status}: ${errText}`);
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`NVIDIA proxy error ${response.status}: ${errText}`);
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || '';
+  } catch (e) {
+    clearTimeout(timeoutId);
+    if (e instanceof Error && e.name === 'AbortError') {
+      throw new Error('NVIDIA API request timeout');
+    }
+    throw e;
   }
-
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content || '';
 }
 
 async function nvidiaVisionCompletion(

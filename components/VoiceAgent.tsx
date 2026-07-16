@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Mic, X, Activity, Zap, Command, MicOff } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import { isAIConfigured, hasLiveVoice, getLiveAIClient } from '../services/geminiService';
@@ -17,12 +17,13 @@ const VoiceAgent: React.FC = () => {
   // Refs for Audio & Session
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
-  const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const workletNodeRef = useRef<AudioWorkletNode | null>(null);
   const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const nextStartTimeRef = useRef<number>(0);
   const activeSourcesRef = useRef<Set<AudioBufferSourceNode>>(new Set());
   const sessionRef = useRef<any>(null);
   const lastVolumeUpdateRef = useRef<number>(0);
+  const sessionPromiseRef = useRef<Promise<any> | null>(null);
 
   // Refs for Live Data (To avoid stale closures in the long-running connection)
   const weatherRef = useRef(weather);
@@ -127,7 +128,7 @@ const VoiceAgent: React.FC = () => {
   };
 
   // --- SESSION MANAGEMENT ---
-  const connect = async () => {
+  const connect = useCallback(async () => {
     if (!isAIConfigured()) {
       showToast("API Key missing", "error");
       return;
@@ -147,8 +148,10 @@ const VoiceAgent: React.FC = () => {
         return;
       }
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      const ctx = new AudioContextClass({ sampleRate: 16000 }); // Try 16k, but browser might override
-      await ctx.resume(); // Ensure context is running
+      const ctx = new AudioContextClass({ sampleRate: 16000 });
+      await ctx.resume();
+      
+      await ctx.audioWorklet.addModule('/audio-processor.js');
       
       audioContextRef.current = ctx;
       nextStartTimeRef.current = ctx.currentTime;
@@ -156,7 +159,7 @@ const VoiceAgent: React.FC = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, sampleRate: 16000 } });
       mediaStreamRef.current = stream;
 
-      const sessionPromise = ai.live.connect({
+      sessionPromiseRef.current = ai.live.connect({
         model: 'gemini-2.5-flash-native-audio-preview-09-2025',
         config: {
           responseModalities: [Modality.AUDIO],
@@ -177,42 +180,42 @@ const VoiceAgent: React.FC = () => {
             setIsConnecting(false);
             
             const source = ctx.createMediaStreamSource(stream);
-            const processor = ctx.createScriptProcessor(4096, 1, 1);
+            const workletNode = new AudioWorkletNode(ctx, 'audio-processor');
             
-            processor.onaudioprocess = async (e) => {
-              const inputData = e.inputBuffer.getChannelData(0);
-              
-              // Optimized Volume Meter (Throttle updates)
-              const now = Date.now();
-              if (now - lastVolumeUpdateRef.current > 100) {
-                let sum = 0;
-                // Sample subset of points for performance
-                for(let i=0; i<inputData.length; i+=10) sum += inputData[i] * inputData[i];
-                const rms = Math.sqrt(sum / (inputData.length / 10));
-                setVolume(Math.min(100, rms * 400));
-                lastVolumeUpdateRef.current = now;
-              }
+            workletNode.port.onmessage = async (e) => {
+              if (e.data.type === 'audioData') {
+                const inputData = e.data.data;
+                
+                const now = Date.now();
+                if (now - lastVolumeUpdateRef.current > 100) {
+                  let sum = 0;
+                  for(let i=0; i<inputData.length; i+=10) sum += inputData[i] * inputData[i];
+                  const rms = Math.sqrt(sum / (inputData.length / 10));
+                  setVolume(Math.min(100, rms * 400));
+                  lastVolumeUpdateRef.current = now;
+                }
 
-              const pcm16 = floatTo16BitPCM(inputData);
-              const b64Data = arrayBufferToBase64(pcm16.buffer);
-              
-              try {
-                const session = await sessionPromise;
-                if (session) session.sendRealtimeInput({
-                  media: { 
-                    mimeType: `audio/pcm;rate=${ctx.sampleRate}`,
-                    data: b64Data 
-                  }
-                });
-              } catch (_e) {
-                // Session closed or not ready — ignore stale sends
+                const pcm16 = floatTo16BitPCM(inputData);
+                const b64Data = arrayBufferToBase64(pcm16.buffer);
+                
+                try {
+                  const session = await sessionPromiseRef.current;
+                  if (session) session.sendRealtimeInput({
+                    media: { 
+                      mimeType: `audio/pcm;rate=${ctx.sampleRate}`, 
+                      data: b64Data 
+                    }
+                  });
+                } catch (_e) {
+                  // Session closed or not ready — ignore stale sends
+                }
               }
             };
 
-            source.connect(processor);
-            processor.connect(ctx.destination);
+            source.connect(workletNode);
+            workletNode.connect(ctx.destination);
             sourceNodeRef.current = source;
-            processorRef.current = processor;
+            workletNodeRef.current = workletNode;
           },
           onmessage: async (msg: LiveServerMessage) => {
             // 1. Handle Tools
@@ -264,7 +267,7 @@ const VoiceAgent: React.FC = () => {
                 }
 
                 try {
-                  const session = await sessionPromise;
+                  const session = await sessionPromiseRef.current;
                   if (session) session.sendToolResponse({
                     functionResponses: [{
                       id: fc.id,
@@ -314,27 +317,28 @@ const VoiceAgent: React.FC = () => {
           }
         }
       });
-      sessionRef.current = await sessionPromise;
+      sessionRef.current = await sessionPromiseRef.current;
     } catch (e) {
       console.error(e);
       setIsConnecting(false);
       showToast("Microphone access failed", "error");
     }
-  };
+  }, [navigate, setThemeMode, addTask, showToast]);
 
-  const disconnect = () => {
+  const disconnect = useCallback(() => {
     setIsActive(false);
     setIsConnecting(false);
     setVolume(0);
     
     sessionRef.current = null;
+    sessionPromiseRef.current = null;
     if (mediaStreamRef.current) {
       mediaStreamRef.current.getTracks().forEach(track => track.stop());
       mediaStreamRef.current = null;
     }
-    if (processorRef.current) {
-      processorRef.current.disconnect();
-      processorRef.current = null;
+    if (workletNodeRef.current) {
+      workletNodeRef.current.disconnect();
+      workletNodeRef.current = null;
     }
     if (sourceNodeRef.current) {
       sourceNodeRef.current.disconnect();
@@ -351,7 +355,11 @@ const VoiceAgent: React.FC = () => {
     
     activeSourcesRef.current.forEach(s => { try { s.stop(); } catch(e){} });
     activeSourcesRef.current.clear();
-  };
+  }, []);
+
+  useEffect(() => {
+    return () => { disconnect(); };
+  }, [disconnect]);
 
   return (
     <div className={`fixed bottom-6 right-6 z-voice-agent flex flex-col items-end gap-4 transition-all ${isActive ? 'translate-y-0' : ''}`}>
@@ -362,8 +370,8 @@ const VoiceAgent: React.FC = () => {
            <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
                  <span className="relative flex h-3 w-3">
-                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                  </span>
                  <span className="text-xs font-semibold text-white">Voice OS Active</span>
               </div>
@@ -380,8 +388,8 @@ const VoiceAgent: React.FC = () => {
               ))}
            </div>
            
-            <div className="mt-4 pt-3 border-t border-white/10 text-[10px] text-[var(--text-tertiary)] text-center">
-              Listening for commands...
+           <div className="mt-4 pt-3 border-t border-white/10 text-[10px] text-[var(--text-tertiary)] text-center">
+             Listening for commands...
            </div>
         </div>
       )}

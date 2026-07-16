@@ -12,6 +12,14 @@ import { fetchAgNews, CountryContext } from '../services/geminiService';
 import { db, DB_KEYS } from '../services/persistence';
 import { MOCK_WEATHER, GUEST_USER, COUNTRY_REGISTRY } from '../constants';
 
+async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 interface FarmContextType {
   userProfile: UserProfile;
   isSignedIn: boolean;
@@ -482,7 +490,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
       const creds = JSON.parse(storedCreds);
       const emailMatch = creds.email?.toLowerCase() === email.toLowerCase();
-      const passMatch = creds.password === password;
+      const hash = await hashPassword(password);
+      const passMatch = creds.passwordHash === hash;
       if (!emailMatch || !passMatch) {
         throw new Error('Invalid email or password.');
       }

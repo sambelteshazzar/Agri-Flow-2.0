@@ -49,7 +49,12 @@ async function fetchFromAlphaVantage(symbol: string): Promise<{ price: number; u
   const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`;
   
   try {
-    const response = await fetch(url);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+    
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+    
     if (!response.ok) return null;
     
     const data = await response.json();
@@ -58,7 +63,10 @@ async function fetchFromAlphaVantage(symbol: string): Promise<{ price: number; u
     
     const price = parseFloat(quote['05. price']);
     return { price, unit: 'USD' };
-  } catch {
+  } catch (e) {
+    if (e instanceof Error && e.name === 'AbortError') {
+      console.warn(`Alpha Vantage request timeout for ${symbol}`);
+    }
     return null;
   }
 }
@@ -85,6 +93,7 @@ export async function fetchRealMarketPrices(): Promise<MarketPrice[]> {
           unit: info.unit,
           trend: 'stable',
           changePercentage: 0,
+          inputCostIndex: 100,
         });
       }
       // Rate limit: 5 requests/minute for free tier

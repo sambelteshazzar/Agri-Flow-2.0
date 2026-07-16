@@ -26,6 +26,14 @@ import { NavigationTab, OnboardingData } from './types';
 import { RouteErrorBoundary } from './components/RouteErrorBoundary';
 import { FarmProvider, useFarm } from './contexts/FarmContext';
 
+async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 const LazyLoader: React.FC = () => (
   <div className="flex items-center justify-center h-64">
     <Loader2 className="w-8 h-8 animate-spin text-jade-500" />
@@ -193,17 +201,18 @@ const AppContent: React.FC = () => {
      }
    };
 
-   const handleSignup = async (data: OnboardingData & { email: string; password: string }) => {
-     try {
-       await login(data);
-       localStorage.setItem('agriflow_credentials', JSON.stringify({ email: data.email, password: data.password }));
-       setIsAuthModalOpen(false);
-       setHasStarted(true);
-       localStorage.setItem('agriflow_has_started', 'true');
-       navigate(NavigationTab.DASHBOARD);
-     } catch (err) {
-     }
-   };
+const handleSignup = async (data: OnboardingData & { email: string; password: string }) => {
+      try {
+        await login(data);
+        const hash = await hashPassword(data.password);
+        localStorage.setItem('agriflow_credentials', JSON.stringify({ email: data.email, passwordHash: hash }));
+        setIsAuthModalOpen(false);
+        setHasStarted(true);
+        localStorage.setItem('agriflow_has_started', 'true');
+        navigate(NavigationTab.DASHBOARD);
+      } catch (err) {
+      }
+    };
 
     if (!hasStarted) {
       return (

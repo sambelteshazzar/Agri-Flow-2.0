@@ -142,11 +142,17 @@ export class WeatherService {
     if (!OWM_API_KEY) return null;
 
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${OWM_API_KEY}`;
-    const res = await fetch(url);
-    if (!res.ok) return null;
+    
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
+      const res = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      
+      if (!res.ok) return null;
 
-    const data: OWMResponse = await res.json();
-    const condition = data.weather?.[0]?.main ?? 'Partly Cloudy';
+      const data: OWMResponse = await res.json();
     const weatherId = data.weather?.[0]?.id ?? 800;
     const temp = Math.round(data.main?.temp ?? 20);
     const humidity = data.main?.humidity ?? 50;

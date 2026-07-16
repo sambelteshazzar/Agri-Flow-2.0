@@ -6,6 +6,8 @@ import { ChatMessage } from '../types';
 import { useFarm } from '../contexts/FarmContext';
 import { LiveServerMessage, Modality } from "@google/genai";
 
+const genId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+
 const AIAdvisor: React.FC = () => {
   const { showToast, userProfile } = useFarm();
 
@@ -287,7 +289,7 @@ const AIAdvisor: React.FC = () => {
     }
 
     const userMsg: ChatMessage = {
-      id: Date.now().toString(),
+      id: genId(),
       role: 'user',
       text: finalPrompt,
       image: selectedImage || undefined,
@@ -316,7 +318,7 @@ const AIAdvisor: React.FC = () => {
       }
 
       const modelMsg: ChatMessage = {
-        id: (Date.now() + 1).toString(),
+        id: genId(),
         role: 'model',
         text: responseText,
         sources: responseSources,
@@ -326,7 +328,7 @@ const AIAdvisor: React.FC = () => {
       setMessages(prev => [...prev, modelMsg]);
     } catch (error) {
       const errorMsg: ChatMessage = {
-        id: (Date.now() + 1).toString(),
+        id: genId(),
         role: 'model',
         text: "Something went wrong processing that request. Please try again.",
         timestamp: new Date()
