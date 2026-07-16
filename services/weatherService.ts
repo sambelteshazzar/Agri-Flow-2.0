@@ -1,14 +1,7 @@
 import { WeatherData, ClimateZone } from '../types';
-import { MOCK_WEATHER, COUNTRY_REGISTRY } from '../constants';
+import { COUNTRY_REGISTRY } from '../constants';
 
 const OWM_API_KEY = import.meta.env.VITE_OWM_API_KEY || '';
-
-interface OWMTemp {
-  day: number;
-  min: number;
-  max: number;
-  night: number;
-}
 
 interface OWMForecastItem {
   dt: number;
@@ -153,6 +146,7 @@ export class WeatherService {
       if (!res.ok) return null;
 
       const data: OWMResponse = await res.json();
+    const condition = data.weather?.[0]?.main ?? 'Partly Cloudy';
     const weatherId = data.weather?.[0]?.id ?? 800;
     const temp = Math.round(data.main?.temp ?? 20);
     const humidity = data.main?.humidity ?? 50;
@@ -183,5 +177,11 @@ export class WeatherService {
       forecast,
       climateRiskIndex: riskLevel,
     };
+  } catch (e) {
+    if (e instanceof Error && e.name === 'AbortError') {
+      console.warn('OWM request timeout');
+    }
+    return null;
   }
+}
 }

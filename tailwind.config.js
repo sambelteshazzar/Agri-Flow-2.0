@@ -6,7 +6,7 @@ export default {
     './index.tsx',
     './App.tsx',
     './types.ts',
-    './constants.ts',
+    './constants/index.ts',
     './components/**/*.{ts,tsx}',
     './contexts/**/*.{ts,tsx}',
     './services/**/*.{ts,tsx}',
