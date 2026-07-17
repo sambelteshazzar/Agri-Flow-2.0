@@ -137,7 +137,7 @@ const CropManager: React.FC = () => {
     setEditingCrop(null);
   };
 
-  const handleLogSubmit = async (data: { referenceId: string; category: string; date: string; type: LogEntry['type']; note: string }) => {
+  const handleLogSubmit = async (data: Omit<LogEntry, 'id'>) => {
     await addActivityLog(data);
   };
 

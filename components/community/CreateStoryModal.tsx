@@ -8,7 +8,7 @@ interface CreateStoryModalProps {
   newStoryImage: string | null;
   setNewStoryImage: (img: string | null) => void;
   onShare: () => void;
-  storyFileRef: React.RefObject<HTMLInputElement>;
+  storyFileRef: React.RefObject<HTMLInputElement | null>;
   onFileRead: (file: File | undefined, callback: (result: string) => void) => void;
 }
 

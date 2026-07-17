@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Send, Hash } from 'lucide-react';
-import { ChatMessage, UserProfile } from '@/types';
+import { CommunityChatMessage, UserProfile } from '@/types';
 
 const TYPING_NAMES = ['Adebayo F.', 'Chioma M.', 'Kwame A.', 'Fatima Z.', 'Jean-Pierre D.'];
 
@@ -8,12 +8,12 @@ interface ChatTabProps {
   channels: { id: string; name: string; desc: string; icon: React.ElementType }[];
   activeChannel: string;
   setActiveChannel: (id: string) => void;
-  chatMessages: ChatMessage[];
+  chatMessages: CommunityChatMessage[];
   chatInput: string;
   setChatInput: (v: string) => void;
   userProfile: UserProfile;
-  onSendChatMessage: (msg: any) => void;
-  chatEndRef: React.RefObject<HTMLDivElement>;
+  onSendChatMessage: (msg: Omit<CommunityChatMessage, 'id' | 'timestamp'>) => void;
+  chatEndRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const TypingIndicator: React.FC<{ name: string }> = ({ name }) => (
@@ -51,6 +51,7 @@ const ChatTab: React.FC<ChatTabProps> = ({
       setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
       return cleanup;
     }
+    return undefined;
   };
 
   return (

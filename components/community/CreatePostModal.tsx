@@ -11,7 +11,7 @@ interface CreatePostModalProps {
   setPostImage: (img: string | null) => void;
   onSubmit: (e: React.FormEvent) => Promise<void>;
   userProfile: UserProfile;
-  postFileRef: React.RefObject<HTMLInputElement>;
+  postFileRef: React.RefObject<HTMLInputElement | null>;
   onFileRead: (file: File | undefined, callback: (result: string) => void) => void;
 }
 

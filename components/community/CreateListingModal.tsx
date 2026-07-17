@@ -11,7 +11,7 @@ interface CreateListingModalProps {
   setListingImage: (img: string | null) => void;
   onSubmit: (e: React.FormEvent) => Promise<void>;
   showToast: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
-  listingFileRef: React.RefObject<HTMLInputElement>;
+  listingFileRef: React.RefObject<HTMLInputElement | null>;
   onFileRead: (file: File | undefined, callback: (result: string) => void) => void;
 }
 

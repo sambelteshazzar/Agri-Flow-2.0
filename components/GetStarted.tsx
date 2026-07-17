@@ -15,7 +15,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
   const containerRef = useRef<HTMLDivElement>(null); // This is the scrollable viewport
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
