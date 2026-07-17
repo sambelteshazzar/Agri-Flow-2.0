@@ -1,7 +1,7 @@
 import type { AIProvider, CountryContext, FarmingAdviceResult } from './AIProvider';
 import { WeatherData, Crop, NewsArticle } from '../../types';
 
-import { GoogleGenAI, GenerateContentResponse, Type } from '@google/genai';
+import { GoogleGenAI, Type } from '@google/genai';
 import { COUNTRY_REGISTRY } from '../../constants';
 import {
   setCache, getCache, buildSystemInstruction, cleanAIOutput, extractJson,
@@ -34,7 +34,7 @@ export class GeminiProvider implements AIProvider {
     if (cached) return cached;
 
     try {
-      const response: GenerateContentResponse = await getAI()?.models.generateContent({
+      const response = await getAI()?.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt,
         config: {
@@ -43,6 +43,7 @@ export class GeminiProvider implements AIProvider {
           tools: [{ googleSearch: {} }]
         }
       });
+      if (!response) throw new Error("Gemini client unavailable");
 
       let sources: { title: string; uri: string }[] = [];
       if (response.candidates?.[0]?.groundingMetadata?.groundingChunks) {
@@ -113,6 +114,7 @@ export class GeminiProvider implements AIProvider {
           }
         }
       });
+      if (!response) throw new Error("Gemini client unavailable");
 
       const jsonStr = extractJson(response.text || "[]");
       const articles = JSON.parse(jsonStr);
@@ -144,7 +146,7 @@ export class GeminiProvider implements AIProvider {
     const prompt = `What are the 3 most critical agricultural news headlines right now regarding climate events, pest outbreaks, or major commodity price shifts in ${region}? Be concise, 1 sentence per headline.`;
 
     try {
-      const response: GenerateContentResponse = await getAI()?.models.generateContent({
+      const response = await getAI()?.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt,
         config: {
@@ -152,6 +154,7 @@ export class GeminiProvider implements AIProvider {
           temperature: 0.3
         }
       });
+      if (!response) throw new Error("Gemini client unavailable");
 
       const text = response.text || "Market intelligence systems offline.";
       const cleanText = cleanAIOutput(text);
@@ -187,11 +190,12 @@ export class GeminiProvider implements AIProvider {
     `;
 
     try {
-      const response: GenerateContentResponse = await getAI()?.models.generateContent({
+      const response = await getAI()?.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt,
         config: { temperature: 0.3 }
       });
+      if (!response) throw new Error("Gemini client unavailable");
 
       return extractJson(response.text || "[]");
     } catch (error) {
@@ -229,7 +233,7 @@ export class GeminiProvider implements AIProvider {
         Focus on: nutrient deficiencies (N, P, K, Mg, Zn), common diseases (MLNV, FAW, Rust, Blight, Streak), water stress, pest damage. Be specific to West African crops if possible.
       `;
 
-      const response: GenerateContentResponse = await getAI()?.models.generateContent({
+      const response = await getAI()?.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: {
           parts: [
@@ -255,6 +259,7 @@ export class GeminiProvider implements AIProvider {
           }
         }
       });
+      if (!response) throw new Error("Gemini client unavailable");
 
       const jsonStr = extractJson(response.text || "{}");
       try {

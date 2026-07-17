@@ -24,7 +24,6 @@ export class CommunityService {
     const newListing: MarketplaceListing = {
       ...listing,
       item: sanitizeText(listing.item),
-      description: listing.description ? sanitizeHtml(listing.description) : '',
       location: listing.location ? sanitizeText(listing.location) : '',
       contact: sanitizeText(listing.contact),
       id: db.generateId('listing'),
