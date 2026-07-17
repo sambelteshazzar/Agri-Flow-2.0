@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { X, ClipboardList } from 'lucide-react';
-import { LogEntry } from '@/types';
+import { LogEntry, ToastMessage } from '@/types';
 
 interface CropLogModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedCropId: string | null;
-  onSubmit: (data: { referenceId: string; category: string; date: string; type: LogEntry['type']; note: string }) => Promise<void>;
-  onShowToast: (msg: string, type: string) => void;
+  onSubmit: (data: Omit<LogEntry, 'id'>) => Promise<void>;
+  onShowToast: (msg: string, type: ToastMessage['type']) => void;
   areaUnit: string;
 }
 

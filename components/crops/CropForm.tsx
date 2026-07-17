@@ -115,7 +115,7 @@ const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowTo
               <div className="flex gap-4 items-start bg-[var(--bg-content)] p-3 rounded border border-[var(--border-card)]">
                 <ImageUpload
                   value={newCrop.imageUrl || ''}
-                  onChange={(url) => setNewCrop(prev => ({...prev, imageUrl: url || getCropImage(prev.name)}))}
+                  onChange={(url) => setNewCrop(prev => ({...prev, imageUrl: url || getCropImage(prev.name ?? '')}))}
                   label="Upload crop image"
                   placeholder="Crop photo"
                   size="md"
