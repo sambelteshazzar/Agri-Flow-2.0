@@ -1,56 +1,80 @@
-import DOMPurify from 'dompurify';
+// HTML sanitization using the browser-native DOMParser API.
+// No external dependencies required.
 
-// Configure DOMPurify for our use case
-const purifyConfig = {
-  ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br', 'ul', 'ol', 'li', 'a', 'span'],
-  ALLOWED_ATTR: ['href', 'target', 'rel', 'class'],
-  ALLOW_DATA_ATTR: false,
-  RETURN_DOM: false,
-  RETURN_DOM_FRAGMENT: false,
-  RETURN_TRUSTED_TYPE: false,
+const ALLOWED_TAGS = new Set([
+  'B', 'I', 'EM', 'STRONG', 'P', 'BR', 'UL', 'OL', 'LI', 'A',
+]);
+
+const ALLOWED_ATTR: Record<string, Set<string>> = {
+  A: new Set(['href', 'target', 'rel']),
 };
 
-/**
- * Sanitize HTML content to prevent XSS
- * Use for user-generated content that will be rendered with dangerouslySetInnerHTML
- */
-export function sanitizeHtml(html: string): string {
-  return DOMPurify.sanitize(html, purifyConfig);
-}
+function sanitizeNode(node: Element): void {
+  const tag = node.tagName;
 
-/**
- * Sanitize plain text (strip all HTML)
- * Use for user input that should never contain HTML
- */
-export function sanitizeText(text: string): string {
-  return DOMPurify.sanitize(text, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
-}
+  if (!ALLOWED_TAGS.has(tag)) {
+    // Replace disallowed element with its text content (escaped)
+    const text = document.createTextNode(node.textContent ?? '');
+    node.replaceWith(text);
+    return;
+  }
 
-/**
- * Sanitize URL - ensure it's a safe https URL
- */
-export function sanitizeUrl(url: string): string {
-  try {
-    const parsed = new URL(url);
-    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
-      return '';
+  // Strip disallowed attributes
+  const allowed = ALLOWED_ATTR[tag] ?? new Set<string>();
+  for (const attr of Array.from(node.attributes)) {
+    if (!allowed.has(attr.name.toLowerCase())) {
+      node.removeAttribute(attr.name);
     }
-    // Block javascript: and data: URLs
-    if (parsed.protocol === 'javascript:' || parsed.protocol === 'data:') {
-      return '';
+  }
+
+  // For <a> tags, enforce safe href and rel attributes
+  if (tag === 'A') {
+    const href = node.getAttribute('href') ?? '';
+    try {
+      const url = new URL(href, window.location.href);
+      if (!['http:', 'https:'].includes(url.protocol)) {
+        node.removeAttribute('href');
+      } else {
+        node.setAttribute('href', url.toString());
+      }
+    } catch {
+      node.removeAttribute('href');
     }
-    return parsed.toString();
-  } catch {
-    return '';
+    node.setAttribute('target', '_blank');
+    node.setAttribute('rel', 'noopener noreferrer');
+  }
+
+  // Recursively sanitize children
+  for (const child of Array.from(node.children)) {
+    sanitizeNode(child);
   }
 }
 
-/**
- * Sanitize user input for display in text content (not HTML)
- * Escapes HTML entities
- */
-export function escapeHtml(text: string): string {
+export function sanitizeHtml(input: string): string {
+  if (!input) return '';
+  const doc = new DOMParser().parseFromString(input, 'text/html');
+  for (const child of Array.from(doc.body.children)) {
+    sanitizeNode(child);
+  }
+  return doc.body.innerHTML;
+}
+
+export function sanitizeText(input: string): string {
+  if (!input) return '';
+  // Escape all HTML so it displays as text content
   const div = document.createElement('div');
-  div.textContent = text;
+  div.textContent = input;
   return div.innerHTML;
+}
+
+export function sanitizeUrl(input: string): string {
+  try {
+    const url = new URL(input, window.location.href);
+    if (['http:', 'https:'].includes(url.protocol)) {
+      return url.toString();
+    }
+  } catch {
+    // Invalid URL
+  }
+  return '';
 }

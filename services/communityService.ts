@@ -1,6 +1,7 @@
 import { db } from './persistence';
 import { MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, Story, SocialTrend, SuggestedUser } from '../types';
 import { INITIAL_STORIES, INITIAL_TRENDS, INITIAL_SUGGESTED_USERS } from '../constants';
+import { sanitizeHtml, sanitizeText } from '../utils/sanitize';
 
 export class CommunityService {
   // --- Marketplace ---
@@ -22,6 +23,10 @@ export class CommunityService {
     const current = await db.getListings(); 
     const newListing: MarketplaceListing = {
       ...listing,
+      item: sanitizeText(listing.item),
+      description: listing.description ? sanitizeHtml(listing.description) : '',
+      location: listing.location ? sanitizeText(listing.location) : '',
+      contact: sanitizeText(listing.contact),
       id: db.generateId('listing'),
       verified: false,
       status: 'ACTIVE',
@@ -66,6 +71,8 @@ export class CommunityService {
     const current = await db.getPosts();
     const newPost: ForumPost = { 
       ...post, 
+      content: sanitizeHtml(post.content),
+      title: post.title ? sanitizeText(post.title) : '',
       id: db.generateId('post'),
       replies: 0,
       likes: 0,
@@ -95,7 +102,7 @@ export class CommunityService {
       id: db.generateId('reply'),
       postId,
       author,
-      content,
+      content: sanitizeHtml(content),
       date: new Date().toISOString()
     };
     
@@ -184,6 +191,7 @@ export class CommunityService {
     const current = await db.getChatMessages();
     const newMessage: CommunityChatMessage = {
       ...message,
+      text: sanitizeHtml(message.text),
       id: db.generateId('msg'),
       timestamp: new Date().toISOString()
     };
