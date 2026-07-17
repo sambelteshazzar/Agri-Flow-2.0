@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Sprout, Image as ImageIcon } from 'lucide-react';
-import { Crop } from '@/types';
+import { Crop, ToastMessage, AreaUnit } from '@/types';
 import { formatAreaLabel } from '@/utils/localeFormat';
 import getCropImage from './getCropImage';
 import CROP_TEMPLATES from './cropTemplates';
@@ -10,8 +10,8 @@ interface CropFormProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (crop: Omit<Crop, 'id'>) => void;
-  onShowToast: (msg: string, type: string) => void;
-  areaUnit: string;
+  onShowToast: (msg: string, type: ToastMessage['type']) => void;
+  areaUnit: AreaUnit;
   editingCrop?: Crop | null;
 }
 
@@ -127,7 +127,7 @@ const CropForm: React.FC<CropFormProps> = ({ isOpen, onClose, onSubmit, onShowTo
                   {newCrop.imageUrl && !newCrop.imageUrl.startsWith('data:') && (
                     <button
                       type="button"
-                      onClick={() => setNewCrop({...newCrop, imageUrl: getCropImage(newCrop.name)})}
+                      onClick={() => setNewCrop({...newCrop, imageUrl: getCropImage(newCrop.name ?? '')})}
                       className="mt-2 text-[10px] text-jade-600 hover:text-jade-700 font-semibold"
                     >
                       Reset to default
