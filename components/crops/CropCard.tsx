@@ -1,12 +1,12 @@
 import React from 'react';
 import { Trash2, Pencil, Ruler, CalendarDays, Droplets, Droplet, Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
-import { Crop, CropExpense, CropIncome } from '@/types';
+import { Crop, CropExpense, CropIncome, AreaUnit } from '@/types';
 import { formatArea, formatCurrency } from '@/utils/localeFormat';
 import { getStockImage as getCropImage } from '@/utils/stockImages';
 
 interface CropCardProps {
   crop: Crop;
-  areaUnit: string;
+  areaUnit: AreaUnit;
   expenses: CropExpense[];
   incomes: CropIncome[];
   currencyCode: string;

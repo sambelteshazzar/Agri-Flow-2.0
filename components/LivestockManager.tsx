@@ -346,7 +346,7 @@ const LivestockManager: React.FC = () => {
                      <div className="flex gap-4 items-start bg-[var(--bg-content)] dark:bg-jade-800 p-3 rounded border border-[var(--border-card)]">
 <ImageUpload
                          value={newAnimal.imageUrl || ''}
-                         onChange={(url) => setNewAnimal(prev => ({...prev, imageUrl: url || getLivestockImage(prev.species)}))}
+                          onChange={(url) => setNewAnimal(prev => ({...prev, imageUrl: url || getLivestockImage(prev.species ?? '')}))}
                          label="Upload livestock image"
                          placeholder="Livestock photo"
                          size="md"
@@ -356,7 +356,7 @@ const LivestockManager: React.FC = () => {
                        {newAnimal.imageUrl && !newAnimal.imageUrl.startsWith('data:') && (
                          <button
                            type="button"
-                           onClick={() => setNewAnimal({...newAnimal, imageUrl: getLivestockImage(newAnimal.species)})}
+                            onClick={() => setNewAnimal({...newAnimal, imageUrl: getLivestockImage(newAnimal.species ?? '')})}
                            className="mt-2 text-[10px] text-jade-600 hover:text-jade-700 font-semibold"
                          >
                            Reset to default

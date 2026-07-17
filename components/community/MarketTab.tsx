@@ -39,7 +39,7 @@ const MarketTab: React.FC<MarketTabProps> = ({
       result = result.filter(item =>
         item.item.toLowerCase().includes(q) ||
         item.location.toLowerCase().includes(q) ||
-        item.seller.toLowerCase().includes(q)
+        (item.seller ?? '').toLowerCase().includes(q)
       );
     }
     return result;

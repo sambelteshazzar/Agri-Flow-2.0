@@ -34,7 +34,7 @@ const EducationHub: React.FC = () => {
   const handleStartCourse = (id: string) => {
     const mod = learningModules.find(m => m.id === id);
     setActiveCourseId(id);
-    setCurrentLessonIdx(mod?.completed ? (mod.lessonsCount - 1) : (mod.completedLessons.length > 0 ? Math.max(...mod.completedLessons) + 1 : 0));
+    setCurrentLessonIdx(mod && mod.completed ? (mod.lessonsCount - 1) : (mod && mod.completedLessons.length > 0 ? Math.max(...mod.completedLessons) + 1 : 0));
     setIsPlaying(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -46,7 +46,7 @@ const EducationHub: React.FC = () => {
   };
 
   const handleLessonComplete = (idx: number) => {
-    if (activeCourseId) {
+    if (activeCourseId && activeCourse) {
       updateModuleProgress(activeCourseId, Math.round(((idx + 1) / activeCourse.lessonsCount) * 100), idx);
     }
   };

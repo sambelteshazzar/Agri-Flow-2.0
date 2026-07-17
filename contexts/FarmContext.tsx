@@ -1029,7 +1029,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     stories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
     pollData, pollVoted, handlePollVote,
     login, signIn, logout, updateUserProfile, resetApp,
-    addCrop, deleteCrop, updateCropStatus, updateCrop, addLivestock, deleteLivestock, updateLivestockStatus, updateLivestock, toggleTask, addTask, completeModule, 
+    addCrop, deleteCrop, updateCropStatus, updateCrop, addLivestock, deleteLivestock, updateLivestockStatus, updateLivestock, toggleTask, addTask, completeModule, updateModuleProgress, 
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
@@ -1051,7 +1051,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     addListing, markListingSold, 
     addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
-    laborInput, resourceResult, saveLaborInputAction, saveResourceResultAction
+    laborInput, resourceResult, saveLaborInputAction, saveResourceResultAction,
+    cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, updateCropExpense, addCropIncome, deleteCropIncome, updateCropIncome
   ]);
 
   return (

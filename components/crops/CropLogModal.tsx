@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, ClipboardList } from 'lucide-react';
-import { LogEntry, ToastMessage } from '@/types';
+import { LogEntry, ToastMessage, AreaUnit } from '@/types';
 
 interface CropLogModalProps {
   isOpen: boolean;
@@ -8,7 +8,7 @@ interface CropLogModalProps {
   selectedCropId: string | null;
   onSubmit: (data: Omit<LogEntry, 'id'>) => Promise<void>;
   onShowToast: (msg: string, type: ToastMessage['type']) => void;
-  areaUnit: string;
+  areaUnit: AreaUnit;
 }
 
 const CropLogModal: React.FC<CropLogModalProps> = ({ isOpen, onClose, selectedCropId, onSubmit, onShowToast, areaUnit }) => {
