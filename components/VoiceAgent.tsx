@@ -220,7 +220,7 @@ const VoiceAgent: React.FC = () => {
           onmessage: async (msg: LiveServerMessage) => {
             // 1. Handle Tools
             if (msg.toolCall) {
-              for (const fc of msg.toolCall.functionCalls) {
+              for (const fc of msg.toolCall.functionCalls ?? []) {
                 let result: any = { status: 'ok' };
                 
                 try {
@@ -310,7 +310,7 @@ const VoiceAgent: React.FC = () => {
             }
           },
           onclose: () => disconnect(),
-          onerror: (err) => {
+          onerror: (err: unknown) => {
             console.error(err);
             disconnect();
             showToast("Connection lost", "error");

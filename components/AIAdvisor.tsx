@@ -210,7 +210,7 @@ const AIAdvisor: React.FC = () => {
             }
           },
           onclose: () => endCall(),
-          onerror: (err) => {
+          onerror: (err: unknown) => {
             console.error(err);
             endCall();
             showToast("Connection lost", "error");

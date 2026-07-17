@@ -151,6 +151,7 @@ const CommunityHub: React.FC = () => {
       return () => clearInterval(interval);
     } else {
       setStoryProgress(0);
+      return undefined;
     }
   }, [viewingStory]);
 
@@ -285,7 +286,7 @@ const CommunityHub: React.FC = () => {
 
   return (
     <div className="h-full w-full relative overflow-hidden bg-[var(--bg-app)]">
-      {showIntro && <IntroOverlay showIntro={showIntro} onDismiss={() => { setShowIntro(false); localStorage.setItem('agriflow_community_intro_dismissed', '1'); }} introBgError={introBgError} setIntroBgError={setIntroBgError} />}
+      {showIntro && <IntroOverlay showIntro={showIntro} onDismiss={() => { setShowIntro(false); localStorage.setItem('agriflow_community_intro_dismissed', '1'); }} />}
 
       <div className="h-full flex flex-col lg:grid lg:grid-cols-12 gap-6 p-4 lg:p-6 overflow-y-hidden">
         
@@ -361,7 +362,7 @@ const CommunityHub: React.FC = () => {
                   </div>
                </div>
                <p className="text-xs text-jade-700 dark:text-jade-300 mb-4 leading-relaxed">Buy inputs in bulk, share equipment costs, and negotiate better prices together.</p>
-                <button onClick={() => handleAuthRequiredAction(() => { sendChatMessage({ sender: userProfile.name, content: `[Cooperative Formation] ${userProfile.name} is starting a new cooperative! Reply here to join.` }); showToast('Cooperative formation announced in community chat!', 'success'); })} className="w-full py-2.5 bg-jade-600 hover:bg-jade-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2">
+                 <button onClick={() => handleAuthRequiredAction(() => { sendChatMessage({ channelId: 'co-ops', author: userProfile.name, text: `[Cooperative Formation] ${userProfile.name} is starting a new cooperative! Reply here to join.`, isMe: true, avatar: userProfile.avatar }); showToast('Cooperative formation announced in community chat!', 'success'); })} className="w-full py-2.5 bg-jade-600 hover:bg-jade-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2">
                  <Users className="w-4 h-4" /> Create Cooperative
               </button>
            </div>
