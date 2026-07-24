@@ -2,14 +2,19 @@ import type { AIProvider } from './AIProvider';
 import { GeminiProvider } from './GeminiProvider';
 import { NvidiaNIMProvider } from './NvidiaNIMProvider';
 
+// SECURITY: Never read VITE_NVIDIA_API_KEY at runtime in the browser.
+// Vite inlines every VITE_* var into the client bundle, which leaks the key
+// to anyone with DevTools open. Provider selection is driven by a derived
+// "which provider" flag instead. The NVIDIA key is only ever attached to
+// requests server-side, in /api/ai-chat or the vite dev proxy.
 const VITE_GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
-const VITE_NVIDIA_KEY = import.meta.env.VITE_NVIDIA_API_KEY || '';
+const AI_PROVIDER_HINT = (import.meta.env.VITE_AI_PROVIDER || '').toLowerCase();
 
 let _provider: AIProvider | null = null;
 
 function createProvider(): AIProvider {
-  if (VITE_GEMINI_KEY) return new GeminiProvider();
-  if (VITE_NVIDIA_KEY) return new NvidiaNIMProvider();
+  if (VITE_GEMINI_KEY || AI_PROVIDER_HINT === 'gemini') return new GeminiProvider();
+  if (AI_PROVIDER_HINT === 'nvidia') return new NvidiaNIMProvider();
   return new GeminiProvider();
 }
 

@@ -6,7 +6,10 @@ import {
   FALLBACK_NEWS, FALLBACK_INTEL, FALLBACK_TASKS, FALLBACK_ADVICE, FALLBACK_ANALYSIS
 } from './shared';
 
-const VITE_NVIDIA_KEY = import.meta.env.VITE_NVIDIA_API_KEY || '';
+// SECURITY: Provider enabled flag is driven by VITE_AI_PROVIDER='nvidia' (a
+// non-secret string) NOT by reading the actual API key here in the browser.
+// The key is injected only by /api/ai-chat server-side or the vite dev proxy.
+const NVIDIA_ENABLED = (import.meta.env.VITE_AI_PROVIDER || '').toLowerCase() === 'nvidia';
 
 const TEXT_MODEL = 'meta/llama-3.1-8b-instruct';
 const VISION_MODEL = 'microsoft/phi-4-multimodal-instruct';
@@ -79,12 +82,14 @@ async function nvidiaVisionCompletion(
 }
 
 export class NvidiaNIMProvider implements AIProvider {
+  displayName = 'NVIDIA NIM (Llama)';
+
   isConfigured(): boolean {
-    return !!VITE_NVIDIA_KEY;
+    return !!NVIDIA_ENABLED;
   }
 
   async getFarmingAdvice(prompt: string, countryCtx?: CountryContext): Promise<FarmingAdviceResult> {
-    if (!VITE_NVIDIA_KEY) {
+    if (!NVIDIA_ENABLED) {
       await new Promise(r => setTimeout(r, 1500));
       return FALLBACK_ADVICE;
     }
@@ -117,7 +122,7 @@ export class NvidiaNIMProvider implements AIProvider {
   }
 
   async fetchAgNews(countryCtx?: CountryContext): Promise<NewsArticle[]> {
-    if (!VITE_NVIDIA_KEY) {
+    if (!NVIDIA_ENABLED) {
       await new Promise(r => setTimeout(r, 1000));
       return FALLBACK_NEWS;
     }
@@ -160,7 +165,7 @@ Return ONLY a valid JSON array. Each item must have: title, summary, category (o
   }
 
   async getLiveAgriIntel(countryCtx?: CountryContext): Promise<string> {
-    if (!VITE_NVIDIA_KEY) {
+    if (!NVIDIA_ENABLED) {
       await new Promise(r => setTimeout(r, 800));
       return FALLBACK_INTEL;
     }
@@ -189,7 +194,7 @@ Return ONLY a valid JSON array. Each item must have: title, summary, category (o
   }
 
   async generateDailyTasks(weather: WeatherData, crops: Crop[], countryCtx?: CountryContext): Promise<string> {
-    if (!VITE_NVIDIA_KEY) {
+    if (!NVIDIA_ENABLED) {
       await new Promise(r => setTimeout(r, 1200));
       return JSON.stringify(FALLBACK_TASKS);
     }
@@ -224,7 +229,7 @@ Return ONLY a valid JSON array of strings. Do not include markdown formatting or
   }
 
   async analyzeCropImage(base64Image: string, userPrompt: string, countryCtx?: CountryContext): Promise<string> {
-    if (!VITE_NVIDIA_KEY) {
+    if (!NVIDIA_ENABLED) {
       await new Promise(r => setTimeout(r, 2000));
       return FALLBACK_ANALYSIS;
     }

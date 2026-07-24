@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutDashboard, Sprout, Beef, TrendingUp, BrainCircuit, GraduationCap, Calculator, Users, HardHat, Globe, Settings } from 'lucide-react';
+import { LayoutDashboard, Sprout, Beef, TrendingUp, BrainCircuit, GraduationCap, Calculator, Users, HardHat, Globe, Settings, Calendar } from 'lucide-react';
 import { NavigationTab } from '../types';
 
 interface MobileNavProps {
@@ -18,10 +18,11 @@ const primaryTabs = [
 
 const secondaryTabs = [
   { id: NavigationTab.AI_ADVISOR, label: 'Advisor', icon: BrainCircuit },
-  { id: NavigationTab.CALCULATOR, label: 'Calculators', icon: Calculator },
+  { id: NavigationTab.CALCULATOR, label: 'Calc', icon: Calculator },
   { id: NavigationTab.EDUCATION, label: 'Learn', icon: GraduationCap },
   { id: NavigationTab.COMMUNITY, label: 'Community', icon: Users },
   { id: NavigationTab.LABOR, label: 'Labor', icon: HardHat },
+  { id: NavigationTab.CALENDAR, label: 'Calendar', icon: Calendar },
   { id: NavigationTab.SETTINGS, label: 'Settings', icon: Settings },
 ];
 
@@ -51,14 +52,14 @@ const MobileNav: React.FC<MobileNavProps> = ({ activeTab, onNavigate }) => {
             );
           })}
         </div>
-        <div className="flex items-center justify-around h-11 px-0.5 border-t border-terra-100/50 dark:border-jade-800/30">
+        <div className="flex items-center justify-around h-11 px-0.5 border-t border-terra-100/50 dark:border-jade-800/30 overflow-x-auto no-scrollbar">
           {secondaryTabs.map(tab => {
             const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => onNavigate(tab.id)}
-                className={`flex flex-col items-center justify-center gap-0 flex-1 h-full transition-all rounded-lg ${
+                className={`flex flex-col items-center justify-center gap-0 flex-1 min-w-[48px] h-full transition-all rounded-lg ${
                   isActive ? 'text-jade-600 dark:text-jade-400' : 'text-terra-400 dark:text-jade-500'
                 }`}
               >

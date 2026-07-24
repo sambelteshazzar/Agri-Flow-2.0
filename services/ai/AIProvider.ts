@@ -23,6 +23,11 @@ export interface FarmingAdviceResult {
 }
 
 export interface AIProvider {
+  // Stable, human-readable provider name. Do NOT use constructor.name —
+  // production minifiers rename classes to single letters, which would
+  // show the user "Provider: t" in the AIAdvisor greeting.
+  displayName: string;
+
   isConfigured(): boolean;
 
   getFarmingAdvice(

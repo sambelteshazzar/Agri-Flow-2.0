@@ -211,7 +211,20 @@ const CommunityHub: React.FC = () => {
   };
 
   const handleLikeQuestion = (questionId: string) => {
-    setQuestions(prev => prev.map(q => q.id === questionId ? { ...q, likes: q.likes + 1 } : q));
+    setQuestions(prev => {
+      // Prevent infinite like spam: each toggle adds/removes the user's
+      // implicit ID. Without this the same user could click infinitely.
+      const target = prev.find(q => q.id === questionId);
+      if (!target) return prev;
+      const userKey = `qa_liked_${userProfile.name}`;
+      const alreadyLiked = localStorage.getItem(userKey) === questionId;
+      if (alreadyLiked) {
+        localStorage.removeItem(userKey);
+        return prev.map(q => q.id === questionId ? { ...q, likes: Math.max(0, q.likes - 1) } : q);
+      }
+      localStorage.setItem(userKey, questionId);
+      return prev.map(q => q.id === questionId ? { ...q, likes: q.likes + 1 } : q);
+    });
   };
 
   const handleAcceptAnswer = (questionId: string, answerId: string) => {

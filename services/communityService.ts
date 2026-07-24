@@ -1,7 +1,7 @@
 import { db } from './persistence';
 import { MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, Story, SocialTrend, SuggestedUser } from '../types';
 import { INITIAL_STORIES, INITIAL_TRENDS, INITIAL_SUGGESTED_USERS } from '../constants';
-import { sanitizeHtml, sanitizeText } from '../utils/sanitize';
+import { sanitizeText } from '../utils/sanitize';
 
 export class CommunityService {
   // --- Marketplace ---
@@ -70,7 +70,7 @@ export class CommunityService {
     const current = await db.getPosts();
     const newPost: ForumPost = { 
       ...post, 
-      content: sanitizeHtml(post.content),
+      content: sanitizeText(post.content),
       title: post.title ? sanitizeText(post.title) : '',
       id: db.generateId('post'),
       replies: 0,
@@ -101,7 +101,7 @@ export class CommunityService {
       id: db.generateId('reply'),
       postId,
       author,
-      content: sanitizeHtml(content),
+      content: sanitizeText(content),
       date: new Date().toISOString()
     };
     
@@ -190,7 +190,7 @@ export class CommunityService {
     const current = await db.getChatMessages();
     const newMessage: CommunityChatMessage = {
       ...message,
-      text: sanitizeHtml(message.text),
+      text: sanitizeText(message.text),
       id: db.generateId('msg'),
       timestamp: new Date().toISOString()
     };

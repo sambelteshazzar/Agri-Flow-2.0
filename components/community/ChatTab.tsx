@@ -33,13 +33,24 @@ const ChatTab: React.FC<ChatTabProps> = ({
   userProfile, onSendChatMessage, chatEndRef,
 }) => {
   const [typingUser, setTypingUser] = useState<string | null>(null);
+  const typingTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const triggerTyping = useCallback(() => {
+    // Clear any pending typing timer first so multiple rapid sends don't
+    // stack up overlapping typing indicators + setTimeout leaks.
+    if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
     const name = TYPING_NAMES[Math.floor(Math.random() * TYPING_NAMES.length)];
     setTypingUser(name);
     const delay = 1500 + Math.random() * 2000;
-    const timer = setTimeout(() => setTypingUser(null), delay);
-    return () => clearTimeout(timer);
+    typingTimerRef.current = setTimeout(() => setTypingUser(null), delay);
+  }, []);
+
+  // Clear the in-flight typing timer on unmount so we don't fire setTypingUser
+  // on an unmounted component (state-after-unmount warning / memory leak).
+  useEffect(() => {
+    return () => {
+      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+    };
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,11 +58,9 @@ const ChatTab: React.FC<ChatTabProps> = ({
     if (chatInput.trim()) {
       onSendChatMessage({ channelId: activeChannel, author: userProfile.name, text: chatInput, isMe: true, avatar: userProfile.avatar });
       setChatInput('');
-      const cleanup = triggerTyping();
+      triggerTyping();
       setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
-      return cleanup;
     }
-    return undefined;
   };
 
   return (

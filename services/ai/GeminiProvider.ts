@@ -19,6 +19,8 @@ const getAI = () => {
 };
 
 export class GeminiProvider implements AIProvider {
+  displayName = 'Google Gemini';
+
   isConfigured(): boolean {
     return !!VITE_GEMINI_KEY;
   }

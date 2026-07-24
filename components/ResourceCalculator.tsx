@@ -39,9 +39,11 @@ const ResourceCalculator: React.FC = () => {
   };
 
   const calculateIrrigation = () => {
+    // Guard: efficiency must be > 0 (otherwise divide-by-zero yields Infinity).
+    const safeEfficiency = efficiency > 0 ? efficiency : 0.75;
     const areaM2 = areaUnit === 'acres' ? area * 4046.86 : area * 10000;
     const demandMm = et0 * cropFactor;
-    const grossDemandMm = demandMm / efficiency;
+    const grossDemandMm = demandMm / safeEfficiency;
     const liters = Math.round(grossDemandMm * areaM2);
     setIrrigationResult(liters);
     saveResourceResult({ mode: 'IRRIGATION', fertilizerKg: fertResult, irrigationLitersPerDay: liters, savedAt: new Date().toISOString() });

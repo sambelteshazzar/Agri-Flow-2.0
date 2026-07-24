@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { CloudRain, Wind, Droplets, Thermometer, AlertTriangle, Calendar, CheckSquare, Square, MapPin, Activity, ShieldCheck, TrendingDown, TrendingUp, Sparkles, Loader2, Navigation, MapPinOff, Globe, X, Sprout, Beef, ArrowUpRight, ArrowDownRight, Minus, Clock, BarChart3, Leaf, Zap, Sun, Cloud, CloudDrizzle, DollarSign, Wallet } from 'lucide-react';
+import { CloudRain, Wind, Droplets, Thermometer, AlertTriangle, Calendar, CheckSquare, Square, MapPin, Activity, ShieldCheck, TrendingDown, TrendingUp, Sparkles, Loader2, Navigation, MapPinOff, Globe, X, Sprout, Beef, ArrowUpRight, ArrowDownRight, Minus, Clock, BarChart3, Leaf, Zap, Sun, Cloud, CloudDrizzle, DollarSign, Wallet, Download } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import { generateDailyTasks, getLiveAgriIntel, CountryContext, isAIConfigured, isWeatherSimulated } from '../services/geminiService';
 import { formatArea, formatCurrency } from '../utils/localeFormat';
+import { useInstallPrompt } from '../utils/useInstallPrompt';
 
 const Dashboard: React.FC = () => {
   const { tasks, toggleTask, crops, addTask, livestock, marketPrices, userLocation, weather, alerts, userProfile, cropExpenses, cropIncomes } = useFarm();
@@ -22,6 +23,8 @@ const Dashboard: React.FC = () => {
   const [liveIntel, setLiveIntel] = useState<string | null>(null);
   const [isLoadingIntel, setIsLoadingIntel] = useState(false);
   const [showWeatherAlert, setShowWeatherAlert] = useState(true);
+  const { canInstall, promptInstall } = useInstallPrompt();
+  const [showInstallBanner, setShowInstallBanner] = useState(true);
 
   useEffect(() => {
     const fetchIntel = async () => {
@@ -144,6 +147,37 @@ const Dashboard: React.FC = () => {
             >
                 <X className="w-4 h-4" />
             </button>
+        </div>
+      )}
+
+      {/* Install PWA Banner — surfaces the deferred beforeinstallprompt event
+          so users can install AgriFlow as a standalone app on the dashboard. */}
+      {canInstall && showInstallBanner && (
+        <div className="bg-jade-50 dark:bg-jade-900/20 border border-jade-200 dark:border-jade-800/50 text-jade-800 dark:text-jade-100 p-4 rounded-2xl shadow-sm flex justify-between items-center animate-fade-in-up gap-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-jade-100 dark:bg-jade-900/40 text-jade-600 dark:text-jade-300 shrink-0">
+              <Download className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm">Install AgriFlow</h3>
+              <p className="text-xs mt-0.5 font-medium opacity-80">Add to your home screen for offline access and faster load times.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={async () => { const ok = await promptInstall(); if (ok) setShowInstallBanner(false); }}
+              className="px-3 py-1.5 text-xs font-semibold bg-jade-600 hover:bg-jade-500 text-white rounded-lg transition-colors"
+            >
+              Install
+            </button>
+            <button
+              onClick={() => setShowInstallBanner(false)}
+              aria-label="Dismiss install prompt"
+              className="text-jade-500 hover:text-jade-700 dark:hover:text-jade-200 transition-colors p-1"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       )}
 

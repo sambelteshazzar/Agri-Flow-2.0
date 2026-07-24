@@ -27,7 +27,9 @@ const AIAdvisor: React.FC = () => {
 
   const aiConfigured = isAIConfigured();
   const provider = getAIProvider();
-  const providerName = provider.constructor.name;
+  // Use a stable displayName instead of constructor.name — production minifiers
+  // rename classes (e.g. GeminiProvider → t), so .constructor.name shows "t".
+  const providerName = provider.displayName;
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {

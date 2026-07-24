@@ -25,6 +25,7 @@ const PlantingCalendar = lazy(() => import('./components/PlantingCalendar'));
 import { NavigationTab, OnboardingData } from './types';
 import { RouteErrorBoundary } from './components/RouteErrorBoundary';
 import { FarmProvider, useFarm } from './contexts/FarmContext';
+import { getRelativeTime } from './utils/localeFormat';
 
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -198,6 +199,7 @@ const AppContent: React.FC = () => {
        localStorage.setItem('agriflow_has_started', 'true');
        navigate(NavigationTab.DASHBOARD);
      } catch (err) {
+       console.error('[AgriFlow] Sign-in failed:', err);
      }
    };
 
@@ -211,6 +213,7 @@ const handleSignup = async (data: OnboardingData & { email: string; password: st
         localStorage.setItem('agriflow_has_started', 'true');
         navigate(NavigationTab.DASHBOARD);
       } catch (err) {
+        console.error('[AgriFlow] Sign-up failed:', err);
       }
     };
 
@@ -242,12 +245,14 @@ const handleSignup = async (data: OnboardingData & { email: string; password: st
               ${toast.type === 'success' ? 'bg-jade-50/95 dark:bg-jade-900/95 border-jade-200 dark:border-jade-800 text-jade-800 dark:text-jade-100' : ''}
               ${toast.type === 'error' ? 'bg-red-50/95 dark:bg-red-900/95 border-red-200 dark:border-red-800 text-red-800 dark:text-red-100' : ''}
               ${toast.type === 'info' ? 'bg-terra-50/95 dark:bg-[#12261A]/95 border-terra-200 dark:border-[#1E5A47] text-terra-800 dark:text-[#E8F0EA]' : ''}
+              ${toast.type === 'warning' ? 'bg-amber-50/95 dark:bg-amber-900/95 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-100' : ''}
             `}
           >
             <div className="shrink-0">
               {toast.type === 'success' && <CheckCircle className="w-5 h-5" aria-hidden="true" />}
               {toast.type === 'error' && <AlertCircle className="w-5 h-5" aria-hidden="true" />}
               {toast.type === 'info' && <InfoIcon className="w-5 h-5" aria-hidden="true" />}
+              {toast.type === 'warning' && <AlertTriangle className="w-5 h-5" aria-hidden="true" />}
             </div>
             <p className="text-sm font-semibold flex-1">{toast.message}</p>
             <button onClick={() => removeToast(toast.id)} aria-label="Dismiss notification" className="opacity-50 hover:opacity-100 transition-opacity">
@@ -260,13 +265,15 @@ const handleSignup = async (data: OnboardingData & { email: string; password: st
       {/* --- GLOBAL VOICE AGENT --- */}
       <Suspense fallback={null}><VoiceAgent /></Suspense>
 
-       {/* SIGN IN / SIGN UP MODAL */}
-        <LoginPage
-          isOpen={isAuthModalOpen}
-          onClose={() => setIsAuthModalOpen(false)}
-          onLogin={handleAuthSubmit}
-          onSignup={handleSignup}
-        />
+       {/* SIGN IN / SIGN UP MODAL (only when user has started but is signed out) */}
+       {hasStarted && !isSignedIn && (
+         <LoginPage
+           isOpen={isAuthModalOpen}
+           onClose={() => setIsAuthModalOpen(false)}
+           onLogin={handleAuthSubmit}
+           onSignup={handleSignup}
+         />
+       )}
 
       {/* COMMAND PALETTE */}
       <CommandPalette
@@ -358,7 +365,7 @@ const handleSignup = async (data: OnboardingData & { email: string; password: st
                             <div>
                               <p className="text-sm font-semibold text-primary-dynamic group-hover:text-red-700 dark:group-hover:text-red-400">{alert.title}</p>
                               <p className="text-xs text-secondary-dynamic mt-1">{alert.message}</p>
-                               <p className="text-[10px] text-terra-400 dark:text-[#7BA896] font-medium mt-2">Just now</p>
+                                <p className="text-[10px] text-terra-400 dark:text-[#7BA896] font-medium mt-2">{alert.timestamp ? getRelativeTime(alert.timestamp) : 'Just now'}</p>
                             </div>
                           </div>
                         </div>

@@ -312,10 +312,29 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     loadData();
     refreshLocation();
 
-    // Cross-tab sync: reload when localStorage changes in another tab
-    const onStorage = (e: StorageEvent) => {
-      if (e.key && e.key.startsWith('agriflow_') && e.newValue !== e.oldValue) {
-        window.location.reload();
+    // Cross-tab sync: when localStorage changes in another tab, reload the
+    // affected slice of state. We do NOT call window.location.reload() — that
+    // would wipe in-progress form state across all tabs.
+    const onStorage = async (e: StorageEvent) => {
+      if (!e.key || !e.key.startsWith('agriflow_') || e.newValue === e.oldValue) return;
+      try {
+        // Selectively refresh only the affected slice of state.
+        if (e.key === DB_KEYS.CROPS) setCrops(await CropService.getAll());
+        else if (e.key === DB_KEYS.LIVESTOCK) setLivestock(await LivestockService.getAll());
+        else if (e.key === DB_KEYS.TASKS) {
+          const t = await db.getTasks(); setTasks(t);
+        } else if (e.key === DB_KEYS.LEARNING) {
+          const m = await db.getModules(); setLearningModules(m);
+        } else if (e.key === DB_KEYS.POSTS) setPosts(await CommunityService.getPosts());
+        else if (e.key === DB_KEYS.LISTINGS) setListings(await CommunityService.getListings());
+        else if (e.key === DB_KEYS.CHAT) setChatMessages(await CommunityService.getChatMessages());
+        else if (e.key === DB_KEYS.ALERTS) {
+          const parsed = e.newValue ? JSON.parse(e.newValue) : []; setAlerts(parsed);
+        } else if (e.key === DB_KEYS.USER_PROFILE) {
+          const p = await db.getUserProfile(); if (p && p.name !== GUEST_USER.name) setUserProfile(p);
+        }
+      } catch (syncErr) {
+        console.warn('[FarmContext] Cross-tab sync error for', e.key, syncErr);
       }
     };
     window.addEventListener('storage', onStorage);
@@ -443,6 +462,32 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         phoneNumber: data.phoneNumber,
         location: data.location,
       };
+
+      // SECURITY/CONSISTENCY: Persist ALL new state to localStorage BEFORE
+      // setting React state / flags. This way, if a save throws (quota etc.),
+      // we don't leave the app in a half-signed-in state with empty localStorage
+      // that would render a blank dashboard after refresh.
+      try {
+        await db.saveUserProfile(newProfile);
+        await CropService.replaceAll(countryCfg.defaultCrops);
+        await LivestockService.replaceAll(countryCfg.defaultLivestock);
+        await MarketService.replaceAll(countryCfg.marketPrices);
+        await CommunityService.replaceAllListings(countryCfg.marketplaceListings);
+        await CommunityService.replaceAllPosts(countryCfg.forumPosts);
+        await CommunityService.replaceAllChatMessages(countryCfg.chatMessages);
+        db.saveTasks(countryCfg.tasks);
+        db.saveModules(countryCfg.learningModules);
+        await db.saveAlerts(countryCfg.alerts);
+        await db.saveTrends(countryCfg.trends);
+        await db.saveSuggestedUsers(countryCfg.suggestedUsers);
+        await db.saveStories(countryCfg.stories);
+      } catch (dbErr) {
+        console.warn('[FarmContext] Critical DB save failed during login:', dbErr);
+        showToast('Could not save your farm data. Sign-in aborted.', 'error');
+        return;
+      }
+
+      // Only after persistence succeeds, update in-memory state and flags.
       setUserProfile(newProfile);
       setIsSignedIn(true);
       localStorage.setItem('agriflow_is_signed_in', 'true');
@@ -461,25 +506,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setStories(countryCfg.stories);
 
       if (countryCfg.weatherDefaults) {
-        setWeather(prev => ({ ...prev, ...countryCfg.weatherDefaults }));
-      }
-
-      try {
-        await db.saveUserProfile(newProfile);
-        await CropService.replaceAll(countryCfg.defaultCrops);
-        await LivestockService.replaceAll(countryCfg.defaultLivestock);
-        await MarketService.replaceAll(countryCfg.marketPrices);
-        await CommunityService.replaceAllListings(countryCfg.marketplaceListings);
-        await CommunityService.replaceAllPosts(countryCfg.forumPosts);
-        await CommunityService.replaceAllChatMessages(countryCfg.chatMessages);
-        db.saveTasks(countryCfg.tasks);
-        db.saveModules(countryCfg.learningModules);
-        await db.saveAlerts(countryCfg.alerts);
-        await db.saveTrends(countryCfg.trends);
-        await db.saveSuggestedUsers(countryCfg.suggestedUsers);
-        await db.saveStories(countryCfg.stories);
-      } catch (dbErr) {
-        console.warn('[FarmContext] Non-critical DB save failed during login:', dbErr);
+        setWeather(prev => ({ ...prev, ...countryCfg.weatherDefaults! }));
       }
 
       showToast(`Welcome, ${newProfile.name}! Your ${countryCfg.name} dashboard is ready.`, 'success');
@@ -538,6 +565,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setSuggestedUsers([]);
     setFollowedUserIds([]);
     setLikedPostIds([]);
+    setBookmarkedPostIds([]);
     setAlerts([]);
     setNewsArticles([]);
     setPollData([
@@ -548,6 +576,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setPollVoted(null);
     setLaborInput(null);
     setResourceResult(null);
+    setCropExpenses([]);
+    setCropIncomes([]);
     showToast('Signed out successfully', 'info');
   }, [showToast]);
 

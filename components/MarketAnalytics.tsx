@@ -36,6 +36,19 @@ const MarketAnalytics: React.FC = () => {
     const days = timeRange === '1W' ? 7 : timeRange === '1M' ? 30 : 90;
     const data = [];
     let priceWalker = currentItem.price;
+
+    // Seeded RNG so the displayed history is stable per (crop, range). The
+    // previous version called Math.random() inside the effect, which regenerated
+    // meaningless data on every marketPrices refresh and made the chart flicker.
+    let seed = 0;
+    for (let i = 0; i < selectedCrop.length; i++) {
+      seed = (seed * 31 + selectedCrop.charCodeAt(i)) >>> 0;
+    }
+    seed = (seed + days * 2654435761) >>> 0;
+    const rng = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 0x100000000;
+    };
     
     for (let i = 0; i < days; i++) {
       const date = new Date();
@@ -44,13 +57,13 @@ const MarketAnalytics: React.FC = () => {
       data.unshift({
         date: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
         price: Number(priceWalker.toFixed(2)),
-        volume: Math.floor(Math.random() * 10000) + 2000,
-        ma: Number((priceWalker * (1 + (Math.random() * 0.05 - 0.025))).toFixed(2))
+        volume: Math.floor(rng() * 10000) + 2000,
+        ma: Number((priceWalker * (1 + (rng() * 0.05 - 0.025))).toFixed(2))
       });
 
       const volatility = currentItem.price * 0.02;
-      const change = (Math.random() - 0.5) * volatility;
-      priceWalker += (Math.random() > 0.5 ? -change : change);
+      const change = (rng() - 0.5) * volatility;
+      priceWalker += (rng() > 0.5 ? -change : change);
     }
     setHistoryData(data);
   }, [selectedCrop, timeRange, marketPrices]);

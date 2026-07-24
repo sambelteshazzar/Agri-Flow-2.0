@@ -105,8 +105,11 @@ const QATab: React.FC<QATabProps> = ({
           <div className="p-5">
             <div className="flex items-start gap-4">
               <div className="flex flex-col items-center gap-1 shrink-0 pt-0.5">
-                <button onClick={() => onLikeQuestion(q.id)} aria-label="Upvote question" className="p-1 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded-lg transition-colors">
-                  <ThumbsUp className={`w-5 h-5 ${q.likes > 0 ? 'text-jade-500' : 'text-[var(--text-tertiary)]'}`} />
+                <button onClick={() => onLikeQuestion(q.id)} aria-label="Upvote question" aria-pressed={typeof localStorage !== 'undefined' && localStorage.getItem(`qa_liked_${userProfile.name}`) === q.id} className="p-1 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded-lg transition-colors">
+                  {(() => {
+                    const liked = typeof localStorage !== 'undefined' && localStorage.getItem(`qa_liked_${userProfile.name}`) === q.id;
+                    return <ThumbsUp className={`w-5 h-5 ${liked ? 'text-jade-500 fill-jade-500' : (q.likes > 0 ? 'text-jade-500' : 'text-[var(--text-tertiary)]')}`} />;
+                  })()}
                 </button>
                 <span className="text-sm font-bold text-[var(--text-secondary)]">{q.likes}</span>
               </div>

@@ -313,14 +313,14 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
                   </div>
                   <button
                     onClick={() => startEditExpense(exp)}
-                    className="opacity-0 group-hover:opacity-100 p-1.5 text-jade-500 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded transition-opacity"
+                    className="opacity-100 md:opacity-0 md:group-hover:opacity-100 p-1.5 text-jade-500 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded transition-opacity"
                     aria-label="Edit expense"
                   >
                     <Pencil className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => { if (window.confirm('Delete this expense?')) onDeleteExpense(exp.id); }}
-                    className="opacity-0 group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-opacity"
+                    className="opacity-100 md:opacity-0 md:group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-opacity"
                     aria-label="Delete expense"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -344,14 +344,14 @@ const CropFinancialsModal: React.FC<CropFinancialsModalProps> = ({
                   </div>
                   <button
                     onClick={() => startEditIncome(inc)}
-                    className="opacity-0 group-hover:opacity-100 p-1.5 text-jade-500 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded transition-opacity"
+                    className="opacity-100 md:opacity-0 md:group-hover:opacity-100 p-1.5 text-jade-500 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded transition-opacity"
                     aria-label="Edit income"
                   >
                     <Pencil className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => { if (window.confirm('Delete this income entry?')) onDeleteIncome(inc.id); }}
-                    className="opacity-0 group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-opacity"
+                    className="opacity-100 md:opacity-0 md:group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-opacity"
                     aria-label="Delete income"
                   >
                     <Trash2 className="w-4 h-4" />

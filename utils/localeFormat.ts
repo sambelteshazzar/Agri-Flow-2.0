@@ -27,3 +27,21 @@ export function formatArea(value: number, unit: AreaUnit): string {
 export function formatAreaLabel(unit: AreaUnit): string {
   return unit === 'acres' ? 'Acres' : 'Hectares';
 }
+
+/**
+ * Render an ISO timestamp as a short relative-time label.
+ * Reused across the app so alerts, posts, and replies stay consistent.
+ */
+export function getRelativeTime(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return 'Recently';
+  const now = new Date();
+  const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+  if (diff < 60) return 'Just now';
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  const days = Math.floor(diff / 86400);
+  if (days < 30) return `${days}d ago`;
+  return date.toLocaleDateString();
+}

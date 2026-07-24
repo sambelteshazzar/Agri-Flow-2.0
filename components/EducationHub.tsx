@@ -34,7 +34,12 @@ const EducationHub: React.FC = () => {
   const handleStartCourse = (id: string) => {
     const mod = learningModules.find(m => m.id === id);
     setActiveCourseId(id);
-    setCurrentLessonIdx(mod && mod.completed ? (mod.lessonsCount - 1) : (mod && mod.completedLessons.length > 0 ? Math.max(...mod.completedLessons) + 1 : 0));
+    // Clamp the resume index to the valid lesson range. Math.max(...completedLessons) + 1
+    // can equal lessonsCount when the final lesson was completed, causing
+    // lessons[idx] to be undefined downstream and crash the render.
+    const maxCompleted = mod && mod.completedLessons.length > 0 ? Math.max(...mod.completedLessons) : -1;
+    const resumeIdx = mod && mod.completed ? (mod.lessonsCount - 1) : Math.min(Math.max(maxCompleted + 1, 0), mod ? mod.lessonsCount - 1 : 0);
+    setCurrentLessonIdx(resumeIdx);
     setIsPlaying(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

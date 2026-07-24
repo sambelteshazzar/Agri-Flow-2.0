@@ -1,5 +1,5 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Sprout, BrainCircuit, ChevronRight, BarChart3, Globe, Zap, CloudLightning, ArrowUpRight, ArrowDownRight, Users, Leaf, GraduationCap, HardHat, Calculator, MessageSquare, Database, Code, Layers, Shield, Cpu } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 
@@ -13,7 +13,14 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
   const aboutRef = useRef<HTMLDivElement>(null);
   const architectureRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null); // This is the scrollable viewport
+  const rafRef = useRef<number | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
     if (ref.current) {
@@ -22,13 +29,18 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      setMousePosition({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-    }
+    if (!containerRef.current) return;
+    // Throttle via requestAnimationFrame so a mousemove storm does not
+    // re-render the whole landing page on every pixel.
+    if (rafRef.current != null) return;
+    const x = e.clientX;
+    const y = e.clientY;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      setMousePosition({ x: x - rect.left, y: y - rect.top });
+    });
   };
 
   const handlePlaceholderLink = (e: React.MouseEvent, name: string) => {
@@ -116,10 +128,7 @@ const GetStarted: React.FC<GetStartedProps> = ({ onStart }) => {
            {/* CTA Buttons */}
            <div className="flex flex-col md:flex-row gap-5 items-center animate-fade-in-up">
               <button 
-                onClick={() => {
-                  console.log('GetStarted button clicked');
-                  onStart();
-                }}
+                onClick={() => onStart()}
                 className="group px-10 py-5 bg-jade-600 hover:bg-jade-500 text-white font-bold text-lg rounded-full transition-all shadow-[0_0_30px_rgba(22,163,74,0.3)] hover:shadow-[0_0_50px_rgba(22,163,74,0.5)] flex items-center gap-3 w-full md:w-auto justify-center"
               >
                 Sign in
