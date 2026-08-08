@@ -180,6 +180,11 @@ export class WeatherService {
   } catch (e) {
     if (e instanceof Error && e.name === 'AbortError') {
       console.warn('OWM request timeout');
+    } else {
+      // Log non-Abort errors so silent failures (network, 4xx, JSON parse)
+      // aren't invisible — the user silently falls back to simulated weather
+      // and we want to know why in the console.
+      console.warn('OWM fetch failed (falling back to simulated weather):', e);
     }
     return null;
   }

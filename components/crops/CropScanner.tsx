@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { X, AlertTriangle, Upload, Loader2 } from 'lucide-react';
 import { analyzeCropImage, isAIConfigured } from '@/services/geminiService';
 import type { CountryContext } from '@/services/geminiService';
+import { useEscapeClose } from '@/utils/useEscapeClose';
 
 interface CropScannerProps {
   isOpen: boolean;
@@ -16,6 +17,8 @@ const CropScanner: React.FC<CropScannerProps> = ({ isOpen, onClose, countryCtx }
   const [isScanning, setIsScanning] = useState(false);
   const [isResultSimulated, setIsResultSimulated] = useState(false);
   const scanInputRef = useRef<HTMLInputElement>(null);
+
+  useEscapeClose(isOpen, onClose);
 
   const handleScanUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -54,9 +57,16 @@ const CropScanner: React.FC<CropScannerProps> = ({ isOpen, onClose, countryCtx }
         <div className="p-6 overflow-y-auto">
           {!scanResult ? (
             <div className="space-y-6">
-              <div onClick={() => scanInputRef.current?.click()} className={`border-4 border-dashed rounded-lg p-10 flex flex-col items-center justify-center cursor-pointer ${scanImage ? 'border-jade-600 bg-jade-50 dark:bg-jade-900/20' : 'border-[var(--text-secondary)] bg-[var(--bg-card)]'}`}>
+              <div
+                onClick={() => scanInputRef.current?.click()}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scanInputRef.current?.click(); } }}
+                role="button"
+                tabIndex={0}
+                aria-label="Upload crop image for analysis"
+                className={`border-4 border-dashed rounded-lg p-10 flex flex-col items-center justify-center cursor-pointer focus:outline-none focus:ring-4 focus:ring-jade-500/30 ${scanImage ? 'border-jade-600 bg-jade-50 dark:bg-jade-900/20' : 'border-[var(--text-secondary)] bg-[var(--bg-card)]'}`}
+              >
                 <input type="file" accept="image/*" className="hidden" ref={scanInputRef} onChange={handleScanUpload} />
-                {scanImage ? <img src={scanImage} className="max-h-48 object-contain" /> : <><Upload className="w-12 h-12 text-[var(--text-secondary)] mb-4" /><p className="text-[var(--text-primary)] font-semibold">Tap to Upload</p></>}
+                {scanImage ? <img src={scanImage} alt="Uploaded crop preview" className="max-h-48 object-contain" /> : <><Upload className="w-12 h-12 text-[var(--text-secondary)] mb-4" /><p className="text-[var(--text-primary)] font-semibold">Tap to Upload</p></>}
               </div>
               <textarea value={scanContext} onChange={e => setScanContext(e.target.value)} className="w-full p-3 border-2 border-[var(--border-card)] rounded font-medium text-[var(--text-primary)] placeholder-[var(--text-secondary)] bg-[var(--bg-content)] focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-jade-500/10" placeholder="Add specific observation notes here..." rows={3} />
               <button onClick={performScan} disabled={!scanImage || isScanning} className="w-full py-4 bg-red-600 text-white font-semibold hover:bg-red-700 rounded-sm shadow-md flex items-center justify-center">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Image as ImageIcon } from 'lucide-react';
 import { UserProfile, ForumPost } from '@/types';
+import { useEscapeClose } from '@/utils/useEscapeClose';
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
   isOpen, onClose, newPost, setNewPost,
   postImage, setPostImage, onSubmit, userProfile, postFileRef, onFileRead,
 }) => {
+  useEscapeClose(isOpen, onClose);
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-jade-950/60 backdrop-blur-sm animate-fade-in">

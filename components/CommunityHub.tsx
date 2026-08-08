@@ -70,7 +70,8 @@ const CommunityHub: React.FC = () => {
   const [introBgError, setIntroBgError] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const storyTimerRef = useRef<any>(null);
+  // storyTimerRef removed: rAF-based story progress now cleans up via the
+  // effect's own closure, no module-level ref needed.
   const storyFileRef = useRef<HTMLInputElement>(null);
   const postFileRef = useRef<HTMLInputElement>(null);
   const listingFileRef = useRef<HTMLInputElement>(null);
@@ -137,22 +138,31 @@ const CommunityHub: React.FC = () => {
   }, [expandedPostId, getPostReplies, showToast]);
 
   useEffect(() => {
-    if (viewingStory) {
-      setStoryProgress(0);
-      const startTime = Date.now();
-      const duration = 5000; 
-      const interval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(100, (elapsed / duration) * 100);
-        setStoryProgress(progress);
-        if (progress >= 100) setViewingStory(null);
-      }, 50);
-      storyTimerRef.current = interval;
-      return () => clearInterval(interval);
-    } else {
+    if (!viewingStory) {
       setStoryProgress(0);
       return undefined;
     }
+    setStoryProgress(0);
+    const startTime = Date.now();
+    const duration = 5000;
+    let rafId: number | null = null;
+    // Use requestAnimationFrame instead of setInterval(50) — the interval
+    // version ran ~100 setState calls/sec and re-rendered the whole hub on
+    // every tick; rAF only fires when the tab is visible AND aligns to paint.
+    const tick = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(100, (elapsed / duration) * 100);
+      setStoryProgress(progress);
+      if (progress >= 100) {
+        setViewingStory(null);
+        return; // stop the loop; no need to schedule another rAF
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => {
+      if (rafId != null) cancelAnimationFrame(rafId);
+    };
   }, [viewingStory]);
 
   const handleAuthRequiredAction = (action: () => void) => {
@@ -283,7 +293,10 @@ const CommunityHub: React.FC = () => {
 
   const handleStoryShare = () => {
     if (newStoryImage) {
-      setLocalStories(prev => [{id: `story-${Date.now()}`, name: userProfile.name, img: newStoryImage, hasUpdate: true, isUser: false}, ...prev]);
+      // Mark the user's own story as isUser: true so it renders with the
+      // correct "your story" affordance (was hardcoded to false, meaning
+      // the user's just-shared story appeared as someone else's).
+      setLocalStories(prev => [{id: `story-${Date.now()}`, name: userProfile.name, img: newStoryImage, hasUpdate: true, isUser: true}, ...prev]);
       setIsStoryModalOpen(false);
       setNewStoryImage(null);
       showToast('Story posted', 'success');

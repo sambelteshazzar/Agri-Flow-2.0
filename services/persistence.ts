@@ -40,7 +40,15 @@ const simulateNetworkDelay = async () => {
 };
 
 class PersistenceService {
-  
+  // Tracks the most recent failed write so callers can surface a toast to the
+  // user when localStorage quota is exhausted (5MB typical). Previously the
+  // setItem boolean was returned but no caller checked it, so saves silently
+  // failed forever and the app kept saying "saved".
+  private lastWriteFailed = false;
+
+  getLastWriteFailed(): boolean { return this.lastWriteFailed; }
+  clearLastWriteFailed(): void { this.lastWriteFailed = false; }
+
   // --- CORE STORAGE METHODS ---
 
   private getItem<T>(key: string, defaultValue: T): T {
@@ -56,10 +64,13 @@ class PersistenceService {
   private setItem<T>(key: string, value: T): boolean {
     try {
       localStorage.setItem(key, JSON.stringify(value));
+      this.lastWriteFailed = false;
       return true;
     } catch (error) {
+      // Storage full (QuotaExceeded) or disabled (private mode). Flag so the
+      // UI layer can warn the user instead of pretending the save succeeded.
+      this.lastWriteFailed = true;
       console.error(`[DB Write Error] Key: ${key}`, error);
-      // In a real app, we might trigger a 'Storage Full' UI alert here
       return false;
     }
   }

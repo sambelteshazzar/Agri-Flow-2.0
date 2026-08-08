@@ -281,6 +281,12 @@ const AIAdvisor: React.FC = () => {
     }
   };
 
+  // Cancellation token: each submit increments this counter. When an async
+  // response resolves, we compare its captured ID to the latest — if a newer
+  // request has started, we silently drop the stale response instead of
+  // appending it after the newer one (was causing out-of-order chat bubbles).
+  const latestRequestIdRef = useRef(0);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if ((!inputText.trim() && !selectedImage) || isLoading) return;
@@ -305,6 +311,9 @@ const AIAdvisor: React.FC = () => {
     setIncludeContext(false);
     setIsLoading(true);
 
+    const myRequestId = ++latestRequestIdRef.current;
+    const isStale = () => latestRequestIdRef.current !== myRequestId;
+
     try {
       let responseText = '';
       let responseSources = undefined;
@@ -319,6 +328,10 @@ const AIAdvisor: React.FC = () => {
         if (result.isSimulated) responseSimulated = true;
       }
 
+      // Drop the response if the user has started a newer request while we
+      // were awaiting this one. Also drop on unmount (component gone).
+      if (isStale()) return;
+
       const modelMsg: ChatMessage = {
         id: genId(),
         role: 'model',
@@ -329,6 +342,7 @@ const AIAdvisor: React.FC = () => {
       };
       setMessages(prev => [...prev, modelMsg]);
     } catch (error) {
+      if (isStale()) return;
       const errorMsg: ChatMessage = {
         id: genId(),
         role: 'model',
@@ -337,7 +351,9 @@ const AIAdvisor: React.FC = () => {
       };
       setMessages(prev => [...prev, errorMsg]);
     } finally {
-      setIsLoading(false);
+      // Only clear loading if this is still the latest request — otherwise
+      // a newer submit is in flight and owns the loading spinner.
+      if (!isStale()) setIsLoading(false);
     }
   };
 

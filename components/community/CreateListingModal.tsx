@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Image as ImageIcon } from 'lucide-react';
 import { MarketplaceListing, UserProfile } from '@/types';
+import { useEscapeClose } from '@/utils/useEscapeClose';
 
 interface CreateListingModalProps {
   isOpen: boolean;
@@ -20,9 +21,10 @@ const CreateListingModal: React.FC<CreateListingModalProps> = ({
   listingImage, setListingImage, onSubmit, showToast,
   listingFileRef, onFileRead,
 }) => {
+  useEscapeClose(isOpen, onClose);
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-jade-950/60 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-jade-950/60 backdrop-blur-sm animate-fade-in" role="dialog" aria-modal="true" aria-label="Create marketplace listing">
       <div className="bg-[var(--bg-card)] w-full max-w-md rounded-2xl shadow-2xl p-6 relative max-h-[90vh] overflow-y-auto">
         <button onClick={onClose} aria-label="Close" className="absolute top-4 right-4 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"><X className="w-6 h-6" aria-hidden="true" /></button>
         <div className="mb-6"><h3 className="font-semibold text-2xl text-[var(--text-primary)] font-heading">New Listing</h3><p className="text-[var(--text-secondary)] text-xs mt-1">Marketplace / Create</p></div>
@@ -31,7 +33,17 @@ const CreateListingModal: React.FC<CreateListingModalProps> = ({
             <button type="button" onClick={() => setNewListing({...newListing, type: 'SELL'})} className={`py-3 font-bold text-xs rounded-lg transition-all ${newListing.type === 'SELL' ? 'bg-[var(--bg-card)] text-jade-700 dark:text-jade-400 shadow-sm' : 'text-[var(--text-secondary)]'}`}>SELL ITEM</button>
             <button type="button" onClick={() => setNewListing({...newListing, type: 'BUY'})} className={`py-3 font-bold text-xs rounded-lg transition-all ${newListing.type === 'BUY' ? 'bg-[var(--bg-card)] text-blue-700 dark:text-blue-400 shadow-sm' : 'text-[var(--text-secondary)]'}`}>REQUEST ITEM</button>
           </div>
-          <div onClick={() => listingFileRef.current?.click()} className={`w-full h-32 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors relative overflow-hidden ${listingImage ? 'border-jade-500' : 'border-[var(--border-card)] hover:border-[var(--text-tertiary)] hover:bg-[var(--bg-content)]'}`}><input type="file" ref={listingFileRef} accept="image/*" onChange={(e) => onFileRead(e.target.files?.[0], (res) => setListingImage(res))} className="hidden" />{listingImage ? <img src={listingImage} alt="Preview" className="w-full h-full object-cover" /> : <><ImageIcon className="w-8 h-8 text-[var(--text-tertiary)] mb-2" /><span className="text-xs font-semibold text-[var(--text-secondary)]">Upload Item Photo</span></>}</div>
+          <div
+            onClick={() => listingFileRef.current?.click()}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); listingFileRef.current?.click(); } }}
+            role="button"
+            tabIndex={0}
+            aria-label="Upload item photo"
+            className={`w-full h-32 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-jade-500/30 ${listingImage ? 'border-jade-500' : 'border-[var(--border-card)] hover:border-[var(--text-tertiary)] hover:bg-[var(--bg-content)]'}`}
+          >
+            <input type="file" ref={listingFileRef} accept="image/*" onChange={(e) => onFileRead(e.target.files?.[0], (res) => setListingImage(res))} className="hidden" />
+            {listingImage ? <img src={listingImage} alt="Listing photo preview" className="w-full h-full object-cover" /> : <><ImageIcon className="w-8 h-8 text-[var(--text-tertiary)] mb-2" /><span className="text-xs font-semibold text-[var(--text-secondary)]">Upload Item Photo</span></>}
+          </div>
           <div className="space-y-4">
             <input placeholder="Item Name" value={newListing.item} onChange={e => setNewListing({...newListing, item: e.target.value})} className="w-full p-3 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl font-bold outline-none text-[var(--text-primary)] text-sm" required />
             <div className="grid grid-cols-2 gap-4">

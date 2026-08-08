@@ -16,6 +16,10 @@ const ALPHA_VANTAGE_SYMBOLS: Record<string, { symbol: string; name: string; unit
 const CACHE_KEY = 'alphavantage_market_cache';
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
+// Module-level in-flight promise so two concurrent refreshes don't both hit
+// the rate-limited API.
+let inflightFetch: Promise<MarketPrice[]> | null = null;
+
 function getCache(): Map<string, { data: MarketPrice[]; timestamp: number }> {
   if (typeof window === 'undefined') return new Map();
   try {
@@ -80,32 +84,61 @@ export async function fetchRealMarketPrices(): Promise<MarketPrice[]> {
 
   if (!isAlphaVantageConfigured()) return [];
 
-  const results: MarketPrice[] = [];
-  
-  // Fetch for each commodity we care about
-  for (const [name, info] of Object.entries(ALPHA_VANTAGE_SYMBOLS)) {
-    try {
-      const result = await fetchFromAlphaVantage(info.symbol);
-      if (result) {
-        results.push({
-          cropName: info.name,
-          price: result.price,
-          unit: info.unit,
-          trend: 'stable',
-          changePercentage: 0,
-          inputCostIndex: 100,
-        });
+  // In-flight dedupe: if a fetch is already running, await it instead of
+  // starting a second one (which would hit the API rate limit instantly).
+  if (inflightFetch) return inflightFetch;
+
+  inflightFetch = (async () => {
+    const results: MarketPrice[] = [];
+
+    // Free Alpha Vantage tier is 5 req/min. We split the ~9 symbols into two
+    // batches of 5 (with one overlap allowed) and run each batch in parallel.
+    // Total wall time: ~12s + 60s = 72s in the worst case (was 96s serial),
+    // and concurrent calls inside a batch don't trip the per-minute cap.
+    const symbols = Object.entries(ALPHA_VANTAGE_SYMBOLS);
+    const BATCH_SIZE = 5;
+    const runBatch = async (batch: typeof symbols): Promise<MarketPrice[]> => {
+      const settled = await Promise.all(
+        batch.map(async ([name, info]): Promise<MarketPrice | null> => {
+          try {
+            const result = await fetchFromAlphaVantage(info.symbol);
+            if (result) {
+              return {
+                cropName: info.name,
+                price: result.price,
+                unit: info.unit,
+                trend: 'stable',
+                changePercentage: 0,
+                inputCostIndex: 100,
+              } satisfies MarketPrice;
+            }
+          } catch {
+            // swallow — handled by returning null, filtered below
+          }
+          return null;
+        })
+      );
+      return settled.filter((r): r is MarketPrice => r !== null);
+    };
+
+    for (let i = 0; i < symbols.length; i += BATCH_SIZE) {
+      const batch = symbols.slice(i, i + BATCH_SIZE);
+      const batchResults = await runBatch(batch);
+      results.push(...batchResults);
+      // If there's a next batch, wait ~60s to respect the 5 req/min cap.
+      if (i + BATCH_SIZE < symbols.length) {
+        await new Promise(r => setTimeout(r, 60000));
       }
-      // Rate limit: 5 requests/minute for free tier
-      await new Promise(r => setTimeout(r, 12000));
-    } catch {
-      continue;
     }
-  }
 
-  if (results.length > 0) {
-    setCache('latest', results);
-  }
+    if (results.length > 0) {
+      setCache('latest', results);
+    }
 
-  return results;
+    return results;
+  })().finally(() => {
+    inflightFetch = null;
+  });
+
+  return inflightFetch;
 }

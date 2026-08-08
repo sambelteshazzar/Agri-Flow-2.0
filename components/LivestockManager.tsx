@@ -4,6 +4,7 @@ import { Plus, Trash2, Pencil, X, Beef, Tag, ClipboardList, Calendar, HeartPulse
 import { Livestock, LogEntry } from '../types';
 import { analyzeCropImage, CountryContext, isAIConfigured } from '../services/geminiService';
 import { ImageUpload } from '@/components/ui/ImageUpload';
+import { useEscapeClose } from '@/utils/useEscapeClose';
 
 import { getStockImage } from '@/utils/stockImages';
 
@@ -51,6 +52,11 @@ const LivestockManager: React.FC = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [isScanSimulated, setIsScanSimulated] = useState(false);
   const scanInputRef = useRef<HTMLInputElement>(null);
+
+  // Modal Escape handling — closes whichever modal is open. Mirrors WAI-ARIA
+  // dialog pattern (Escape dismisses a modal) and restores focus on close.
+  useEscapeClose(isRecordsModalOpen, () => setIsRecordsModalOpen(false));
+  useEscapeClose(isScannerOpen, () => setIsScannerOpen(false));
 
   const openRecordsModal = async (id: string) => {
     setSelectedAnimalId(id);
@@ -412,10 +418,17 @@ const LivestockManager: React.FC = () => {
               <div className="p-6 overflow-y-auto">
                  {!scanResult ? (
                    <div className="space-y-6">
-                       <div onClick={() => scanInputRef.current?.click()} className={`border-4 border-dashed rounded-lg p-10 flex flex-col items-center justify-center cursor-pointer ${scanImage ? 'border-red-600 bg-red-50 dark:bg-red-900/20' : 'border-jade-500 dark:border-jade-600 bg-[var(--bg-card)] dark:bg-jade-800'}`}>
-                          <input type="file" accept="image/*" className="hidden" ref={scanInputRef} onChange={handleScanUpload} />
-                          {scanImage ? <img src={scanImage} className="max-h-48 object-contain" /> : <><Upload className="w-12 h-12 text-[var(--text-secondary)] mb-4" /><p className="text-[var(--text-primary)] dark:text-[var(--text-primary)] font-semibold">Tap to Upload Photo</p></>}
-                      </div>
+                        <div
+                          onClick={() => scanInputRef.current?.click()}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scanInputRef.current?.click(); } }}
+                          role="button"
+                          tabIndex={0}
+                          aria-label="Upload livestock photo for analysis"
+                          className={`border-4 border-dashed rounded-lg p-10 flex flex-col items-center justify-center cursor-pointer focus:outline-none focus:ring-4 focus:ring-jade-500/30 ${scanImage ? 'border-red-600 bg-red-50 dark:bg-red-900/20' : 'border-jade-500 dark:border-jade-600 bg-[var(--bg-card)] dark:bg-jade-800'}`}
+                        >
+                           <input type="file" accept="image/*" className="hidden" ref={scanInputRef} onChange={handleScanUpload} />
+                           {scanImage ? <img src={scanImage} alt="Uploaded livestock preview" className="max-h-48 object-contain" /> : <><Upload className="w-12 h-12 text-[var(--text-secondary)] mb-4" /><p className="text-[var(--text-primary)] dark:text-[var(--text-primary)] font-semibold">Tap to Upload Photo</p></>}
+                       </div>
                       <textarea value={scanContext} onChange={e => setScanContext(e.target.value)} className="w-full p-3 border-2 border-[var(--border-card)] dark:border-jade-600 rounded font-medium text-[var(--text-primary)] placeholder-[var(--text-secondary)] dark:placeholder-[var(--text-tertiary)] bg-[var(--bg-card)] dark:bg-jade-800 focus:outline-none focus:border-red-500" placeholder="Add specific observation notes (e.g., lethargy, spots, limping)..." rows={3} />
                       <button onClick={performScan} disabled={!scanImage || isScanning} className="w-full py-4 bg-red-600 text-white font-semibold hover:bg-red-700 rounded-sm shadow-md flex items-center justify-center">
                         {isScanning ? <Loader2 className="animate-spin w-5 h-5 mr-2" /> : 'Run Analysis'}

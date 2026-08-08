@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, HelpCircle, Sparkles } from 'lucide-react';
+import { useEscapeClose } from '@/utils/useEscapeClose';
 
 interface AskQuestionModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface AskQuestionModalProps {
 const AskQuestionModal: React.FC<AskQuestionModalProps> = ({
   isOpen, onClose, newQuestion, setNewQuestion, onSubmit,
 }) => {
+  useEscapeClose(isOpen, onClose);
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-jade-950/60 backdrop-blur-sm animate-fade-in">

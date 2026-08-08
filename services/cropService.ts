@@ -65,15 +65,23 @@ export class CropService {
 
   static calculateProjectedYield(crop: Crop, marketPricePerUnit: number): number {
     // Base yield per acre (hypothetical generic unit)
-    let baseYield = 100; 
+    let baseYield = 100;
 
-    // Modifiers based on health
+    // Modifiers based on soil health. 'Unknown' soil gets a small penalty so
+    // it doesn't silently inherit the 'Good' multiplier — the user should be
+    // incented to assess the plot rather than leave it unmeasured.
     if (crop.soilHealth === 'Excellent') baseYield *= 1.2;
-    if (crop.soilHealth === 'Degraded') baseYield *= 0.7;
-    
-    // Modifiers based on water efficiency
+    else if (crop.soilHealth === 'Good') baseYield *= 1.0;
+    else if (crop.soilHealth === 'Degraded') baseYield *= 0.7;
+    else baseYield *= 0.85; // Unknown
+
+    // Modifiers based on water efficiency. Same logic — Unknown is not free.
     if (crop.waterEfficiency === 'High') baseYield *= 1.1;
-    if (crop.waterEfficiency === 'Low') baseYield *= 0.9;
+    else if (crop.waterEfficiency === 'Moderate') baseYield *= 1.0;
+    else if (crop.waterEfficiency === 'Low') baseYield *= 0.9;
+    else baseYield *= 0.92; // Unknown — defensive fallback (CurrentCrop type
+                             // only allows the three above, but legacy data
+                             // may have other values)
 
     const totalYield = baseYield * crop.area;
     return Math.floor(totalYield * marketPricePerUnit);
