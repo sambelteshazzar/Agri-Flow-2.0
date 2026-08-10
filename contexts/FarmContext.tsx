@@ -548,7 +548,6 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     Object.values(DB_KEYS).forEach(key => localStorage.removeItem(key));
     localStorage.removeItem('agriflow_theme');
     localStorage.removeItem('agriflow_is_signed_in');
-    localStorage.removeItem('agriflow_has_started');
     localStorage.removeItem('agriflow_credentials');
     setUserProfile(GUEST_USER);
     setIsSignedIn(false);
@@ -670,7 +669,6 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     Object.values(DB_KEYS).forEach(key => localStorage.removeItem(key));
     localStorage.removeItem('agriflow_theme');
     localStorage.removeItem('agriflow_is_signed_in');
-    localStorage.removeItem('agriflow_has_started');
     localStorage.removeItem('agriflow_credentials');
     window.location.reload();
   }, []);

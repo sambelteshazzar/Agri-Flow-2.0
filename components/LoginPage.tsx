@@ -64,7 +64,6 @@ const handleSignIn = async (e: React.FormEvent) => {
     setIsLoading(true);
     try {
       await onLogin({ email: trimmedEmail, password: trimmedPassword, remember });
-      localStorage.setItem('agriflow_has_started', 'true');
       onClose();
     } catch (err: any) {
       if (err?.message) {

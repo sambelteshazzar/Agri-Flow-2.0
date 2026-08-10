@@ -43,10 +43,7 @@ const LazyLoader: React.FC = () => (
 const AppContent: React.FC = () => {
   const { userProfile, alerts, isSignedIn, login, signIn, logout, toasts, removeToast, currentView, navigate, dismissAlert, dismissAllAlerts } = useFarm();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [hasStarted, setHasStarted] = useState(() => 
-    localStorage.getItem('agriflow_has_started') === 'true' || 
-    localStorage.getItem('agriflow_is_signed_in') === 'true'
-  );
+  const [hasStarted, setHasStarted] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   useEffect(() => {
     const goOnline = () => setIsOnline(true);
@@ -151,7 +148,6 @@ const AppContent: React.FC = () => {
 
    const handleStart = () => {
      setHasStarted(true);
-     localStorage.setItem('agriflow_has_started', 'true');
    };
      const handleOpenAuth = () => {
        setIsAuthModalOpen(true);
@@ -185,7 +181,6 @@ const AppContent: React.FC = () => {
   const handleLogout = () => {
     logout();
     setHasStarted(false);
-    localStorage.removeItem('agriflow_has_started');
     navigate(NavigationTab.DASHBOARD);
     setIsMobileOpen(false);
   };
@@ -195,7 +190,6 @@ const AppContent: React.FC = () => {
        await signIn(data.email, data.password);
        setIsAuthModalOpen(false);
        setHasStarted(true);
-       localStorage.setItem('agriflow_has_started', 'true');
        navigate(NavigationTab.DASHBOARD);
      } catch (err) {
        console.error('[AgriFlow] Sign-in failed:', err);
@@ -209,7 +203,6 @@ const handleSignup = async (data: OnboardingData & { email: string; password: st
         localStorage.setItem('agriflow_credentials', JSON.stringify({ email: data.email, passwordHash: hash }));
         setIsAuthModalOpen(false);
         setHasStarted(true);
-        localStorage.setItem('agriflow_has_started', 'true');
         navigate(NavigationTab.DASHBOARD);
       } catch (err) {
         console.error('[AgriFlow] Sign-up failed:', err);
