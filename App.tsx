@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 
 import { Avatar } from '@/utils/avatar';
 import { Menu, Wifi, WifiOff, Globe, Bell, X, AlertTriangle, TrendingUp, Info, LogIn, User, Loader2, CheckCircle, AlertCircle, Info as InfoIcon, Search, Command } from 'lucide-react';
 import Sidebar from './components/Sidebar';
-import MobileNav from './components/MobileNav';
 import CommandPalette from './components/CommandPalette';
 import GetStarted from './components/GetStarted';
 import { LoginPage } from './components/LoginPage';
@@ -292,7 +291,7 @@ const handleSignup = async (data: OnboardingData & { email: string; password: st
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden w-full relative pb-24 md:pb-0">
+      <div className="flex-1 flex flex-col h-full overflow-hidden w-full relative">
 
         {/* TOP HEADER */}
         <header className="h-[72px] bg-white/80 dark:bg-[#12261A]/80 backdrop-blur-xl border-b border-terra-200/60 dark:border-[#1E5A47]/60 shrink-0 flex items-center justify-between px-4 md:px-8 z-20 transition-colors">
@@ -446,8 +445,6 @@ const handleSignup = async (data: OnboardingData & { email: string; password: st
         </footer>
       </div>
 
-      {/* MOBILE BOTTOM NAV */}
-      <MobileNav activeTab={currentView} onNavigate={navigate} />
     </div>
   );
 };
