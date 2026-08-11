@@ -139,7 +139,7 @@ const FeedTab: React.FC<FeedTabProps> = ({
                          <p className="text-xs text-[var(--text-secondary)] font-medium">{post.category} • {getRelativeTime(post.date)}</p>
                       </div>
                    </div>
-                    <button onClick={() => { if (post.author === userProfile.name) { deletePost(post.id); } else { showToast("Post reported to moderators", "info"); } }} className="text-[var(--text-tertiary)] hover:bg-[var(--bg-content)] p-2 rounded-full"><MoreHorizontal className="w-5 h-5"/></button>
+                    <button onClick={() => { if (post.author === userProfile.name) { deletePost(post.id); } else { showToast("Post reported to moderators", "info"); } }} className="text-[var(--text-tertiary)] hover:bg-[var(--bg-content)] p-2 rounded-full" aria-label="Post options"><MoreHorizontal className="w-5 h-5"/></button>
                 </div>
                 
                 <h5 className="font-bold text-[var(--text-primary)] mb-2">{post.title}</h5>
@@ -151,13 +151,13 @@ const FeedTab: React.FC<FeedTabProps> = ({
                   </div>
                 )}
 
-                <div className="flex justify-between items-center text-xs text-[var(--text-secondary)] font-semibold organic-divider pt-4 mt-2">
+<div className="flex justify-between items-center text-xs text-[var(--text-secondary)] font-semibold organic-divider pt-4 mt-2">
                     <div className="flex gap-4">
-                       <button onClick={() => likePost(post.id)} className={`flex items-center gap-1.5 hover:text-red-500 transition-colors ${likedPostIds.includes(post.id) ? 'text-red-500' : ''}`}><Heart className={`w-4 h-4 ${likedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> {post.likes} Likes</button>
-                       <button onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)} className="flex items-center gap-1.5 hover:text-blue-500 transition-colors"><MessageCircle className="w-4 h-4"/> {post.replies} Comments</button>
-                       <button onClick={() => handleAuthRequiredAction(() => toggleBookmark(post.id))} className={`flex items-center gap-1.5 hover:text-amber-500 transition-colors ${bookmarkedPostIds.includes(post.id) ? 'text-amber-600' : ''}`}><Bookmark className={`w-4 h-4 ${bookmarkedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> Save</button>
+                        <button onClick={() => likePost(post.id)} className={`flex items-center gap-1.5 hover:text-red-500 transition-colors ${likedPostIds.includes(post.id) ? 'text-red-500' : ''}`} aria-label={`Like post (${post.likes} likes)`}><Heart className={`w-4 h-4 ${likedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> {post.likes} Likes</button>
+                        <button onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)} className="flex items-center gap-1.5 hover:text-blue-500 transition-colors" aria-label={`View comments (${post.replies} comments)`}><MessageCircle className="w-4 h-4"/> {post.replies} Comments</button>
+                        <button onClick={() => handleAuthRequiredAction(() => toggleBookmark(post.id))} className={`flex items-center gap-1.5 hover:text-amber-500 transition-colors ${bookmarkedPostIds.includes(post.id) ? 'text-amber-600' : ''}`} aria-label="Bookmark post"><Bookmark className={`w-4 h-4 ${bookmarkedPostIds.includes(post.id) ? 'fill-current' : ''}`}/> Save</button>
                     </div>
-                     <button onClick={() => { const text = `${post.title} - ${post.content.slice(0, 100)}`; navigator.clipboard?.writeText(text).then(() => showToast("Link copied to clipboard!", "success")).catch(() => showToast("Share link copied!", "success")); }} className="flex items-center gap-1.5 hover:text-jade-500 transition-colors"><Share2 className="w-4 h-4"/> Share</button>
+                      <button onClick={() => { const text = `${post.title} - ${post.content.slice(0, 100)}`; navigator.clipboard?.writeText(text).then(() => showToast("Link copied to clipboard!", "success")).catch(() => showToast("Share link copied!", "success")); }} className="flex items-center gap-1.5 hover:text-jade-500 transition-colors" aria-label="Share post"><Share2 className="w-4 h-4"/> Share</button>
                 </div>
              </div>
              

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { 
   Users, ShoppingBag, Search, CheckCircle, MapPin, Plus, X, Send, Hash, 
   ThumbsUp, Share2, MoreHorizontal, Image as ImageIcon, Heart, MessageCircle, TrendingUp,
@@ -11,6 +11,15 @@ import {
 import { useFarm } from '../contexts/FarmContext';
 import { MarketplaceListing, ForumPost, ForumReply, Story, NavigationTab } from '../types';
 import { CommunityTab, LocationAlerts } from './community/types';
+import { CHANNELS } from '../constants/community';
+import { useLocationAlerts } from '../hooks/useLocationAlerts';
+import { useCommunity } from '../contexts/CommunityContext';
+import { useFeed } from '../hooks/community/useFeed';
+import { useQA } from '../hooks/community/useQA';
+import { useMarket } from '../hooks/community/useMarket';
+import { useChat } from '../hooks/community/useChat';
+import { useStories } from '../hooks/community/useStories';
+import { useSidebar } from '../hooks/community/useSidebar';
 import IntroOverlay from './community/IntroOverlay';
 import RightSidebar from './community/RightSidebar';
 import FeedTab from './community/FeedTab';
@@ -36,80 +45,31 @@ const CommunityHub: React.FC = () => {
     pollData, pollVoted, handlePollVote,
     navigate
   } = useFarm();
-  
+
+  const community = useCommunity();
+
   const [showIntro, setShowIntro] = useState(() => !localStorage.getItem('agriflow_community_intro_dismissed'));
   const [activeTab, setActiveTab] = useState<CommunityTab>('FEED');
-
-  const [localStories, setLocalStories] = useState<Story[]>([]);
-  const [viewingStory, setViewingStory] = useState<Story | null>(null);
-  const [storyMessage, setStoryMessage] = useState('');
-  const [storyReacted, setStoryReacted] = useState(false);
-  const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
-  const [newStoryImage, setNewStoryImage] = useState<string | null>(null);
-  const [storyProgress, setStoryProgress] = useState(0);
-  
-  const [isListingModalOpen, setIsListingModalOpen] = useState(false);
-  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
-  const [newPost, setNewPost] = useState<Partial<ForumPost>>({ title: '', category: 'General', author: userProfile.name, content: '' });
-  const [postImage, setPostImage] = useState<string | null>(null);
-  const [newListing, setNewListing] = useState<Partial<MarketplaceListing>>({ type: 'SELL', item: '', price: '', location: '', contact: '' });
-  const [listingImage, setListingImage] = useState<string | null>(null);
-  const [activeChannel, setActiveChannel] = useState('general');
-  const [chatInput, setChatInput] = useState('');
-  const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
-  const [activePostReplies, setActivePostReplies] = useState<ForumReply[]>([]);
-  const [replyInput, setReplyInput] = useState('');
-
-  const [expandedQuestionId, setExpandedQuestionId] = useState<string | null>(null);
-  const [newQuestion, setNewQuestion] = useState({ title: '', body: '', category: 'General' });
-  const [newAnswer, setNewAnswer] = useState('');
-  const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
-  const [qaSearchQuery, setQaSearchQuery] = useState('');
-  const [qaCategoryFilter, setQaCategoryFilter] = useState('ALL');
-  const [challengeProgress, setChallengeProgress] = useState<Record<string, number>>({});
-  
   const [avatarError, setAvatarError] = useState(false);
   const [introBgError, setIntroBgError] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
 
-  // storyTimerRef removed: rAF-based story progress now cleans up via the
-  // effect's own closure, no module-level ref needed.
-  const storyFileRef = useRef<HTMLInputElement>(null);
-  const postFileRef = useRef<HTMLInputElement>(null);
-  const listingFileRef = useRef<HTMLInputElement>(null);
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  // Use hooks
+  const feed = useFeed();
+  const qa = useQA();
+  const market = useMarket();
+  const chat = useChat();
+  const stories = useStories();
+  const sidebar = useSidebar();
 
-  const CHANNELS = [
-    { id: 'general', name: 'General', desc: 'Main hub', icon: Globe },
-    { id: 'crops', name: 'Crops Talk', desc: 'Planting & Seeds', icon: Leaf },
-    { id: 'livestock', name: 'Livestock', desc: 'Herd health', icon: BadgeCheck },
-    { id: 'equipment', name: 'Equipment', desc: 'Repairs & Sharing', icon: Tractor },
-    { id: 'market-watch', name: 'Market Watch', desc: 'Prices & Trends', icon: TrendingUp },
-    { id: 'knowledge', name: 'Knowledge Base', desc: 'Q&A & Tips', icon: BookOpen },
-    { id: 'co-ops', name: 'Co-ops', desc: 'Organize & Buy', icon: Handshake },
-  ];
-
-  const locationAlerts: LocationAlerts = useMemo(() => {
-    const weatherAlerts = alerts.filter(a => a.category === 'WEATHER').slice(0, 2);
-    const priceAlerts = marketPrices
-      .filter(p => Math.abs(p.changePercentage) >= 5)
-      .slice(0, 3)
-      .map(p => ({
-        id: `price-${p.cropName}`,
-        title: `${p.cropName} Price ${p.trend === 'up' ? 'Surge' : 'Drop'}`,
-        message: `${p.cropName} is ${p.trend === 'up' ? 'up' : 'down'} ${Math.abs(p.changePercentage).toFixed(1)}% this week`,
-        severity: Math.abs(p.changePercentage) >= 10 ? 'high' : 'medium' as 'high' | 'medium'
-      }));
-    return { weather: weatherAlerts, prices: priceAlerts };
-  }, [alerts, marketPrices]);
+  const locationAlerts = useLocationAlerts(alerts, marketPrices);
 
   const filteredQuestions = useMemo(() => {
     let result = questions;
-    if (qaCategoryFilter !== 'ALL') {
-      result = result.filter(q => q.category === qaCategoryFilter);
+    if (qa.qaCategoryFilter !== 'ALL') {
+      result = result.filter(q => q.category === qa.qaCategoryFilter);
     }
-    if (qaSearchQuery) {
-      const q = qaSearchQuery.toLowerCase();
+    if (qa.qaSearchQuery) {
+      const q = qa.qaSearchQuery.toLowerCase();
       result = result.filter(quest => 
         quest.title.toLowerCase().includes(q) || 
         quest.body.toLowerCase().includes(q) || 
@@ -117,171 +77,7 @@ const CommunityHub: React.FC = () => {
       );
     }
     return result;
-  }, [questions, qaSearchQuery, qaCategoryFilter]);
-
-  const prevStoriesRef = useRef<Story[]>([]);
-  useEffect(() => {
-    if (contextStories !== prevStoriesRef.current) {
-      prevStoriesRef.current = contextStories;
-      setLocalStories(prev => prev.length === 0 ? contextStories : [...contextStories, ...prev.filter(ls => !contextStories.some(cs => cs.id === ls.id))]);
-    }
-  }, [contextStories]);
-
-  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
-    if (activeTab === 'GROUPS') {
-      scrollTimerRef.current = setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
-    }
-    return () => { if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current); };
-  }, [chatMessages, activeTab, activeChannel]);
-
-  useEffect(() => {
-    if (expandedPostId) getPostReplies(expandedPostId).then(setActivePostReplies).catch(() => showToast("Failed to load comments", "error"));
-  }, [expandedPostId, getPostReplies, showToast]);
-
-  useEffect(() => {
-    if (!viewingStory) {
-      setStoryProgress(0);
-      return undefined;
-    }
-    setStoryProgress(0);
-    const startTime = Date.now();
-    const duration = 5000;
-    let rafId: number | null = null;
-    // Use requestAnimationFrame instead of setInterval(50) — the interval
-    // version ran ~100 setState calls/sec and re-rendered the whole hub on
-    // every tick; rAF only fires when the tab is visible AND aligns to paint.
-    const tick = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(100, (elapsed / duration) * 100);
-      setStoryProgress(progress);
-      if (progress >= 100) {
-        setViewingStory(null);
-        return; // stop the loop; no need to schedule another rAF
-      }
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-    return () => {
-      if (rafId != null) cancelAnimationFrame(rafId);
-    };
-  }, [viewingStory]);
-
-  const handleAuthRequiredAction = (action: () => void) => {
-    if (isSignedIn) action();
-    else showToast('Please sign in to perform this action', 'info');
-  };
-
-  const handleFileRead = (file: File | undefined, callback: (result: string) => void) => {
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => callback(reader.result as string);
-      reader.onerror = () => showToast("Failed to read file", "error");
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const getRelativeTime = (dateString: string) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return 'Recently';
-    const now = new Date();
-    const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
-    if (diff < 60) return 'Just now';
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-    return date.toLocaleDateString();
-  };
-
-  const handleQuestionSubmit = async () => {
-    if (!newQuestion.title.trim()) return;
-    await addQuestion({
-      title: newQuestion.title,
-      body: newQuestion.body,
-      category: newQuestion.category,
-      author: userProfile.name,
-      authorAvatar: userProfile.avatar,
-    });
-    setNewQuestion({ title: '', body: '', category: 'General' });
-    setIsQuestionModalOpen(false);
-  };
-
-  const handleAnswerSubmit = async (questionId: string) => {
-    if (!newAnswer.trim()) return;
-    await addAnswer(questionId, {
-      author: userProfile.name,
-      authorAvatar: userProfile.avatar,
-      content: newAnswer,
-      isExpert: false,
-    });
-    setNewAnswer('');
-  };
-
-  const handleLikeQuestion = async (questionId: string) => {
-    await toggleQuestionLike(questionId);
-  };
-
-  const handleAcceptAnswer = async (questionId: string, answerId: string) => {
-    await toggleAnswerAccepted(questionId, answerId);
-  };
-
-  const handleJoinChallenge = (id: string) => {
-    if (challengeProgress[id] !== undefined) return;
-    setChallengeProgress(prev => ({ ...prev, [id]: 10 }));
-    showToast('Joined challenge! Check back for progress.', 'success');
-  };
-
-  const handlePostSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newPost.content) {
-      await addPost({ ...newPost, title: newPost.title || newPost.content.substring(0, 30)+'...', author: userProfile.name, image: postImage } as any);
-      setIsPostModalOpen(false);
-      setNewPost({ title: '', category: 'General', author: userProfile.name, content: '' });
-      setPostImage(null);
-    }
-  };
-
-  const handleListingSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newListing.item || !newListing.price) {
-      showToast("Please provide an item name and price", "error");
-      return;
-    }
-    try {
-      await addListing({ ...newListing, seller: userProfile.name, image: listingImage } as any);
-      setIsListingModalOpen(false);
-      setNewListing({ type: 'SELL', item: '', price: '', location: '', contact: '' });
-      setListingImage(null);
-    } catch (err) {
-    }
-  };
-
-  const handleContactSeller = (item: MarketplaceListing) => {
-    const isEmail = item.contact.includes('@');
-    if (isEmail) {
-      window.open(`mailto:${item.contact}`, '_blank');
-    } else {
-      navigator.clipboard?.writeText(item.contact).then(() => showToast('Contact copied to clipboard', 'success')).catch(() => showToast(`Contact: ${item.contact}`, 'info'));
-    }
-  };
-
-  const handleStoryClose = () => {
-    setViewingStory(null);
-    setStoryMessage('');
-    setStoryReacted(false);
-  };
-
-  const handleStoryShare = () => {
-    if (newStoryImage) {
-      // Mark the user's own story as isUser: true so it renders with the
-      // correct "your story" affordance (was hardcoded to false, meaning
-      // the user's just-shared story appeared as someone else's).
-      setLocalStories(prev => [{id: `story-${Date.now()}`, name: userProfile.name, img: newStoryImage, hasUpdate: true, isUser: true}, ...prev]);
-      setIsStoryModalOpen(false);
-      setNewStoryImage(null);
-      showToast('Story posted', 'success');
-    }
-  };
+  }, [questions, qa.qaSearchQuery, qa.qaCategoryFilter]);
 
   const tabConfig: { key: CommunityTab; label: string; icon: React.ElementType; color: string; desktopLabel: string }[] = [
     { key: 'FEED', label: 'Feed', icon: LayoutGrid, color: 'field', desktopLabel: 'Global Feed' },
@@ -292,293 +88,303 @@ const CommunityHub: React.FC = () => {
 
   return (
     <div className="h-full w-full relative overflow-hidden bg-[var(--bg-app)]">
-      {showIntro && <IntroOverlay showIntro={showIntro} onDismiss={() => { setShowIntro(false); localStorage.setItem('agriflow_community_intro_dismissed', '1'); }} />}
+      {/* INTRO OVERLAY */}
+      {showIntro && (
+        <IntroOverlay 
+          onDismiss={() => {
+            localStorage.setItem('agriflow_community_intro_dismissed', 'true');
+            setShowIntro(false);
+          }}
+          bgError={introBgError}
+          setIntroBgError={setIntroBgError}
+        />
+      )}
 
-      <div className="h-full flex flex-col lg:grid lg:grid-cols-12 gap-6 p-4 lg:p-6 overflow-y-hidden">
-        
-        {/* LEFT SIDEBAR */}
-        <div className="hidden lg:flex lg:col-span-3 flex-col gap-6 overflow-y-auto custom-scrollbar h-full">
-           {/* Profile Card */}
-           <div className="card-surface overflow-hidden relative group">
-              <div className="h-24 bg-gradient-to-r from-jade-800 to-jade-950 relative">
-                 {isSignedIn && (
-                   <button 
-                     onClick={() => navigate(NavigationTab.SETTINGS)} 
-                     className="absolute top-3 right-3 p-1.5 bg-white/10 text-white rounded-full hover:bg-white/20 transition-colors backdrop-blur-md z-10"
-                     title="Settings"
-                   >
-                     <Settings className="w-4 h-4"/>
-                   </button>
-                 )}
-              </div>
-              <div className="px-6 pb-6 -mt-12 relative z-10">
-                 <div className="w-24 h-24 rounded-full border-4 border-white dark:border-[var(--bg-card)] shadow-md bg-[var(--bg-content)] overflow-hidden mx-auto mb-4 relative">
-                    {!avatarError && userProfile?.avatar ? (
-                      <img 
-                        src={userProfile.avatar} 
-                        alt="Profile" 
-                        className="w-full h-full object-cover" 
-                        onError={() => setAvatarError(true)} 
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-terra-300 dark:bg-[var(--bg-content)] text-[var(--text-secondary)] dark:text-[var(--text-secondary)] font-black text-3xl">
-                        {(userProfile?.name || 'G').charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                 </div>
-                 <div className="text-center">
-                    <h3 className="font-black text-[var(--text-primary)] text-xl flex items-center justify-center gap-1.5">
-                      {userProfile?.name || 'Guest'} {isSignedIn && <BadgeCheck className="w-5 h-5 text-blue-500 fill-blue-100" />}
-                    </h3>
-                    <p className="text-xs text-[var(--text-secondary)] font-semibold mb-4">
-                      {userProfile?.role || 'Visitor'} • {userProfile?.farmName || 'Unregistered'}
-                    </p>
-                    <div className="grid grid-cols-3 gap-2 border-t border-[var(--border-card)] pt-4">
-                       <div className="text-center"><span className="block font-black text-[var(--text-primary)] text-lg">{userProfile?.posts ?? 0}</span><span className="text-[10px] text-[var(--text-tertiary)] font-semibold">Posts</span></div>
-                       <div className="text-center border-l border-r border-[var(--border-card)]"><span className="block font-black text-[var(--text-primary)] text-lg">{userProfile?.followers ?? 0}</span><span className="text-[10px] text-[var(--text-tertiary)] font-semibold">Fans</span></div>
-                       <div className="text-center"><span className="block font-black text-[var(--text-primary)] text-lg">{userProfile?.following ?? 0}</span><span className="text-[10px] text-[var(--text-tertiary)] font-semibold">Following</span></div>
-                    </div>
-                 </div>
-              </div>
-           </div>
-
-           {/* Navigation Menu */}
-           <div className="card-surface p-2">
-              <nav className="space-y-1">
-                 {tabConfig.map(tab => {
-                   const Icon = tab.icon;
-                   return (
-                     <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all ${activeTab === tab.key ? 'bg-[var(--bg-content)] text-[var(--text-primary)] shadow-sm' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-content)]'}`}>
-                       <Icon className={`w-5 h-5 ${activeTab === tab.key ? `text-${tab.color}-500` : ''}`} /> {tab.desktopLabel}
-                     </button>
-                   );
-                 })}
-              </nav>
-           </div>
-
-           {/* Start a Co-op Card */}
-           <div className="bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-950/30 dark:to-jade-900/20 rounded-3xl shadow-sm border border-jade-200 dark:border-jade-800/40 p-6">
-               <div className="flex items-center gap-3 mb-3">
-                  <div className="bg-jade-100 dark:bg-jade-900/40 p-2.5 rounded-xl">
-                     <Handshake className="w-5 h-5 text-jade-600 dark:text-jade-400" />
+      {/* MOBILE TABS */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-jade-950/95 backdrop-blur-xl border-t border-terra-200/50 dark:border-jade-800/50 safe-area-bottom shadow-[0_-4px_20px_rgba(58,39,25,0.06)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
+        <div className="flex flex-col">
+          <div className="flex items-center justify-around h-12 px-2">
+            {tabConfig.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all rounded-xl ${
+                    isActive ? 'text-jade-600 dark:text-jade-400' : 'text-terra-400 dark:text-jade-500'
+                  }`}
+                >
+                  <div className={`relative p-1.5 rounded-xl transition-all ${isActive ? 'bg-jade-50 dark:bg-jade-900/30' : ''}`}>
+                    <Icon className={`w-5 h-5 ${isActive ? 'scale-110' : ''} transition-transform`} />
+                    {isActive && <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-jade-500 shadow-sm shadow-jade-500/50" />}
                   </div>
-                  <div>
-                     <h4 className="font-bold text-jade-900 dark:text-jade-200 text-sm">Start a Co-op</h4>
-                     <p className="text-[10px] text-jade-600 dark:text-jade-400 font-medium">Pool resources with nearby farmers</p>
-                  </div>
-               </div>
-               <p className="text-xs text-jade-700 dark:text-jade-300 mb-4 leading-relaxed">Buy inputs in bulk, share equipment costs, and negotiate better prices together.</p>
-                 <button onClick={() => handleAuthRequiredAction(() => { sendChatMessage({ channelId: 'co-ops', author: userProfile.name, text: `[Cooperative Formation] ${userProfile.name} is starting a new cooperative! Reply here to join.`, isMe: true, avatar: userProfile.avatar }); showToast('Cooperative formation announced in community chat!', 'success'); })} className="w-full py-2.5 bg-jade-600 hover:bg-jade-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2">
-                 <Users className="w-4 h-4" /> Create Cooperative
-              </button>
-           </div>
-
-           {/* Upcoming Events Mini */}
-           <div className="card-surface p-6">
-              <div className="flex justify-between items-center mb-4">
-                 <h4 className="font-semibold text-[var(--text-primary)] text-xs">Upcoming Events</h4>
-              </div>
-              <div className="space-y-4">
-                 {[
-                    { id: 1, title: 'Soil Regeneration Webinar', date: 'OCT 24', time: '2:00 PM WAT', type: 'Online' },
-                    { id: 2, title: 'Regional Machinery Auction', date: 'NOV 02', time: '9:00 AM WAT', type: 'In-Person' },
-                   { id: 3, title: 'Co-op Annual Meeting', date: 'NOV 15', time: '10:00 AM', type: 'Hybrid' },
-                 ].map(evt => (
-                     <div key={evt.id} className="flex gap-3 group cursor-pointer" onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(evt.title + ' agriculture farming 2026')}`, '_blank', 'noopener,noreferrer')}>
-                       <div className="bg-[var(--bg-content)] rounded-xl p-2.5 flex flex-col items-center justify-center min-w-[50px] border border-[var(--border-card)]">
-                          <span className="text-[9px] font-semibold text-red-500">{evt.date.split(' ')[0]}</span>
-                          <span className="text-lg font-black text-[var(--text-primary)] leading-none">{evt.date.split(' ')[1]}</span>
-                       </div>
-                       <div className="flex-1">
-                          <h5 className="text-xs font-bold text-[var(--text-primary)] group-hover:text-blue-500 transition-colors line-clamp-2">{evt.title}</h5>
-                          <p className="text-[10px] text-[var(--text-secondary)] mt-1">{evt.time} • {evt.type}</p>
-                       </div>
-                    </div>
-                 ))}
-              </div>
-           </div>
-         </div>
-
-        {/* CENTER COLUMN */}
-        <div className="flex-1 lg:col-span-6 flex flex-col overflow-hidden h-full rounded-t-3xl lg:rounded-3xl bg-white/50 dark:bg-[var(--bg-card)]/50 lg:bg-transparent">
-           
-           {/* Mobile Tabs */}
-           <div className="lg:hidden flex bg-[var(--bg-card)] border-b border-[var(--border-card)] sticky top-0 z-20 shrink-0">
-              {tabConfig.map(tab => (
-                <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`flex-1 py-4 text-xs font-semibold border-b-2 ${activeTab === tab.key ? `border-${tab.color}-500 text-${tab.color}-600 dark:text-${tab.color}-400` : 'border-transparent text-[var(--text-secondary)]'}`}>{tab.label}</button>
-              ))}
-           </div>
-
-           <div className="flex-1 overflow-y-auto custom-scrollbar p-0 lg:pr-2 pb-20">
-              {activeTab === 'FEED' && (
-                <FeedTab
-                  localStories={localStories}
-                  viewingStory={viewingStory}
-                  setViewingStory={setViewingStory}
-                  setIsStoryModalOpen={setIsStoryModalOpen}
-                  posts={posts}
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  expandedPostId={expandedPostId}
-                  setExpandedPostId={setExpandedPostId}
-                  activePostReplies={activePostReplies}
-                  replyInput={replyInput}
-                  setReplyInput={setReplyInput}
-                  likedPostIds={likedPostIds}
-                  bookmarkedPostIds={bookmarkedPostIds}
-                  userProfile={userProfile}
-                  isSignedIn={isSignedIn}
-                  avatarError={avatarError}
-                  setAvatarError={setAvatarError}
-                  likePost={likePost}
-                  toggleBookmark={toggleBookmark}
-                  addPostReply={addPostReply}
-                  setActivePostReplies={setActivePostReplies}
-                  showToast={showToast}
-                  deletePost={deletePost}
-                  handleAuthRequiredAction={handleAuthRequiredAction}
-                  setIsPostModalOpen={setIsPostModalOpen}
-                  getRelativeTime={getRelativeTime}
-                  locationAlerts={locationAlerts}
-                  mobileRightSidebar={<RightSidebar userProfile={userProfile} isSignedIn={isSignedIn} pollData={pollData} pollVoted={pollVoted} handlePollVote={handlePollVote} trends={trends} suggestedUsers={suggestedUsers} followedUserIds={followedUserIds} alerts={alerts} marketPrices={marketPrices} challengeProgress={challengeProgress} onJoinChallenge={handleJoinChallenge} onAuthRequiredAction={handleAuthRequiredAction} showToast={showToast} sendChatMessage={sendChatMessage} navigate={navigate} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} toggleFollowUser={toggleFollowUser} />}
-                />
-              )}
-
-              {activeTab === 'MARKET' && (
-                <MarketTab
-                  listings={listings}
-                  userProfile={userProfile}
-                  onAuthRequiredAction={handleAuthRequiredAction}
-                  onMarkSold={markListingSold}
-                  setIsListingModalOpen={setIsListingModalOpen}
-                  onContactSeller={handleContactSeller}
-                  getRelativeTime={getRelativeTime}
-                  showToast={showToast}
-                />
-              )}
-
-              {activeTab === 'GROUPS' && (
-                <ChatTab
-                  channels={CHANNELS}
-                  activeChannel={activeChannel}
-                  setActiveChannel={setActiveChannel}
-                  chatMessages={chatMessages}
-                  chatInput={chatInput}
-                  setChatInput={setChatInput}
-                  userProfile={userProfile}
-                  onSendChatMessage={sendChatMessage}
-                  chatEndRef={chatEndRef}
-                />
-              )}
-
-              {activeTab === 'QA' && (
-                <QATab
-                  questions={questions}
-                  filteredQuestions={filteredQuestions}
-                  expandedQuestionId={expandedQuestionId}
-                  setExpandedQuestionId={setExpandedQuestionId}
-                  newAnswer={newAnswer}
-                  setNewAnswer={setNewAnswer}
-                  isSignedIn={isSignedIn}
-                  userProfile={userProfile}
-                  qaSearchQuery={qaSearchQuery}
-                  setQaSearchQuery={setQaSearchQuery}
-                  qaCategoryFilter={qaCategoryFilter}
-                  setQaCategoryFilter={setQaCategoryFilter}
-                  onLikeQuestion={handleLikeQuestion}
-                  onAcceptAnswer={handleAcceptAnswer}
-                  onAnswerSubmit={handleAnswerSubmit}
-                  setIsQuestionModalOpen={setIsQuestionModalOpen}
-                  handleAuthRequiredAction={handleAuthRequiredAction}
-                  getRelativeTime={getRelativeTime}
-                />
-              )}
-           </div>
-        </div>
-
-        {/* RIGHT SIDEBAR */}
-        <div className="hidden lg:flex lg:col-span-3 flex-col gap-6 overflow-y-auto custom-scrollbar h-full">
-          <RightSidebar
-            userProfile={userProfile}
-            isSignedIn={isSignedIn}
-            pollData={pollData}
-            pollVoted={pollVoted}
-            handlePollVote={handlePollVote}
-            trends={trends}
-            suggestedUsers={suggestedUsers}
-            followedUserIds={followedUserIds}
-            alerts={alerts}
-            marketPrices={marketPrices}
-            challengeProgress={challengeProgress}
-            onJoinChallenge={handleJoinChallenge}
-            onAuthRequiredAction={handleAuthRequiredAction}
-            showToast={showToast}
-            sendChatMessage={sendChatMessage}
-            navigate={navigate}
-            setActiveTab={setActiveTab}
-            setSearchQuery={setSearchQuery}
-            toggleFollowUser={toggleFollowUser}
-          />
+                  <span className={`text-[10px] font-medium ${isActive ? 'text-jade-600 dark:text-jade-400 font-semibold' : ''}`}>
+                    {tab.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      <CreatePostModal
-        isOpen={isPostModalOpen}
-        onClose={() => { setIsPostModalOpen(false); setPostImage(null); }}
-        newPost={newPost}
-        setNewPost={setNewPost}
-        postImage={postImage}
-        setPostImage={setPostImage}
-        onSubmit={handlePostSubmit}
-        userProfile={userProfile}
-        postFileRef={postFileRef}
-        onFileRead={handleFileRead}
-      />
+      <div className="flex h-full w-full overflow-hidden">
+        {/* MAIN CONTENT AREA */}
+        <div className="flex-1 flex flex-col h-full overflow-hidden w-full relative md:pb-0">
+          {/* TOP HEADER */}
+          <header className="h-16 bg-white/80 dark:bg-[#12261A]/80 backdrop-blur-xl border-b border-terra-200/60 dark:border-[#1E5A47]/60 shrink-0 flex items-center justify-between px-4 md:px-8 z-20 transition-colors">
+            <div className="flex items-center">
+              <button
+                onClick={() => setActiveTab('FEED')}
+                className="md:hidden p-2 text-terra-600 dark:text-[#7BA896] hover:bg-terra-100 dark:hover:bg-[#163D2F] rounded-xl mr-3 focus:outline-none"
+                aria-label="Open Navigation Menu"
+              >
+                <Hash className="w-6 h-6" aria-hidden="true" />
+              </button>
+              <div>
+                <h1 className="text-xl md:text-2xl font-bold text-primary-dynamic tracking-tight font-heading">
+                  {tabConfig.find(t => t.key === activeTab)?.desktopLabel || 'Community'}
+                </h1>
+                <p className="text-[10px] md:text-xs text-jade-600 dark:text-jade-400 font-medium hidden md:block">
+                  Connect, learn, and grow together
+                </p>
+              </div>
+            </div>
 
-      <CreateListingModal
-        isOpen={isListingModalOpen}
-        onClose={() => { setIsListingModalOpen(false); setListingImage(null); }}
-        newListing={newListing}
-        setNewListing={setNewListing}
-        listingImage={listingImage}
-        setListingImage={setListingImage}
-        onSubmit={handleListingSubmit}
-        showToast={showToast}
-        listingFileRef={listingFileRef}
-        onFileRead={handleFileRead}
-      />
+            <div className="flex items-center gap-2 md:gap-5">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-terra-400 dark:text-jade-500" />
+                <input
+                  type="text"
+                  value={community.searchQuery}
+                  onChange={e => community.setSearchQuery(e.target.value)}
+                  placeholder="Search community..."
+                  className="w-64 md:w-80 pl-10 pr-4 py-2 bg-terra-50 dark:bg-[#163D2F] border border-terra-200 dark:border-[#1E5A47] rounded-xl text-sm focus:outline-none focus:border-jade-500 transition-colors"
+                />
+              </div>
+            </div>
+          </header>
 
-      <AskQuestionModal
-        isOpen={isQuestionModalOpen}
-        onClose={() => { setIsQuestionModalOpen(false); setNewQuestion({ title: '', body: '', category: 'General' }); }}
-        newQuestion={newQuestion}
-        setNewQuestion={setNewQuestion}
-        onSubmit={handleQuestionSubmit}
-      />
+          {/* CONTENT */}
+          <main className="flex-1 overflow-auto p-4 md:p-8 bg-content dark:bg-[#0A1A0F] transition-colors custom-scrollbar">
+            <div className="max-w-7xl mx-auto h-full animate-page-enter">
+              <div className="flex h-full gap-8">
+                {/* LEFT CONTENT */}
+                <div className="flex-1 min-w-0">
+                  {activeTab === 'FEED' && (
+                    <FeedTab
+                      userProfile={userProfile}
+                      isSignedIn={isSignedIn}
+                      posts={feed.filteredPosts}
+                      likedPostIds={likedPostIds}
+                      bookmarkedPostIds={bookmarkedPostIds}
+                      expandedPostId={community.expandedPostId}
+                      setExpandedPostId={community.setExpandedPostId}
+                      activePostReplies={community.activePostReplies}
+                      setActivePostReplies={community.setActivePostReplies}
+                      replyInput={community.replyInput}
+                      setReplyInput={community.setReplyInput}
+                      newPost={community.newPost}
+                      setNewPost={community.setNewPost}
+                      postImage={community.postImage}
+                      setPostImage={community.setPostImage}
+                      isPostModalOpen={community.isPostModalOpen}
+                      setIsPostModalOpen={community.setIsPostModalOpen}
+                      onLikePost={feed.handleLike}
+                      onBookmarkPost={feed.handleBookmark}
+                      onSharePost={feed.handleShare}
+                      onDeletePost={feed.handleDeletePost}
+                      onReportPost={feed.handleReportPost}
+                      onExpandPost={feed.handleExpandPost}
+                      onReplySubmit={feed.handleReplySubmit}
+                      getRelativeTime={feed.getRelativeTime}
+                      handleFileRead={feed.handleFileRead}
+                      postFileRef={community.postFileRef}
+                      handlePostSubmit={feed.handlePostSubmit}
+                      handlePostImageChange={feed.handlePostImageChange}
+                      searchQuery={community.searchQuery}
+                      setSearchQuery={community.setSearchQuery}
+                      handleAuthRequiredAction={feed.handleAuthRequiredAction}
+                      onCreateStory={() => stories.setIsStoryModalOpen(true)}
+                    />
+                  )}
 
-      <StoryViewer
-        viewingStory={viewingStory}
-        storyProgress={storyProgress}
-        storyMessage={storyMessage}
-        setStoryMessage={setStoryMessage}
-        storyReacted={storyReacted}
-        setStoryReacted={setStoryReacted}
-        onClose={handleStoryClose}
-        sendChatMessage={sendChatMessage}
-        userProfile={userProfile}
-        showToast={showToast}
-      />
+                  {activeTab === 'GROUPS' && (
+                    <ChatTab
+                      channels={chat.CHANNELS}
+                      activeChannel={chat.activeChannel}
+                      setActiveChannel={chat.handleChannelChange}
+                      chatMessages={chat.channelMessages}
+                      chatInput={chat.chatInput}
+                      setChatInput={chat.setChatInput}
+                      userProfile={userProfile}
+                      onSendChatMessage={async (msg) => {
+                        await sendChatMessage(msg);
+                        chat.triggerTyping();
+                      }}
+                      chatEndRef={chat.chatEndRef}
+                      typingUser={chat.typingUser}
+                      getRelativeTime={chat.getRelativeTime}
+                      handleAuthRequiredAction={chat.handleAuthRequiredAction}
+                    />
+                  )}
 
-      <CreateStoryModal
-        isOpen={isStoryModalOpen}
-        onClose={() => { setIsStoryModalOpen(false); setNewStoryImage(null); }}
-        newStoryImage={newStoryImage}
-        setNewStoryImage={setNewStoryImage}
-        onShare={handleStoryShare}
-        storyFileRef={storyFileRef}
-        onFileRead={handleFileRead}
-      />
+                  {activeTab === 'MARKET' && (
+                    <MarketTab
+                      userProfile={userProfile}
+                      isSignedIn={isSignedIn}
+                      listings={market.filteredListings}
+                      searchQuery={market.searchQuery}
+                      setSearchQuery={market.setSearchQuery}
+                      typeFilter={market.typeFilter}
+                      setTypeFilter={market.setTypeFilter}
+                      isListingModalOpen={market.isListingModalOpen}
+                      setIsListingModalOpen={market.setIsListingModalOpen}
+                      newListing={market.newListing}
+                      setNewListing={market.setNewListing}
+                      listingImage={market.listingImage}
+                      setListingImage={market.setListingImage}
+                      onListingSubmit={market.handleListingSubmit}
+                      onListingImageChange={market.handleListingImageChange}
+                      onMarkSold={market.handleMarkSold}
+                      onContactSeller={market.handleContactSeller}
+                      handleAuthRequiredAction={market.handleAuthRequiredAction}
+                      listingFileRef={market.listingFileRef}
+                    />
+                  )}
 
+                  {activeTab === 'QA' && (
+                    <QATab
+                      questions={questions}
+                      filteredQuestions={filteredQuestions}
+                      expandedQuestionId={qa.expandedQuestionId}
+                      setExpandedQuestionId={qa.setExpandedQuestionId}
+                      newAnswer={qa.newAnswer}
+                      setNewAnswer={qa.setNewAnswer}
+                      isSignedIn={isSignedIn}
+                      userProfile={userProfile}
+                      qaSearchQuery={qa.qaSearchQuery}
+                      setQaSearchQuery={qa.setQaSearchQuery}
+                      qaCategoryFilter={qa.qaCategoryFilter}
+                      setQaCategoryFilter={qa.setQaCategoryFilter}
+                      onLikeQuestion={qa.handleLikeQuestion}
+                      onAcceptAnswer={qa.handleAcceptAnswer}
+                      onAnswerSubmit={qa.handleAnswerSubmit}
+                      setIsQuestionModalOpen={qa.setIsQuestionModalOpen}
+                      handleAuthRequiredAction={qa.handleAuthRequiredAction}
+                      getRelativeTime={qa.getRelativeTime}
+                      QA_CATEGORIES={qa.QA_CATEGORIES}
+                      newQuestion={qa.newQuestion}
+                      setNewQuestion={qa.setNewQuestion}
+                      isQuestionModalOpen={qa.isQuestionModalOpen}
+                      handleQuestionSubmit={qa.handleQuestionSubmit}
+                    />
+                  )}
+                </div>
+
+                {/* RIGHT SIDEBAR */}
+                <div className="hidden lg:block w-80 flex-shrink-0">
+                  <RightSidebar
+                    userProfile={userProfile}
+                    isSignedIn={isSignedIn}
+                    pollData={pollData}
+                    pollVoted={pollVoted}
+                    handlePollVote={handlePollVote}
+                    trends={trends}
+                    suggestedUsers={suggestedUsers}
+                    followedUserIds={followedUserIds}
+                    alerts={alerts}
+                    marketPrices={marketPrices}
+                    challengeProgress={sidebar.challengeProgress}
+                    onJoinChallenge={sidebar.handleJoinChallenge}
+                    onAuthRequiredAction={sidebar.handleAuthRequiredAction}
+                    showToast={showToast}
+                    sendChatMessage={sendChatMessage}
+                    navigate={navigate}
+                    setActiveTab={setActiveTab}
+                    setSearchQuery={community.setSearchQuery}
+                    toggleFollowUser={toggleFollowUser}
+                    locationAlerts={sidebar.locationAlerts}
+                    SEASONAL_CHALLENGES={sidebar.SEASONAL_CHALLENGES}
+                    FARMER_MATCHES={sidebar.FARMER_MATCHES}
+                    handleFollowUser={sidebar.handleFollowUser}
+                    handleMessageUser={sidebar.handleMessageUser}
+                    handleTrendingTopicClick={sidebar.handleTrendingTopicClick}
+                  />
+                </div>
+              </div>
+            </div>
+          </main>
+
+          {/* MODALS */}
+          {community.isPostModalOpen && (
+            <CreatePostModal
+              isOpen={community.isPostModalOpen}
+              onClose={() => community.setIsPostModalOpen(false)}
+              onSubmit={feed.handlePostSubmit}
+              newPost={community.newPost}
+              setNewPost={community.setNewPost}
+              postImage={community.postImage}
+              setPostImage={community.setPostImage}
+              handleImageChange={feed.handlePostImageChange}
+              postFileRef={community.postFileRef}
+            />
+          )}
+
+          {community.isListingModalOpen && (
+            <CreateListingModal
+              isOpen={community.isListingModalOpen}
+              onClose={() => community.setIsListingModalOpen(false)}
+              onSubmit={market.handleListingSubmit}
+              newListing={market.newListing}
+              setNewListing={market.setNewListing}
+              listingImage={market.listingImage}
+              setListingImage={market.setListingImage}
+              handleImageChange={market.handleListingImageChange}
+              listingFileRef={market.listingFileRef}
+            />
+          )}
+
+          {qa.isQuestionModalOpen && (
+            <AskQuestionModal
+              isOpen={qa.isQuestionModalOpen}
+              onClose={() => qa.setIsQuestionModalOpen(false)}
+              onSubmit={qa.handleQuestionSubmit}
+              newQuestion={qa.newQuestion}
+              setNewQuestion={qa.setNewQuestion}
+              QA_CATEGORIES={qa.QA_CATEGORIES}
+            />
+          )}
+
+          {community.isStoryModalOpen && (
+            <CreateStoryModal
+              isOpen={community.isStoryModalOpen}
+              onClose={() => community.setIsStoryModalOpen(false)}
+              onSubmit={stories.handleStorySubmit}
+              newStoryImage={community.newStoryImage}
+              setNewStoryImage={community.setNewStoryImage}
+              handleImageChange={stories.handleStoryImageChange}
+              storyFileRef={community.storyFileRef}
+            />
+          )}
+
+          {stories.viewingStory && (
+            <StoryViewer
+              viewingStory={stories.viewingStory}
+              storyProgress={stories.storyProgress}
+              storyMessage={stories.storyMessage}
+              setStoryMessage={stories.setStoryMessage}
+              storyReacted={stories.storyReacted}
+              setStoryReacted={stories.setStoryReacted}
+              onClose={stories.handleStoryClose}
+              sendChatMessage={sendChatMessage}
+              userProfile={userProfile}
+              showToast={showToast}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

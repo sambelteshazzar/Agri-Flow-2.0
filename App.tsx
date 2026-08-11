@@ -15,7 +15,7 @@ const MarketAnalytics = lazy(() => import('./components/MarketAnalytics'));
 const NewsHub = lazy(() => import('./components/NewsHub'));
 const AIAdvisor = lazy(() => import('./components/AIAdvisor'));
 const ResourceCalculator = lazy(() => import('./components/ResourceCalculator'));
-const CommunityHub = lazy(() => import('./components/CommunityHub'));
+const CommunityHub = lazy(() => import('./components/CommunityHubWrapper'));
 const FarmLaborPlanner = lazy(() => import('./components/FarmLaborPlanner'));
 const SettingsPage = lazy(() => import('./components/Settings'));
 const VoiceAgent = lazy(() => import('./components/VoiceAgent'));
