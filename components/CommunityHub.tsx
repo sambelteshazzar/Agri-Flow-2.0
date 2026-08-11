@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import { MarketplaceListing, ForumPost, ForumReply, Story, NavigationTab } from '../types';
-import { Question, CommunityTab, INITIAL_QUESTIONS, LocationAlerts } from './community/types';
+import { CommunityTab, LocationAlerts } from './community/types';
 import IntroOverlay from './community/IntroOverlay';
 import RightSidebar from './community/RightSidebar';
 import FeedTab from './community/FeedTab';
@@ -27,8 +27,11 @@ const CommunityHub: React.FC = () => {
   const { 
     userProfile, isSignedIn,
     listings, posts, chatMessages, stories: contextStories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
+    questions, likedQuestionIds,
     addListing, markListingSold, addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser,
+    // Q&A
+    addQuestion, addAnswer, toggleQuestionLike, toggleAnswerAccepted,
     showToast, weather, alerts, marketPrices,
     pollData, pollVoted, handlePollVote,
     navigate
@@ -57,7 +60,6 @@ const CommunityHub: React.FC = () => {
   const [activePostReplies, setActivePostReplies] = useState<ForumReply[]>([]);
   const [replyInput, setReplyInput] = useState('');
 
-  const [questions, setQuestions] = useState<Question[]>(INITIAL_QUESTIONS);
   const [expandedQuestionId, setExpandedQuestionId] = useState<string | null>(null);
   const [newQuestion, setNewQuestion] = useState({ title: '', body: '', category: 'General' });
   const [newAnswer, setNewAnswer] = useState('');
@@ -191,58 +193,36 @@ const CommunityHub: React.FC = () => {
     return date.toLocaleDateString();
   };
 
-  const handleQuestionSubmit = () => {
+  const handleQuestionSubmit = async () => {
     if (!newQuestion.title.trim()) return;
-    const q: Question = {
-      id: `q-${Date.now()}`,
-      author: userProfile.name,
+    await addQuestion({
       title: newQuestion.title,
       body: newQuestion.body,
       category: newQuestion.category,
-      answers: [],
-      likes: 0,
-      solved: false,
-      date: new Date().toISOString()
-    };
-    setQuestions(prev => [q, ...prev]);
+      author: userProfile.name,
+      authorAvatar: userProfile.avatar,
+    });
     setNewQuestion({ title: '', body: '', category: 'General' });
     setIsQuestionModalOpen(false);
-    showToast('Question posted', 'success');
   };
 
-  const handleAnswerSubmit = (questionId: string) => {
+  const handleAnswerSubmit = async (questionId: string) => {
     if (!newAnswer.trim()) return;
-    setQuestions(prev => prev.map(q => {
-      if (q.id !== questionId) return q;
-      return { ...q, answers: [...q.answers, { id: `a-${Date.now()}`, author: userProfile.name, content: newAnswer, isExpert: false, accepted: false, likes: 0, date: new Date().toISOString() }] };
-    }));
-    setNewAnswer('');
-    showToast('Answer posted', 'success');
-  };
-
-  const handleLikeQuestion = (questionId: string) => {
-    setQuestions(prev => {
-      // Prevent infinite like spam: each toggle adds/removes the user's
-      // implicit ID. Without this the same user could click infinitely.
-      const target = prev.find(q => q.id === questionId);
-      if (!target) return prev;
-      const userKey = `qa_liked_${userProfile.name}`;
-      const alreadyLiked = localStorage.getItem(userKey) === questionId;
-      if (alreadyLiked) {
-        localStorage.removeItem(userKey);
-        return prev.map(q => q.id === questionId ? { ...q, likes: Math.max(0, q.likes - 1) } : q);
-      }
-      localStorage.setItem(userKey, questionId);
-      return prev.map(q => q.id === questionId ? { ...q, likes: q.likes + 1 } : q);
+    await addAnswer(questionId, {
+      author: userProfile.name,
+      authorAvatar: userProfile.avatar,
+      content: newAnswer,
+      isExpert: false,
     });
+    setNewAnswer('');
   };
 
-  const handleAcceptAnswer = (questionId: string, answerId: string) => {
-    setQuestions(prev => prev.map(q => {
-      if (q.id !== questionId) return q;
-      return { ...q, solved: true, answers: q.answers.map(a => ({ ...a, accepted: a.id === answerId })) };
-    }));
-    showToast('Answer accepted', 'success');
+  const handleLikeQuestion = async (questionId: string) => {
+    await toggleQuestionLike(questionId);
+  };
+
+  const handleAcceptAnswer = async (questionId: string, answerId: string) => {
+    await toggleAnswerAccepted(questionId, answerId);
   };
 
   const handleJoinChallenge = (id: string) => {

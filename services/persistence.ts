@@ -1,5 +1,5 @@
 
-import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult, Story, SocialTrend, SuggestedUser, SystemAlert, CropExpense, CropIncome } from '../types';
+import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult, Story, SocialTrend, SuggestedUser, SystemAlert, CropExpense, CropIncome, Question, Answer } from '../types';
 import { GUEST_USER } from '../constants';
 
 // --- DATABASE KEYS ---
@@ -17,6 +17,7 @@ export const DB_KEYS = {
   CHAT: 'agriflow_chat',
   FOLLOWED_USERS: 'agriflow_followed_users',
   LIKED_POSTS: 'agriflow_liked_posts',
+  LIKED_QUESTIONS: 'agriflow_liked_questions',
   BOOKMARKED_POSTS: 'agriflow_bookmarked_posts',
   USER_PROFILE: 'agriflow_user_profile',
   LABOR_INPUT: 'agriflow_labor_input',
@@ -364,12 +365,20 @@ class PersistenceService {
     this.setItem(DB_KEYS.POLL_VOTED, voted);
   }
 
-  // 17. Q&A QUESTIONS
-  async getQuestions(): Promise<any[]> {
-    return this.getItem<any[]>(DB_KEYS.QUESTIONS, []);
+  async getLikedQuestionIds(): Promise<string[]> {
+    return this.getItem<string[]>(DB_KEYS.LIKED_QUESTIONS, []);
   }
 
-  async saveQuestions(questions: any[]): Promise<void> {
+  async saveLikedQuestionIds(ids: string[]): Promise<void> {
+    this.setItem(DB_KEYS.LIKED_QUESTIONS, ids);
+  }
+
+  // 17. Q&A QUESTIONS
+  async getQuestions(): Promise<Question[]> {
+    return this.getItem<Question[]>(DB_KEYS.QUESTIONS, []);
+  }
+
+  async saveQuestions(questions: Question[]): Promise<void> {
     this.setItem(DB_KEYS.QUESTIONS, questions);
   }
 

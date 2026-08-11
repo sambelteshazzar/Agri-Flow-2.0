@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef } from 'react';
-import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab, LaborInput, ResourceResult, CropExpense, CropIncome, OnboardingData } from '../types';
+import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab, LaborInput, ResourceResult, CropExpense, CropIncome, OnboardingData, Question, Answer } from '../types';
 import { CropService } from '../services/cropService';
 import { LivestockService } from '../services/livestockService';
 import { MarketService } from '../services/marketService';
@@ -58,6 +58,9 @@ interface FarmContextType {
   followedUserIds: string[];
   likedPostIds: string[];
   bookmarkedPostIds: string[];
+  // Q&A Data
+  questions: Question[];
+  likedQuestionIds: string[];
   
   // Poll Data
   pollData: PollOption[];
@@ -103,8 +106,13 @@ interface FarmContextType {
   toggleBookmark: (postId: string) => Promise<void>;
   sendChatMessage: (message: Omit<CommunityChatMessage, 'id' | 'timestamp'>) => Promise<void>;
   toggleFollowUser: (userId: string) => Promise<void>;
+  // Q&A Methods
+  addQuestion: (question: Omit<Question, 'id' | 'answers' | 'likes' | 'solved' | 'date'>) => Promise<void>;
+  addAnswer: (questionId: string, answer: Omit<Answer, 'id' | 'likes' | 'accepted' | 'date'>) => Promise<void>;
+  toggleQuestionLike: (questionId: string) => Promise<void>;
+  toggleAnswerAccepted: (questionId: string, answerId: string) => Promise<void>;
   
-   dismissAlert: (id: string) => void;
+  dismissAlert: (id: string) => void;
 
   laborInput: LaborInput | null;
   resourceResult: ResourceResult | null;
@@ -214,6 +222,9 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [followedUserIds, setFollowedUserIds] = useState<string[]>([]);
   const [likedPostIds, setLikedPostIds] = useState<string[]>([]);
   const [bookmarkedPostIds, setBookmarkedPostIds] = useState<string[]>([]);
+  // Q&A State
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [likedQuestionIds, setLikedQuestionIds] = useState<string[]>([]);
 
   // Poll State (Persisted in session)
   const [pollData, setPollData] = useState<PollOption[]>([
@@ -240,7 +251,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [
+const [
           loadedCrops, 
           loadedLivestock, 
           loadedTasks, 
@@ -255,12 +266,14 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           loadedFollows, 
           loadedLikes,
           loadedBookmarks,
+          loadedQuestions,
+          loadedLikedQuestions,
           loadedProfile,
            loadedLaborInput,
            loadedResourceResult,
            loadedExpenses,
            loadedIncomes
-         ] = await Promise.all([
+        ] = await Promise.all([
           CropService.getAll(),
           LivestockService.getAll(),
           db.getTasks(),
@@ -275,6 +288,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           CommunityService.getFollowedUserIds(),
           CommunityService.getLikedPostIds(),
           CommunityService.getBookmarkedPostIds(),
+          CommunityService.getQuestions(),
+          CommunityService.getLikedQuestionIds(),
           db.getUserProfile(),
           db.getLaborInput(),
            db.getResourceResult(),
@@ -296,6 +311,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setFollowedUserIds(loadedFollows);
         setLikedPostIds(loadedLikes);
         setBookmarkedPostIds(loadedBookmarks);
+        setQuestions(loadedQuestions);
+        setLikedQuestionIds(loadedLikedQuestions);
         if (loadedLaborInput) setLaborInput(loadedLaborInput);
         if (loadedResourceResult) setResourceResult(loadedResourceResult);
         setCropExpenses(loadedExpenses);
@@ -1036,6 +1053,50 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [showToast]);
 
+  // --- Q&A Actions ---
+  const addQuestion = useCallback(async (question: Omit<Question, 'id' | 'answers' | 'likes' | 'solved' | 'date'>) => {
+    try {
+      const updated = await CommunityService.addQuestion(question);
+      setQuestions(updated);
+      showToast('Question posted to Q&A', 'success');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to post question', 'error');
+    }
+  }, [showToast]);
+
+  const addAnswer = useCallback(async (questionId: string, answer: Omit<Answer, 'id' | 'likes' | 'accepted' | 'date'>) => {
+    try {
+      const updated = await CommunityService.addAnswer(questionId, answer);
+      setQuestions(updated);
+      showToast('Answer added', 'success');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to add answer', 'error');
+    }
+  }, [showToast]);
+
+  const toggleQuestionLike = useCallback(async (questionId: string) => {
+    try {
+      const { questions: updatedQuestions, likedIds: updatedLikedIds } = await CommunityService.toggleQuestionLike(questionId);
+      setQuestions(updatedQuestions);
+      setLikedQuestionIds(updatedLikedIds);
+    } catch (e) {
+      console.error("Failed to like question", e);
+    }
+  }, []);
+
+  const toggleAnswerAccepted = useCallback(async (questionId: string, answerId: string) => {
+    try {
+      const updated = await CommunityService.toggleAnswerAccepted(questionId, answerId);
+      setQuestions(updated);
+      showToast('Answer marked as accepted', 'success');
+    } catch (e) {
+      console.error("Failed to accept answer", e);
+      showToast('Failed to accept answer', 'error');
+    }
+  }, [showToast]);
+
   const dismissAlert = useCallback((id: string) => {
     setAlerts(prev => {
       const updated = prev.filter(a => a.id !== id);
@@ -1055,6 +1116,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     toasts, showToast, removeToast,
     crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
     stories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
+    questions, likedQuestionIds,
     pollData, pollVoted, handlePollVote,
     login, signIn, logout, updateUserProfile, resetApp,
     addCrop, deleteCrop, updateCropStatus, updateCrop, addLivestock, deleteLivestock, updateLivestockStatus, updateLivestock, toggleTask, addTask, completeModule, updateModuleProgress, 
@@ -1063,6 +1125,8 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     addListing, markListingSold, 
     addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
+    // Q&A
+    addQuestion, addAnswer, toggleQuestionLike, toggleAnswerAccepted,
     laborInput, resourceResult, saveLaborInput: saveLaborInputAction, saveResourceResult: saveResourceResultAction,
     cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, updateCropExpense, addCropIncome, deleteCropIncome, updateCropIncome
   }), [
@@ -1071,6 +1135,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     toasts, showToast, removeToast,
     crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
     stories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
+    questions, likedQuestionIds,
     pollData, pollVoted, handlePollVote,
     login, signIn, logout, updateUserProfile, resetApp,
     addCrop, deleteCrop, updateCropStatus, updateCrop, addLivestock, deleteLivestock, updateLivestockStatus, updateLivestock, toggleTask, addTask, completeModule, updateModuleProgress,
@@ -1079,6 +1144,7 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     addListing, markListingSold, 
     addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
+    addQuestion, addAnswer, toggleQuestionLike, toggleAnswerAccepted,
     laborInput, resourceResult, saveLaborInputAction, saveResourceResultAction,
     cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, updateCropExpense, addCropIncome, deleteCropIncome, updateCropIncome
   ]);

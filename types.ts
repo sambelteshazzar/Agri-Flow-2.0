@@ -278,6 +278,30 @@ export interface PollOption {
    text: string;
    percent: number;
    votes: number;
+ }
+
+export interface Question {
+  id: string;
+  author: string;
+  authorAvatar?: string;
+  title: string;
+  body: string;
+  category: string;
+  answers: Answer[];
+  likes: number;
+  solved: boolean;
+  date: string;
+}
+
+export interface Answer {
+  id: string;
+  author: string;
+  authorAvatar?: string;
+  content: string;
+  isExpert: boolean;
+  accepted: boolean;
+  likes: number;
+  date: string;
 }
 
 export interface LaborInput {

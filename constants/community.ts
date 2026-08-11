@@ -1,4 +1,15 @@
 import { MarketplaceListing, ForumPost, CommunityChatMessage, Story, SocialTrend, SuggestedUser } from '../types';
+import { Globe, Leaf, BadgeCheck, Tractor, TrendingUp, BookOpen, Handshake } from 'lucide-react';
+
+export const CHANNELS = [
+  { id: 'general', name: 'General', desc: 'Main hub', icon: Globe },
+  { id: 'crops', name: 'Crops Talk', desc: 'Planting & Seeds', icon: Leaf },
+  { id: 'livestock', name: 'Livestock', desc: 'Herd health', icon: BadgeCheck },
+  { id: 'equipment', name: 'Equipment', desc: 'Repairs & Sharing', icon: Tractor },
+  { id: 'market-watch', name: 'Market Watch', desc: 'Prices & Trends', icon: TrendingUp },
+  { id: 'knowledge', name: 'Knowledge Base', desc: 'Q&A & Tips', icon: BookOpen },
+  { id: 'co-ops', name: 'Co-ops', desc: 'Organize & Buy', icon: Handshake },
+];
 
 export const INITIAL_LISTINGS: MarketplaceListing[] = [
   {

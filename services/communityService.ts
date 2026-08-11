@@ -1,7 +1,8 @@
 import { db } from './persistence';
-import { MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, Story, SocialTrend, SuggestedUser } from '../types';
+import { MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, Story, SocialTrend, SuggestedUser, Question, Answer } from '../types';
 import { INITIAL_STORIES, INITIAL_TRENDS, INITIAL_SUGGESTED_USERS } from '../constants';
 import { sanitizeText } from '../utils/sanitize';
+import { INITIAL_QUESTIONS } from '../components/community/types';
 
 export class CommunityService {
   // --- Marketplace ---
@@ -229,5 +230,108 @@ export class CommunityService {
     
     await db.saveFollowedUserIds(updated);
     return updated;
+  }
+
+  // --- Q&A ---
+  static async getQuestions(): Promise<Question[]> {
+    const questions = await db.getQuestions();
+    // Sort by Date Descending
+    return questions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }
+
+  static async addQuestion(question: Omit<Question, 'id' | 'answers' | 'likes' | 'solved' | 'date'>): Promise<Question[]> {
+    if (!question.title || !question.body) throw new Error("Title and body are required");
+
+    const current = await db.getQuestions();
+    const newQuestion: Question = {
+      ...question,
+      title: sanitizeText(question.title),
+      body: sanitizeText(question.body),
+      id: db.generateId('question'),
+      answers: [],
+      likes: 0,
+      solved: false,
+      date: new Date().toISOString().split('T')[0]
+    };
+    const updated = [newQuestion, ...current];
+    await db.saveQuestions(updated);
+    return this.getQuestions();
+  }
+
+  static async addAnswer(questionId: string, answer: Omit<Answer, 'id' | 'likes' | 'accepted' | 'date'>): Promise<Question[]> {
+    if (!answer.content.trim()) throw new Error("Answer cannot be empty");
+
+    const questions = await db.getQuestions();
+    const questionIndex = questions.findIndex(q => q.id === questionId);
+    if (questionIndex === -1) throw new Error("Question not found");
+
+    const newAnswer: Answer = {
+      ...answer,
+      content: sanitizeText(answer.content),
+      id: db.generateId('answer'),
+      likes: 0,
+      accepted: false,
+      date: new Date().toISOString().split('T')[0]
+    };
+
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex] = {
+      ...updatedQuestions[questionIndex],
+      answers: [newAnswer, ...updatedQuestions[questionIndex].answers]
+    };
+
+    await db.saveQuestions(updatedQuestions);
+    return this.getQuestions();
+  }
+
+  static async toggleQuestionLike(questionId: string): Promise<{ questions: Question[], likedIds: string[] }> {
+    const questions = await db.getQuestions();
+    const likedIds = await db.getLikedQuestionIds();
+    const isLiked = likedIds.includes(questionId);
+    
+    let newLikedIds: string[];
+    let likeModifier: number;
+
+    if (isLiked) {
+      newLikedIds = likedIds.filter(id => id !== questionId);
+      likeModifier = -1;
+    } else {
+      newLikedIds = [...likedIds, questionId];
+      likeModifier = 1;
+    }
+
+    const updatedQuestions = questions.map(q => 
+      q.id === questionId ? { ...q, likes: Math.max(0, q.likes + likeModifier) } : q
+    );
+
+    await db.saveQuestions(updatedQuestions);
+    await db.saveLikedQuestionIds(newLikedIds);
+
+    return { 
+      questions: updatedQuestions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()), 
+      likedIds: newLikedIds 
+    };
+  }
+
+  static async toggleAnswerAccepted(questionId: string, answerId: string): Promise<Question[]> {
+    const questions = await db.getQuestions();
+    const questionIndex = questions.findIndex(q => q.id === questionId);
+    if (questionIndex === -1) throw new Error("Question not found");
+
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex] = {
+      ...updatedQuestions[questionIndex],
+      solved: true,
+      answers: updatedQuestions[questionIndex].answers.map(a => 
+        a.id === answerId ? { ...a, accepted: true } : { ...a, accepted: false }
+      )
+    };
+
+    await db.saveQuestions(updatedQuestions);
+    return this.getQuestions();
+  }
+
+  static async getLikedQuestionIds(): Promise<string[]> {
+    return await db.getLikedQuestionIds();
   }
 }
