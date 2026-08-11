@@ -16,6 +16,10 @@ interface CommunityContextType {
   isStoryModalOpen: boolean;
   setIsStoryModalOpen: (v: boolean) => void;
   
+  // Post editing
+  editingPostId: string | null;
+  setEditingPostId: (id: string | null) => void;
+  
   // Story state
   viewingStory: any;
   setViewingStory: (s: any) => void;
@@ -93,6 +97,9 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   
+  // Post editing
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  
   // Story state
   const [viewingStory, setViewingStory] = useState<any>(null);
   const [storyMessage, setStoryMessage] = useState('');
@@ -146,6 +153,9 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
     setIsQuestionModalOpen,
     isStoryModalOpen,
     setIsStoryModalOpen,
+    // Post editing
+    editingPostId,
+    setEditingPostId,
     // Story
     viewingStory,
     setViewingStory,
@@ -204,6 +214,7 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
   }), [
     searchQuery,
     isPostModalOpen, isListingModalOpen, isQuestionModalOpen, isStoryModalOpen,
+    editingPostId,
     viewingStory, storyMessage, storyReacted, storyProgress, newStoryImage, localStories,
     activeChannel, chatInput,
     qaSearchQuery, qaCategoryFilter, expandedQuestionId, newQuestion, newAnswer,

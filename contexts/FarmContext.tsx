@@ -100,8 +100,10 @@ interface FarmContextType {
   markListingSold: (id: string) => Promise<void>;
   addPost: (post: Omit<ForumPost, 'id' | 'replies' | 'likes' | 'date'>) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
+  updatePost: (id: string, updates: Partial<Omit<ForumPost, 'id' | 'replies' | 'likes' | 'date'>>) => Promise<void>;
   getPostReplies: (postId: string) => Promise<ForumReply[]>;
-  addPostReply: (postId: string, content: string) => Promise<ForumReply[]>;
+  getNestedReplies: (postId: string) => Promise<ForumReply[]>;
+  addPostReply: (postId: string, content: string, parentReplyId?: string) => Promise<ForumReply[]>;
   likePost: (postId: string) => Promise<void>;
   toggleBookmark: (postId: string) => Promise<void>;
   sendChatMessage: (message: Omit<CommunityChatMessage, 'id' | 'timestamp'>) => Promise<void>;
@@ -1001,12 +1003,27 @@ const [
     }
   }, [showToast]);
 
+  const updatePost = useCallback(async (id: string, updates: Partial<Omit<ForumPost, 'id' | 'replies' | 'likes' | 'date'>>) => {
+    try {
+      const updated = await CommunityService.updatePost(id, updates);
+      setPosts(updated);
+      showToast('Post updated', 'success');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to update post', 'error');
+    }
+  }, [showToast]);
+
   const getPostReplies = useCallback(async (postId: string) => {
     return await CommunityService.getPostReplies(postId);
   }, []);
 
-  const addPostReply = useCallback(async (postId: string, content: string) => {
-    const replies = await CommunityService.addReply(postId, content, userProfile.name);
+  const getNestedReplies = useCallback(async (postId: string) => {
+    return await CommunityService.getNestedReplies(postId);
+  }, []);
+
+  const addPostReply = useCallback(async (postId: string, content: string, parentReplyId?: string) => {
+    const replies = await CommunityService.addReply(postId, content, userProfile.name, parentReplyId);
     const updatedPosts = await CommunityService.getPosts(); // sync counts
     setPosts(updatedPosts);
     showToast('Reply added', 'success');
@@ -1123,7 +1140,7 @@ const [
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
-    addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
+    addPost, deletePost, updatePost, getPostReplies, getNestedReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
     // Q&A
     addQuestion, addAnswer, toggleQuestionLike, toggleAnswerAccepted,
@@ -1142,7 +1159,7 @@ const [
     refreshMarketPrices, refreshNews, refreshLocation,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
-    addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
+    addPost, deletePost, updatePost, getPostReplies, getNestedReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
     addQuestion, addAnswer, toggleQuestionLike, toggleAnswerAccepted,
     laborInput, resourceResult, saveLaborInputAction, saveResourceResultAction,

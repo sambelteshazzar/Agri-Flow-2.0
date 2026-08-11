@@ -37,7 +37,7 @@ const CommunityHub: React.FC = () => {
     userProfile, isSignedIn,
     listings, posts, chatMessages, stories: contextStories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
     questions, likedQuestionIds,
-    addListing, markListingSold, addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
+    addListing, markListingSold, addPost, deletePost, updatePost, getPostReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser,
     // Q&A
     addQuestion, addAnswer, toggleQuestionLike, toggleAnswerAccepted,
@@ -207,6 +207,9 @@ const CommunityHub: React.FC = () => {
                       setSearchQuery={community.setSearchQuery}
                       handleAuthRequiredAction={feed.handleAuthRequiredAction}
                       onCreateStory={() => stories.setIsStoryModalOpen(true)}
+                      handlePostOptions={feed.handlePostOptions}
+                      handleEditPost={feed.handleEditPost}
+                      updatePost={updatePost}
                     />
                   )}
 
@@ -321,7 +324,7 @@ const CommunityHub: React.FC = () => {
           {community.isPostModalOpen && (
             <CreatePostModal
               isOpen={community.isPostModalOpen}
-              onClose={() => community.setIsPostModalOpen(false)}
+              onClose={() => { community.setIsPostModalOpen(false); community.setEditingPostId(null); }}
               onSubmit={feed.handlePostSubmit}
               newPost={community.newPost}
               setNewPost={community.setNewPost}
@@ -329,6 +332,8 @@ const CommunityHub: React.FC = () => {
               setPostImage={community.setPostImage}
               handleImageChange={feed.handlePostImageChange}
               postFileRef={community.postFileRef}
+              editPostId={community.editingPostId}
+              onUpdatePost={updatePost}
             />
           )}
 

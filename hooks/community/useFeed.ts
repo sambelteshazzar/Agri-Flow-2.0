@@ -1,13 +1,16 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { ForumPost, ForumReply } from '@/types';
 import { useFarm } from '@/contexts/FarmContext';
+import { useCommunity } from '@/contexts/CommunityContext';
 
 export function useFeed() {
   const { 
     userProfile, isSignedIn, posts, likedPostIds, bookmarkedPostIds,
-    addPost, deletePost, getPostReplies, addPostReply, likePost, toggleBookmark,
+    addPost, deletePost, updatePost, getPostReplies, getNestedReplies, addPostReply, likePost, toggleBookmark,
     showToast, handleAuthRequiredAction
   } = useFarm();
+  
+  const { setEditingPostId } = useCommunity();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -71,13 +74,27 @@ export function useFeed() {
     handleAuthRequiredAction(() => deletePost(postId));
   };
 
+  const handleEditPost = (post: ForumPost) => {
+    handleAuthRequiredAction(() => {
+      setNewPost({ title: post.title, category: post.category, author: userProfile.name, content: post.content });
+      setPostImage(post.image || null);
+      setIsPostModalOpen(true);
+      setEditingPostId(post.id);
+    });
+  };
+
   const handleReportPost = (postId: string) => {
     showToast("Post reported to moderators", "info");
   };
 
   const handlePostOptions = (post: ForumPost) => {
     if (post.author === userProfile.name) {
-      handleDeletePost(post.id);
+      // For own posts, show options: Edit or Delete
+      if (confirm('Edit or Delete this post? (OK=Edit, Cancel=Delete)')) {
+        handleEditPost(post);
+      } else {
+        handleDeletePost(post.id);
+      }
     } else {
       handleReportPost(post.id);
     }
@@ -154,5 +171,6 @@ export function useFeed() {
     handleLike,
     handleBookmark,
     handleShare,
+    handleEditPost,
   };
 }

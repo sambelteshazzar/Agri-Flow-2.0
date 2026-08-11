@@ -95,12 +95,23 @@ export class CommunityService {
     return this.getPosts();
   }
 
-  static async addReply(postId: string, content: string, author: string): Promise<ForumReply[]> {
+  static async updatePost(id: string, updates: Partial<Omit<ForumPost, 'id' | 'replies' | 'likes' | 'date'>>): Promise<ForumPost[]> {
+    if (!updates.content || !updates.content.trim()) throw new Error("Post content cannot be empty");
+    const current = await db.getPosts();
+    const updated = current.map(p => 
+      p.id === id ? { ...p, ...updates, content: sanitizeText(updates.content!), title: updates.title ? sanitizeText(updates.title) : p.title } : p
+    );
+    await db.savePosts(updated);
+    return this.getPosts();
+  }
+
+  static async addReply(postId: string, content: string, author: string, parentReplyId?: string): Promise<ForumReply[]> {
     if (!content.trim()) throw new Error("Reply cannot be empty");
 
     const newReply: ForumReply = {
       id: db.generateId('reply'),
       postId,
+      parentReplyId,
       author,
       content: sanitizeText(content),
       date: new Date().toISOString()
@@ -117,6 +128,33 @@ export class CommunityService {
     await db.savePosts(updatedPosts);
 
     return await db.getReplies(postId);
+  }
+
+  static async getNestedReplies(postId: string): Promise<ForumReply[]> {
+    const allReplies = await db.getReplies(postId);
+    // Build tree structure
+    const replyMap = new Map<string, ForumReply & { children: ForumReply[] }>();
+    
+    allReplies.forEach(reply => {
+      replyMap.set(reply.id, { ...reply, children: [] });
+    });
+    
+    const roots: (ForumReply & { children: ForumReply[] })[] = [];
+    allReplies.forEach(reply => {
+      const replyWithChildren = replyMap.get(reply.id)!;
+      if (reply.parentReplyId) {
+        const parent = replyMap.get(reply.parentReplyId);
+        if (parent) {
+          parent.children.push(replyWithChildren);
+        } else {
+          roots.push(replyWithChildren);
+        }
+      } else {
+        roots.push(replyWithChildren);
+      }
+    });
+    
+    return roots;
   }
 
   static async getLikedPostIds(): Promise<string[]> {

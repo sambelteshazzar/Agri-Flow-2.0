@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, Image as ImageIcon } from 'lucide-react';
 import { UserProfile, ForumPost } from '@/types';
 import { useEscapeClose } from '@/utils/useEscapeClose';
@@ -14,22 +14,47 @@ interface CreatePostModalProps {
   userProfile: UserProfile;
   postFileRef: React.RefObject<HTMLInputElement | null>;
   onFileRead: (file: File | undefined, callback: (result: string) => void) => void;
+  editPostId?: string;
+  onUpdatePost?: (id: string, updates: Partial<Omit<ForumPost, 'id' | 'replies' | 'likes' | 'date'>>) => Promise<void>;
 }
 
 const CreatePostModal: React.FC<CreatePostModalProps> = ({
   isOpen, onClose, newPost, setNewPost,
   postImage, setPostImage, onSubmit, userProfile, postFileRef, onFileRead,
+  editPostId, onUpdatePost,
 }) => {
   useEscapeClose(isOpen, onClose);
   if (!isOpen) return null;
+  
+  useEffect(() => {
+    if (editPostId && onUpdatePost) {
+      document.title = 'Edit Post · AgriFlow';
+    }
+  }, [editPostId, onUpdatePost]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editPostId && onUpdatePost) {
+      await onUpdatePost(editPostId, {
+        title: newPost.title || newPost.content?.substring(0, 30) + '...',
+        category: newPost.category,
+        content: newPost.content,
+        image: postImage,
+      });
+      onClose();
+    } else {
+      await onSubmit(e);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-jade-950/60 backdrop-blur-sm animate-fade-in">
       <div className="bg-[var(--bg-card)] w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden scale-100 transition-all">
         <div className="px-6 py-4 border-b border-[var(--border-card)] flex justify-between items-center bg-[var(--bg-content)]">
-          <h3 className="font-bold text-[var(--text-primary)] text-lg">Create Post</h3>
+          <h3 className="font-bold text-[var(--text-primary)] text-lg">{editPostId ? 'Edit Post' : 'Create Post'}</h3>
           <button onClick={onClose} aria-label="Close" className="text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] p-1 rounded-full"><X className="w-5 h-5" aria-hidden="true"/></button>
         </div>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="p-6">
             <div className="flex gap-4 mb-4">
               <div className="w-10 h-10 rounded-full bg-[var(--bg-content)] overflow-hidden"><img src={userProfile.avatar} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = '/stock/user.svg'; }} /></div>
@@ -44,7 +69,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
               <button type="button" onClick={() => postFileRef.current?.click()} aria-label="Attach image" className="p-2 hover:bg-jade-100 text-[var(--text-secondary)] hover:text-jade-600 rounded-full transition-colors"><ImageIcon className="w-5 h-5" aria-hidden="true"/></button>
               <input type="file" ref={postFileRef} accept="image/*" onChange={(e) => onFileRead(e.target.files?.[0], (res) => setPostImage(res))} className="hidden" />
             </div>
-            <button type="submit" disabled={!newPost.content} className="bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 px-6 py-2 rounded-full font-semibold text-xs hover:opacity-90 disabled:opacity-50 transition-all shadow-md active:scale-[0.98]">Post Update</button>
+            <button type="submit" disabled={!newPost.content} className="bg-jade-800 dark:bg-sunburst-500 text-white dark:text-jade-950 px-6 py-2 rounded-full font-semibold text-xs hover:opacity-90 disabled:opacity-50 transition-all shadow-md active:scale-[0.98]">{editPostId ? 'Save Changes' : 'Post Update'}</button>
           </div>
         </form>
       </div>

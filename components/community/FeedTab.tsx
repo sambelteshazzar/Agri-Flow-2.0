@@ -33,11 +33,14 @@ interface FeedTabProps {
   setActivePostReplies: (replies: ForumReply[]) => void;
   showToast: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
   deletePost: (id: string) => void;
+  updatePost: (id: string, updates: Partial<Omit<ForumPost, 'id' | 'replies' | 'likes' | 'date'>>) => Promise<void>;
   handleAuthRequiredAction: (action: () => void) => void;
   setIsPostModalOpen: (v: boolean) => void;
   getRelativeTime: (dateString: string) => string;
   locationAlerts: LocationAlerts;
   mobileRightSidebar: React.ReactNode;
+  handlePostOptions: (post: ForumPost) => void;
+  handleEditPost: (post: ForumPost) => void;
 }
 
 const FeedTab: React.FC<FeedTabProps> = ({
@@ -46,9 +49,9 @@ const FeedTab: React.FC<FeedTabProps> = ({
   activePostReplies, replyInput, setReplyInput, likedPostIds, bookmarkedPostIds,
   userProfile, isSignedIn, avatarError, setAvatarError,
   likePost, toggleBookmark, addPostReply, setActivePostReplies,
-  showToast, deletePost, handleAuthRequiredAction,
+  showToast, deletePost, updatePost, handleAuthRequiredAction,
   setIsPostModalOpen, getRelativeTime, locationAlerts,
-  mobileRightSidebar,
+  mobileRightSidebar, handlePostOptions, handleEditPost,
 }) => (
   <div className="space-y-6 pt-4 lg:pt-0">
      {/* Location Alerts */}
@@ -139,7 +142,7 @@ const FeedTab: React.FC<FeedTabProps> = ({
                          <p className="text-xs text-[var(--text-secondary)] font-medium">{post.category} • {getRelativeTime(post.date)}</p>
                       </div>
                    </div>
-                    <button onClick={() => { if (post.author === userProfile.name) { deletePost(post.id); } else { showToast("Post reported to moderators", "info"); } }} className="text-[var(--text-tertiary)] hover:bg-[var(--bg-content)] p-2 rounded-full" aria-label="Post options"><MoreHorizontal className="w-5 h-5"/></button>
+                    <button onClick={() => handlePostOptions(post)} className="text-[var(--text-tertiary)] hover:bg-[var(--bg-content)] p-2 rounded-full" aria-label="Post options"><MoreHorizontal className="w-5 h-5"/></button>
                 </div>
                 
                 <h5 className="font-bold text-[var(--text-primary)] mb-2">{post.title}</h5>

@@ -227,6 +227,7 @@ export interface ForumPost {
 export interface ForumReply {
   id: string;
   postId: string;
+  parentReplyId?: string;
   author: string;
   content: string;
   date: string;
