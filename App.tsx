@@ -44,7 +44,7 @@ const LazyLoader: React.FC = () => (
 const AppContent: React.FC = () => {
   const { userProfile, alerts, isSignedIn, login, signIn, logout, toasts, removeToast, currentView, navigate, dismissAlert, dismissAllAlerts } = useFarm();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [hasStarted, setHasStarted] = useState(() => isSignedIn);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   useEffect(() => {
     const goOnline = () => setIsOnline(true);
