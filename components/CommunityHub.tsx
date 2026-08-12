@@ -95,8 +95,6 @@ const CommunityHub: React.FC = () => {
             localStorage.setItem('agriflow_community_intro_dismissed', 'true');
             setShowIntro(false);
           }}
-          bgError={introBgError}
-          setIntroBgError={setIntroBgError}
         />
       )}
 
@@ -205,7 +203,7 @@ const CommunityHub: React.FC = () => {
                       handlePostImageChange={feed.handlePostImageChange}
                       searchQuery={community.searchQuery}
                       setSearchQuery={community.setSearchQuery}
-                      handleAuthRequiredAction={feed.handleAuthRequiredAction}
+                      handleAuthRequiredAction={useFarm().handleAuthRequiredAction}
                       onCreateStory={() => stories.setIsStoryModalOpen(true)}
                       handlePostOptions={feed.handlePostOptions}
                       handleEditPost={feed.handleEditPost}
@@ -229,7 +227,7 @@ const CommunityHub: React.FC = () => {
                       chatEndRef={chat.chatEndRef}
                       typingUser={chat.typingUser}
                       getRelativeTime={chat.getRelativeTime}
-                      handleAuthRequiredAction={chat.handleAuthRequiredAction}
+                      handleAuthRequiredAction={useFarm().handleAuthRequiredAction}
                     />
                   )}
 
@@ -252,7 +250,7 @@ const CommunityHub: React.FC = () => {
                       onListingImageChange={market.handleListingImageChange}
                       onMarkSold={market.handleMarkSold}
                       onContactSeller={market.handleContactSeller}
-                      handleAuthRequiredAction={market.handleAuthRequiredAction}
+                      handleAuthRequiredAction={useFarm().handleAuthRequiredAction}
                       listingFileRef={market.listingFileRef}
                     />
                   )}
@@ -275,7 +273,7 @@ const CommunityHub: React.FC = () => {
                       onAcceptAnswer={qa.handleAcceptAnswer}
                       onAnswerSubmit={qa.handleAnswerSubmit}
                       setIsQuestionModalOpen={qa.setIsQuestionModalOpen}
-                      handleAuthRequiredAction={qa.handleAuthRequiredAction}
+                      handleAuthRequiredAction={useFarm().handleAuthRequiredAction}
                       getRelativeTime={qa.getRelativeTime}
                       QA_CATEGORIES={qa.QA_CATEGORIES}
                       newQuestion={qa.newQuestion}

@@ -1,9 +1,11 @@
 import React from 'react';
 import { Avatar } from '@/utils/avatar';
 import { getStockImage } from '@/utils/stockImages';
+import { parseContent, renderParsedContent, ParsedContent } from '@/utils/parseContent';
 import {
   Search, Plus, Image as ImageIcon, Camera, Heart, MessageCircle, Share2,
-  Send, MoreHorizontal, Award, Shield, Cloud, Bell, DollarSign, TrendingUp, Bookmark
+  Send, MoreHorizontal, Award, Shield, Cloud, Bell, DollarSign, TrendingUp, Bookmark,
+  ChevronRight, Reply
 } from 'lucide-react';
 import { UserProfile, ForumPost, ForumReply, Story } from '@/types';
 import { LocationAlerts } from './types';
@@ -18,7 +20,7 @@ interface FeedTabProps {
   setSearchQuery: (q: string) => void;
   expandedPostId: string | null;
   setExpandedPostId: (id: string | null) => void;
-  activePostReplies: ForumReply[];
+  activePostReplies: (ForumReply & { children?: (ForumReply & { children?: any[] })[] })[];
   replyInput: string;
   setReplyInput: (v: string) => void;
   likedPostIds: string[];
@@ -29,8 +31,8 @@ interface FeedTabProps {
   setAvatarError: (v: boolean) => void;
   likePost: (id: string) => void;
   toggleBookmark: (id: string) => void;
-  addPostReply: (postId: string, content: string) => Promise<ForumReply[]>;
-  setActivePostReplies: (replies: ForumReply[]) => void;
+  addPostReply: (postId: string, content: string, parentReplyId?: string) => Promise<ForumReply[]>;
+  setActivePostReplies: (replies: (ForumReply & { children?: any[] })[]) => void;
   showToast: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
   deletePost: (id: string) => void;
   updatePost: (id: string, updates: Partial<Omit<ForumPost, 'id' | 'replies' | 'likes' | 'date'>>) => Promise<void>;
@@ -42,6 +44,66 @@ interface FeedTabProps {
   handlePostOptions: (post: ForumPost) => void;
   handleEditPost: (post: ForumPost) => void;
 }
+
+const ReplyTree: React.FC<{ 
+  replies: (ForumReply & { children?: (ForumReply & { children?: any[] })[] })[];
+  postId: string;
+  addPostReply: (postId: string, content: string, parentReplyId?: string) => Promise<ForumReply[]>;
+  setActivePostReplies: (replies: (ForumReply & { children?: any[] })[]) => void;
+  replyInput: string;
+  setReplyInput: (v: string) => void;
+  getRelativeTime: (dateString: string) => string;
+  showToast: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
+  isSignedIn: boolean;
+  userProfile: UserProfile;
+  handleAuthRequiredAction: (action: () => void) => void;
+  depth?: number;
+}> = ({ 
+  replies, postId, addPostReply, setActivePostReplies, 
+  replyInput, setReplyInput, getRelativeTime, showToast, 
+  isSignedIn, userProfile, handleAuthRequiredAction, depth = 0 
+}) => (
+  <div className={`space-y-3 ${depth > 0 ? 'ml-8 border-l border-[var(--border-card)] pl-4' : ''}`}>
+    {replies.map(reply => (
+      <div key={reply.id}>
+        <div className="flex gap-3">
+          <div className="w-8 h-8 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0"><Avatar name={reply.author} size={32} /></div>
+          <div className="flex-1 bg-[var(--bg-card)] p-3 rounded-2xl rounded-tl-none border border-[var(--border-card)] shadow-sm">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1">{reply.author} {reply.id.charCodeAt(reply.id.length - 1) % 3 === 0 && <Shield className="w-3 h-3 text-amber-500" />}</span>
+              <span className="text-[10px] text-[var(--text-tertiary)]">{getRelativeTime(reply.date)}</span>
+            </div>
+            <p className="text-sm text-[var(--text-secondary)]">{renderParsedContent(parseContent(reply.content))}</p>
+            {isSignedIn && (
+              <button 
+                onClick={() => setReplyInput(`@${reply.author} `)} 
+                className="mt-2 text-xs text-jade-600 dark:text-jade-400 hover:underline flex items-center gap-1"
+              >
+                <Reply className="w-3 h-3" /> Reply
+              </button>
+            )}
+          </div>
+        </div>
+        {reply.children && reply.children.length > 0 && (
+          <ReplyTree 
+            replies={reply.children} 
+            postId={postId}
+            addPostReply={addPostReply}
+            setActivePostReplies={setActivePostReplies}
+            replyInput={replyInput}
+            setReplyInput={setReplyInput}
+            getRelativeTime={getRelativeTime}
+            showToast={showToast}
+            isSignedIn={isSignedIn}
+            userProfile={userProfile}
+            handleAuthRequiredAction={handleAuthRequiredAction}
+            depth={depth + 1}
+          />
+        )}
+      </div>
+    ))}
+  </div>
+);
 
 const FeedTab: React.FC<FeedTabProps> = ({
   localStories, viewingStory, setViewingStory, setIsStoryModalOpen,
@@ -146,7 +208,9 @@ const FeedTab: React.FC<FeedTabProps> = ({
                 </div>
                 
                 <h5 className="font-bold text-[var(--text-primary)] mb-2">{post.title}</h5>
-                <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-4 whitespace-pre-wrap">{post.content}</p>
+                <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-4 whitespace-pre-wrap">
+                  {renderParsedContent(parseContent(post.content))}
+                </p>
                 
                 {(post.image || (parseInt(post.id) % 2 === 0)) && (
                   <div className="mb-4 rounded-2xl overflow-hidden h-64 bg-[var(--bg-content)] relative">
@@ -164,18 +228,22 @@ const FeedTab: React.FC<FeedTabProps> = ({
                 </div>
              </div>
              
-             {expandedPostId === post.id && (
+{expandedPostId === post.id && (
                 <div className="bg-[var(--bg-content)] p-5 border-t border-[var(--border-card)]">
                    <div className="space-y-4 mb-4 max-h-60 overflow-y-auto custom-scrollbar">
-                      {activePostReplies.map(reply => (
-                         <div key={reply.id} className="flex gap-3">
-                            <div className="w-8 h-8 rounded-full bg-[var(--bg-content)] overflow-hidden shrink-0"><Avatar name={reply.author} size={32} /></div>
-                            <div className="flex-1 bg-[var(--bg-card)] p-3 rounded-2xl rounded-tl-none border border-[var(--border-card)] shadow-sm">
-                               <div className="flex justify-between items-center mb-1"><span className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1">{reply.author} {reply.id.charCodeAt(reply.id.length - 1) % 3 === 0 && <Shield className="w-3 h-3 text-amber-500" />}</span><span className="text-[10px] text-[var(--text-tertiary)]">{getRelativeTime(reply.date)}</span></div>
-                               <p className="text-sm text-[var(--text-secondary)]">{reply.content}</p>
-                            </div>
-                         </div>
-                      ))}
+                      <ReplyTree
+                        replies={activePostReplies}
+                        postId={post.id}
+                        addPostReply={addPostReply}
+                        setActivePostReplies={setActivePostReplies}
+                        replyInput={replyInput}
+                        setReplyInput={setReplyInput}
+                        getRelativeTime={getRelativeTime}
+                        showToast={showToast}
+                        isSignedIn={isSignedIn}
+                        userProfile={userProfile}
+                        handleAuthRequiredAction={handleAuthRequiredAction}
+                      />
                    </div>
                    {isSignedIn && (
                      <form onSubmit={async (e) => { 

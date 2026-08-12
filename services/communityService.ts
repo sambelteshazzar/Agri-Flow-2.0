@@ -1,5 +1,5 @@
 import { db } from './persistence';
-import { MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, Story, SocialTrend, SuggestedUser, Question, Answer } from '../types';
+import { MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, Story, SocialTrend, SuggestedUser, Question, Answer, AppNotification, DirectMessage, DirectMessageItem } from '../types';
 import { INITIAL_STORIES, INITIAL_TRENDS, INITIAL_SUGGESTED_USERS } from '../constants';
 import { sanitizeText } from '../utils/sanitize';
 import { INITIAL_QUESTIONS } from '../components/community/types';
@@ -231,11 +231,106 @@ export class CommunityService {
       ...message,
       text: sanitizeText(message.text),
       id: db.generateId('msg'),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      reactions: []
     };
     const updated = [...current, newMessage];
     await db.saveChatMessages(updated);
     return updated;
+  }
+
+  // --- Message Reactions ---
+  static async toggleReaction(messageId: string, emoji: string, userId: string): Promise<CommunityChatMessage[]> {
+    const messages = await db.getChatMessages();
+    const messageIndex = messages.findIndex(m => m.id === messageId);
+    if (messageIndex === -1) throw new Error("Message not found");
+
+    const message = { ...messages[messageIndex] };
+    const reactions = message.reactions || [];
+    const reactionIndex = reactions.findIndex(r => r.emoji === emoji);
+    
+    if (reactionIndex >= 0) {
+      const reaction = reactions[reactionIndex];
+      if (reaction.users.includes(userId)) {
+        reaction.users = reaction.users.filter(u => u !== userId);
+        reaction.count = Math.max(0, reaction.count - 1);
+        if (reaction.count === 0) {
+          reactions.splice(reactionIndex, 1);
+        }
+      } else {
+        reaction.users.push(userId);
+        reaction.count += 1;
+      }
+    } else {
+      reactions.push({ emoji, users: [userId], count: 1 });
+    }
+
+    message.reactions = reactions;
+    messages[messageIndex] = message;
+    await db.saveChatMessages(messages);
+    return messages;
+  }
+
+  // --- Direct Messages ---
+  static async getDirectMessages(userId: string): Promise<DirectMessage[]> {
+    return await db.getDirectMessages(userId);
+  }
+
+  static async sendDirectMessage(dmId: string, senderId: string, text: string): Promise<DirectMessage[]> {
+    if (!text.trim()) throw new Error("Message text required");
+    
+    const dms = await db.getDirectMessages(senderId);
+    const dmIndex = dms.findIndex(dm => dm.id === dmId);
+    if (dmIndex === -1) throw new Error("Direct message not found");
+
+    const dm = { ...dms[dmIndex] };
+    const newMessage: DirectMessageItem = {
+      id: db.generateId('dm-msg'),
+      senderId,
+      text: sanitizeText(text),
+      timestamp: new Date().toISOString(),
+      read: false,
+      reactions: []
+    };
+    
+    dm.messages = [...dm.messages, newMessage];
+    dm.lastMessageAt = new Date().toISOString();
+    dm.unreadCount = dm.unreadCount || {};
+    dm.participants.forEach(p => {
+      if (p !== senderId) {
+        dm.unreadCount![p] = (dm.unreadCount![p] || 0) + 1;
+      }
+    });
+
+    dms[dmIndex] = dm;
+    await db.saveDirectMessages(dms);
+    return this.getDirectMessages(senderId);
+  }
+
+  static async createDirectMessage(participants: string[]): Promise<DirectMessage[]> {
+    const dms = await db.getDirectMessages(participants[0]);
+    
+    // Check if DM already exists between these participants
+    const existingDm = dms.find(dm => 
+      dm.participants.length === participants.length &&
+      participants.every(p => dm.participants.includes(p))
+    );
+    
+    if (existingDm) {
+      return this.getDirectMessages(participants[0]);
+    }
+
+    const newDm: DirectMessage = {
+      id: db.generateId('dm'),
+      participants,
+      messages: [],
+      lastMessageAt: new Date().toISOString(),
+      unreadCount: {}
+    };
+
+    dms.unshift(newDm);
+    await db.saveDirectMessages(dms);
+    return this.getDirectMessages(participants[0]);
   }
 
   // --- Social / Feed Features ---
@@ -371,5 +466,22 @@ export class CommunityService {
 
   static async getLikedQuestionIds(): Promise<string[]> {
     return await db.getLikedQuestionIds();
+  }
+
+  // --- Notifications ---
+  static async getNotifications(userId: string): Promise<AppNotification[]> {
+    return await db.getNotifications(userId);
+  }
+
+  static async addNotification(notification: AppNotification): Promise<void> {
+    await db.addNotification(notification);
+  }
+
+  static async markNotificationAsRead(notificationId: string): Promise<void> {
+    await db.markNotificationAsRead(notificationId);
+  }
+
+  static async markAllNotificationsAsRead(userId: string): Promise<void> {
+    await db.markAllNotificationsAsRead(userId);
   }
 }

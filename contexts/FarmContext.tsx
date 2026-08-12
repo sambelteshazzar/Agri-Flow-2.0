@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef } from 'react';
-import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab, LaborInput, ResourceResult, CropExpense, CropIncome, OnboardingData, Question, Answer } from '../types';
+import { Crop, MarketPrice, Task, Livestock, LearningModule, LogEntry, MarketplaceListing, ForumPost, ForumReply, CommunityChatMessage, UserLocation, WeatherData, Story, SocialTrend, SuggestedUser, UserProfile, SystemAlert, NewsArticle, ToastMessage, PollOption, NavigationTab, LaborInput, ResourceResult, CropExpense, CropIncome, OnboardingData, Question, Answer, AppNotification } from '../types';
 import { CropService } from '../services/cropService';
 import { LivestockService } from '../services/livestockService';
 import { MarketService } from '../services/marketService';
@@ -61,6 +61,9 @@ interface FarmContextType {
   // Q&A Data
   questions: Question[];
   likedQuestionIds: string[];
+  // Notifications
+  notifications: AppNotification[];
+  unreadNotificationCount: number;
   
   // Poll Data
   pollData: PollOption[];
@@ -89,7 +92,14 @@ interface FarmContextType {
   refreshMarketPrices: () => Promise<void>;
   refreshNews: () => Promise<void>;
   refreshLocation: () => void;
+  refreshWeather: () => Promise<void>;
   dismissAllAlerts: () => void;
+
+  // Auth helper: gates an action behind sign-in. If signed in, runs the
+  // action; if not, surfaces a toast prompting sign-in. Used by the
+  // community hooks so they don't crash trying to call a non-existent
+  // function — every like/post/reply used to throw silently.
+  handleAuthRequiredAction: (action: () => void | Promise<void>) => void;
   
   // Logs
   addActivityLog: (log: Omit<LogEntry, 'id'>) => Promise<void>;
@@ -113,6 +123,10 @@ interface FarmContextType {
   addAnswer: (questionId: string, answer: Omit<Answer, 'id' | 'likes' | 'accepted' | 'date'>) => Promise<void>;
   toggleQuestionLike: (questionId: string) => Promise<void>;
   toggleAnswerAccepted: (questionId: string, answerId: string) => Promise<void>;
+  // Notification Methods
+  getNotifications: () => Promise<void>;
+  markNotificationAsRead: (notificationId: string) => Promise<void>;
+  markAllNotificationsAsRead: () => Promise<void>;
   
   dismissAlert: (id: string) => void;
 
@@ -227,6 +241,9 @@ export const FarmProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Q&A State
   const [questions, setQuestions] = useState<Question[]>([]);
   const [likedQuestionIds, setLikedQuestionIds] = useState<string[]>([]);
+  // Notification State
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
 
   // Poll State (Persisted in session)
   const [pollData, setPollData] = useState<PollOption[]>([
@@ -270,6 +287,7 @@ const [
           loadedBookmarks,
           loadedQuestions,
           loadedLikedQuestions,
+          loadedNotifications,
           loadedProfile,
            loadedLaborInput,
            loadedResourceResult,
@@ -292,6 +310,7 @@ const [
           CommunityService.getBookmarkedPostIds(),
           CommunityService.getQuestions(),
           CommunityService.getLikedQuestionIds(),
+          CommunityService.getNotifications(userProfile.name),
           db.getUserProfile(),
           db.getLaborInput(),
            db.getResourceResult(),
@@ -315,6 +334,8 @@ const [
         setBookmarkedPostIds(loadedBookmarks);
         setQuestions(loadedQuestions);
         setLikedQuestionIds(loadedLikedQuestions);
+        setNotifications(loadedNotifications);
+        setUnreadNotificationCount(loadedNotifications.filter(n => !n.read).length);
         if (loadedLaborInput) setLaborInput(loadedLaborInput);
         if (loadedResourceResult) setResourceResult(loadedResourceResult);
         setCropExpenses(loadedExpenses);
@@ -721,20 +742,66 @@ const [
     );
   }, []);
 
-  // --- Weather Update Effect ---
-  useEffect(() => {
-    const updateWeather = async () => {
-      if (userLocation.latitude && userLocation.longitude) {
-        try {
-          const localWeather = await WeatherService.getLocalWeather(userLocation.latitude, userLocation.longitude, userProfile.countryCode || undefined);
-          setWeather(localWeather);
-        } catch (e) {
-          console.error("Failed to update local weather", e);
-        }
+  // --- Weather Logic ---
+  // Fetch fresh weather for the current location (or country fallback) and
+  // update state. Exposed as `refreshWeather` so the UI can offer a manual
+  // "refresh" button instead of relying on geolocation events alone —
+  // which previously left the dashboard stuck on MOCK_WEATHER forever.
+  const refreshWeather = useCallback(async () => {
+    if (userLocation.latitude && userLocation.longitude) {
+      try {
+        const localWeather = await WeatherService.getLocalWeather(
+          userLocation.latitude,
+          userLocation.longitude,
+          userProfile.countryCode || undefined
+        );
+        setWeather(localWeather);
+        return;
+      } catch (e) {
+        console.error("Failed to refresh local weather, falling back to region weather", e);
       }
-    };
-    updateWeather();
-  }, [userLocation, userProfile.countryCode]);
+    }
+    // No location (or fetch failed): fall back to region-based simulated
+    // weather so the widget always shows something fresh rather than the
+    // static MOCK_WEATHER constant.
+    try {
+      const fallback = await WeatherService.getLocalWeather(0, 0, userProfile.countryCode || undefined);
+      setWeather(fallback);
+    } catch (e) {
+      console.error("Region weather fallback also failed", e);
+    }
+  }, [userLocation.latitude, userLocation.longitude, userProfile.countryCode]);
+
+  // --- Weather Update Effect ---
+  // Fires when location or country changes. refreshWeather now contains the
+  // full logic (including the region fallback), so this effect just defers
+  // to it. Keeps the old [userLocation, userProfile.countryCode] dep array
+  // semantics so existing callers see weather update when they grant
+  // geolocation permission.
+  useEffect(() => {
+    refreshWeather();
+  }, [refreshWeather]);
+
+  // --- Auth-gated action helper ---
+  // Used by every community hook (useFeed, useChat, useMarket, useQA,
+  // useSidebar) to wrap actions that require sign-in. Previously those
+  // hooks destructured a non-existent `handleAuthRequiredAction` from
+  // useFarm() and got `undefined`, so every like/reply/follow threw
+  // "TypeError: handleAuthRequiredAction is not a function" silently.
+  const handleAuthRequiredAction = useCallback((action: () => void | Promise<void>) => {
+    if (isSignedIn) {
+      try {
+        const result = action();
+        if (result && typeof (result as Promise<void>).then === 'function') {
+          (result as Promise<void>).catch(err => console.error('[AgriFlow] Auth-required action failed:', err));
+        }
+      } catch (err) {
+        console.error('[AgriFlow] Auth-required action failed:', err);
+      }
+    } else {
+      showToast('Please sign in to perform this action.', 'info');
+    }
+  }, [isSignedIn, showToast]);
 
   // --- Crop Actions ---
   const addCrop = useCallback(async (cropData: Omit<Crop, 'id'>) => {
@@ -1114,6 +1181,38 @@ const [
     }
   }, [showToast]);
 
+  const getNotifications = useCallback(async () => {
+    if (!isSignedIn) return;
+    try {
+      const loadedNotifications = await CommunityService.getNotifications(userProfile.name);
+      setNotifications(loadedNotifications);
+      setUnreadNotificationCount(loadedNotifications.filter(n => !n.read).length);
+    } catch (e) {
+      console.error("Failed to load notifications", e);
+    }
+  }, [isSignedIn, userProfile]);
+
+  const markNotificationAsRead = useCallback(async (notificationId: string) => {
+    try {
+      await CommunityService.markNotificationAsRead(notificationId);
+      setNotifications(prev => prev.map(n => n.id === notificationId ? { ...n, read: true } : n));
+      setUnreadNotificationCount(prev => Math.max(0, prev - 1));
+    } catch (e) {
+      console.error("Failed to mark notification as read", e);
+    }
+  }, []);
+
+  const markAllNotificationsAsRead = useCallback(async () => {
+    if (!isSignedIn) return;
+    try {
+      await CommunityService.markAllNotificationsAsRead(userProfile.name);
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      setUnreadNotificationCount(0);
+    } catch (e) {
+      console.error("Failed to mark all notifications as read", e);
+    }
+  }, [isSignedIn, userProfile]);
+
   const dismissAlert = useCallback((id: string) => {
     setAlerts(prev => {
       const updated = prev.filter(a => a.id !== id);
@@ -1134,16 +1233,20 @@ const [
     crops, livestock, tasks, marketPrices, learningModules, newsArticles, isLoadingNews, listings, posts, chatMessages, userLocation, weather,
     stories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
     questions, likedQuestionIds,
+    notifications, unreadNotificationCount,
     pollData, pollVoted, handlePollVote,
     login, signIn, logout, updateUserProfile, resetApp,
     addCrop, deleteCrop, updateCropStatus, updateCrop, addLivestock, deleteLivestock, updateLivestockStatus, updateLivestock, toggleTask, addTask, completeModule, updateModuleProgress, 
-    refreshMarketPrices, refreshNews, refreshLocation,
+    refreshMarketPrices, refreshNews, refreshLocation, refreshWeather,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
     addPost, deletePost, updatePost, getPostReplies, getNestedReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
+    handleAuthRequiredAction,
     // Q&A
     addQuestion, addAnswer, toggleQuestionLike, toggleAnswerAccepted,
+    // Notifications
+    getNotifications, markNotificationAsRead, markAllNotificationsAsRead,
     laborInput, resourceResult, saveLaborInput: saveLaborInputAction, saveResourceResult: saveResourceResultAction,
     cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, updateCropExpense, addCropIncome, deleteCropIncome, updateCropIncome
   }), [
@@ -1156,12 +1259,15 @@ const [
     pollData, pollVoted, handlePollVote,
     login, signIn, logout, updateUserProfile, resetApp,
     addCrop, deleteCrop, updateCropStatus, updateCrop, addLivestock, deleteLivestock, updateLivestockStatus, updateLivestock, toggleTask, addTask, completeModule, updateModuleProgress,
-    refreshMarketPrices, refreshNews, refreshLocation,
+    refreshMarketPrices, refreshNews, refreshLocation, refreshWeather,
     addActivityLog, getLogsByRef, 
     addListing, markListingSold, 
     addPost, deletePost, updatePost, getPostReplies, getNestedReplies, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser, dismissAlert, dismissAllAlerts,
+    handleAuthRequiredAction,
     addQuestion, addAnswer, toggleQuestionLike, toggleAnswerAccepted,
+    // Notifications
+    getNotifications, markNotificationAsRead, markAllNotificationsAsRead,
     laborInput, resourceResult, saveLaborInputAction, saveResourceResultAction,
     cropExpenses, cropIncomes, addCropExpense, deleteCropExpense, updateCropExpense, addCropIncome, deleteCropIncome, updateCropIncome
   ]);

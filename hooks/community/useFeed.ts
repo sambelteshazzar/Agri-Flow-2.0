@@ -106,9 +106,9 @@ export function useFeed() {
 
   useEffect(() => {
     if (expandedPostId) {
-      getPostReplies(expandedPostId).then(setActivePostReplies).catch(() => showToast("Failed to load comments", "error"));
+      getNestedReplies(expandedPostId).then(setActivePostReplies).catch(() => showToast("Failed to load comments", "error"));
     }
-  }, [expandedPostId, getPostReplies, showToast]);
+  }, [expandedPostId, getNestedReplies, showToast]);
 
   const handleReplySubmit = async (e: React.FormEvent, postId: string) => {
     e.preventDefault();

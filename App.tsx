@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar';
 import CommandPalette from './components/CommandPalette';
 import GetStarted from './components/GetStarted';
 import { LoginPage } from './components/LoginPage';
+import { NotificationBell } from './components/NotificationBell';
 
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const CropManager = lazy(() => import('./components/CropManager'));
@@ -331,7 +332,10 @@ const handleSignup = async (data: OnboardingData & { email: string; password: st
                 {isOnline ? 'Online' : 'Offline'}
               </div>
 
-              {/* Notifications Dropdown */}
+              {/* Notifications Bell */}
+              <NotificationBell />
+
+              {/* System Alerts */}
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}

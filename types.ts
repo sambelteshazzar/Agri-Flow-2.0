@@ -250,14 +250,63 @@ export interface CommunityChatMessage {
   timestamp: string;
   avatar?: string;
   isMe: boolean;
+  reactions?: MessageReaction[];
+}
+
+export interface MessageReaction {
+  emoji: string;
+  users: string[];
+  count: number;
+}
+
+// Direct Messages
+export interface DirectMessage {
+  id: string;
+  participants: string[];
+  messages: DirectMessageItem[];
+  lastMessageAt: string;
+  unreadCount?: Record<string, number>;
+}
+
+export interface DirectMessageItem {
+  id: string;
+  senderId: string;
+  text: string;
+  timestamp: string;
+  read: boolean;
+  reactions?: MessageReaction[];
 }
 
 export interface Story {
+  // Basic story fields (used by UI stories row)
   id: string;
   name: string;
   img: string;
   isUser?: boolean;
   hasUpdate?: boolean;
+  // Enhanced story features
+  type?: 'image' | 'video';
+  videoUrl?: string;
+  duration?: number;
+  highlights?: StoryHighlight[];
+  viewers?: StoryViewer[];
+  createdAt?: string;
+  expiresAt?: string;
+}
+
+export interface StoryHighlight {
+  id: string;
+  title: string;
+  coverImg: string;
+  storyIds: string[];
+  createdAt: string;
+}
+
+export interface StoryViewer {
+  id: string;
+  name: string;
+  avatar?: string;
+  viewedAt: string;
 }
 
 export interface SocialTrend {
@@ -280,6 +329,24 @@ export interface PollOption {
    percent: number;
    votes: number;
  }
+
+export interface AppNotification {
+  id: string;
+  userId: string;
+  type: 'reply' | 'like' | 'follow' | 'mention' | 'answer' | 'accepted_answer' | 'market_alert' | 'weather_alert';
+  title: string;
+  message: string;
+  referenceId?: string;
+  referenceType?: 'post' | 'question' | 'listing' | 'chat';
+  read: boolean;
+  date: string;
+}
+
+// Backwards-compat alias. The DOM lib also declares a global `Notification`
+// (the Notifications API), so callers that import this type should prefer
+// `AppNotification` directly, but we keep `Notification` working for any
+// existing import sites that haven't been migrated yet.
+export type Notification = AppNotification;
 
 export interface Question {
   id: string;

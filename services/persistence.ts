@@ -1,5 +1,5 @@
 
-import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult, Story, SocialTrend, SuggestedUser, SystemAlert, CropExpense, CropIncome, Question, Answer } from '../types';
+import { Crop, Livestock, Task, LearningModule, MarketPrice, MarketplaceListing, ForumPost, ForumReply, LogEntry, CommunityChatMessage, UserProfile, LaborInput, ResourceResult, Story, SocialTrend, SuggestedUser, SystemAlert, CropExpense, CropIncome, Question, Answer, AppNotification, DirectMessage, DirectMessageItem, MessageReaction } from '../types';
 import { GUEST_USER } from '../constants';
 
 // --- DATABASE KEYS ---
@@ -28,6 +28,8 @@ export const DB_KEYS = {
   ALERTS: 'agriflow_alerts',
   POLL_VOTED: 'agriflow_poll_voted',
   QUESTIONS: 'agriflow_qa_questions',
+  DIRECT_MESSAGES: 'agriflow_direct_messages',
+  NOTIFICATIONS: 'agriflow_notifications',
   CROP_EXPENSES: 'agriflow_crop_expenses',
   CROP_INCOMES: 'agriflow_crop_incomes'
 };
@@ -373,7 +375,35 @@ class PersistenceService {
     this.setItem(DB_KEYS.LIKED_QUESTIONS, ids);
   }
 
-  // 17. Q&A QUESTIONS
+  // 17. NOTIFICATIONS
+  async getNotifications(userId: string): Promise<AppNotification[]> {
+    const allNotifications = this.getItem<AppNotification[]>(DB_KEYS.NOTIFICATIONS, []);
+    return allNotifications.filter(n => n.userId === userId).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }
+
+  async saveNotifications(notifications: AppNotification[]): Promise<void> {
+    this.setItem(DB_KEYS.NOTIFICATIONS, notifications);
+  }
+
+  async addNotification(notification: AppNotification): Promise<void> {
+    const allNotifications = this.getItem<AppNotification[]>(DB_KEYS.NOTIFICATIONS, []);
+    allNotifications.unshift(notification);
+    this.setItem(DB_KEYS.NOTIFICATIONS, allNotifications);
+  }
+
+  async markNotificationAsRead(notificationId: string): Promise<void> {
+    const allNotifications = this.getItem<AppNotification[]>(DB_KEYS.NOTIFICATIONS, []);
+    const updated = allNotifications.map(n => n.id === notificationId ? { ...n, read: true } : n);
+    this.setItem(DB_KEYS.NOTIFICATIONS, updated);
+  }
+
+  async markAllNotificationsAsRead(userId: string): Promise<void> {
+    const allNotifications = this.getItem<AppNotification[]>(DB_KEYS.NOTIFICATIONS, []);
+    const updated = allNotifications.map(n => n.userId === userId ? { ...n, read: true } : n);
+    this.setItem(DB_KEYS.NOTIFICATIONS, updated);
+  }
+
+  // 18. Q&A QUESTIONS
   async getQuestions(): Promise<Question[]> {
     return this.getItem<Question[]>(DB_KEYS.QUESTIONS, []);
   }
@@ -398,6 +428,16 @@ class PersistenceService {
 
   async saveCropIncomes(incomes: CropIncome[]): Promise<void> {
     this.setItem(DB_KEYS.CROP_INCOMES, incomes);
+  }
+
+  // 20. DIRECT MESSAGES
+  async getDirectMessages(userId: string): Promise<DirectMessage[]> {
+    const allDms = this.getItem<DirectMessage[]>(DB_KEYS.DIRECT_MESSAGES, []);
+    return allDms.filter(dm => dm.participants.includes(userId));
+  }
+
+  async saveDirectMessages(dms: DirectMessage[]): Promise<void> {
+    this.setItem(DB_KEYS.DIRECT_MESSAGES, dms);
   }
 }
 
