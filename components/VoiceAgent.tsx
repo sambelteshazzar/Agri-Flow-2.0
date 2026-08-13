@@ -130,12 +130,19 @@ const VoiceAgent: React.FC = () => {
   // --- SESSION MANAGEMENT ---
   const connect = useCallback(async () => {
     if (!isAIConfigured()) {
-      showToast("API Key missing", "error");
+      showToast("AI is not configured. Set an API key in your environment.", "error");
       return;
     }
 
     if (!hasLiveVoice()) {
-      showToast("Live voice requires a Gemini API key", "error");
+      // Two distinct reasons: provider doesn't support voice, or no Gemini key.
+      const hint = (import.meta.env.VITE_AI_PROVIDER || '').toLowerCase();
+      const hasGeminiKey = !!(import.meta.env.VITE_GEMINI_API_KEY || '');
+      if (hint === 'nvidia' || (!hasGeminiKey)) {
+        showToast("Live voice is a Gemini-only feature. Set VITE_GEMINI_API_KEY and switch the provider to use it.", "info");
+      } else {
+        showToast("Live voice unavailable — Gemini API key missing or quota exhausted.", "error");
+      }
       return;
     }
 
@@ -398,7 +405,7 @@ const VoiceAgent: React.FC = () => {
       <button 
         onClick={isActive ? disconnect : connect}
         disabled={isConnecting || !hasLiveVoice()}
-        title={!hasLiveVoice() ? 'Voice agent requires Gemini API key' : undefined}
+        title={!hasLiveVoice() ? 'Live voice requires a Gemini API key (not supported by the current NVIDIA provider)' : undefined}
         className={`
           w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all active:scale-95 border-4
           ${!hasLiveVoice() 

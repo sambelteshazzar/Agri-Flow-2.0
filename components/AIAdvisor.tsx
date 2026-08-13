@@ -102,12 +102,18 @@ const AIAdvisor: React.FC = () => {
 
   const startCall = async () => {
     if (!isAIConfigured()) {
-      showToast("API Key missing", "error");
+      showToast("AI is not configured. Set an API key in your environment.", "error");
       return;
     }
 
     if (!hasLiveVoice()) {
-      showToast("Live voice requires a Gemini API key", "error");
+      const hint = (import.meta.env.VITE_AI_PROVIDER || '').toLowerCase();
+      const hasGeminiKey = !!(import.meta.env.VITE_GEMINI_API_KEY || '');
+      if (hint === 'nvidia' || !hasGeminiKey) {
+        showToast("Live voice is a Gemini-only feature. Set VITE_GEMINI_API_KEY and switch the provider to use it.", "info");
+      } else {
+        showToast("Live voice unavailable — Gemini API key missing or quota exhausted.", "error");
+      }
       return;
     }
 
@@ -115,7 +121,7 @@ const AIAdvisor: React.FC = () => {
     try {
       const ai = getLiveAIClient();
       if (!ai) {
-        showToast("Live voice unavailable with current provider", "error");
+        showToast("Live voice unavailable with the current provider. Switch to Gemini or add VITE_GEMINI_API_KEY.", "error");
         setIsConnectingCall(false);
         return;
       }

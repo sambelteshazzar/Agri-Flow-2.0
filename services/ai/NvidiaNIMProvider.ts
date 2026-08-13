@@ -7,9 +7,17 @@ import {
 } from './shared';
 
 // SECURITY: Provider enabled flag is driven by VITE_AI_PROVIDER='nvidia' (a
-// non-secret string) NOT by reading the actual API key here in the browser.
-// The key is injected only by /api/ai-chat server-side or the vite dev proxy.
-const NVIDIA_ENABLED = (import.meta.env.VITE_AI_PROVIDER || '').toLowerCase() === 'nvidia';
+// non-secret string) OR by the presence of VITE_NVIDIA_API_KEY. We read the
+// key here ONLY as a boolean "is this configured" check — we never attach
+// it to a request from the browser. The actual key is injected server-side
+// by /api/ai-chat (production) or the vite dev proxy (local dev).
+//
+// Note: Vite inlines VITE_* vars into the client bundle, so the key string
+// IS exposed to anyone with DevTools regardless of whether we read it here.
+// The real protection is that no browser-side code sends it to NVIDIA — all
+// browser requests go to our own /api/ai-chat endpoint.
+const VITE_NVIDIA_KEY = import.meta.env.VITE_NVIDIA_API_KEY || '';
+const NVIDIA_ENABLED = (import.meta.env.VITE_AI_PROVIDER || '').toLowerCase() === 'nvidia' || !!VITE_NVIDIA_KEY;
 
 const TEXT_MODEL = 'meta/llama-3.1-8b-instruct';
 const VISION_MODEL = 'microsoft/phi-4-multimodal-instruct';
