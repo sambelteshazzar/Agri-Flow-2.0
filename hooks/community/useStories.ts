@@ -93,7 +93,13 @@ export function useStories() {
   const handleStoryMessageSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (storyMessage.trim() && viewingStory) {
-      sendChatMessage({ sender: userProfile.name, content: storyMessage.trim() });
+      sendChatMessage({
+        channelId: 'general',
+        author: userProfile.name,
+        text: storyMessage.trim(),
+        avatar: userProfile.avatar,
+        isMe: true,
+      });
       showToast(`Message sent to ${viewingStory.name}`, 'success');
       setStoryMessage('');
     }

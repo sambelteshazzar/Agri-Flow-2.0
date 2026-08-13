@@ -1,18 +1,15 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { 
-  Users, ShoppingBag, Search, CheckCircle, MapPin, Plus, X, Send, Hash, 
-  ThumbsUp, Share2, MoreHorizontal, Image as ImageIcon, Heart, MessageCircle, TrendingUp,
-  UserPlus, Globe, BadgeCheck, Camera, Bell, ChevronRight, Settings,
-  Calendar, BarChart2, Zap, XCircle, Leaf, PackageSearch, ArrowRight, LayoutGrid, Users2,
-  HelpCircle, Award, Target, Handshake, Cloud, DollarSign, Flame, BookOpen, Sparkles,
-  ChevronDown, Eye, Star, Shield, Wheat, TreePine, Droplets, Sun, Snowflake, Bug,
-  Sprout, Tractor, CircleDot
+import React, { useState, useMemo } from 'react';
+import {
+  Search,
+  Plus,
+  ShoppingBag,
+  Hash,
+  LayoutGrid, Users2,
+  HelpCircle,
 } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
-import { MarketplaceListing, ForumPost, ForumReply, Story, NavigationTab } from '../types';
-import { CommunityTab, LocationAlerts } from './community/types';
-import { CHANNELS } from '../constants/community';
-import { useLocationAlerts } from '../hooks/useLocationAlerts';
+import { NavigationTab } from '../types';
+import { CommunityTab } from './community/types';
 import { useCommunity } from '../contexts/CommunityContext';
 import { useFeed } from '../hooks/community/useFeed';
 import { useQA } from '../hooks/community/useQA';
@@ -33,27 +30,25 @@ import StoryViewer from './community/StoryViewer';
 import CreateStoryModal from './community/CreateStoryModal';
 
 const CommunityHub: React.FC = () => {
-  const { 
+  const {
     userProfile, isSignedIn,
-    listings, posts, chatMessages, stories: contextStories, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
-    questions, likedQuestionIds,
-    addListing, markListingSold, addPost, deletePost, updatePost, getPostReplies, addPostReply, likePost, toggleBookmark,
+    listings, posts, trends, suggestedUsers, followedUserIds, likedPostIds, bookmarkedPostIds,
+    questions,
+    deletePost, updatePost, addPostReply, likePost, toggleBookmark,
     sendChatMessage, toggleFollowUser,
-    // Q&A
     addQuestion, addAnswer, toggleQuestionLike, toggleAnswerAccepted,
-    showToast, weather, alerts, marketPrices,
+    showToast, alerts, marketPrices,
     pollData, pollVoted, handlePollVote,
-    navigate
+    navigate,
+    handleAuthRequiredAction,
   } = useFarm();
 
   const community = useCommunity();
 
   const [showIntro, setShowIntro] = useState(() => !localStorage.getItem('agriflow_community_intro_dismissed'));
   const [activeTab, setActiveTab] = useState<CommunityTab>('FEED');
-  const [avatarError, setAvatarError] = useState(false);
-  const [introBgError, setIntroBgError] = useState(false);
 
-  // Use hooks
+  // Use hooks — each owns its slice of state and actions
   const feed = useFeed();
   const qa = useQA();
   const market = useMarket();
@@ -61,23 +56,40 @@ const CommunityHub: React.FC = () => {
   const stories = useStories();
   const sidebar = useSidebar();
 
-  const locationAlerts = useLocationAlerts(alerts, marketPrices);
-
-  const filteredQuestions = useMemo(() => {
-    let result = questions;
-    if (qa.qaCategoryFilter !== 'ALL') {
-      result = result.filter(q => q.category === qa.qaCategoryFilter);
-    }
-    if (qa.qaSearchQuery) {
-      const q = qa.qaSearchQuery.toLowerCase();
-      result = result.filter(quest => 
-        quest.title.toLowerCase().includes(q) || 
-        quest.body.toLowerCase().includes(q) || 
-        quest.category.toLowerCase().includes(q)
-      );
-    }
-    return result;
-  }, [questions, qa.qaSearchQuery, qa.qaCategoryFilter]);
+  // Mobile-only inline preview of the right sidebar (the desktop sidebar is
+  // rendered separately below). FeedTab injects this ReactNode under the
+  // "Create Post" widget so mobile users see polls/challenges inline.
+  const mobileRightSidebar = (
+    <div className="lg:hidden">
+      <RightSidebar
+        userProfile={userProfile}
+        isSignedIn={isSignedIn}
+        pollData={pollData}
+        pollVoted={pollVoted}
+        handlePollVote={handlePollVote}
+        trends={trends}
+        suggestedUsers={suggestedUsers}
+        followedUserIds={followedUserIds}
+        alerts={alerts}
+        marketPrices={marketPrices}
+        challengeProgress={sidebar.challengeProgress}
+        onJoinChallenge={sidebar.handleJoinChallenge}
+        onAuthRequiredAction={handleAuthRequiredAction}
+        showToast={showToast}
+        sendChatMessage={sendChatMessage}
+        navigate={navigate}
+        setActiveTab={(tab: CommunityTab) => setActiveTab(tab)}
+        setSearchQuery={community.setSearchQuery}
+        toggleFollowUser={toggleFollowUser}
+        locationAlerts={sidebar.locationAlerts}
+        SEASONAL_CHALLENGES={sidebar.SEASONAL_CHALLENGES}
+        FARMER_MATCHES={sidebar.FARMER_MATCHES}
+        handleFollowUser={sidebar.handleFollowUser}
+        handleMessageUser={sidebar.handleMessageUser}
+        handleTrendingTopicClick={sidebar.handleTrendingTopicClick}
+      />
+    </div>
+  );
 
   const tabConfig: { key: CommunityTab; label: string; icon: React.ElementType; color: string; desktopLabel: string }[] = [
     { key: 'FEED', label: 'Feed', icon: LayoutGrid, color: 'field', desktopLabel: 'Global Feed' },
@@ -90,7 +102,8 @@ const CommunityHub: React.FC = () => {
     <div className="h-full w-full relative overflow-hidden bg-[var(--bg-app)]">
       {/* INTRO OVERLAY */}
       {showIntro && (
-        <IntroOverlay 
+        <IntroOverlay
+          showIntro={showIntro}
           onDismiss={() => {
             localStorage.setItem('agriflow_community_intro_dismissed', 'true');
             setShowIntro(false);
@@ -172,42 +185,38 @@ const CommunityHub: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   {activeTab === 'FEED' && (
                     <FeedTab
-                      userProfile={userProfile}
-                      isSignedIn={isSignedIn}
+                      localStories={stories.allStories}
+                      viewingStory={stories.viewingStory}
+                      setViewingStory={stories.setViewingStory}
+                      setIsStoryModalOpen={stories.setIsStoryModalOpen}
                       posts={feed.filteredPosts}
+                      searchQuery={community.searchQuery}
+                      setSearchQuery={feed.setSearchQuery}
+                      expandedPostId={feed.expandedPostId}
+                      setExpandedPostId={feed.setExpandedPostId}
+                      activePostReplies={feed.activePostReplies}
+                      replyInput={feed.replyInput}
+                      setReplyInput={feed.setReplyInput}
                       likedPostIds={likedPostIds}
                       bookmarkedPostIds={bookmarkedPostIds}
-                      expandedPostId={community.expandedPostId}
-                      setExpandedPostId={community.setExpandedPostId}
-                      activePostReplies={community.activePostReplies}
-                      setActivePostReplies={community.setActivePostReplies}
-                      replyInput={community.replyInput}
-                      setReplyInput={community.setReplyInput}
-                      newPost={community.newPost}
-                      setNewPost={community.setNewPost}
-                      postImage={community.postImage}
-                      setPostImage={community.setPostImage}
-                      isPostModalOpen={community.isPostModalOpen}
-                      setIsPostModalOpen={community.setIsPostModalOpen}
-                      onLikePost={feed.handleLike}
-                      onBookmarkPost={feed.handleBookmark}
-                      onSharePost={feed.handleShare}
-                      onDeletePost={feed.handleDeletePost}
-                      onReportPost={feed.handleReportPost}
-                      onExpandPost={feed.handleExpandPost}
-                      onReplySubmit={feed.handleReplySubmit}
+                      userProfile={userProfile}
+                      isSignedIn={isSignedIn}
+                      avatarError={false}
+                      setAvatarError={() => {}}
+                      likePost={feed.handleLike}
+                      toggleBookmark={feed.handleBookmark}
+                      addPostReply={addPostReply}
+                      setActivePostReplies={feed.setActivePostReplies}
+                      showToast={showToast}
+                      deletePost={(id: string) => { handleAuthRequiredAction(() => deletePost(id)); }}
+                      updatePost={updatePost}
+                      handleAuthRequiredAction={handleAuthRequiredAction}
+                      setIsPostModalOpen={feed.setIsPostModalOpen}
                       getRelativeTime={feed.getRelativeTime}
-                      handleFileRead={feed.handleFileRead}
-                      postFileRef={community.postFileRef}
-                      handlePostSubmit={feed.handlePostSubmit}
-                      handlePostImageChange={feed.handlePostImageChange}
-                      searchQuery={community.searchQuery}
-                      setSearchQuery={community.setSearchQuery}
-                      handleAuthRequiredAction={useFarm().handleAuthRequiredAction}
-                      onCreateStory={() => stories.setIsStoryModalOpen(true)}
+                      locationAlerts={sidebar.locationAlerts}
+                      mobileRightSidebar={mobileRightSidebar}
                       handlePostOptions={feed.handlePostOptions}
                       handleEditPost={feed.handleEditPost}
-                      updatePost={updatePost}
                     />
                   )}
 
@@ -220,45 +229,28 @@ const CommunityHub: React.FC = () => {
                       chatInput={chat.chatInput}
                       setChatInput={chat.setChatInput}
                       userProfile={userProfile}
-                      onSendChatMessage={async (msg) => {
-                        await sendChatMessage(msg);
-                        chat.triggerTyping();
-                      }}
+                      onSendChatMessage={sendChatMessage}
                       chatEndRef={chat.chatEndRef}
-                      typingUser={chat.typingUser}
-                      getRelativeTime={chat.getRelativeTime}
-                      handleAuthRequiredAction={useFarm().handleAuthRequiredAction}
                     />
                   )}
 
                   {activeTab === 'MARKET' && (
                     <MarketTab
-                      userProfile={userProfile}
-                      isSignedIn={isSignedIn}
                       listings={market.filteredListings}
-                      searchQuery={market.searchQuery}
-                      setSearchQuery={market.setSearchQuery}
-                      typeFilter={market.typeFilter}
-                      setTypeFilter={market.setTypeFilter}
-                      isListingModalOpen={market.isListingModalOpen}
-                      setIsListingModalOpen={market.setIsListingModalOpen}
-                      newListing={market.newListing}
-                      setNewListing={market.setNewListing}
-                      listingImage={market.listingImage}
-                      setListingImage={market.setListingImage}
-                      onListingSubmit={market.handleListingSubmit}
-                      onListingImageChange={market.handleListingImageChange}
+                      userProfile={userProfile}
+                      onAuthRequiredAction={handleAuthRequiredAction}
                       onMarkSold={market.handleMarkSold}
+                      setIsListingModalOpen={market.setIsListingModalOpen}
                       onContactSeller={market.handleContactSeller}
-                      handleAuthRequiredAction={useFarm().handleAuthRequiredAction}
-                      listingFileRef={market.listingFileRef}
+                      getRelativeTime={feed.getRelativeTime}
+                      showToast={showToast}
                     />
                   )}
 
                   {activeTab === 'QA' && (
                     <QATab
                       questions={questions}
-                      filteredQuestions={filteredQuestions}
+                      filteredQuestions={qa.filteredQuestions}
                       expandedQuestionId={qa.expandedQuestionId}
                       setExpandedQuestionId={qa.setExpandedQuestionId}
                       newAnswer={qa.newAnswer}
@@ -273,13 +265,8 @@ const CommunityHub: React.FC = () => {
                       onAcceptAnswer={qa.handleAcceptAnswer}
                       onAnswerSubmit={qa.handleAnswerSubmit}
                       setIsQuestionModalOpen={qa.setIsQuestionModalOpen}
-                      handleAuthRequiredAction={useFarm().handleAuthRequiredAction}
+                      handleAuthRequiredAction={handleAuthRequiredAction}
                       getRelativeTime={qa.getRelativeTime}
-                      QA_CATEGORIES={qa.QA_CATEGORIES}
-                      newQuestion={qa.newQuestion}
-                      setNewQuestion={qa.setNewQuestion}
-                      isQuestionModalOpen={qa.isQuestionModalOpen}
-                      handleQuestionSubmit={qa.handleQuestionSubmit}
                     />
                   )}
                 </div>
@@ -299,11 +286,11 @@ const CommunityHub: React.FC = () => {
                     marketPrices={marketPrices}
                     challengeProgress={sidebar.challengeProgress}
                     onJoinChallenge={sidebar.handleJoinChallenge}
-                    onAuthRequiredAction={sidebar.handleAuthRequiredAction}
+                    onAuthRequiredAction={handleAuthRequiredAction}
                     showToast={showToast}
                     sendChatMessage={sendChatMessage}
                     navigate={navigate}
-                    setActiveTab={setActiveTab}
+                    setActiveTab={(tab: CommunityTab) => setActiveTab(tab)}
                     setSearchQuery={community.setSearchQuery}
                     toggleFollowUser={toggleFollowUser}
                     locationAlerts={sidebar.locationAlerts}
@@ -319,33 +306,35 @@ const CommunityHub: React.FC = () => {
           </main>
 
           {/* MODALS */}
-          {community.isPostModalOpen && (
+          {feed.isPostModalOpen && (
             <CreatePostModal
-              isOpen={community.isPostModalOpen}
-              onClose={() => { community.setIsPostModalOpen(false); community.setEditingPostId(null); }}
+              isOpen={feed.isPostModalOpen}
+              onClose={() => { feed.setIsPostModalOpen(false); community.setEditingPostId(null); }}
+              newPost={feed.newPost}
+              setNewPost={feed.setNewPost}
+              postImage={feed.postImage}
+              setPostImage={feed.setPostImage}
               onSubmit={feed.handlePostSubmit}
-              newPost={community.newPost}
-              setNewPost={community.setNewPost}
-              postImage={community.postImage}
-              setPostImage={community.setPostImage}
-              handleImageChange={feed.handlePostImageChange}
-              postFileRef={community.postFileRef}
-              editPostId={community.editingPostId}
+              userProfile={userProfile}
+              postFileRef={feed.postFileRef}
+              onFileRead={feed.handleFileRead}
+              editPostId={community.editingPostId ?? undefined}
               onUpdatePost={updatePost}
             />
           )}
 
-          {community.isListingModalOpen && (
+          {market.isListingModalOpen && (
             <CreateListingModal
-              isOpen={community.isListingModalOpen}
-              onClose={() => community.setIsListingModalOpen(false)}
-              onSubmit={market.handleListingSubmit}
+              isOpen={market.isListingModalOpen}
+              onClose={() => market.setIsListingModalOpen(false)}
               newListing={market.newListing}
               setNewListing={market.setNewListing}
               listingImage={market.listingImage}
               setListingImage={market.setListingImage}
-              handleImageChange={market.handleListingImageChange}
+              onSubmit={market.handleListingSubmit}
+              showToast={showToast}
               listingFileRef={market.listingFileRef}
+              onFileRead={market.handleFileRead}
             />
           )}
 
@@ -353,22 +342,21 @@ const CommunityHub: React.FC = () => {
             <AskQuestionModal
               isOpen={qa.isQuestionModalOpen}
               onClose={() => qa.setIsQuestionModalOpen(false)}
-              onSubmit={qa.handleQuestionSubmit}
               newQuestion={qa.newQuestion}
               setNewQuestion={qa.setNewQuestion}
-              QA_CATEGORIES={qa.QA_CATEGORIES}
+              onSubmit={qa.handleQuestionSubmit}
             />
           )}
 
-          {community.isStoryModalOpen && (
+          {stories.isStoryModalOpen && (
             <CreateStoryModal
-              isOpen={community.isStoryModalOpen}
-              onClose={() => community.setIsStoryModalOpen(false)}
-              onSubmit={stories.handleStorySubmit}
-              newStoryImage={community.newStoryImage}
-              setNewStoryImage={community.setNewStoryImage}
-              handleImageChange={stories.handleStoryImageChange}
-              storyFileRef={community.storyFileRef}
+              isOpen={stories.isStoryModalOpen}
+              onClose={() => stories.setIsStoryModalOpen(false)}
+              newStoryImage={stories.newStoryImage}
+              setNewStoryImage={stories.setNewStoryImage}
+              onShare={stories.handleStorySubmit}
+              storyFileRef={stories.storyFileRef}
+              onFileRead={stories.handleFileRead}
             />
           )}
 

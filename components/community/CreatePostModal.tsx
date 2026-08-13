@@ -39,7 +39,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         title: newPost.title || newPost.content?.substring(0, 30) + '...',
         category: newPost.category,
         content: newPost.content,
-        image: postImage,
+        image: postImage ?? undefined,
       });
       onClose();
     } else {

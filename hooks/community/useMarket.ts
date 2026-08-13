@@ -95,6 +95,7 @@ export function useMarket() {
     listingFileRef,
     filteredListings,
     // Actions
+    handleFileRead,
     handleListingSubmit,
     handleListingImageChange,
     handleMarkSold,

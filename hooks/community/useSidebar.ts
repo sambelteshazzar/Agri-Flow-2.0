@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Challenge, LocationAlerts } from '@/components/community/types';
-import { SystemAlert, MarketPrice, PollOption, SocialTrend, SuggestedUser, UserProfile } from '@/types';
+import { SystemAlert, MarketPrice, PollOption, SocialTrend, SuggestedUser, UserProfile, NavigationTab } from '@/types';
 import { useLocationAlerts } from '../../hooks/useLocationAlerts';
 import { useFarm } from '@/contexts/FarmContext';
 import { Target, Droplets, Sprout, DollarSign } from 'lucide-react';
@@ -46,7 +46,7 @@ export function useSidebar() {
   };
 
   const handleTrendingTopicClick = (tag: string) => {
-    navigate('FEED');
+    navigate(NavigationTab.COMMUNITY);
     // The search query will be set by the parent
   };
 

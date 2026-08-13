@@ -73,7 +73,13 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
     : 'City, Region';
 
   return (
-  <form onSubmit={onSubmit} className="space-y-5">
+  <form
+    onSubmit={onSubmit}
+    action="#"
+    method="post"
+    autoComplete="on"
+    className="space-y-5"
+  >
     <div className="grid grid-cols-2 gap-3">
       <div>
         <label htmlFor="signup-name" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Full name</label>
@@ -81,6 +87,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
           <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
           <input
             id="signup-name"
+            name="name"
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
@@ -97,10 +104,12 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
           <Tractor className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
           <input
             id="signup-farm"
+            name="organization"
             type="text"
             value={farmName}
             onChange={e => setFarmName(e.target.value)}
             placeholder="Greenfield Farm"
+            autoComplete="organization"
             className="w-full pl-11 pr-3 py-3.5 bg-[var(--bg-content)] border-2 border-[var(--border-card)] rounded-xl text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-jade-500 focus:ring-0 transition-all outline-none"
           />
         </div>
@@ -113,6 +122,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
         <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
         <input
           id="signup-email"
+          name="email"
           type="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
@@ -131,6 +141,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
           <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
           <input
             id="signup-phone"
+            name="tel"
             type="tel"
             value={phoneNumber}
             onChange={e => setPhoneNumber(e.target.value)}
@@ -146,6 +157,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
           <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
           <input
             id="signup-location"
+            name="address-level2"
             type="text"
             value={location}
             onChange={e => setLocation(e.target.value)}
@@ -163,6 +175,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
         <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
         <input
           id="signup-password"
+          name="new-password"
           type={showPassword ? 'text' : 'password'}
           value={password}
           onChange={e => setPassword(e.target.value)}
@@ -189,6 +202,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
         <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
         <input
           id="signup-confirm"
+          name="new-password-confirm"
           type={showConfirmPassword ? 'text' : 'password'}
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}

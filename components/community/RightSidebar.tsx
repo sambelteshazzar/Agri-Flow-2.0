@@ -66,7 +66,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
                 className="w-full relative h-10 rounded-lg overflow-hidden group border border-white/10"
               >
                 <div className={`absolute inset-0 bg-white/5 transition-colors ${pollVoted === opt.id ? 'bg-white/10' : ''}`}></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-sunburst-500 to-sunburst-600 transition-all duration-1000 ease-out opacity-80" style={{ '--progress': pollVoted ? opt.percent : 0 }}></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-sunburst-500 to-sunburst-600 transition-all duration-1000 ease-out opacity-80" style={{ '--progress': pollVoted ? opt.percent : 0 } as React.CSSProperties}></div>
                 <div className="absolute inset-0 flex items-center justify-between px-3">
                   <span className="text-xs font-medium relative z-10 text-white shadow-black drop-shadow-sm">{opt.text}</span>
                   {pollVoted && <span className="text-xs font-bold text-white shadow-black drop-shadow-md animate-fade-in">{opt.percent}%</span>}
@@ -100,7 +100,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
                 </div>
                 <div className="flex items-center gap-2 ml-9">
                   <div className="flex-1 bg-[var(--bg-content)] rounded-full h-1.5 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-jade-400 to-jade-500 rounded-full transition-all duration-500" style={{ '--progress': isJoined ? Math.min(ch.progress + 15, 100) : 0 }}></div>
+                    <div className="h-full bg-gradient-to-r from-jade-400 to-jade-500 rounded-full transition-all duration-500" style={{ '--progress': isJoined ? Math.min(ch.progress + 15, 100) : 0 } as React.CSSProperties}></div>
                   </div>
                   <span className="text-[10px] text-[var(--text-tertiary)] font-semibold shrink-0">{isJoined ? `${Math.min(ch.progress + 15, 100)}%` : `${ch.participants} in`}</span>
                 </div>

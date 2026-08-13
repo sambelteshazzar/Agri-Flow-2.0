@@ -46,7 +46,25 @@ const AppContent: React.FC = () => {
   const { userProfile, alerts, isSignedIn, login, signIn, logout, toasts, removeToast, currentView, navigate, dismissAlert, dismissAllAlerts } = useFarm();
   console.log('[AgriFlow] useFarm() called, isSignedIn:', isSignedIn);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [hasStarted, setHasStarted] = useState(() => isSignedIn);
+  // hasStarted tracks whether the user has progressed past the landing
+  // page. It must stay in sync with isSignedIn so that a successful
+  // sign-in immediately takes the user into the app instead of leaving
+  // them stuck on the GetStarted page. We mirror isSignedIn here and
+  // also persist a separate flag so the landing page only shows on the
+  // very first visit — not every time a signed-in user reloads.
+  const [hasStarted, setHasStarted] = useState(() => {
+    if (isSignedIn) return true;
+    try { return sessionStorage.getItem('agriflow_has_started') === 'true'; } catch { return false; }
+  });
+  useEffect(() => {
+    if (isSignedIn && !hasStarted) setHasStarted(true);
+  }, [isSignedIn, hasStarted]);
+  useEffect(() => {
+    try {
+      if (hasStarted) sessionStorage.setItem('agriflow_has_started', 'true');
+      else sessionStorage.removeItem('agriflow_has_started');
+    } catch { /* ignore quota/privacy errors */ }
+  }, [hasStarted]);
   console.log('[AgriFlow] hasStarted:', hasStarted);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   useEffect(() => {
@@ -202,9 +220,11 @@ const AppContent: React.FC = () => {
 
 const handleSignup = async (data: OnboardingData & { email: string; password: string }) => {
       try {
-        await login(data);
+        // Persist credentials BEFORE login() so that a subsequent
+        // sign-in attempt can succeed even if login() partially fails.
         const hash = await hashPassword(data.password);
         localStorage.setItem('agriflow_credentials', JSON.stringify({ email: data.email, passwordHash: hash }));
+        await login(data);
         setIsAuthModalOpen(false);
         setHasStarted(true);
         navigate(NavigationTab.DASHBOARD);

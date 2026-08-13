@@ -34,13 +34,20 @@ export const SignInForm: React.FC<SignInFormProps> = ({
     : '+1 234 567 8900';
 
   return (
-  <form onSubmit={onSubmit} className="space-y-5">
+  <form
+    onSubmit={onSubmit}
+    action="#"
+    method="post"
+    autoComplete="on"
+    className="space-y-5"
+  >
     <div>
       <label htmlFor="signin-email" className="block text-xs font-semibold text-[var(--text-secondary)] mb-2">Email address</label>
       <div className="relative group">
         <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
         <input
           id="signin-email"
+          name="email"
           type="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
@@ -58,6 +65,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
         <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] group-focus-within:text-jade-500 transition-colors pointer-events-none" />
         <input
           id="signin-password"
+          name="password"
           type={showPassword ? 'text' : 'password'}
           value={password}
           onChange={e => setPassword(e.target.value)}
