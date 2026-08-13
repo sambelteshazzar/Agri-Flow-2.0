@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Bell, X, CheckCircle2, MessageSquare, Heart, UserPlus, Award, TrendingUp, Clock } from 'lucide-react';
+import { Bell, X, CheckCircle2, MessageSquare, Heart, UserPlus, Award, TrendingUp, Clock, Cloud } from 'lucide-react';
 import { useFarm } from '@/contexts/FarmContext';
 import { parseContent, renderParsedContent } from '@/utils/parseContent';
 
