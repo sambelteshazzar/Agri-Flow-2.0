@@ -42,9 +42,12 @@ const LazyLoader: React.FC = () => (
 );
 
 const AppContent: React.FC = () => {
+  console.log('[AgriFlow] AppContent rendering...');
   const { userProfile, alerts, isSignedIn, login, signIn, logout, toasts, removeToast, currentView, navigate, dismissAlert, dismissAllAlerts } = useFarm();
+  console.log('[AgriFlow] useFarm() called, isSignedIn:', isSignedIn);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [hasStarted, setHasStarted] = useState(() => isSignedIn);
+  console.log('[AgriFlow] hasStarted:', hasStarted);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   useEffect(() => {
     const goOnline = () => setIsOnline(true);
