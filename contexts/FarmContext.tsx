@@ -560,15 +560,25 @@ const [
   const signIn = useCallback(async (email: string, password: string) => {
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
+      // Normalize the same way the sign-up form does: trim + lowercase email.
+      const normalizedEmail = email.trim().toLowerCase();
       const storedCreds = localStorage.getItem('agriflow_credentials');
       if (!storedCreds) {
+        console.warn('[AgriFlow] signIn: no stored credentials in localStorage');
         throw new Error('Invalid email or password.');
       }
       const creds = JSON.parse(storedCreds);
-      const emailMatch = creds.email?.toLowerCase() === email.toLowerCase();
+      const storedEmail = (creds.email ?? '').toLowerCase();
+      const emailMatch = storedEmail === normalizedEmail;
       const hash = await hashPassword(password);
       const passMatch = creds.passwordHash === hash;
       if (!emailMatch || !passMatch) {
+        console.warn('[AgriFlow] signIn mismatch:', {
+          emailMatch,
+          passMatch,
+          storedEmailPrefix: storedEmail.slice(0, 3) + '…',
+          inputEmailPrefix: normalizedEmail.slice(0, 3) + '…',
+        });
         throw new Error('Invalid email or password.');
       }
       const savedProfile = await db.getUserProfile();

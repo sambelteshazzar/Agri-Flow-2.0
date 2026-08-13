@@ -55,15 +55,20 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onLogin, 
 
 const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
-    if (!trimmedEmail || !trimmedPassword) {
+    // IMPORTANT: normalize the EXACT same way as sign-up (see handleSignUp).
+    // Trim+lowercase the email, but DO NOT trim the password — passwords
+    // may legitimately contain leading/trailing spaces, and trimming here
+    // while not trimming at sign-up produces a different SHA-256 hash and
+    // a spurious "Invalid email or password" error.
+    const normalizedEmail = email.trim().toLowerCase();
+    const rawPassword = password;
+    if (!normalizedEmail || !rawPassword) {
       showToast('Please enter both email and password.', 'error');
       return;
     }
     setIsLoading(true);
     try {
-      await onLogin({ email: trimmedEmail, password: trimmedPassword, remember });
+      await onLogin({ email: normalizedEmail, password: rawPassword, remember });
       onClose();
     } catch (err: any) {
       if (err?.message) {
@@ -107,7 +112,8 @@ const handleSignIn = async (e: React.FormEvent) => {
         areaUnit: 'ha',
         phoneNumber: phoneNumber.trim(),
         location: location.trim(),
-        email,
+        // Mirror handleSignIn: normalize email lowercase+trim; keep password raw.
+        email: email.trim().toLowerCase(),
         password,
       };
       if (onSignup) {
